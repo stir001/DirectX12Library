@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{4F766985-FEB5-46C0-A31E-6033294EB592}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Dx12MSLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>C:\Users\JBAba\Documents\Dx12Lib\x64\Debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>C:\Users\JBAba\Documents\Dx12Lib\x86\Debug\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>C:\Users\JBAba\Documents\Dx12Lib\x86\release\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+    <OutDir>C:\Users\JBAba\Documents\Dx12Lib\x64\Release\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)Project1\Dx12MSLib\DirectX12;$(SolutionDir)Project1\Dx12MSLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(DIRECTXTEX_LIB)\x64\debug;$(FBXSDK_DIR)lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(SolutionDir)Project1\Dx12MSLib/DirectX12;$(SolutionDir)Project1\Dx12MSLib;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(FBXSDK_DIR)lib\vs2015\x86\debug;$(DIRECTXTEX_LIB)\Win32\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(SolutionDir)Project1\Dx12MSLib/DirectX12;$(SolutionDir)Project1\Dx12MSLib;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(FBXSDK_DIR)lib\vs2015\x86\release;$(DIRECTXTEX_LIB)\Win32\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)Project1\Dx12MSLib\DirectX12;$(SolutionDir)Project1\Dx12MSLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(FBXSDK_DIR)lib\vs2015\x64\release;$(DIRECTXTEX_LIB)\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="DirectX12\Animation\Animation.h" />
+    <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
+    <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h" />
+    <ClInclude Include="DirectX12\Animation\Motion.h" />
+    <ClInclude Include="DirectX12\Animation\VMD\VMDLoader.h" />
+    <ClInclude Include="DirectX12\Animation\VMD\VMDMotion.h" />
+    <ClInclude Include="DirectX12\Animation\VMD\VMDPlayer.h" />
+    <ClInclude Include="DirectX12\Buffer\AdditionalConstatntBuffer.h" />
+    <ClInclude Include="DirectX12\Buffer\ConstantBufferObject.h" />
+    <ClInclude Include="DirectX12\Buffer\DepthBufferObject.h" />
+    <ClInclude Include="DirectX12\Buffer\Dx12BufferObject.h" />
+    <ClInclude Include="DirectX12\Buffer\IndexBufferObject.h" />
+    <ClInclude Include="DirectX12\Buffer\RendertargetObject.h" />
+    <ClInclude Include="DirectX12\Buffer\ShaderResourceObject.h" />
+    <ClInclude Include="DirectX12\Buffer\VertexBufferObject.h" />
+    <ClInclude Include="DirectX12\Camera\CameraHolder.h" />
+    <ClInclude Include="DirectX12\Camera\Dx12Camera.h" />
+    <ClInclude Include="DirectX12\CommandList\Dx12CommandList.h" />
+    <ClInclude Include="DirectX12\DescriptorHeap\Dx12DescriptorHeapObject.h" />
+    <ClInclude Include="DirectX12\DrawObject\DrawController3D.h" />
+    <ClInclude Include="DirectX12\DrawObject\DrawObjectController.h" />
+    <ClInclude Include="DirectX12\DrawObject\DrawObjectLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModel.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelController.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionData.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxsdkHaveStruct.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxStructure.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\Image3DController.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\ImageController.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\ImageControllerStructure.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\ImageObject.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\Loader\ImageLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\Model.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMDController.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMDDataStructure.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMDLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMDModel.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMXLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\PMD\PMXModel.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveObject.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitivePlane.h" />
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.h" />
+    <ClInclude Include="DirectX12\DrawObject\Transform3DCalculator.h" />
+    <ClInclude Include="DirectX12\DrawObject\TransformMatrixCalculator.h" />
+    <ClInclude Include="DirectX12\Dx12MSLib.h" />
+    <ClInclude Include="DirectX12\Input\DxInput.h" />
+    <ClInclude Include="DirectX12\Light\DirectionalLight.h" />
+    <ClInclude Include="DirectX12\Light\LightObject.h" />
+    <ClInclude Include="DirectX12\Master\Dx12Ctrl.h" />
+    <ClInclude Include="DirectX12\Master\Dx12ResultCheckDefine.h" />
+    <ClInclude Include="DirectX12\Master\NeedCall.h" />
+    <ClInclude Include="DirectX12\PipelineState\BillboardPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\FbxPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\Image2DPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\Image3DPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\PipelineStateObject.h" />
+    <ClInclude Include="DirectX12\PipelineState\PrimitivePipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\SkeletonPipelineState.h" />
+    <ClInclude Include="DirectX12\RenderingPath\Base\RenderingPathObject.h" />
+    <ClInclude Include="DirectX12\RenderingPath\FirstPathObject.h" />
+    <ClInclude Include="DirectX12\RenderingPath\Manager\RenderingPathManager.h" />
+    <ClInclude Include="DirectX12\Rootsignature\BillboardRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\FbxRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\Image2DRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\Image3DRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\PrimitiveRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\RootSignatureObject.h" />
+    <ClInclude Include="DirectX12\Rootsignature\SkeletonRootSignature.h" />
+    <ClInclude Include="DirectX12\Shader\HlslInclude.h" />
+    <ClInclude Include="DirectX12\Shader\ShaderCompiler.h" />
+    <ClInclude Include="DirectX12\Shader\ShaderDatasStructure.h" />
+    <ClInclude Include="DirectX12\SwapChain\SwapChainObject.h" />
+    <ClInclude Include="DirectX12\TextDevice\Dx12TextDevice.h" />
+    <ClInclude Include="DirectX12\Texture\TextureLoader.h" />
+    <ClInclude Include="DirectX12\Texture\TextureObject.h" />
+    <ClInclude Include="DirectX12\Util\CharToWChar.h" />
+    <ClInclude Include="DirectX12\Util\Dx12Getter.h" />
+    <ClInclude Include="DirectX12\Util\File.h" />
+    <ClInclude Include="DirectX12\Util\Rect.h" />
+    <ClInclude Include="DirectX12\Util\Util.h" />
+    <ClInclude Include="DirectX12\Util\XMFloatOperators.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12BufferViewDesc.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12ConstantBufferViewDesc.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12DepthStencilViewDesc.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12RenderTargetViewDesc.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.h" />
+    <ClInclude Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DirectX12\Animation\Animation.cpp" />
+    <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
+    <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp" />
+    <ClCompile Include="DirectX12\Animation\Motion.cpp" />
+    <ClCompile Include="DirectX12\Animation\VMD\VMDLoader.cpp" />
+    <ClCompile Include="DirectX12\Animation\VMD\VMDMotion.cpp" />
+    <ClCompile Include="DirectX12\Animation\VMD\VMDPlayer.cpp" />
+    <ClCompile Include="DirectX12\Buffer\AdditionalConstatntBuffer.cpp" />
+    <ClCompile Include="DirectX12\Buffer\ConstantBufferObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\DepthBufferObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\Dx12BufferObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\IndexBufferObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\RendertargetObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\ShaderResourceObject.cpp" />
+    <ClCompile Include="DirectX12\Buffer\VertexBufferObject.cpp" />
+    <ClCompile Include="DirectX12\Camera\CameraHolder.cpp" />
+    <ClCompile Include="DirectX12\Camera\Dx12Camera.cpp" />
+    <ClCompile Include="DirectX12\CommandList\Dx12CommandList.cpp" />
+    <ClCompile Include="DirectX12\DescriptorHeap\Dx12DescriptorHeapObject.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\DrawController3D.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\DrawObjectController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\DrawObjectLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModel.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionData.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxStructure.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\Image3DController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\ImageController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\ImageControllerStructure.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\ImageObject.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\Loader\ImageLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Model.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\PMD\PMDController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\PMD\PMDLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\PMD\PMDModel.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\PMD\PMXLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\PMD\PMXModel.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveObject.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitivePlane.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Transform3DCalculator.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\TransformMatrixCalculator.cpp" />
+    <ClCompile Include="DirectX12\Input\DxInput.cpp" />
+    <ClCompile Include="DirectX12\Light\DirectionalLight.cpp" />
+    <ClCompile Include="DirectX12\Light\LightObject.cpp" />
+    <ClCompile Include="DirectX12\Master\Dx12Ctrl.cpp" />
+    <ClCompile Include="DirectX12\Master\NeedCall.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\BillboardPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\FbxPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\Image2DPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\Image3DPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\PipelineStateObject.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\PrimitivePipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\SkeletonPipelineState.cpp" />
+    <ClCompile Include="DirectX12\RenderingPath\Base\RenderingPathObject.cpp" />
+    <ClCompile Include="DirectX12\RenderingPath\FirstPathObject.cpp" />
+    <ClCompile Include="DirectX12\RenderingPath\Manager\RenderingPathManager.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\BillboardRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\FbxRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\Image2DRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\Image3DRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\PrimitiveRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\RootSignatureObject.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\SkeletonRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Shader\HlslInclude.cpp" />
+    <ClCompile Include="DirectX12\Shader\ShaderCompiler.cpp" />
+    <ClCompile Include="DirectX12\Shader\ShaderDatasStructure.cpp" />
+    <ClCompile Include="DirectX12\SwapChain\SwapChainObject.cpp" />
+    <ClCompile Include="DirectX12\TextDevice\Dx12TextDevice.cpp" />
+    <ClCompile Include="DirectX12\Texture\TextureLoader.cpp" />
+    <ClCompile Include="DirectX12\Texture\TextureObject.cpp" />
+    <ClCompile Include="DirectX12\Util\CharToWChar.cpp" />
+    <ClCompile Include="DirectX12\Util\Dx12Getter.cpp" />
+    <ClCompile Include="DirectX12\Util\File.cpp" />
+    <ClCompile Include="DirectX12\Util\Rect.cpp" />
+    <ClCompile Include="DirectX12\Util\Util.cpp" />
+    <ClCompile Include="DirectX12\Util\XMFloatOperators.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12BufferViewDesc.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12ConstantBufferViewDesc.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12DepthStencilViewDesc.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12RenderTargetViewDesc.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.cpp" />
+    <ClCompile Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DirectX12\Shader\Billboard.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\FbxShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\Image3DShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\ImageShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\InterFacesTest.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\NormalmapShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\PMDexistTexShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\PMDShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\Primitive2D.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\Primitive3D.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\SkeletonShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DirectX12\Shader\FbxRootsiganatureDefine.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="DirectX12\Shader\MatrixOperation.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
