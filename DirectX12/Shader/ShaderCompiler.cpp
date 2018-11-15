@@ -15,7 +15,7 @@ using Microsoft::WRL::ComPtr;
 
 ShaderCompiler* ShaderCompiler::mInstance = nullptr;
 
-ShaderCompiler::ShaderCompiler() : mShaderModel("5_0"), mShaderDirPath("Dx12MSLib/DirectX12/Shader/")
+ShaderCompiler::ShaderCompiler() : mShaderModel("5_0"), mShaderDirPath("../DirectX12Library/DirectX12/Shader/")
 {
 }
 
