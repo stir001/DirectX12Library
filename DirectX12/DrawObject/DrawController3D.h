@@ -34,6 +34,11 @@ public:
 	virtual ~DrawController3D();
 
 	/**
+	*	DescriptorHeapを再構築する
+	*/
+	virtual void UpdateDescriptorHeap() = 0;
+
+	/**
 	*	@brief カメラバッファを設定する
 	*	@param cameraBuffer	カメラ情報保持用バッファ
 	*/

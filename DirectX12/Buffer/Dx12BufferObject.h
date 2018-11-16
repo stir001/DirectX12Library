@@ -60,27 +60,27 @@ public:
 	/**
 	*	D3D12_CONSTANT_BUFFER_VIEW_DESC‚ğì¬‚·‚é
 	*/
-	void CreateConstantBufferViewDesc();
+	virtual void CreateConstantBufferViewDesc();
 
 	/**
 	*	D3D12_UNORDERD_ACCESS_VIEW_DESC‚ğì¬‚·‚é
 	*/
-	void CreateUnorderdAccessViewDesc();
+	virtual void CreateUnorderdAccessViewDesc();
 
 	/**
 	*	D3D12_SHADER_RESOURCE_VIEW_DESC‚ğì¬‚·‚é
 	*/
-	void CreateShaderResourceViewDesc();
+	virtual void CreateShaderResourceViewDesc();
 
 	/**
 	*	D3D12_RENDER_TARGET_VIEW_DESC‚ğì¬‚·‚é
 	*/
-	void CreateRenderTargetViewDesc();
+	virtual void CreateRenderTargetViewDesc();
 
 	/**
 	*	D3D12_DEPTH_STENCIL_VIEW_DESC‚ğì¬‚·‚é
 	*/
-	void CreateDepthStecilViewDesc();
+	virtual void CreateDepthStecilViewDesc();
 
 	/**
 	*	@brief	•Û‚µ‚Ä‚¢‚éID3D12Resource‚ÌQÆ‚ğæ“¾‚·‚é

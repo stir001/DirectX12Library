@@ -11,7 +11,7 @@ SamplerState texsampler : register(s0);
 
 Texture2D<float4> colortex : register(t0);
 
-CAMERA_CBUFFER(b0)
+MULTI_CAMERA(b0)
 
 cbuffer imageMatrix : register(b1)
 {
@@ -38,7 +38,7 @@ struct VSoutput
 VSoutput Image3DVS(VSinput input)
 {
     VSoutput output;
-    output.svpos = mul(c_projection, mul(c_view, mul(c_world, mul(imageMatrix, input.pos))));
+    output.svpos = mul(cameras[0].c_projection, mul(cameras[0].c_view, mul(cameras[0].c_world, mul(imageMatrix, input.pos))));
     output.normal = mul(imageMatrix, input.normal);
     output.uv = input.uv;
     output.gamma = input.gamma;

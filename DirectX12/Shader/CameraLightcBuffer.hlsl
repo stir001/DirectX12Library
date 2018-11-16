@@ -18,8 +18,8 @@ struct CameraStructure
 
 #define MULTI_CAMERA(bnum) cbuffer mulcamera : register(bnum) \
 {	\
-	uint cameraNum;	\
 	CameraStructure	cameras[4];	\
+	uint cameraNum;	\
 }	
 
 #define LIGHT_CBUFFER(bnum) cbuffer directionalLight : register(bnum)\

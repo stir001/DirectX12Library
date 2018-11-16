@@ -67,6 +67,5 @@ VSOutput BillboardVS(VSInput vInput)
 
 float4 BillboardPS(VSOutput vsout) : SV_Target
 {
-    //return float4(1, 0, 0, 1);
     return pow(colortex.Sample(texsampler, vsout.uv), vsout.gamma);
 }

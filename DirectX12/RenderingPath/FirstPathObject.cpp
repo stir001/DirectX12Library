@@ -3,13 +3,14 @@
 #include "CommandList/Dx12CommandList.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Buffer/RendertargetObject.h"
+#include "Camera/CameraHolder.h"
 #include <d3d12.h>
 
 FirstPathObject::FirstPathObject(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, std::shared_ptr<Dx12DescriptorHeapObject> depthHeap,
-	unsigned int wWidth, unsigned int wHeight): RenderingPathObject("Firstpath"),
+	int wWidth, int wHeight, std::shared_ptr<CameraHolder> holder): RenderingPathObject("Firstpath"),
 	mDepthHeap(depthHeap), 
 	mRendertarget(std::make_shared<RendertargetObject>(mPathName + "Rendertarget", dev, wWidth, wHeight)),
-	mWndRect{0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight)}, mViewPort{0, 0, static_cast<FLOAT>(wWidth), static_cast<FLOAT>(wHeight), 0.0f, 1.0f}
+	mCameraHolder(holder), mWndRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight)}
 {
 	std::vector<std::shared_ptr<Dx12BufferObject>> buffers = { mRendertarget };
 	mRtvHeap = std::make_shared<Dx12DescriptorHeapObject>(mPathName + "RendertargetHeap", dev, buffers , D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
@@ -27,8 +28,8 @@ void FirstPathObject::FirstUpdate()
 	mCmdList->OMSetRenderTargets(1, mRtvHeap->GetCPUHeapHandleStart(), &mDepthHeap->GetCPUHeapHandleStart());
 	float colors[4] = { 1.0f,1.0f,1.0f,1.0f };
 	mCmdList->ClearRenderTargetView(mRtvHeap->GetCPUHeapHandleStart(), mRendertarget->GetClearValue().Color, &mWndRect);
-	mCmdList->RSSetViewports(&mViewPort);
-	mCmdList->RSSetScissorRects(&mWndRect);
+	mCmdList->RSSetViewports(mCameraHolder->GetVi);
+	mCmdList->RSSetScissorRects(mWndRect.data());
 }
 
 void FirstPathObject::PreExcuteUpdate()

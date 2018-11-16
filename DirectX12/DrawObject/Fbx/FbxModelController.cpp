@@ -242,7 +242,9 @@ void FbxModelController::UpdateDescriptorHeap()
 
 	std::string name = mModel->GetModelName();
 	name += "DescriptorHeap";
-	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, Dx12Ctrl::Instance().GetDev(), bufferObj, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, mDevice, bufferObj, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	
+	mBundleUpdate = &FbxModelController::UpdateBundle;
 }
 
 void FbxModelController::NonDrawSkeleton()

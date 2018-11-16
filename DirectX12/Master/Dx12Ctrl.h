@@ -22,6 +22,7 @@ class TextureObject;
 class DepthBufferObject;
 class Dx12Camera;
 class Dx12DescriptorHeapObject;
+class CameraHolder;
 
 namespace DirectX
 {
@@ -83,6 +84,7 @@ public:
 
 	//テスト用関数
 	std::shared_ptr<Dx12Camera> GetCamera() const;
+	std::shared_ptr<CameraHolder> GetCameraHolder();
 
 	template<typename T>
 	LONG CheckComPtrRefCount(Microsoft::WRL::ComPtr<T>& comptr)
@@ -119,6 +121,7 @@ private:
 	std::shared_ptr<DepthBufferObject> mDepthBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDepthDescHeap;
 	std::shared_ptr<Dx12Camera> mCamera;
+	std::shared_ptr<CameraHolder> mCameraHolder;
 	std::vector<Microsoft::WRL::ComPtr<ID3DBlob>> mShaders;
 	UINT64 mFenceValue;
 	D3D12_VIEWPORT mViewPort;

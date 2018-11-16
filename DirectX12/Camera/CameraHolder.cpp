@@ -2,18 +2,36 @@
 #include "CameraHolder.h"
 #include "Camera/Dx12Camera.h"
 #include "DrawObject/DrawController3D.h"
+#include "Buffer/ConstantBufferObject.h"
 
-CameraHolder::CameraHolder()
+CameraHolder::CameraHolder(int wndWidth, int wndHeight, Microsoft::WRL::ComPtr<ID3D12Device> dev)
+	:mWndSize{wndWidth, wndHeight},
+	mDevice(dev),
+	mCamerasBuffer(std::make_shared<ConstantBufferObject>("MultiCameraConstntBuffer", dev, static_cast<unsigned int>(sizeof(MultiCameras)), 1U))
 {
+	UpdateBuffers();
 }
 
 CameraHolder::~CameraHolder()
 {
 }
 
-std::shared_ptr<Dx12Camera> CameraHolder::CreateCamera()
+std::shared_ptr<Dx12Camera> CameraHolder::CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target)
 {
-	return std::shared_ptr<Dx12Camera>();
+	std::shared_ptr<Dx12Camera> rtn = nullptr;
+	if (mCameras.size() < MAXCAMERA_NUM)
+	{
+		rtn = std::make_shared<Dx12Camera>(mWndSize.x, mWndSize.y, eye
+			, target, DirectX::XMFLOAT3(0.f, 1.f, 0.f)
+			, shared_from_this(), static_cast<unsigned int>(mCameras.size()));
+		mCameras.push_back(rtn);
+		mMultiCameras.cameraBuffer[mCameras.size() - 1] = rtn->GetCameraBufferElement();
+		mMultiCameras.cameraNum = static_cast<unsigned int>(mCameras.size());
+		mViewPorts.push_back(rtn->GetViewPort());
+		mScissorRects.push_back(rtn->GetScissorRect());
+		UpdateBuffers();
+	}
+	return rtn;
 }
 
 std::shared_ptr<Dx12Camera> CameraHolder::GetCamera(unsigned int index) const
@@ -22,23 +40,66 @@ std::shared_ptr<Dx12Camera> CameraHolder::GetCamera(unsigned int index) const
 	return mCameras[index];
 }
 
-void CameraHolder::DeleteCamera(unsigned int index)
+bool CameraHolder::DeleteCamera(unsigned int index)
 {
+	bool rtn = false;
 	auto itr = mCameras.begin() + index;
-	mCameras.erase(itr);
-	mCameras.shrink_to_fit();
+	if (mCameras.erase(itr) == mCameras.end())
+	{
+		mCameras.shrink_to_fit();
+		mMultiCameras.cameraNum = static_cast<unsigned int>(mCameras.size());
+		rtn = true;
+	}
+	return rtn;
 }
 
-void CameraHolder::SetCameraBuffer(std::shared_ptr<DrawController3D> controller)
+void CameraHolder::SetCameraBuffer(DrawController3D* controller)
 {
 	controller->SetCameraBuffer(mCamerasBuffer);
 	mControllers.push_back(controller);
 }
 
+void CameraHolder::SetCameraElement(Dx12Camera* camera)
+{
+	int index = camera->GetHoldIndex();
+	if (index < 0 || index >= MAXCAMERA_NUM) return;
+	mMultiCameras.cameraBuffer[index] = camera->GetCameraBufferElement();
+	UpdateBuffers();
+}
+
+const std::vector<D3D12_VIEWPORT>& CameraHolder::GetViewPorts() const
+{
+	return mViewPorts;
+}
+
+const std::vector<D3D12_RECT>& CameraHolder::GetScissorRects() const
+{
+	return mScissorRects;
+}
+
 void CameraHolder::UpdateControllerHeap()
 {
-	for (auto& ctrl : mControllers)
+	std::list<std::list<DrawController3D*>::iterator> deleteIterators;
+	auto endItr = mControllers.end();
+	for (auto itr = mControllers.begin(); itr != endItr; ++itr)
 	{
-		ctrl.expired();
+		if ((*itr) != nullptr)
+		{
+			(*itr)->UpdateDescriptorHeap();
+		}
+		else
+		{
+			deleteIterators.push_back(itr);
+		}
 	}
+
+	for (auto dItr : deleteIterators)
+	{
+		mControllers.erase(dItr);
+	}
+}
+
+void CameraHolder::UpdateBuffers()
+{
+	mCamerasBuffer->WriteBuffer256Alignment(&mMultiCameras, sizeof(mMultiCameras), 1);
 }

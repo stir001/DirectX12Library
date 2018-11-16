@@ -3,6 +3,7 @@
 #include "Util/Dx12Getter.h"
 #include "Master/Dx12Ctrl.h"
 #include "Master/Dx12ResultCheckDefine.h"
+#include "ViewDesc/Dx12ShaderResourceViewDesc.h"
 #include <cassert>
 
 DepthBufferObject::DepthBufferObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, 
@@ -82,6 +83,26 @@ DepthBufferObject::~DepthBufferObject()
 		barrier.Transition.Subresource = 0;
 		Dx12Ctrl::Instance().GetCmdList()->ResourceBarrier(1, &barrier);
 	}
+}
+
+void DepthBufferObject::CreateShaderResourceViewDesc()
+{
+	auto format = (mBuffer->GetDesc().Format);
+	DXGI_FORMAT srvFormat = DXGI_FORMAT_UNKNOWN;
+	if (format == DXGI_FORMAT_D32_FLOAT)
+	{
+		srvFormat = DXGI_FORMAT_R32_FLOAT;
+	}
+	else if(format == DXGI_FORMAT_D16_UNORM)
+	{
+		srvFormat = DXGI_FORMAT_R16_UNORM;
+	}
+	else
+	{
+		MessageBoxA(nullptr, "ëŒâûÇµÇƒÇ¢Ç»Ç¢ê[ìxílÇÃå^Ç≈Ç∑\nDXGI_FORMAT_D32_FLOAT,DXGI_FORMAT_D16_UNORMÇÃÇ›ëŒâûÇµÇƒÇ¢Ç‹Ç∑",
+			"ViewCreationError", MB_OK);
+	}
+	mViewDescs = std::make_shared<Dx12ShaderResourceViewDesc>(srvFormat);
 }
 
 void DepthBufferObject::Map()

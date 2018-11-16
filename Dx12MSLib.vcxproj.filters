@@ -399,6 +399,9 @@
     <ClInclude Include="DirectX12\Camera\CameraHolder.h">
       <Filter>DirectX12\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Camera\CameraBufferStructure.h">
+      <Filter>DirectX12\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

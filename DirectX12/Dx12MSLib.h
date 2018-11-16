@@ -23,6 +23,7 @@
 #include "Buffer/VertexBufferObject.h"
 
 #include "Camera/Dx12Camera.h"
+#include "Camera/CameraHolder.h"
 
 #include "CommandList/Dx12CommandList.h"
 

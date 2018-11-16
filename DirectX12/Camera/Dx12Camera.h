@@ -6,8 +6,9 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/11/15
+*	@par 最終更新日	2018/11/16
 */
+#include "CameraBufferStructure.h"
 
 #include <DirectXMath.h>
 #include <wrl.h	>
@@ -16,29 +17,15 @@
 
 class ConstantBufferObject;
 class DxInput;
+class CameraHolder;
 struct ID3D12GraphicsCommandList;
-
-
-/**
-*	@ingroup Dx12Camera
-*	@struct Dx12CameraBuffer
-*	@brief GPUに投げるための要素をまとめた構造体
-*/
-struct Dx12CameraBuffer
-{
-	DirectX::XMFLOAT4 eye;
-	DirectX::XMFLOAT4 target;
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT4X4 view;
-	DirectX::XMFLOAT4X4 projection;
-};
 
 /**
 *	@ingroup Dx12Camera
 *	@class Dx12Camera
 *	@brief DirectX12で使うための機能を持つカメラクラス
 */
-class Dx12Camera
+class Dx12Camera : public std::enable_shared_from_this<Dx12Camera>
 {
 public:
 	/**
@@ -54,7 +41,19 @@ public:
 	*	@param[in]	target	カメラの注視点
 	*	@param[in]	upper	カメラの上ベクトル(world座標基準)
 	*/
-	Dx12Camera(int wWidth, int wHeight, DirectX::XMFLOAT3& eye, DirectX::XMFLOAT3& target, DirectX::XMFLOAT3& upper);
+	Dx12Camera(int wWidth, int wHeight, const DirectX::XMFLOAT3& eye,
+		const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper);
+
+	/**
+	*	@param[in]	width	カメラの映すピクセル単位の横幅
+	*	@param[in]	height	カメラの映すピクセル単位の縦幅
+	*	@param[in]	eye		カメラの位置
+	*	@param[in]	target	カメラの注視点
+	*	@param[in]	upper	カメラの上ベクトル(world座標基準)
+	*/
+	Dx12Camera(int wWidth, int wHeight, const DirectX::XMFLOAT3& eye,
+		const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper,
+		std::shared_ptr<CameraHolder> holder, unsigned int holdIndex);
 	~Dx12Camera();
 
 	/**
@@ -140,9 +139,15 @@ public:
 	void SetScisorRect(int right, int bottom,
 		int left = 0.0f, int top = 0.0f );
 
+	/**
+	*	カメラのViewPortを取得する
+	*/
 	D3D12_VIEWPORT GetViewPort() const;
 
-	D3D12_RECT GetScisorRect() const;
+	/**
+	*	カメラのScisorRectを取得する
+	*/
+	D3D12_RECT GetScissorRect() const;
 
 	/**
 	*	@brief	あらかじめ提供されている移動でカメラを移動させる
@@ -179,6 +184,16 @@ public:
 	*	@return	カメラのもつコンスタントバッファ
 	*/
 	std::shared_ptr<ConstantBufferObject>& GetCameraBuffer();
+
+	/**
+	*	カメラ情報を取得する
+	*/
+	Dx12CameraBuffer GetCameraBufferElement();
+
+	/**
+	*	カメラが保持されているインデックス
+	*/
+	int GetHoldIndex() const;
 private:
 	/**
 	*	カメラがGPUに投げる要素
@@ -231,14 +246,29 @@ private:
 	int mBuffersize;
 
 	/**
-	*	
+	*	画面の描画範囲矩形
 	*/
 	D3D12_VIEWPORT mViewPort;
 
 	/**
-	*	
+	*	描画範囲内の切り抜き矩形
 	*/
-	D3D12_RECT mScisorRect;
+	D3D12_RECT mScissorRect;
+
+	/**
+	*	自分を保持しているホルダー
+	*/
+	std::weak_ptr<CameraHolder> mHolder;
+
+	/**
+	*	自分の管理されているインデックス
+	*/
+	int mHoldIndex;
+
+	/**
+	*	更新をCameraHolderに通知するステート用
+	*/
+	void (Dx12Camera::*mHolderSetter)();
 
 	/**
 	*	@brief	カメラに回転行列を適応する
@@ -267,4 +297,19 @@ private:
 	*	ConstantBufferにmElementの内容を書き込む
 	*/
 	void UpdateBuffer();
+
+	/**
+	*	初期化処理
+	*/
+	void Init();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定する状態
+	*/
+	void SetElementToHolder();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定しない状態
+	*/
+	void NonSetElementToHolder();
 };

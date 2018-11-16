@@ -186,6 +186,11 @@ public:
 	*	@return	画像のファイルパス
 	*/
 	std::string GetFilePath() const;
+
+	/**
+	*	DescriptorHeapを再構築する
+	*/
+	void UpdateDescriptorHeap();
 private:
 	/**
 	*	@enum	eROOT_PARAMATER_INDEX

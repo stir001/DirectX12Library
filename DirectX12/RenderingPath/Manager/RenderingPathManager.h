@@ -40,48 +40,49 @@ public:
 	}
 
 	/**
-	*RenderingManagerの初期化処理
+	*	RenderingManagerの初期化処理
 	*/
 	void Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, HWND hwnd);
 
 	void Render();
 
-	///**
-	//*パス番号は0から
-	//*パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
-	//*DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
-	//*/
+	/**
+	*	パス番号は0から
+	*	パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
+	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
+	*/
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPathCommandList(unsigned int pathIndex) const;
 
-	///**
-	//*パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
-	//*DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
-	//*/
+	/**
+	*	パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
+	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
+	*/
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPathCommandList(const std::string& pathName) const;
 
 	/**
-	*パスの名前からそのパスのインデックスを取得する
-	*レンダリングパスのインデックスを取得する
-	*DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるので注意
+	*	パスの名前からそのパスのインデックスを取得する
+	*	レンダリングパスのインデックスを取得する
+	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるので注意
 	*/
 	unsigned int GetRenderingPathIndex(const std::string& pathName) const;
 
 
 	/**
+	*
 	*/
 	bool AddRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int& out_PathIndex);
 
 	bool InsertRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int insertPathIndex);
 
 	/**
-	*指定したレンダリングパスのコマンドリストをパス上から削除する
-	*これを実行した後はパスのインデックスが崩れるので注意
+	*	指定したレンダリングパスのコマンドリストをパス上から削除する
+	*	これを実行した後はパスのインデックスが崩れるので注意
 	*/
 	bool DeleteRenderingPath(unsigned int pathIndex);
 	bool DeleteRenderingPath(const std::string& pathName);
 
 	/**
-	*パスの全体の数を取得
+	*	パスの全体の数を取得
 	*/
 	unsigned int GetNumCuurentPath() const;
 

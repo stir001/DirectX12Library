@@ -17,8 +17,7 @@ class PrimitiveController :
 public:
 	PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
 		,Microsoft::WRL::ComPtr<ID3D12Device>& dev
-		, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
-		, std::shared_ptr<Dx12Camera>& camera);
+		, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 	~PrimitiveController();
 
 	void SetTexture(std::shared_ptr<TextureObject>& texture);
@@ -27,10 +26,10 @@ public:
 	void SetInstancingMatrix(std::vector<DirectX::XMFLOAT4X4>& matrix, unsigned int startIndex, unsigned int endIndex);
 	void Draw();
 
+	void UpdateDescriptorHeap();
 protected:
 	void UpdateInstanceVertexBuffer();
 	void NonUpdate();
-	void CreateDescHeap();
 
 	enum eROOT_PARAMATER_INDEX
 	{
@@ -54,6 +53,6 @@ protected:
 	std::shared_ptr<ConstantBufferObject> mLightBuffer;
 	std::shared_ptr<TextureObject> mTexObj;
 	void (PrimitiveController::*mInstanceUpdate)();
-	void (PrimitiveController::*mDescHeapCreate)();
+	void (PrimitiveController::*mDescHeapUpdate)();
 };
 

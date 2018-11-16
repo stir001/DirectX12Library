@@ -1,16 +1,18 @@
 #pragma once
 #include "RenderingPath/Base/RenderingPathObject.h"
 #include <d3d12.h>
+#include <vector>
 
 class Dx12DescriptorHeapObject;
 class RendertargetObject;
+class CameraHolder;
 
 class FirstPathObject :
 	public RenderingPathObject
 {
 public:
 	FirstPathObject(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, std::shared_ptr<Dx12DescriptorHeapObject> depthHeap,
-		unsigned int wWidth, unsigned int wHeight);
+		 int wWidth, int wHeight, std::shared_ptr<CameraHolder> holder);
 	~FirstPathObject();
 
 	void FirstUpdate();
@@ -26,7 +28,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetRenderTarget();
 private:
 	D3D12_RECT mWndRect;
-	D3D12_VIEWPORT mViewPort;
+	std::shared_ptr<CameraHolder> mCameraHolder;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDepthHeap;
 	std::shared_ptr<Dx12DescriptorHeapObject> mRtvHeap;
 	std::shared_ptr<RendertargetObject> mRendertarget;

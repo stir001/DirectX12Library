@@ -4,6 +4,7 @@
 #include "Texture/TextureLoader.h"
 #include "Buffer/DepthBufferObject.h"
 #include "Camera/Dx12Camera.h"
+#include "Camera/CameraHolder.h"
 #include "Util/CharToWChar.h"
 #include "RenderingPath/Manager/RenderingPathManager.h"
 #include "CommandList/Dx12CommandList.h"
@@ -180,6 +181,8 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 	result = mDev->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 
 	mCamera = std::make_shared<Dx12Camera>(mWndWidth, mWndHeight);
+	mCameraHolder = std::make_shared<CameraHolder>(mWndWidth, mWndHeight, mDev);
+	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, -9.0f, 0.0f));
 
 	//RendringManagerƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	InitFirstPath();
@@ -198,22 +201,6 @@ void Dx12Ctrl::InitFirstPath()
 	RenderingPathManager::Instance().AddRenderPath(fpath, renderingPathIndex);
 
 	fpath->FirstUpdate();
-
-	/*InitFunctionObject_t initfunc = [&](CmdListsArg_t cmdList, RTResourcesArg_t resource, RTDescHeapArg_t descHeap) {
-		cmdList[0]->ClearDepthStencilView(Dx12Ctrl::Instance().GetDepthCpuHandle(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, &mRect);
-		cmdList[0]->OMSetRenderTargets(1, &descHeap->GetCPUDescriptorHandleForHeapStart(), false, &Dx12Ctrl::Instance().GetDepthCpuHandle());
-		cmdList[0]->ClearRenderTargetView(descHeap->GetCPUDescriptorHandleForHeapStart(), mClrcolor, 0, &mRect);
-		cmdList[0]->RSSetViewports(1, &mViewPort);
-		cmdList[0]->RSSetScissorRects(1, &mRect);
-	};
-
-	RenderingPathManager::Instance().SetInitFunction(0, initfunc);
-
-	LastFunctionObject_t lastFunc = [](CmdListsArg_t cmdList, RTResourcesArg_t resrouce) {
-
-	};
-
-	RenderingPathManager::Instance().SetLastFunction(0, lastFunc);*/
 }
 
 void Dx12Ctrl::InitWindowCreate()
@@ -384,6 +371,11 @@ D3D12_CPU_DESCRIPTOR_HANDLE Dx12Ctrl::GetDepthCpuHandle() const
 std::shared_ptr<Dx12Camera> Dx12Ctrl::GetCamera() const
 {
 	return mCamera;
+}
+
+std::shared_ptr<CameraHolder> Dx12Ctrl::GetCameraHolder()
+{
+	return mCameraHolder;
 }
 
 const D3D12_VIEWPORT& Dx12Ctrl::GetViewPort() const

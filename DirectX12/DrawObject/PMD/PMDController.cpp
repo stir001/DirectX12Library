@@ -22,7 +22,7 @@ PMDController::PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<D
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
 	: DrawController3D(name, dev, cmdList), mModel(model), mDirLight(dlight), mBundleUpdate(&PMDController::UpdateBundle)
 {
-	mBoneMatrixBuffer = std::make_shared<ConstantBufferObject>("PMDBoneMatrixBuffer", Dx12Ctrl::Instance().GetDev(), static_cast<unsigned int>(sizeof(DirectX::XMMATRIX) * mModel->mBoneDatas.size()), 1);
+	mBoneMatrixBuffer = std::make_shared<ConstantBufferObject>("PMDBoneMatrixBuffer", mDevice, static_cast<unsigned int>(sizeof(DirectX::XMMATRIX) * mModel->mBoneDatas.size()), 1);
 	mBoneMatrix.resize(mModel->mBoneDatas.size());
 	for (auto& bm : mBoneMatrix)  DirectX::XMStoreFloat4x4(&bm, DirectX::XMMatrixIdentity());
 	mBoneMatrixBuffer->WriteBuffer(&mBoneMatrix[0], static_cast<unsigned int>(sizeof(DirectX::XMMATRIX) * mModel->mBoneDatas.size()));
@@ -90,6 +90,10 @@ void PMDController::SetSubRootSignature(std::shared_ptr<RootSignatureObject>& ro
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
 	mSubRootsignature = rootsiganture;
+}
+
+void PMDController::UpdateDescriptorHeap()
+{
 }
 
 

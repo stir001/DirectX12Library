@@ -91,6 +91,8 @@ public:
 	*	@param[in]	rootsignature	İ’è‚·‚éRootSignature
 	*/
 	void SetSubRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
+
+	void UpdateDescriptorHeap();
 private:
 	/**
 	*	PMDƒ‚ƒfƒ‹î•ñ

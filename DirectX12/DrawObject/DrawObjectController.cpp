@@ -5,9 +5,9 @@
 
 DrawObjectController::DrawObjectController(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
-	:mCmdList(cmdList)
+	:mCmdList(cmdList), mDevice(dev)
 {
-	mBundleCmdList = std::make_shared<Dx12CommandList>(name, dev, D3D12_COMMAND_LIST_TYPE_BUNDLE);
+	mBundleCmdList = std::make_shared<Dx12CommandList>(name, mDevice, D3D12_COMMAND_LIST_TYPE_BUNDLE);
 	mBundleCmdList->Close();
 }
 

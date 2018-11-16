@@ -35,24 +35,16 @@ Image3DController::Image3DController(std::shared_ptr<ImageObject> img,
 	mPipelinestate = pipelinestate;
 	mRootsignature = rootsignature;
 
-	//mCameraBuffer = Dx12Ctrl::Instance().GetCamera()->GetCameraBuffer();
 	std::string name = mImgObj->GetTextureName();
 
 	name += "3DImageVertexBuffer";
-	mVertexBuffer = std::make_shared<VertexBufferObject>(name, Dx12Ctrl::Instance().GetDev(), static_cast<unsigned int>(sizeof(Image3DVertex)), 4);
+	mVertexBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(Image3DVertex)), 4);
 
 	name = mImgObj->GetTextureName();
 	name += "3DImageMatrixConstantBuffer";
-	mImageMatrixBuffer = std::make_shared<ConstantBufferObject>(name, Dx12Ctrl::Instance().GetDev(), static_cast<unsigned int>(sizeof(DirectX::XMFLOAT4X4)), 1);
+	mImageMatrixBuffer = std::make_shared<ConstantBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(DirectX::XMFLOAT4X4)), 1);
 
-	std::vector<std::shared_ptr<Dx12BufferObject>> resources;
-	resources.reserve(DEFAULT_RESOURCE_NUM);
-	resources.push_back(mCameraBuffer);
-	resources.push_back(mImageMatrixBuffer);
-	resources.push_back(mImgObj->GetShaderResource());
-	name = mImgObj->GetTextureName();
-	name += "3DImageDescriptorHeap";
-	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, Dx12Ctrl::Instance().GetDev(), resources, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	UpdateDescriptorHeap();
 
 	DirectX::XMStoreFloat4x4(&mImageMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMMatrixIdentity());
@@ -205,7 +197,7 @@ DirectX::XMFLOAT2 Image3DController::GetImageSize()
 
 std::shared_ptr<Image3DController> Image3DController::GetNewCopy()
 {
-	std::shared_ptr<Image3DController> rtn = std::make_shared<Image3DController>(mImgObj,Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
+	std::shared_ptr<Image3DController> rtn = std::make_shared<Image3DController>(mImgObj, mDevice, mCmdList, mPipelinestate, mRootsignature);
 	return rtn;
 }
 
@@ -234,6 +226,19 @@ std::string Image3DController::GetImageName() const
 std::string Image3DController::GetFilePath() const
 {
 	return mImgObj->GetFilePath();
+}
+
+void Image3DController::UpdateDescriptorHeap()
+{
+	std::vector<std::shared_ptr<Dx12BufferObject>> resources;
+	resources.reserve(DEFAULT_RESOURCE_NUM);
+	resources.push_back(mCameraBuffer);
+	resources.push_back(mImageMatrixBuffer);
+	resources.push_back(mImgObj->GetShaderResource());
+	std::string name = mImgObj->GetTextureName();
+	name += "3DImageDescriptorHeap";
+	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, mDevice, resources, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mBundleUpdate = &Image3DController::UpdateBundle;
 }
 
 void Image3DController::UpdateUV()

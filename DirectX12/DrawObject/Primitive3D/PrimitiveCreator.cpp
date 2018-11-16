@@ -73,7 +73,7 @@ void PrimitiveCreator::SetParamaters(std::shared_ptr<PrimitiveController>& ctrl)
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateController(const std::shared_ptr<PrimitiveObject>& primitive)
 {
-	std::shared_ptr<PrimitiveController> rtn = std::make_shared<PrimitiveController>(primitive, Dx12Ctrl::Instance().GetDev(), mCommnadList, Dx12Ctrl::Instance().GetCamera());
+	std::shared_ptr<PrimitiveController> rtn = std::make_shared<PrimitiveController>(primitive, Dx12Ctrl::Instance().GetDev(), mCommnadList);
 	SetParamaters(rtn);
 	return rtn;
 }

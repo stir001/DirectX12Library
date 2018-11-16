@@ -39,6 +39,11 @@ public:
 	~DepthBufferObject();
 	
 	/**
+	*	D3D12_SHADER_RESOURCE_VIEW_DESC‚ğì¬‚·‚é
+	*/
+	void CreateShaderResourceViewDesc();
+
+	/**
 	*	@brief	DepthStencilBuffer‚ğæ“¾‚·‚é
 	*	@return	•Û‚µ‚Ä‚¢‚éDepthStencilBuffer
 	*/

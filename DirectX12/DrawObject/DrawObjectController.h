@@ -64,14 +64,19 @@ protected:
 	std::shared_ptr<PipelineStateObject> mPipelinestate;
 
 	/**
-	*	使用するコマンドリスト
+	*	使用するコマンドリスト パスごとに共通
 	*/
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;
 
 	/**
-	*	使用するバンドルコマンドリスト
+	*	使用するバンドルコマンドリスト コントローラローラー単位で所持
 	*/
 	std::shared_ptr<Dx12CommandList> mBundleCmdList;
+
+	/**
+	*	使用するデバイス
+	*/
+	Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
 private:
 };
 

@@ -49,6 +49,8 @@ public:
 	void AddConstantBuffer(std::shared_ptr<ConstantBufferObject>& buffer);
 	std::string GetModelName() const;
 	std::string GetModelPath() const;
+
+	void UpdateDescriptorHeap();
 private:
 	std::shared_ptr<FbxMotionPlayer> mMotionPlayer;
 
@@ -67,7 +69,6 @@ private:
 	void UpdateVertex();
 	void UpdateBundle();
 	void NonBundleUpdate();
-	void UpdateDescriptorHeap();
 	void NonDrawSkeleton();
 	void DrawColorSkeleton();
 };

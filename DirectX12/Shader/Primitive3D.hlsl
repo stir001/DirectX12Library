@@ -10,7 +10,7 @@ SamplerState smp : register(s0);
 
 #include "CameraLightcBuffer.hlsl"
 
-CAMERA_CBUFFER(b0)
+MULTI_CAMERA(b0)
 
 LIGHT_CBUFFER(b1)
 
@@ -38,7 +38,7 @@ struct PriVSInput
 PriOutput PrimitiveVS(PriVSInput vsInput)
 {
     PriOutput po;
-    matrix pvw = mul(c_projection, mul(c_view, c_world));
+    matrix pvw = mul(cameras[0].c_projection, mul(cameras[0].c_view, cameras[0].c_world));
     po.svpos = mul(pvw, mul(vsInput.aMat, vsInput.pos)) + mul(pvw, vsInput.instanceOffset);
     po.pos = po.svpos;
     po.color = vsInput.color;
