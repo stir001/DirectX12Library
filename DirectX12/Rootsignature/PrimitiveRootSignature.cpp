@@ -6,7 +6,7 @@ PrimitiveRootSignature::PrimitiveRootSignature(const Microsoft::WRL::ComPtr<ID3D
 {
 	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "Primitive3D.hlsl",
 		"PrimitiveVS",
-		"PrimitivePS", "", "", "", true);
+		"PrimitivePS", "PrimitiveGS", "", "", true);
 	CreateRootSignature("PrimitiveRootSignature",mShader.rootSignature.Get(), dev);
 }
 

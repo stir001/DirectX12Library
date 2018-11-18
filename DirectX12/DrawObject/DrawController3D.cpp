@@ -12,7 +12,7 @@ using namespace DirectX;
 DrawController3D::DrawController3D(const std::string& modelName, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList): 
 	DrawObjectController(modelName +"Bundle", dev, cmdList)
-	,mScale(1.0f), mPos(0, 0, 0)
+	, mScale{ 1.0f, 1.0f, 1.0f }, mPos(0, 0, 0)
 	,mQuaternion{0,0,0,1}, mSkeletonColor(1.0f,1.0f,1.0f,1.0f)
 	,mSkeletonRootsignature(std::make_shared<SkeletonRootSignature>(dev))
 	,mSkeletonPipelineState(std::make_shared<SkeletonPipelineState>(mSkeletonRootsignature, dev))
@@ -38,7 +38,7 @@ void DrawController3D::SetCameraBuffer(std::shared_ptr<ConstantBufferObject> cam
 	mCameraBuffer = cameraBuffer;
 }
 
-void DrawController3D::SetPositon(const DirectX::XMFLOAT3& pos)
+void DrawController3D::SetPosition(const DirectX::XMFLOAT3& pos)
 {
 	mPos = pos;
 	UpdateMatrix();
@@ -46,7 +46,13 @@ void DrawController3D::SetPositon(const DirectX::XMFLOAT3& pos)
 
 void DrawController3D::SetScale(float scale)
 {
-	mScale = scale;
+	mScale = { scale,scale,scale };
+	UpdateMatrix();
+}
+
+void DrawController3D::SetScale(float scaleX, float scaleY, float scaleZ)
+{
+	mScale = { scaleX,scaleY,scaleZ };
 	UpdateMatrix();
 }
 
@@ -92,7 +98,7 @@ void DrawController3D::UpdateMatrix()
 	XMVECTOR q = XMLoadFloat4(&mQuaternion);
 	mat *= XMMatrixRotationQuaternion(q);
 	mat *= DirectX::XMLoadFloat4x4(&mRotationMatrix);
-	mat *= XMMatrixScaling(mScale, mScale, mScale);
+	mat *= XMMatrixScaling(mScale.x, mScale.y, mScale.z);
 	mat *= XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
 	DirectX::XMStoreFloat4x4(&mModelMatrix, mat);
 

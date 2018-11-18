@@ -147,11 +147,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-<<<<<<< .mine
       <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\release;$(FBXSDK_DIR)lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-=======
-      <AdditionalLibraryDirectories>$(FBXSDK_DIR)lib\vs2015\x86\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
->>>>>>> .theirs
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -175,11 +171,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-<<<<<<< .mine
       <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\release;$(FBXSDK_DIR)lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-=======
-      <AdditionalLibraryDirectories>$(FBXSDK_DIR)lib\vs2015\x64\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
->>>>>>> .theirs
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>

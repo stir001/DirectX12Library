@@ -51,7 +51,7 @@ public:
 	*	@param[in]	target	カメラの注視点
 	*	@param[in]	upper	カメラの上ベクトル(world座標基準)
 	*/
-	Dx12Camera(int wWidth, int wHeight, const DirectX::XMFLOAT3& eye,
+	Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3& eye,
 		const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper,
 		std::shared_ptr<CameraHolder> holder, unsigned int holdIndex);
 	~Dx12Camera();
@@ -130,7 +130,7 @@ public:
 		float minDepth = 0.0f, float maxDepth = 1.0f);
 
 	/**
-	*	@brief ScisorRectを設定する ViewPort内の切り抜き矩形
+	*	@brief ScisorRectを設定する ViewPort内の切り抜き矩形(画面座標)
 	*	@param right	切り抜き矩形の右のX座標
 	*	@param bottom	切り抜き矩形の下Y座標
 	*	@param left		切り抜き矩形の左X座標

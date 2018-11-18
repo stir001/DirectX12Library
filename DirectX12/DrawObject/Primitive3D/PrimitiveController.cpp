@@ -102,6 +102,48 @@ void PrimitiveController::Draw()
 	mCmdList->DrawIndexedInstanced(static_cast<UINT>(mPrimitive->GetIndices().size()), static_cast<UINT>(mInstanceDatas.size()), 0, 0, 0);
 }
 
+void PrimitiveController::SetPosition(const DirectX::XMFLOAT3 & pos)
+{
+	DrawController3D::SetPosition(pos);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+void PrimitiveController::SetScale(float scale)
+{
+	DrawController3D::SetScale(scale);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+void PrimitiveController::SetScale(float scaleX, float scaleY, float scaleZ)
+{
+	DrawController3D::SetScale(scaleX, scaleY, scaleZ);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+void PrimitiveController::AddRotaX(float deg)
+{
+	DrawController3D::AddRotaX(deg);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+void PrimitiveController::AddRotaY(float deg)
+{
+	DrawController3D::AddRotaY(deg);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+void PrimitiveController::AddRotaZ(float deg)
+{
+	DrawController3D::AddRotaZ(deg);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
 void PrimitiveController::UpdateInstanceVertexBuffer()
 {
 	mInstanceVertexBuffer->WriteBuffer(&mInstanceDatas[0], static_cast<unsigned int>(sizeof(mInstanceDatas[0]) * mInstanceDatas.size()));
@@ -109,6 +151,10 @@ void PrimitiveController::UpdateInstanceVertexBuffer()
 }
 
 void PrimitiveController::NonUpdate()
+{
+}
+
+void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4 & quaternion)
 {
 }
 

@@ -16,12 +16,13 @@ CameraHolder::~CameraHolder()
 {
 }
 
-std::shared_ptr<Dx12Camera> CameraHolder::CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target)
+std::shared_ptr<Dx12Camera> CameraHolder::CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
+	D3D12_VIEWPORT viewport, D3D12_RECT scissorRect)
 {
 	std::shared_ptr<Dx12Camera> rtn = nullptr;
 	if (mCameras.size() < MAXCAMERA_NUM)
 	{
-		rtn = std::make_shared<Dx12Camera>(mWndSize.x, mWndSize.y, eye
+		rtn = std::make_shared<Dx12Camera>(viewport, scissorRect, eye
 			, target, DirectX::XMFLOAT3(0.f, 1.f, 0.f)
 			, shared_from_this(), static_cast<unsigned int>(mCameras.size()));
 		mCameras.push_back(rtn);
@@ -43,11 +44,16 @@ std::shared_ptr<Dx12Camera> CameraHolder::GetCamera(unsigned int index) const
 bool CameraHolder::DeleteCamera(unsigned int index)
 {
 	bool rtn = false;
+	if (index >= mCameras.size()) return rtn;
 	auto itr = mCameras.begin() + index;
-	if (mCameras.erase(itr) == mCameras.end())
+	auto rtnItr = mCameras.erase(itr);
+	if (rtnItr == mCameras.end())
 	{
 		mCameras.shrink_to_fit();
+		mViewPorts.erase(mViewPorts.begin() + index);
+		mScissorRects.erase(mScissorRects.begin() + index);
 		mMultiCameras.cameraNum = static_cast<unsigned int>(mCameras.size());
+		UpdateBuffers();
 		rtn = true;
 	}
 	return rtn;
@@ -67,12 +73,26 @@ void CameraHolder::SetCameraElement(Dx12Camera* camera)
 	UpdateBuffers();
 }
 
-const std::vector<D3D12_VIEWPORT>& CameraHolder::GetViewPorts() const
+void CameraHolder::SetCameraViewPort(Dx12Camera * camera)
+{
+	int index = camera->GetHoldIndex();
+	if (index > mViewPorts.size()) return;
+	mViewPorts[index] = camera->GetViewPort();
+}
+
+void CameraHolder::SetCameraScissorRect(Dx12Camera * camera)
+{
+	int index = camera->GetHoldIndex();
+	if (index > mScissorRects.size()) return;
+	mScissorRects[index] = camera->GetScissorRect();
+}
+
+std::vector<D3D12_VIEWPORT>& CameraHolder::GetViewPorts()
 {
 	return mViewPorts;
 }
 
-const std::vector<D3D12_RECT>& CameraHolder::GetScissorRects() const
+std::vector<D3D12_RECT>& CameraHolder::GetScissorRects()
 {
 	return mScissorRects;
 }

@@ -48,13 +48,21 @@ public:
 	*	@brief	基準点を指定の場所に平行移動させる
 	*	@param[in]	pos		平行移動させたい場所
 	*/
-	virtual void SetPositon(const DirectX::XMFLOAT3& pos);
+	virtual void SetPosition(const DirectX::XMFLOAT3& pos);
 
 	/**
 	*	@brief	x,y,z等倍で拡大率を設定する
 	*	@param[in]	設定したい拡大率
 	*/
 	virtual void SetScale(float scale);
+
+	/**
+	*	@brief x,y,z各成分で拡大率を設定する
+	*	@param[in]	scaleX	xの拡大率
+	*	@param[in]	scaleY	yの拡大率
+	*	@param[in]	scaleZ	zの拡大率
+	*/
+	virtual void SetScale(float scaleX, float scaleY, float scaleZ);
 
 	/**
 	*	@brief	x軸中心で追加で回転させる
@@ -115,7 +123,7 @@ protected:
 	/**
 	*	拡大率
 	*/
-	float mScale;
+	DirectX::XMFLOAT3 mScale;
 
 	/**
 	*	基準点の座標

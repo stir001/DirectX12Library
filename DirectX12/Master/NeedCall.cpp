@@ -43,7 +43,7 @@ bool ProcessMessage()
 
 void Dx12CtrlInit(HINSTANCE hInst,
 	std::string wndName = "DirectX12",
-	unsigned int wndWidth = 768, unsigned int wndHeight = 448)
+	unsigned int wndWidth = 800, unsigned int wndHeight = 600)
 {
 	Dx12Ctrl::Instance().SetWindowSize(wndWidth, wndHeight);
 	Dx12Ctrl::Instance().SetWindowName(wndName);

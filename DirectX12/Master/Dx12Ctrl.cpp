@@ -182,7 +182,7 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 
 	mCamera = std::make_shared<Dx12Camera>(mWndWidth, mWndHeight);
 	mCameraHolder = std::make_shared<CameraHolder>(mWndWidth, mWndHeight, mDev);
-	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, -9.0f, 0.0f));
+	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),mViewPort,mRect);
 
 	//RendringManagerƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	InitFirstPath();
@@ -195,7 +195,7 @@ void Dx12Ctrl::InitFirstPath()
 	RenderingPathManager::Instance().Init(mDev, mFactory, mhWnd);
 
 	std::shared_ptr<RenderingPathObject> fpath = std::make_shared<FirstPathObject>(
-		mDev, mDepthDescHeap, mWndWidth, mWndHeight);
+		mDev, mDepthDescHeap, mWndWidth, mWndHeight, mCameraHolder);
 
 	unsigned int renderingPathIndex;
 	RenderingPathManager::Instance().AddRenderPath(fpath, renderingPathIndex);
@@ -328,6 +328,7 @@ void Dx12Ctrl::Release()
 	ImageLoader::Destroy();
 	ShaderCompiler::Destroy();
 	mCamera.reset();
+	mCameraHolder.reset();
 	Primitive2DManager::Destory();
 	mDepthBuffer.reset();
 	mCmdAllocator.Reset();

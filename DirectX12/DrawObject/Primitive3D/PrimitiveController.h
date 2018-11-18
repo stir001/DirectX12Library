@@ -25,6 +25,32 @@ public:
 	void Instancing(std::vector<DirectX::XMFLOAT3>& instancePositions);
 	void SetInstancingMatrix(std::vector<DirectX::XMFLOAT4X4>& matrix, unsigned int startIndex, unsigned int endIndex);
 	void Draw();
+	void SetPosition(const DirectX::XMFLOAT3& pos);
+	void SetScale(float scale);
+	void SetScale(float scaleX, float scaleY, float scaleZ);
+	/**
+	*	@brief	x軸中心で追加で回転させる
+	*	@param[in]	deg		回転量(degree,度数法)
+	*/
+	void AddRotaX(float deg);
+
+	/**
+	*	@brief	y軸中心で追加で回転させる
+	*	@param[in]	deg		回転量(degree,度数法)
+	*/
+	void AddRotaY(float deg);
+
+	/**
+	*	@brief	z軸中心で追加で回転させる
+	*	@param[in]	deg		回転量(degree,度数法)
+	*/
+	void AddRotaZ(float deg);
+
+	/**
+	*	@brief	任意の軸で回転する四元数を設定する
+	*	@param[in]	quaternion	軸と回転量を表す四元数
+	*/
+	void SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion);
 
 	void UpdateDescriptorHeap();
 protected:

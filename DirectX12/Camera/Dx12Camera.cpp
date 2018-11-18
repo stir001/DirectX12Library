@@ -8,10 +8,13 @@
 
 using namespace DirectX;
 
-Dx12Camera::Dx12Camera(int wWidth,int wHeight):mWidth(wWidth),mHeight(wHeight)
+Dx12Camera::Dx12Camera(int wWidth,int wHeight)
+	: mWidth(wWidth),mHeight(wHeight)
 	, mElement()
 	, mUpper(0, 1, 0), mLocalUpper(mUpper), mHoldIndex(-1)
 	, mHolderSetter(&Dx12Camera::NonSetElementToHolder)
+	, mViewPort{ 0.f, 0.f, static_cast<FLOAT>(wWidth), static_cast<FLOAT>(wHeight), 0.0f, 1.0f }
+	, mScissorRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight) }
 {
 	mElement.eye = { 0.f, 20.f, -30.f, 1.f };
 	mElement.target = { 0.f, 9.f, 0.f, 1.f };
@@ -22,11 +25,13 @@ Dx12Camera::Dx12Camera(int wWidth,int wHeight):mWidth(wWidth),mHeight(wHeight)
 
 Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 	const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper)
-	:mWidth(wWidth),mHeight(wHeight)
+	: mWidth(wWidth),mHeight(wHeight)
 	, mElement()
 	, mUpper(upper), mLocalUpper(mUpper), mHoldIndex(-1)
 	, mHolderSetter(&Dx12Camera::NonSetElementToHolder)
-{	
+	, mViewPort{ 0.f, 0.f, static_cast<FLOAT>(wWidth), static_cast<FLOAT>(wHeight), 0.0f, 1.0f}
+	, mScissorRect { 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight)}
+{
 	mElement.eye = { eye.x, eye.y, eye.z, 1.f };
 	mElement.target = { target.x, target.y, target.z, 1.f };
 	Init();
@@ -34,10 +39,10 @@ Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 	UpdateBuffer();
 }
 
-Dx12Camera::Dx12Camera(int wWidth, int wHeight, const DirectX::XMFLOAT3 & eye,
+Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3 & eye,
 	const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & upper,
 	std::shared_ptr<CameraHolder> holder, unsigned int holdIndex)
-	:mWidth(wWidth), mHeight(wHeight)
+	: mWidth(viewport.Width), mHeight(viewport.Height),mViewPort(viewport), mScissorRect(scissorRect)
 	, mElement()
 	, mUpper(upper), mLocalUpper(mUpper), mHolder(holder), mHoldIndex(holdIndex)
 	, mHolderSetter(&Dx12Camera::SetElementToHolder)
@@ -216,12 +221,20 @@ void Dx12Camera::SetViewPort(float width, float height,
 	float minDepth, float maxDepth)
 {
 	mViewPort = { topLX, topLY, width, height, minDepth, maxDepth };
+	mWidth = width;
+	mHeight = height;
+	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
+	UpdateElement();
+	UpdateBuffer();
+	(this->*mHolderSetter)();
+	mHolder.lock()->SetCameraViewPort(this);
 }
 
 void Dx12Camera::SetScisorRect(int right, int bottom,
 	int left, int top)
 {
 	mScissorRect = { left, top, right, bottom };
+	mHolder.lock()->SetCameraScissorRect(this);
 }
 
 D3D12_VIEWPORT Dx12Camera::GetViewPort() const

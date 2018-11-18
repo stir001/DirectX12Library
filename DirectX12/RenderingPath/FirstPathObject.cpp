@@ -28,8 +28,8 @@ void FirstPathObject::FirstUpdate()
 	mCmdList->OMSetRenderTargets(1, mRtvHeap->GetCPUHeapHandleStart(), &mDepthHeap->GetCPUHeapHandleStart());
 	float colors[4] = { 1.0f,1.0f,1.0f,1.0f };
 	mCmdList->ClearRenderTargetView(mRtvHeap->GetCPUHeapHandleStart(), mRendertarget->GetClearValue().Color, &mWndRect);
-	mCmdList->RSSetViewports(mCameraHolder->GetVi);
-	mCmdList->RSSetScissorRects(mWndRect.data());
+	mCmdList->RSSetViewports(mCameraHolder->GetViewPorts().data(), static_cast<unsigned int>(mCameraHolder->GetViewPorts().size()));
+	mCmdList->RSSetScissorRects(mCameraHolder->GetScissorRects().data(), static_cast<unsigned int>(mCameraHolder->GetViewPorts().size()));
 }
 
 void FirstPathObject::PreExcuteUpdate()

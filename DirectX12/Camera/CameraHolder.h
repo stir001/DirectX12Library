@@ -17,20 +17,23 @@ public:
 	CameraHolder(int wndWidth, int wndHeight, Microsoft::WRL::ComPtr<ID3D12Device> dev);
 	~CameraHolder();
 
-	std::shared_ptr<Dx12Camera> CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target);
+	std::shared_ptr<Dx12Camera> CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
+		D3D12_VIEWPORT viewport, D3D12_RECT scissorRect);
 	std::shared_ptr<Dx12Camera> GetCamera(unsigned int index) const;
 	bool DeleteCamera(unsigned int index);
 	void SetCameraBuffer(DrawController3D* controller);
 	void SetCameraElement(Dx12Camera* camera);
-	const std::vector<D3D12_VIEWPORT>& GetViewPorts() const;
-	const std::vector<D3D12_RECT>& GetScissorRects() const;
+	void SetCameraViewPort(Dx12Camera* camera);
+	void SetCameraScissorRect(Dx12Camera* camera);
+	std::vector<D3D12_VIEWPORT>& GetViewPorts();
+	std::vector<D3D12_RECT>& GetScissorRects();
 private:
 	const static unsigned int MAXCAMERA_NUM = 4;
 	struct MultiCameras
 	{
 		Dx12CameraBuffer cameraBuffer[MAXCAMERA_NUM];
 		unsigned int cameraNum;
-		MultiCameras() :/*cameraNum{ 0,0,0,0 },*/ cameraBuffer() {}
+		MultiCameras() :cameraNum(0), cameraBuffer() {}
 	};
 
 	MultiCameras mMultiCameras;
