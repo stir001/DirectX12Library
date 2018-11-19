@@ -7,6 +7,8 @@
 
 #include "CameraLightcBuffer.hlsl"
 
+#include "MatrixOperation.hlsli"
+
 SamplerState texsampler : register(s0);
 
 Texture2D<float4> colortex : register(t0);
@@ -18,7 +20,7 @@ cbuffer imageMatrix : register(b1)
     float4x4 imageMatrix;
 }
 
-struct VSinput
+struct VSInput
 {
     float4 pos : POSITION;
     float4 normal : NORMAL;
@@ -26,19 +28,28 @@ struct VSinput
     float gamma : GAMMA;
 };
 
-struct VSoutput
+struct VSOutput
 {
-    float4 svpos : SV_Position;
+    float4 pos : POSITION;
     float4 normal : NORMAL;
     float2 uv : TEXCOORD;
     float gamma : GAMMA;
 };
 
-[RootSignature(IMAGE3DRS)]
-VSoutput Image3DVS(VSinput input)
+struct GSOutput
 {
-    VSoutput output;
-    output.svpos = mul(cameras[0].c_projection, mul(cameras[0].c_view, mul(cameras[0].c_world, mul(imageMatrix, input.pos))));
+    float4 svpos : SV_Position;
+    float4 normal : NORMAL;
+    float2 uv : TEXCOORD;
+    float gamma : GAMMA;
+    uint viewIndex : SV_ViewportArrayIndex;
+};
+
+[RootSignature(IMAGE3DRS)]
+VSOutput Image3DVS(VSInput input)
+{
+    VSOutput output;
+    output.pos = mul(imageMatrix, input.pos);
     output.normal = mul(imageMatrix, input.normal);
     output.uv = input.uv;
     output.gamma = input.gamma;
@@ -46,8 +57,37 @@ VSoutput Image3DVS(VSinput input)
     return output;
 }
 
-float4 Image3DPS(VSoutput vsout):SV_Target
+float4 Image3DPS(GSOutput gsout) : SV_Target
 {
-    //return float4(1, 0, 0, 1);
-    return pow(colortex.Sample(texsampler, vsout.uv), vsout.gamma);
+    return pow(colortex.Sample(texsampler, gsout.uv), gsout.gamma);
+}
+
+#define VERTEX_COUNT 12U
+
+[maxvertexcount(VERTEX_COUNT)]
+void Image3DGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
+{
+    uint i = 0;
+    uint j = 0;
+
+    float4x4 pvw = identity();
+    GSOutput gsVert;
+    VSOutput vsout;
+	[unroll(4)]
+    for (i = 0; i < cameraNum; ++i)
+    {
+        pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
+		[unroll(3)]
+        for (j = 0; j < 3; ++j)
+        {
+            vsout = vertices[j];
+            gsVert.svpos = mul(pvw, vsout.pos);
+            gsVert.normal = mul(cameras[i].c_world, vsout.normal);
+            gsVert.uv = vsout.uv;
+            gsVert.gamma = vsout.gamma;
+            gsVert.viewIndex = i;
+            gsOut.Append(gsVert);
+        }
+        gsOut.RestartStrip();
+    }
 }

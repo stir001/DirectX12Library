@@ -13,7 +13,7 @@ SamplerState texsampler : register(s0);
 
 Texture2D<float4> colortex : register(t0);
 
-CAMERA_CBUFFER(b0)
+MULTI_CAMERA(b0)
 
 cbuffer imageMatrix : register(b1)
 {
@@ -30,10 +30,19 @@ struct VSInput
 
 struct VSOutput
 {
+    float4 pos : SV_Position;
+    float4 normal : NORMAL;
+    float2 uv : TEXCOORD;
+    float gamma : GAMMA;
+};
+
+struct GSOutput
+{
     float4 svpos : SV_Position;
     float4 normal : NORMAL;
     float2 uv : TEXCOORD;
     float gamma : GAMMA;
+    uint viewIndex : SV_ViewportArrayIndex;
 };
 
 matrix ExcludeRotation(matrix mat)
@@ -50,22 +59,55 @@ matrix ExcludeRotation(matrix mat)
 VSOutput BillboardVS(VSInput vInput)
 {
     VSOutput o;
-    float4x4 notRotaMat = ExcludeRotation(imageMatrix);
+    //float4x4 notRotaMat = ExcludeRotation(imageMatrix);
 
-    float4x4 notRotaWorld = ExcludeRotation(c_world);
+    //float4x4 notRotaWorld = ExcludeRotation(c_world);
 
-    matrix inverseView = inverse(c_view);
+    //matrix inverseView = inverse(c_view);
 
-    o.svpos = mul(notRotaMat, mul(notRotaWorld, mul(inverseView, vInput.pos)));
-    o.svpos = mul(c_projection, mul(c_view, mul(c_world, o.svpos)));
+    //o.svpos = mul(notRotaMat, mul(notRotaWorld, mul(inverseView, vInput.pos)));
+    //o.svpos = mul(c_projection, mul(c_view, mul(c_world, o.svpos)));
+    o.pos = vInput.pos;
 
-    o.normal = mul(inverseView, vInput.normal);
+    o.normal = vInput.normal;
     o.uv = vInput.uv;
     o.gamma = vInput.gamma;
     return o;
 }
 
-float4 BillboardPS(VSOutput vsout) : SV_Target
+float4 BillboardPS(GSOutput gsout) : SV_Target
 {
-    return pow(colortex.Sample(texsampler, vsout.uv), vsout.gamma);
+    return pow(colortex.Sample(texsampler, gsout.uv), gsout.gamma);
+}
+
+#define VERTEX_COUNT 12U
+
+[maxvertexcount(VERTEX_COUNT)]
+void BillboardGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
+{
+    uint i = 0;
+    uint j = 0;
+
+    float4x4 pvw = identity();
+    float4x4 invMat = identity();
+    GSOutput gsVert;
+    VSOutput vsout;
+	[unroll(4)]
+    for (i = 0; i < cameraNum; ++i)
+    {
+        pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
+        invMat = mul(ExcludeRotation(imageMatrix), mul(ExcludeRotation(cameras[i].c_world), inverse(cameras[i].c_view)));
+		[unroll(3)]
+        for (j = 0; j < 3; ++j)
+        {
+            vsout = vertices[j];
+            gsVert.svpos = mul(pvw, mul(invMat, vsout.pos));
+            gsVert.normal = mul(cameras[i].c_world, mul(ExcludeRotation(imageMatrix), vsout.normal));
+            gsVert.uv = vsout.uv;
+            gsVert.gamma = vsout.gamma;
+            gsVert.viewIndex = i;
+            gsOut.Append(gsVert);
+        }
+        gsOut.RestartStrip();
+    }
 }

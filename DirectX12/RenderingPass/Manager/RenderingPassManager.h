@@ -9,23 +9,31 @@
 
 class SwapChainObject;
 class Dx12DescriptorHeapObject;
-class RenderingPathObject;
+class RenderingPassObject;
 
+
+enum class DefaultPass
+{
+	BackGround,
+	Model,
+	UI,
+	Max
+};
 
 /**
 *レンダリングパスが順番に呼ばれることを保証する
 *すべてのパスが終了した後コマンドリストをリセットする
 */
-class RenderingPathManager
+class RenderingPassManager
 {
 public:
-	~RenderingPathManager();
+	~RenderingPassManager();
 
-	static RenderingPathManager& Instance()
+	static RenderingPassManager& Instance()
 	{
 		if (mInstance == nullptr)
 		{
-			mInstance = new RenderingPathManager();
+			mInstance = new RenderingPassManager();
 		}
 		return *mInstance;
 	}
@@ -51,40 +59,40 @@ public:
 	*	パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
 	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPathCommandList(unsigned int pathIndex) const;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(unsigned int pathIndex) const;
 
 	/**
 	*	パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
 	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPathCommandList(const std::string& pathName) const;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(const std::string& pathName) const;
 
 	/**
 	*	パスの名前からそのパスのインデックスを取得する
 	*	レンダリングパスのインデックスを取得する
 	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるので注意
 	*/
-	unsigned int GetRenderingPathIndex(const std::string& pathName) const;
+	unsigned int GetRenderingPassIndex(const std::string& pathName) const;
 
 
 	/**
 	*
 	*/
-	bool AddRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int& out_PathIndex);
+	bool AddRenderingPass(const std::shared_ptr<RenderingPassObject>& pathObj, unsigned int& out_PathIndex);
 
-	bool InsertRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int insertPathIndex);
+	bool InsertRenderingPass(std::shared_ptr<RenderingPassObject>& pathObj, unsigned int insertPathIndex);
 
 	/**
 	*	指定したレンダリングパスのコマンドリストをパス上から削除する
 	*	これを実行した後はパスのインデックスが崩れるので注意
 	*/
-	bool DeleteRenderingPath(unsigned int pathIndex);
-	bool DeleteRenderingPath(const std::string& pathName);
+	bool DeleteRenderingPass(unsigned int pathIndex);
+	bool DeleteRenderingPass(const std::string& pathName);
 
 	/**
 	*	パスの全体の数を取得
 	*/
-	unsigned int GetNumCuurentPath() const;
+	unsigned int GetNumCuurentPass() const;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTVHeapHandle() const;
 	std::shared_ptr<Dx12DescriptorHeapObject> GetCurrentRTVDescHeap() const;
@@ -97,15 +105,15 @@ public:
 	void AllPathClear();
 
 private:
-	RenderingPathManager();
-	RenderingPathManager(const RenderingPathManager&) = delete;
-	RenderingPathManager(const RenderingPathManager&&) = delete;
-	RenderingPathManager& operator=(const RenderingPathManager&) = delete;
-	RenderingPathManager& operator=(const RenderingPathManager&&) = delete;
+	RenderingPassManager();
+	RenderingPassManager(const RenderingPassManager&) = delete;
+	RenderingPassManager(const RenderingPassManager&&) = delete;
+	RenderingPassManager& operator=(const RenderingPassManager&) = delete;
+	RenderingPassManager& operator=(const RenderingPassManager&&) = delete;
 
-	static RenderingPathManager* mInstance;
+	static RenderingPassManager* mInstance;
 
-	std::vector<std::shared_ptr<RenderingPathObject>> mRenderingPathObjects;
+	std::vector<std::shared_ptr<RenderingPassObject>> mRenderingPassObjects;
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mRenderCmdAllocator;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mRenderCmdList;
@@ -119,7 +127,7 @@ private:
 	unsigned int mWidth;
 	unsigned int mHeight;
 
-	unsigned int AddRenderingPathObject(std::shared_ptr<RenderingPathObject>& pathObj);
+	unsigned int AddRenderingPassObject(const std::shared_ptr<RenderingPassObject>& pathObj);
 
 	void WaitCmdQueue();
 	void CopyLastPathRenderTarget();

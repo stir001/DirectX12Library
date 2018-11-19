@@ -88,13 +88,13 @@
     <Filter Include="DirectX12\Shader\hlsl">
       <UniqueIdentifier>{40754938-60a7-4c70-ad35-f1cfe8a1bd4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX12\RenderingPath">
+    <Filter Include="DirectX12\RenderingPass">
       <UniqueIdentifier>{a00112a7-a468-4ec6-99a7-868ae0168e79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX12\RenderingPath\Base">
+    <Filter Include="DirectX12\RenderingPass\Base">
       <UniqueIdentifier>{c58a3b9f-007b-4991-9510-40f2b083b06e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX12\RenderingPath\Manager">
+    <Filter Include="DirectX12\RenderingPass\Manager">
       <UniqueIdentifier>{453e4080-ae0e-47c3-982b-f98763f55663}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -348,15 +348,6 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12ConstantBufferViewDesc.h">
       <Filter>DirectX12\ViewDesc</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPath\Base\RenderingPathObject.h">
-      <Filter>DirectX12\RenderingPath\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPath\Manager\RenderingPathManager.h">
-      <Filter>DirectX12\RenderingPath\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPath\FirstPathObject.h">
-      <Filter>DirectX12\RenderingPath</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Dx12MSLib.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -401,6 +392,21 @@
     </ClInclude>
     <ClInclude Include="DirectX12\Camera\CameraBufferStructure.h">
       <Filter>DirectX12\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\BackGroundPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\ModelPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\Base\RenderingPassObject.h">
+      <Filter>DirectX12\RenderingPass\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\Manager\RenderingPassManager.h">
+      <Filter>DirectX12\RenderingPass\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\UIPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -644,15 +650,6 @@
     <ClCompile Include="DirectX12\ViewDesc\Dx12DepthStencilViewDesc.cpp">
       <Filter>DirectX12\ViewDesc</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPath\Base\RenderingPathObject.cpp">
-      <Filter>DirectX12\RenderingPath\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPath\Manager\RenderingPathManager.cpp">
-      <Filter>DirectX12\RenderingPath\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPath\FirstPathObject.cpp">
-      <Filter>DirectX12\RenderingPath</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Image\Loader\ImageLoader.cpp">
       <Filter>DirectX12\DrawObject\Image</Filter>
     </ClCompile>
@@ -688,6 +685,21 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Camera\CameraHolder.cpp">
       <Filter>DirectX12\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\ModelPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\BackGroundPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\Base\RenderingPassObject.cpp">
+      <Filter>DirectX12\RenderingPass\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\Manager\RenderingPassManager.cpp">
+      <Filter>DirectX12\RenderingPass\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\UIPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@
 #include "Shader/ShaderCompiler.h"
 #include "Util/File.h"
 #include "Util/XMFloatOperators.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 
 #include <d3d12.h>
 #include <algorithm>
@@ -23,6 +24,7 @@ const std::string PMDSHADER_PATH = "shader.hlsl";
 
 PMDLoader::PMDLoader():mLight(std::make_shared<DirectionalLight>(1.f,-1.f,1.f))
 {
+	mCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
 	Microsoft::WRL::ComPtr<ID3D12Device> dev = Dx12Ctrl::Instance().GetDev();
 	CreateRootsignature(dev);
 	CreatePipelineState(dev);
@@ -359,7 +361,7 @@ void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mShader.vertexShader.Get());
 	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mShader.pixelShader.Get());
 	gpsDesc.DS;
-	gpsDesc.GS;
+	gpsDesc.GS = CD3DX12_SHADER_BYTECODE(mShader.geometryShader.Get());
 	gpsDesc.HS;
 
 	mPipelinestate = std::make_shared<PipelineStateObject>("PMDMaterial", gpsDesc,dev);
@@ -368,7 +370,7 @@ void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mSubShader.vertexShader.Get());
 	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mSubShader.pixelShader.Get());
 	gpsDesc.DS;
-	gpsDesc.GS;
+	gpsDesc.GS = CD3DX12_SHADER_BYTECODE(mShader.geometryShader.Get());
 	gpsDesc.HS;
 
 	mSubPipelineState = std::make_shared<PipelineStateObject>("PMDTex", gpsDesc, dev);
@@ -380,7 +382,7 @@ void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDShader.hlsl"
 		, "BasicVS"
 		, "BasicPS"
-		, ""
+		, "PmdGS"
 		, ""
 		, ""
 		, true);
@@ -393,7 +395,7 @@ void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	mSubShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDexistTexShader.hlsl"
 		, "BasicVS"
 		, "ExitTexPS"
-		, ""
+		, "PmdGS"
 		, ""
 		, ""
 		, true);

@@ -8,7 +8,7 @@ BillboardRootSignature::BillboardRootSignature(const Microsoft::WRL::ComPtr<ID3D
 		ShaderCompiler::Instance().GetShaderDirPath() + "Billboard.hlsl",
 		"BillboardVS",
 		"BillboardPS",
-		"",
+		"BillboardGS",
 		"",
 		"",
 		true

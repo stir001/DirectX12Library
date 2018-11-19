@@ -10,7 +10,7 @@
 #include "Buffer/VertexBufferObject.h"
 #include "Buffer/IndexBufferObject.h"
 #include "Buffer/DepthBufferObject.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Camera/Dx12Camera.h"
 #include "Texture/TextureObject.h"

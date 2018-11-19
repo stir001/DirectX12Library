@@ -9,7 +9,7 @@
 #include "Master/Dx12Ctrl.h"
 #include "Util/XMFloatOperators.h"
 #include "Light/DirectionalLight.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "d3dx12.h"
 #include "FbxsdkHaveStruct.h"
 #include "PipelineState/FbxPipelineState.h"
@@ -32,7 +32,7 @@ FbxLoader::FbxLoader():mModelConverter(std::make_shared<FbxModelDataConverter>()
 	DX12CTRL_INSTANCE
 	CreateRootsignature(d12.GetDev());
 	CreatePipelineState(d12.GetDev());
-	mCmdList = RenderingPathManager::Instance().GetRenderingPathCommandList(0);
+	mCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
 }
 
 void FbxLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)

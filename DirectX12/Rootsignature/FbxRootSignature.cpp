@@ -5,7 +5,7 @@
 const std::string FBX_SHADER_PATH = ShaderCompiler::Instance().GetShaderDirPath() + "FbxShader.hlsl";
 const std::string FBX_VERTEXSHADER_NAME = "FbxVS";
 const std::string FBX_PIXCELSHADER_NAME = "FbxPS";
-const std::string FBX_GEOMETRYSHADER_NAME = "";
+const std::string FBX_GEOMETRYSHADER_NAME = "FbxGS";
 const std::string FBX_HULLSHADER_NAME = "";
 const std::string FBX_DOMAINSHADER_NAME = "";
 

@@ -15,7 +15,7 @@
 #include "PipelineState/BillboardPipelineState.h"
 #include "Shader/ShaderCompiler.h"
 #include "Texture/TextureLoader.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "DrawObject/Image/Image3DController.h"
 
 #include "d3dx12.h"
@@ -27,7 +27,9 @@ ImageLoader::ImageLoader()
 	DX12CTRL_INSTANCE;
 	CreateRootsignature(d12.GetDev());
 	CreatePipelineState(d12.GetDev());
-	mCmdList = RenderingPathManager::Instance().GetRenderingPathCommandList(0);
+	mCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::UI));
+	mBackCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::BackGround));
+	mModelCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
 }
 
 ImageLoader::~ImageLoader()
@@ -45,14 +47,14 @@ std::shared_ptr<ImageController> ImageLoader::LoadImageData(const std::string& p
 	auto itr = mImages.find(path);
 	if (itr != mImages.end())
 	{
-		imgCtrl = std::make_shared<ImageController>(itr->second, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
+		imgCtrl = std::make_shared<ImageController>(itr->second, Dx12Ctrl::Instance().GetDev(), mCmdList, mBackCmdList, mPipelinestate, mRootsignature);
 		return imgCtrl;
 	}
 	
 	std::shared_ptr<TextureObject> tObj = TextureLoader::Instance().LoadTexture(path);
 	std::shared_ptr<ImageObject> imgObj = ImageObject::Create(tObj->GetWidth(), tObj->GetHeight(), tObj);
 	mImages[path] = imgObj;
-	imgCtrl = std::make_shared<ImageController>(imgObj, Dx12Ctrl::Instance().GetDev(), mCmdList,mPipelinestate,mRootsignature);
+	imgCtrl = std::make_shared<ImageController>(imgObj, Dx12Ctrl::Instance().GetDev(), mCmdList, mBackCmdList, mPipelinestate,mRootsignature);
 
 	return imgCtrl;
 }
@@ -63,7 +65,14 @@ std::shared_ptr<Image3DController> ImageLoader::LoadImage3D(const std::string& p
 	auto itr = mImages.find(path);
 	if (itr != mImages.end())
 	{
-		imgCtrl = std::make_shared<Image3DController>(itr->second, Dx12Ctrl::Instance().GetDev(), mCmdList, m3DPipelinestate, m3DRootsignature);
+		if(isBillboard)
+		{ 
+			imgCtrl = std::make_shared<Image3DController>(itr->second, Dx12Ctrl::Instance().GetDev(), mModelCmdList, mBillboardPipelineState, mBillboardRootsignature);
+		}
+		else
+		{
+			imgCtrl = std::make_shared<Image3DController>(itr->second, Dx12Ctrl::Instance().GetDev(), mModelCmdList, m3DPipelinestate, m3DRootsignature);
+		}
 		return imgCtrl;
 	}
 
@@ -72,11 +81,11 @@ std::shared_ptr<Image3DController> ImageLoader::LoadImage3D(const std::string& p
 	mImages[path] = imgObj;
 	if(isBillboard)
 	{ 
-		imgCtrl = std::make_shared<Image3DController>(imgObj, Dx12Ctrl::Instance().GetDev(), mCmdList, mBillboardPipelineState, mBillboardRootsignature );
+		imgCtrl = std::make_shared<Image3DController>(imgObj, Dx12Ctrl::Instance().GetDev(), mModelCmdList, mBillboardPipelineState, mBillboardRootsignature );
 	}
 	else
 	{
-		imgCtrl = std::make_shared<Image3DController>(imgObj, Dx12Ctrl::Instance().GetDev(), mCmdList, m3DPipelinestate, m3DRootsignature);
+		imgCtrl = std::make_shared<Image3DController>(imgObj, Dx12Ctrl::Instance().GetDev(), mModelCmdList, m3DPipelinestate, m3DRootsignature);
 	}
 	return imgCtrl;
 }

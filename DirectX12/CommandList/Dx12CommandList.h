@@ -30,7 +30,9 @@ public:
 	*	@param	dev		ID3D12Deviceの参照
 	*	@param	type	コマンドリストのタイプ
 	*/
-	Dx12CommandList(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev , D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
+	Dx12CommandList(const std::string& name 
+		, const Microsoft::WRL::ComPtr<ID3D12Device>& dev 
+		, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
 	virtual ~Dx12CommandList();
 	
 	/**

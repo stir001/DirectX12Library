@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Primitive2DManager.h"
 #include "Primitive2DLine.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "Master/Dx12Ctrl.h"
 #include "Rootsignature/RootSignatureObject.h"
 #include "Shader/ShaderCompiler.h"
@@ -12,7 +12,7 @@ Primitive2DManager* Primitive2DManager::mInstance = nullptr;
 
 Primitive2DManager::Primitive2DManager()
 {
-	mCmdList = RenderingPathManager::Instance().GetRenderingPathCommandList(0);
+	mCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(0);
 	CreateRootsignature(Dx12Ctrl::Instance().GetDev());
 	CreatePipelineState(Dx12Ctrl::Instance().GetDev());
 }

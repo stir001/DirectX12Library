@@ -93,6 +93,16 @@ private:
 	std::map<std::string, std::shared_ptr<ImageObject>> mImages;
 
 	/**
+	*	背景レイヤー用のコマンドリスト
+	*/
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mBackCmdList;
+
+	/**
+	*	3D描画レイヤー用のコマンドリスト
+	*/
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mModelCmdList;
+	
+	/**
 	*	2D画像描画に使用するrootsiganture
 	*/
 	std::shared_ptr<RootSignatureObject> mRootsignature;

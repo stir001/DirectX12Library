@@ -7,7 +7,7 @@ float4x4 c_view;	\
 float4x4 c_projection;	\
 }	
 
-struct CameraStructure
+struct CameraElement
 {
     float4 eye;
     float4 target;
@@ -18,7 +18,7 @@ struct CameraStructure
 
 #define MULTI_CAMERA(bnum) cbuffer mulcamera : register(bnum) \
 {	\
-	CameraStructure	cameras[4];	\
+	CameraElement	cameras[4];	\
 	uint cameraNum;	\
 }	
 

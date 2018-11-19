@@ -9,11 +9,11 @@ struct ID3D12Resource;
 
 class Dx12CommandList;
 
-class RenderingPathObject
+class RenderingPassObject
 {
 public:
-	RenderingPathObject(const std::string& pathName);
-	virtual ~RenderingPathObject();
+	RenderingPassObject(const std::string& pathName);
+	virtual ~RenderingPassObject();
 
 	/**
 	*	各フレームの一番最初に実行される
@@ -22,6 +22,7 @@ public:
 
 	/**
 	*	このパスのExcutePathが呼ばれる直前に実行される
+	*	基本的にここでコマンドリストはcloseを呼ぶ
 	*/
 	virtual void PreExcuteUpdate() = 0;
 
@@ -55,10 +56,10 @@ public:
 	*/
 	virtual bool IsActive() const;
 
-	const std::string& GetPathName() const;
+	const std::string& GetPassName() const;
 protected:
 	std::shared_ptr<Dx12CommandList> mCmdList;
-	std::string mPathName;
+	std::string mPassName;
 private:
 	bool mIsActive;
 };

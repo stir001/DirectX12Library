@@ -6,14 +6,17 @@
 #include "Camera/Dx12Camera.h"
 #include "Camera/CameraHolder.h"
 #include "Util/CharToWChar.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
+#include "RenderingPass/ModelPass.h"
+#include "RenderingPass/BackGroundPass.h"
+#include "RenderingPass/UIPass.h"
 #include "CommandList/Dx12CommandList.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "DrawObject/Image/Loader/ImageLoader.h"
 #include "Shader/ShaderCompiler.h"
 #include "DrawObject/Primitive2D/Primitive2DManager.h"
 #include "DrawObject/Fbx/FbxLoader.h"
-#include "RenderingPath/FirstPathObject.h"
+#include "DrawObject/Primitive3D/PrimitiveCreator.h"
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -192,15 +195,23 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 
 void Dx12Ctrl::InitFirstPath()
 {
-	RenderingPathManager::Instance().Init(mDev, mFactory, mhWnd);
+	RenderingPassManager::Instance().Init(mDev, mFactory, mhWnd);
 
-	std::shared_ptr<RenderingPathObject> fpath = std::make_shared<FirstPathObject>(
-		mDev, mDepthDescHeap, mWndWidth, mWndHeight, mCameraHolder);
+	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(mDev, mWndWidth, mWndHeight);
+
+	std::shared_ptr<ModelPass> modelpass = std::make_shared<ModelPass>(
+		mDev, mDepthDescHeap, backpass->GetRtvDescHeapObject() ,mWndWidth, mWndHeight, mCameraHolder);
+
+	std::shared_ptr<UIPass> uipass = std::make_shared<UIPass>(mDev, backpass->GetRtvDescHeapObject(), backpass->GetRendertargetObject(), mWndWidth, mWndHeight);
 
 	unsigned int renderingPathIndex;
-	RenderingPathManager::Instance().AddRenderPath(fpath, renderingPathIndex);
+	RenderingPassManager::Instance().AddRenderingPass(backpass, renderingPathIndex);
+	RenderingPassManager::Instance().AddRenderingPass(modelpass, renderingPathIndex);
+	RenderingPassManager::Instance().AddRenderingPass(uipass, renderingPathIndex);
 
-	fpath->FirstUpdate();
+	backpass->FirstUpdate();
+	modelpass->FirstUpdate();
+	uipass->FirstUpdate();
 }
 
 void Dx12Ctrl::InitWindowCreate()
@@ -323,7 +334,7 @@ void Dx12Ctrl::Release()
 	mShaders.clear();
 	mDepthDescHeap.reset();
 	TextureLoader::Destroy();
-	RenderingPathManager::Destroy();
+	RenderingPassManager::Destroy();
 	FbxLoader::Destroy();
 	ImageLoader::Destroy();
 	ShaderCompiler::Destroy();
@@ -336,6 +347,8 @@ void Dx12Ctrl::Release()
 	mCmdQueue.Reset();
 	mFactory.Reset();
 	mFence.Reset();
+	PrimitiveCreator::Destroy();
+
 	ReportLiveObject();
 }
 

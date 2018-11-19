@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "DrawObjectLoader.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include <wpframework.h>
 #include <algorithm>
 
 DrawObjectLoader::DrawObjectLoader()
-	:mPipelinestate(nullptr), mRootsignature(nullptr), 
-	mCmdList(RenderingPathManager::Instance().GetRenderingPathCommandList(0))
+	:mPipelinestate(nullptr), mRootsignature(nullptr)
 {
 	setlocale(LC_ALL, "japanese");
 }

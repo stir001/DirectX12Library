@@ -19,7 +19,9 @@ SamplerState smp : register(s0);
 
 #include "CameraLightcBuffer.hlsl"
 
-CAMERA_CBUFFER(b0)
+#include "MatrixOperation.hlsli"
+
+MULTI_CAMERA(b0)
 
 LIGHT_CBUFFER(b1)
 
@@ -28,7 +30,7 @@ cbuffer affinematrix: register(b2)
    float4x4 modelMatrix;
 }
 
-struct Input
+struct VSInput
 {
     float4 pos : POSITION;
     float4 normal : NORMAL;
@@ -36,9 +38,8 @@ struct Input
     //float4x4 vmatrix : VERTEXMATRIX;
 };
 
-struct Output
+struct VSOutput
 {
-    float4 svpos : SV_POSITION;
     float4 pos : POSITION;
     float4 normal : NORMAL;
     float2 uv : TEXCOORD;
@@ -51,21 +52,27 @@ struct PSOutput
     float4 albedo   : Sv_Target2;
 };
 
-[RootSignature(FBXRS SMAPLWEDEFINE)]
-Output FbxVS(Input input)
+struct GSOutput
 {
-    Output o;
-    o.pos = mul(c_world, mul(modelMatrix, input.pos));
-    o.svpos = mul(c_projection, mul(c_view,  o.pos));
-    o.uv = input.uv;
+    float4 svpos : SV_POSITION;
+    float4 pos : POSITION;
+    float4 normal : NORMAL;
+    float2 uv : TEXCOORD;
+    uint viewIndex : SV_ViewportArrayIndex;
+};
 
-    matrix m = mul(c_world, modelMatrix);
-    o.normal = normalize(mul(m, float4(input.normal.xyz, 0)));
+[RootSignature(FBXRS SMAPLWEDEFINE)]
+VSOutput FbxVS(VSInput input)
+{
+    VSOutput o;
+    o.pos = mul(modelMatrix, input.pos);
+    o.uv = input.uv;
+    o.normal = normalize(mul(modelMatrix, float4(input.normal.xyz, 0)));
 
     return o;
 }
 
-float4 FbxPS(Output output) : SV_Target
+float4 FbxPS(GSOutput output) : SV_Target
 {
     float bright = dot(output.normal.xyz, -dir.xyz);
     float4 diffuse = (diffuseMap.Sample(smp, output.uv)) * diffuseFactorMap.Sample(smp, output.uv);
@@ -76,7 +83,7 @@ float4 FbxPS(Output output) : SV_Target
 		*	pow(
 				max(0.0f, 
 					dot(normalize
-						(reflect(-dir, output.normal)), -normalize((output.pos - eye))
+						(reflect(-dir, output.normal)), -normalize((output.pos - cameras[output.viewIndex].eye))
 						)
 					), shininessMap.Sample(smp, output.uv)
 				) 
@@ -92,14 +99,44 @@ float2 PackingNormal(float2 viewNorm)
     return float2(0.5 * (viewNorm.xy + 1.0f));
 }
 
-PSOutput FbxGeometryPS(Output input)
+PSOutput FbxGeometryPS(GSOutput input)
 {
     PSOutput output;
-    float2 viewNorm = mul(c_view,input.normal).xy;
+    float2 viewNorm = mul(cameras[input.viewIndex].c_view,input.normal).xy;
     viewNorm = PackingNormal(viewNorm);//法線パッキング
     output.normal = viewNorm;
     output.albedo = (diffuseMap.Sample(smp, input.uv.xy));
     output.specular = specularMap.Sample(smp, input.uv.xy);
 
     return output;
+}
+
+#define VERTEX_COUNT 12U
+
+[maxvertexcount(VERTEX_COUNT)]
+void FbxGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
+{
+    uint i = 0;
+    uint j = 0;
+
+    float4x4 pvw = identity();
+    GSOutput gsVert;
+    VSOutput vsout;
+	[unroll(4)]
+    for (i = 0; i < cameraNum; ++i)
+    {
+        pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
+		[unroll(3)]
+        for (j = 0; j < 3; ++j)
+        {
+            vsout = vertices[j];
+            gsVert.svpos = mul(pvw, vsout.pos);
+            gsVert.pos = vsout.pos;
+            gsVert.normal = mul(cameras[i].c_world, vsout.normal);
+            gsVert.uv = vsout.uv;
+            gsVert.viewIndex = i;
+            gsOut.Append(gsVert);
+        }
+        gsOut.RestartStrip();
+    }
 }

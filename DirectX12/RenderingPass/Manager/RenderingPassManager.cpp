@@ -1,31 +1,31 @@
 #include "stdafx.h"
-#include "RenderingPathManager.h"
+#include "RenderingPassManager.h"
 #include "Util/CharToWChar.h"
 #include "SwapChain/SwapChainObject.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
-#include "RenderingPath/Base/RenderingPathObject.h"
+#include "RenderingPass/Base/RenderingPassObject.h"
 
 #include "d3dx12.h"
 #include <algorithm>
 #include <assert.h>
 
-RenderingPathManager* RenderingPathManager::mInstance = nullptr;
+RenderingPassManager* RenderingPassManager::mInstance = nullptr;
 
-RenderingPathManager::RenderingPathManager()
+RenderingPassManager::RenderingPassManager()
 {
 }
 
 
-RenderingPathManager::~RenderingPathManager()
+RenderingPassManager::~RenderingPassManager()
 {
-	mRenderingPathObjects.clear();
+	mRenderingPassObjects.clear();
 	mSwapChain.reset();
 	mFence.Reset();
 }
 
-void RenderingPathManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, HWND hwnd)
+void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, HWND hwnd)
 {
-	mRenderingPathObjects.clear();
+	mRenderingPassObjects.clear();
 	mCmdQueue.Reset();
 
 	mDevice = dev;
@@ -71,9 +71,9 @@ void RenderingPathManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	//mRenderingPathObjects[index].isActive = true;
 }
 
-void RenderingPathManager::Render()
+void RenderingPassManager::Render()
 {
-	for (auto& pathObj : mRenderingPathObjects)
+	for (auto& pathObj : mRenderingPassObjects)
 	{
 		if (!pathObj->IsActive())
 		{
@@ -105,7 +105,7 @@ void RenderingPathManager::Render()
 	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mSwapChain->GetCurrentRenderTarget().Get(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	for (auto& pathObj : mRenderingPathObjects)
+	for (auto& pathObj : mRenderingPassObjects)
 	{
 		if (!pathObj->IsActive())
 		{
@@ -115,9 +115,9 @@ void RenderingPathManager::Render()
 	}
 }
 
-void RenderingPathManager::CopyLastPathRenderTarget()
+void RenderingPassManager::CopyLastPathRenderTarget()
 {
-	auto& lastPath = mRenderingPathObjects.back();
+	auto& lastPath = mRenderingPassObjects.back();
 	D3D12_RESOURCE_STATES lastPathBeforeState = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	D3D12_RESOURCE_STATES lastPathAfterState = D3D12_RESOURCE_STATE_COPY_SOURCE;
 	Microsoft::WRL::ComPtr<ID3D12Resource> lastPathResrouce = lastPath->GetRenderTarget();
@@ -148,65 +148,65 @@ void RenderingPathManager::CopyLastPathRenderTarget()
 
 }
 
-unsigned int RenderingPathManager::GetNumCuurentPath() const
+unsigned int RenderingPassManager::GetNumCuurentPass() const
 {
-	return static_cast<unsigned int>(mRenderingPathObjects.size());
+	return static_cast<unsigned int>(mRenderingPassObjects.size());
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPathManager::GetRenderingPathCommandList(unsigned int pathIndex) const
+Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPassManager::GetRenderingPassCommandList(unsigned int pathIndex) const
 {
-	if (pathIndex < mRenderingPathObjects.size())
+	if (pathIndex < mRenderingPassObjects.size())
 	{
-		return mRenderingPathObjects[pathIndex]->GetCommandList();
+		return mRenderingPassObjects[pathIndex]->GetCommandList();
 	}
 	return nullptr;
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPathManager::GetRenderingPathCommandList(const std::string& pathName) const
+Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPassManager::GetRenderingPassCommandList(const std::string& pathName) const
 {
-	unsigned int index = GetRenderingPathIndex(pathName);
+	unsigned int index = GetRenderingPassIndex(pathName);
 	if (index != UINT_MAX)
 	{
-		return mRenderingPathObjects[index]->GetCommandList();
+		return mRenderingPassObjects[index]->GetCommandList();
 	}
 
 	return nullptr;
 }
 
-bool RenderingPathManager::AddRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int& out_PathIndex)
+bool RenderingPassManager::AddRenderingPass(const std::shared_ptr<RenderingPassObject>& pathObj, unsigned int& out_PathIndex)
 {
-	auto& itr = std::find_if(mRenderingPathObjects.begin(), mRenderingPathObjects.end(), [&pathObj](const std::shared_ptr<RenderingPathObject>& value) {return value->GetPathName() == pathObj->GetPathName(); });
-	if (itr != mRenderingPathObjects.end())
+	auto& itr = std::find_if(mRenderingPassObjects.begin(), mRenderingPassObjects.end(), [&pathObj](const std::shared_ptr<RenderingPassObject>& value) {return value->GetPassName() == pathObj->GetPassName(); });
+	if (itr != mRenderingPassObjects.end())
 	{
 		out_PathIndex = UINT_MAX;
 		return false;
 	}
-	out_PathIndex = AddRenderingPathObject(pathObj);
+	out_PathIndex = AddRenderingPassObject(pathObj);
 	return true;
 }
 
-bool RenderingPathManager::InsertRenderPath(std::shared_ptr<RenderingPathObject>& pathObj, unsigned int insertPathIndex)
+bool RenderingPassManager::InsertRenderingPass(std::shared_ptr<RenderingPassObject>& pathObj, unsigned int insertPathIndex)
 {
-	if (insertPathIndex <= mRenderingPathObjects.size())
+	if (insertPathIndex <= mRenderingPassObjects.size())
 	{
-		auto itr = mRenderingPathObjects.begin();
-		mRenderingPathObjects.insert((itr + insertPathIndex), pathObj);
+		auto itr = mRenderingPassObjects.begin();
+		mRenderingPassObjects.insert((itr + insertPathIndex), pathObj);
 		return true;
 	}
 	return false;
 }
 
-unsigned int RenderingPathManager::AddRenderingPathObject(std::shared_ptr<RenderingPathObject>& pathObj)
+unsigned int RenderingPassManager::AddRenderingPassObject(const std::shared_ptr<RenderingPassObject>& pathObj)
 {
-	mRenderingPathObjects.push_back(pathObj);
-	return static_cast<unsigned int>(mRenderingPathObjects.size() - 1);
+	mRenderingPassObjects.push_back(pathObj);
+	return static_cast<unsigned int>(mRenderingPassObjects.size() - 1);
 }
 
-unsigned int RenderingPathManager::GetRenderingPathIndex(const std::string& pathName) const
+unsigned int RenderingPassManager::GetRenderingPassIndex(const std::string& pathName) const
 {
-	for (unsigned int i = 0; i < mRenderingPathObjects.size(); ++i)
+	for (unsigned int i = 0; i < mRenderingPassObjects.size(); ++i)
 	{
-		if (mRenderingPathObjects[i]->GetPathName() == pathName)
+		if (mRenderingPassObjects[i]->GetPassName() == pathName)
 		{
 			return i;
 		}
@@ -214,34 +214,34 @@ unsigned int RenderingPathManager::GetRenderingPathIndex(const std::string& path
 	return UINT_MAX;
 }
 
-bool RenderingPathManager::DeleteRenderingPath(unsigned int pathIndex)
+bool RenderingPassManager::DeleteRenderingPass(unsigned int pathIndex)
 {
-	if (mRenderingPathObjects.size() > pathIndex)
+	if (mRenderingPassObjects.size() > pathIndex)
 	{
-		mRenderingPathObjects.erase(mRenderingPathObjects.begin() + pathIndex);
+		mRenderingPassObjects.erase(mRenderingPassObjects.begin() + pathIndex);
 		return true;
 	}
 
 	return false;
 }
 
-bool RenderingPathManager::DeleteRenderingPath(const std::string & pathName)
+bool RenderingPassManager::DeleteRenderingPass(const std::string & pathName)
 {
-	unsigned int index = GetRenderingPathIndex(pathName);
+	unsigned int index = GetRenderingPassIndex(pathName);
 	if (index != UINT_MAX)
 	{
-		mRenderingPathObjects.erase(mRenderingPathObjects.begin() + index);
+		mRenderingPassObjects.erase(mRenderingPassObjects.begin() + index);
 		return true;
 	}
 	return false;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE RenderingPathManager::GetCurrentRTVHeapHandle() const
+D3D12_CPU_DESCRIPTOR_HANDLE RenderingPassManager::GetCurrentRTVHeapHandle() const
 {
 	return mSwapChain->GetCurrentRTVHeap();
 }
 
-void RenderingPathManager::WaitCmdQueue()
+void RenderingPassManager::WaitCmdQueue()
 {
 	mCmdQueue->Signal(mFence.Get(), ++mFenceValue);
 	UINT64 value = mFence->GetCompletedValue();
@@ -257,21 +257,21 @@ void RenderingPathManager::WaitCmdQueue()
 	}
 }
 
-std::shared_ptr<Dx12DescriptorHeapObject> RenderingPathManager::GetCurrentRTVDescHeap() const
+std::shared_ptr<Dx12DescriptorHeapObject> RenderingPassManager::GetCurrentRTVDescHeap() const
 {
 	return mSwapChain->GetDescriptorHeap();
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> RenderingPathManager::GetCurrentRenderTarget() const
+Microsoft::WRL::ComPtr<ID3D12Resource> RenderingPassManager::GetCurrentRenderTarget() const
 {
 	return mSwapChain->GetCurrentRenderTarget();
 }
 
-void RenderingPathManager::SetIsActiveValue(unsigned int pathIndex, bool isActive)
+void RenderingPassManager::SetIsActiveValue(unsigned int pathIndex, bool isActive)
 {
-	if (mRenderingPathObjects.size() >= pathIndex)
+	if (mRenderingPassObjects.size() >= pathIndex)
 	{
-		auto& pathObj = mRenderingPathObjects[pathIndex];
+		auto& pathObj = mRenderingPassObjects[pathIndex];
 		if (pathObj->IsActive() == isActive)
 		{
 			return;
@@ -288,12 +288,12 @@ void RenderingPathManager::SetIsActiveValue(unsigned int pathIndex, bool isActiv
 	}
 }
 
-void RenderingPathManager::SetIsActiveValue(std::string pathName, bool isActive)
+void RenderingPassManager::SetIsActiveValue(std::string pathName, bool isActive)
 {
-	unsigned int index = GetRenderingPathIndex(pathName);
+	unsigned int index = GetRenderingPassIndex(pathName);
 	if (index != UINT_MAX)
 	{
-		auto& pathObj = mRenderingPathObjects[index];
+		auto& pathObj = mRenderingPassObjects[index];
 		if (pathObj->IsActive() == isActive)
 		{
 			return;
@@ -310,8 +310,8 @@ void RenderingPathManager::SetIsActiveValue(std::string pathName, bool isActive)
 	}
 }
 
-void RenderingPathManager::AllPathClear()
+void RenderingPassManager::AllPathClear()
 {
-	mRenderingPathObjects.clear();
-	mRenderingPathObjects.shrink_to_fit();
+	mRenderingPassObjects.clear();
+	mRenderingPassObjects.shrink_to_fit();
 }

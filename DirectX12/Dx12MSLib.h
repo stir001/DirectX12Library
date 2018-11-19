@@ -84,9 +84,8 @@
 /**
 *	RenderringPathフォルダインクルード
 */
-#include "RenderingPath/FirstPathObject.h"
-#include "RenderingPath/Base/RenderingPathObject.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Base/RenderingPassObject.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 
 /**
 *	Rootsignatureフォルダインクルード

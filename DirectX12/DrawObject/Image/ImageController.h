@@ -35,7 +35,8 @@ public:
 	*/
 	ImageController(std::shared_ptr<ImageObject> img,
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> uicmdList,
+		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> backcmdList,
 		std::shared_ptr<PipelineStateObject>& pipelinestate,
 		std::shared_ptr<RootSignatureObject>& rootsignature);
 
@@ -144,9 +145,14 @@ public:
 	void TurnV();
 
 	/**
-	*	画像を描画コマンドを発行する
+	*	画像をUIレイヤーに描画する
 	*/
 	void Draw();
+
+	/**
+	*	画像をBackGroundレイヤーに描画する
+	*/
+	void BackDraw();
 
 	/**
 	*	U方向に反転しているかどうかを得る
@@ -276,6 +282,11 @@ private:
 	*	この画像用のDescriptorHeap
 	*/
 	std::shared_ptr<Dx12DescriptorHeapObject> mDescHeap;
+
+	/**
+	*	背景描画用のコマンドリスト
+	*/
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mBackCmdList;
 
 	/**
 	*	バンドルの更新情報をもつステート変数

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Dx12Ctrl.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "Animation/AnimationPlayerManager.h"
 
 unsigned int Roundup2Multiplier(unsigned int size)
@@ -18,7 +18,7 @@ unsigned int Roundup2Multiplier(unsigned int size)
 void CallEveryFrame()
 {
 	AnimationPlayerManager::Instance().WaitSafeFree();
-	RenderingPathManager::Instance().Render();
+	RenderingPassManager::Instance().Render();
 	AnimationPlayerManager::Instance().UpdateAnimations();
 }
 
@@ -42,8 +42,8 @@ bool ProcessMessage()
 }
 
 void Dx12CtrlInit(HINSTANCE hInst,
-	std::string wndName = "DirectX12",
-	unsigned int wndWidth = 800, unsigned int wndHeight = 600)
+	std::string wndName,
+	unsigned int wndWidth, unsigned int wndHeight)
 {
 	Dx12Ctrl::Instance().SetWindowSize(wndWidth, wndHeight);
 	Dx12Ctrl::Instance().SetWindowName(wndName);

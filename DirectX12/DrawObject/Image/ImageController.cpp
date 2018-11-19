@@ -8,7 +8,7 @@
 #include "Util/Rect.h"
 #include "PipelineState/PipelineStateObject.h"
 #include "Rootsignature/RootSignatureObject.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "CommandList/Dx12CommandList.h"
 
@@ -24,15 +24,17 @@ const unsigned int DEFAULT_RESOURCE_NUM = 1;
 
 ImageController::ImageController(std::shared_ptr<ImageObject> img,
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList,
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> uicmdList,
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> backcmdList,
 	std::shared_ptr<PipelineStateObject>& pipelinestate,
 	std::shared_ptr<RootSignatureObject>& rootsignature)
-	:DrawObjectController(img->GetTextureName() + "Bundle", dev, cmdList),
-	mImgObj(img)
+	:DrawObjectController(img->GetTextureName() + "Bundle", dev, uicmdList)
+	, mBackCmdList(backcmdList)
+	, mImgObj(img)
 	, mVertex{ { { 0.f, img->GetImageSize().y, 0.f },{ 0.f, 0.f }, img->GetGamma()}/* v1 */
-	,{ { img->GetImageSize().x,img->GetImageSize().y, 0.f },{ 1.f, 0.f }, img->GetGamma() }/* v2 */
-	,{ { 0.0f,0.0f , 0.0f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
-	,{ { img->GetImageSize().x, 0.0f, 0.f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
+			,{ { img->GetImageSize().x,img->GetImageSize().y, 0.f },{ 1.f, 0.f }, img->GetGamma() }/* v2 */
+			,{ { 0.0f,0.0f , 0.0f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
+			,{ { img->GetImageSize().x, 0.0f, 0.f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
 	, mScaleX(1.0f), mScaleY(1.0f), mRota(0.0f), mPivot{ 0.f,0.f,0.f }, mCenterOffset(0,0,0)
 	, mRect(std::make_shared<Rect>(mPivot, img->GetImageSize().x, img->GetImageSize().y))
 	, mTurnSign(1,1), mBundleUpdate(&ImageController::UpdateBundle)
@@ -42,7 +44,7 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 
 	std::string name = mImgObj->GetTextureName();
 	name += "2DImageVertexBuffer";
-	mVertexBuffer.reset(new VertexBufferObject(name, mDevice, sizeof(ImageVertex), 4));
+	mVertexBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(ImageVertex)), 4U);
 
 	std::vector<std::shared_ptr<Dx12BufferObject>> resource;
 	resource.reserve(DEFAULT_RESOURCE_NUM);
@@ -50,7 +52,7 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 
 	name = mImgObj->GetTextureName();
 	name += "ImageDescriptorHeap";
-	mDescHeap.reset(new Dx12DescriptorHeapObject(name, mDevice, resource, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, mDevice, resource, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	DirectX::XMFLOAT2 size = mImgObj->GetImageSize();
 	DirectX::XMFLOAT3 offset = { size.x / 2.0f,size.y / 2.0f, 0.0f };
@@ -197,13 +199,16 @@ void ImageController::TurnV()
 
 void ImageController::Draw()
 {
-	//DX12CTRL_INSTANCE;
-	/*auto obj = RenderingPathManager::Instance().GetRenderTargetViews(0);
-	mCmdList->OMSetRenderTargets(obj.cpuhandles.size(), &obj.rtvDescHeap->GetDescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), false, nullptr);*/
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mCmdList);
 	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+}
 
+void ImageController::BackDraw()
+{
+	(this->*mBundleUpdate)();
+	mDescHeap->SetDescriptorHeap(mBackCmdList);
+	mBackCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
 }
 
 bool ImageController::IsTurnU() const
@@ -223,7 +228,7 @@ DirectX::XMFLOAT2 ImageController::GetImageSize()
 
 std::shared_ptr<ImageController> ImageController::GetNewCopy()
 {
-	std::shared_ptr<ImageController> rtn(new ImageController(mImgObj, mDevice, mCmdList, mPipelinestate, mRootsignature));
+	std::shared_ptr<ImageController> rtn(new ImageController(mImgObj, mDevice, mCmdList, mBackCmdList, mPipelinestate, mRootsignature));
 	return rtn;
 }
 
@@ -325,7 +330,6 @@ void ImageController::UpdateBuffer()
 	{
 		mVertex[i].pos.x = RotationXY(mNormvec[i], mRota).x * mLength[i] * mScaleX + mPivot.x;
 		mVertex[i].pos.y = RotationXY(mNormvec[i], mRota).y * mLength[i] * mScaleY + mPivot.y;
-		//mVertex[i].pos.z = RotationXY(mNormvec[i], mRota).z * mLength[i] * mScaleY + mPivot.z;
 		mVertex[i].pos.x *= 2.0f / size.x;
 		mVertex[i].pos.y *= 2.0f / size.y;
 	}

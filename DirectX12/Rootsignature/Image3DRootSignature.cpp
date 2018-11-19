@@ -8,7 +8,7 @@ Image3DRootSignature::Image3DRootSignature(Microsoft::WRL::ComPtr<ID3D12Device>&
 		ShaderCompiler::Instance().GetShaderDirPath() + "Image3DShader.hlsl",
 		"Image3DVS",
 		"Image3DPS",
-		"",
+		"Image3DGS",
 		"",
 		"",
 		true

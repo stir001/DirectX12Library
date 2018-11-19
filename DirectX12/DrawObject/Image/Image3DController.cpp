@@ -7,7 +7,7 @@
 #include "Buffer/ShaderResourceObject.h"
 #include "Util/Rect.h"
 #include "Util/XMFloatOperators.h"
-#include "RenderingPath/Manager/RenderingPathManager.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
 #include "PipelineState/PipelineStateObject.h"
 #include "Rootsignature/RootSignatureObject.h"
 #include "Master/Dx12Ctrl.h"
