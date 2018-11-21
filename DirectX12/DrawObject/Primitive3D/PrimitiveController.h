@@ -52,7 +52,18 @@ public:
 	*/
 	void SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion);
 
+	/**
+	*	DescriptorHeapを更新する
+	*	基本的には呼ばなくていい
+	*/
 	void UpdateDescriptorHeap();
+
+	/**
+	*	@brief プリミティブの色を設定する
+	*	@param color 0~1の範囲のrbgの色情報
+	*/
+	void SetColor(const DirectX::XMFLOAT4& color);
+
 protected:
 	void UpdateInstanceVertexBuffer();
 	void NonUpdate();
@@ -69,6 +80,7 @@ protected:
 	{
 		DirectX::XMFLOAT4X4 aMatrix;
 		DirectX::XMFLOAT4 offset;
+		DirectX::XMFLOAT4 color;
 	};
 	std::shared_ptr<PrimitiveObject> mPrimitive;
 	std::shared_ptr<VertexBufferObject> mVertexBuffer;

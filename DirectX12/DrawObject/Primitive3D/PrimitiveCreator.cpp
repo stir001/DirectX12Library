@@ -83,6 +83,10 @@ void PrimitiveCreator::SetTexture(std::shared_ptr<PrimitiveController>& ctrl, co
 	{
 		ctrl->SetTexture(TextureLoader::Instance().LoadTexture(texPath));
 	}
+	else
+	{
+		
+	}
 }
 
 void PrimitiveCreator::SetLightObject(std::shared_ptr<LightObject> inlight)

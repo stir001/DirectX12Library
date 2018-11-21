@@ -34,6 +34,7 @@ PrimitiveController::PrimitiveController(std::shared_ptr<PrimitiveObject> primit
 	InstanceDatas data;
 	DirectX::XMStoreFloat4x4(&data.aMatrix, DirectX::XMMatrixIdentity());
 	data.offset = DirectX::XMFLOAT4(0, 0, 0, 1);
+	data.color = primitive->GetColor();
 	mInstanceDatas.push_back(data);
 	mInstanceVertexBuffer = std::make_shared<VertexBufferObject>(primitive->GetName() + "InstanceVertexBuffer", dev, static_cast<unsigned int>(sizeof(mInstanceDatas[0])), 1U);
 
@@ -147,6 +148,13 @@ void PrimitiveController::AddRotaZ(float deg)
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
+void PrimitiveController::SetColor(const DirectX::XMFLOAT4& color)
+{
+	mPrimitive->SetColor(color);
+	mInstanceDatas[0].color = color;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
 void PrimitiveController::UpdateInstanceVertexBuffer()
 {
 	mInstanceVertexBuffer->WriteBuffer(&mInstanceDatas[0], static_cast<unsigned int>(sizeof(mInstanceDatas[0]) * mInstanceDatas.size()));
@@ -157,7 +165,7 @@ void PrimitiveController::NonUpdate()
 {
 }
 
-void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4 & quaternion)
+void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion)
 {
 }
 

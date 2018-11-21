@@ -20,10 +20,10 @@ struct PriVSInput
 {
     float4 pos : POSITION;
     float4 normal : NORMAL;
-    float4 color : COLOR;
     float2 uv : TEXCOORD;
     matrix aMat : INSTANCEMAT;
     float4 instanceOffset : INSTANCEPOS;
+    float4 color : INSTANCECOLOR;
     uint instanceID : SV_InstanceID;
 };
 

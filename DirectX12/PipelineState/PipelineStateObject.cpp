@@ -33,7 +33,7 @@ void PipelineStateObject::CreatePipelineState(const std::string& name, D3D12_GRA
 {
 	if (mPipelineState != nullptr) return;
 	mName = name + "GraphicsPipelineState";
-	dev->CreateGraphicsPipelineState(&gpsDesc, IID_PPV_ARGS(&mPipelineState));
+	HRESULT rsult = dev->CreateGraphicsPipelineState(&gpsDesc, IID_PPV_ARGS(&mPipelineState));
 	SetName(mName);
 }
 
@@ -41,7 +41,7 @@ void PipelineStateObject::CreatePipelineState(const std::string & name, D3D12_CO
 {
 	if (mPipelineState != nullptr) return;
 	mName = name + "ComputePipelineState";
-	dev->CreateComputePipelineState(&gpsDesc, IID_PPV_ARGS(&mPipelineState));
+	HRESULT rsult = dev->CreateComputePipelineState(&gpsDesc, IID_PPV_ARGS(&mPipelineState));
 	SetName(mName);
 }
 

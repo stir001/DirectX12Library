@@ -2,7 +2,7 @@
 #include "PrimitiveObject.h"
 #include <d3d12.h>
 
-PrimitiveObject::PrimitiveObject(const std::string& name): mName(name)
+PrimitiveObject::PrimitiveObject(const std::string& name): mName(name), mColor(INIT_COLOR)
 {
 }
 
@@ -23,4 +23,14 @@ const std::vector<PrimitiveVertex>& PrimitiveObject::GetVertices() const
 const std::vector<unsigned int>& PrimitiveObject::GetIndices() const
 {
 	return mIndices;
+}
+
+const DirectX::XMFLOAT4 & PrimitiveObject::GetColor() const
+{
+	return mColor;
+}
+
+void PrimitiveObject::SetColor(const DirectX::XMFLOAT4 & color)
+{
+	mColor = color;
 }
