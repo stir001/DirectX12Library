@@ -40,8 +40,6 @@ Dx12BufferObject::~Dx12BufferObject()
 		mBuffer->Unmap(0, nullptr);
 	}
 	mElementBuffer = nullptr;
-
-	mViewDescs.reset();
 }
 
 void Dx12BufferObject::WriteBuffer(const void* pData, unsigned int amountDatasSize)

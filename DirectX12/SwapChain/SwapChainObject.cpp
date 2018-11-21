@@ -67,9 +67,6 @@ SwapChainObject::SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device
 
 SwapChainObject::~SwapChainObject()
 {
-	mSwapchain.Reset();
-	mRtvDescriptorHeap.reset();
-	mRenderTargets.clear();
 }
 
 Microsoft::WRL::ComPtr<IDXGISwapChain3> SwapChainObject::GetSwapChain() const

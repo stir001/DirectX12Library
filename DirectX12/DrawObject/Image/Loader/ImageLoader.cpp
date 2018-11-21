@@ -35,10 +35,6 @@ ImageLoader::ImageLoader()
 ImageLoader::~ImageLoader()
 {
 	mImages.clear();
-	mRootsignature.reset();
-	mPipelinestate.reset();
-	m3DPipelinestate.reset();
-	m3DPipelinestate.reset();
 }
 
 std::shared_ptr<ImageController> ImageLoader::LoadImageData(const std::string& path)
