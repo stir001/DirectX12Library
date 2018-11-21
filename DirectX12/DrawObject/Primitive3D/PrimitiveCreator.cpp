@@ -42,9 +42,8 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreatePlane(DirectX::XMFL
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCube(float length, const std::string& texPath)
 {
-	auto tex = TextureLoader::Instance().LoadTexture(texPath);
 	std::shared_ptr<PrimitiveController> rtn = CreateController(std::make_shared<PrimitiveCube>(length));
-	rtn->SetTexture(tex);
+	SetTexture(rtn, texPath);
 	return rtn;
 }
 
@@ -58,10 +57,9 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCubeNormalMap(float
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateSphere(float radius, unsigned int div, const std::string& texPath)
 {
-	auto tex = TextureLoader::Instance().LoadTexture(texPath);
 	auto sph = std::make_shared<PrimitiveSphere>(radius, div);
 	auto rtn = CreateController(sph);
-	rtn->SetTexture(tex);
+	SetTexture(rtn, texPath);
 	return rtn;
 }
 
@@ -77,6 +75,14 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateController(const st
 	std::shared_ptr<PrimitiveController> rtn = std::make_shared<PrimitiveController>(primitive, Dx12Ctrl::Instance().GetDev(), mCommnadList);
 	SetParamaters(rtn);
 	return rtn;
+}
+
+void PrimitiveCreator::SetTexture(std::shared_ptr<PrimitiveController>& ctrl, const std::string & texPath)
+{
+	if (texPath != "")
+	{
+		ctrl->SetTexture(TextureLoader::Instance().LoadTexture(texPath));
+	}
 }
 
 void PrimitiveCreator::SetLightObject(std::shared_ptr<LightObject> inlight)

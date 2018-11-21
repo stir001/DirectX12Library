@@ -55,6 +55,11 @@ std::shared_ptr<TextureObject> TextureLoader::LoadTexture(const std::string& fil
 
 	if (FAILED(d12.result))
 	{
+		d12.result = LoadDDS(wstrPath, texMetaData, *rtn->mImageData);
+	}
+
+	if (FAILED(d12.result))
+	{
 		#ifdef _DEBUG
 		std::wstring outputstr = L"テクスチャパスが違うか対応していない拡張子なんやで\n FilePath:";
 		outputstr += wstrPath;
@@ -377,7 +382,12 @@ HRESULT TextureLoader::LoadWIC(const std::wstring& path, DirectX::TexMetadata& m
 	return DirectX::LoadFromWICFile(path.data(), 0, &metaData, scratchImage);
 }
 
-HRESULT TextureLoader::LoadTGA(const std::wstring & path, DirectX::TexMetadata & metaData, DirectX::ScratchImage & scratchmage)
+HRESULT TextureLoader::LoadTGA(const std::wstring& path, DirectX::TexMetadata& metaData, DirectX::ScratchImage& scratchmage)
 {
 	return DirectX::LoadFromTGAFile(path.data(), &metaData, scratchmage);
+}
+
+HRESULT TextureLoader::LoadDDS(const std::wstring& path, DirectX::TexMetadata& metaData, DirectX::ScratchImage& scracgImage)
+{
+	return DirectX::LoadFromDDSFile(path.data(), 0, &metaData, scracgImage);
 }

@@ -69,5 +69,6 @@ private:
 	bool IsUseGamma(DXGI_FORMAT fomat);
 	HRESULT LoadWIC(const std::wstring& path, DirectX::TexMetadata& metaData, DirectX::ScratchImage& scracgImage);
 	HRESULT LoadTGA(const std::wstring& path, DirectX::TexMetadata& metaData, DirectX::ScratchImage& scracgImage);
+	HRESULT LoadDDS(const std::wstring& path, DirectX::TexMetadata& metaData, DirectX::ScratchImage& scracgImage);
 };
 

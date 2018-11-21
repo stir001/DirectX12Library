@@ -48,12 +48,14 @@ private:
 	PrimitiveCreator(PrimitiveCreator&&);
 	PrimitiveCreator& operator=(const PrimitiveController&);
 
-	std::shared_ptr<PrimitiveController> CreateController(const std::shared_ptr<PrimitiveObject>& primitive);
 	std::shared_ptr<LightObject> mLight;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCommnadList;
 	std::shared_ptr<RootSignatureObject> mRootsiganture;
 	std::shared_ptr<PipelineStateObject> mPipelineState;
 	std::shared_ptr<RootSignatureObject> mNormalMapRootsignature;
 	std::shared_ptr<PipelineStateObject> mNormalMapPipelineState;
+
+	std::shared_ptr<PrimitiveController> CreateController(const std::shared_ptr<PrimitiveObject>& primitive);
+	void SetTexture(std::shared_ptr<PrimitiveController>& ctrl, const std::string& texPath);
 };
 
