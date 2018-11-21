@@ -10,7 +10,7 @@ class PipelineStateObject;
 class RootSignatureObject;
 class Dx12CommnadList;
 
-const DirectX::XMFLOAT4 INIT_COLOR = { 0.0f,0.5f,0.5f,1.0f };
+const DirectX::XMFLOAT4 INIT_COLOR = { 0.0f,0.0f,0.0f,1.0f };
 
 struct PrimitiveVertex
 {

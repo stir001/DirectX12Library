@@ -226,9 +226,14 @@ DirectX::XMFLOAT2 ImageController::GetImageSize()
 	return mImgObj->GetImageSize();
 }
 
-std::shared_ptr<ImageController> ImageController::GetNewCopy()
+std::shared_ptr<ImageController> ImageController::Duplicate()
 {
-	std::shared_ptr<ImageController> rtn(new ImageController(mImgObj, mDevice, mCmdList, mBackCmdList, mPipelinestate, mRootsignature));
+	std::shared_ptr<ImageController> rtn  = std::make_shared<ImageController>(mImgObj, mDevice, mCmdList, mBackCmdList, mPipelinestate, mRootsignature);
+	rtn->SetCenterOffset(mCenterOffset);
+	rtn->SetPos(mPivot);
+	rtn->SetRect(mRect->GetCenter(), mRect->GetWidth(), mRect->GetHeight());
+	rtn->SetRota(mRota);
+	rtn->SetScale(DirectX::XMFLOAT2(mScaleX, mScaleY));
 	return rtn;
 }
 

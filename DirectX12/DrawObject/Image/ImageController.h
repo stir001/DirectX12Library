@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/9/14
+*	@par 最終更新日	2018/11/21
 */
 #include "DrawObject/DrawObjectController.h"
 #include "ImageControllerStructure.h"
@@ -178,7 +178,7 @@ public:
 	*	@brief	自身のコピーを取得する
 	*	@return	自身のコピー(所有権は別)
 	*/
-	std::shared_ptr<ImageController> GetNewCopy();
+	std::shared_ptr<ImageController> Duplicate();
 
 	/**
 	*	@brief	使用するRootsigantureを設定する

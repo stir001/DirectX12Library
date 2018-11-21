@@ -8,6 +8,7 @@
 #include "Util/XMFloatOperators.h"
 #include "Camera/Dx12Camera.h"
 #include "Texture/TextureObject.h"
+#include "Texture/TextureLoader.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "PipelineState/PipelineStateObject.h"
 #include "Rootsignature/RootSignatureObject.h"
@@ -35,6 +36,8 @@ PrimitiveController::PrimitiveController(std::shared_ptr<PrimitiveObject> primit
 	data.offset = DirectX::XMFLOAT4(0, 0, 0, 1);
 	mInstanceDatas.push_back(data);
 	mInstanceVertexBuffer = std::make_shared<VertexBufferObject>(primitive->GetName() + "InstanceVertexBuffer", dev, static_cast<unsigned int>(sizeof(mInstanceDatas[0])), 1U);
+
+	mTexObj = TextureLoader::Instance().CreateSingleColorTexture(0.0f);
 
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 	mDescHeapUpdate = &PrimitiveController::UpdateDescriptorHeap;
