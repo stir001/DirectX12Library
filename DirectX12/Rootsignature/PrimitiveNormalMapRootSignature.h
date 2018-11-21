@@ -1,5 +1,6 @@
 #pragma once
 #include "RootSignatureObject.h"
+
 class PrimitiveNormalMapRootSignature :
 	public RootSignatureObject
 {

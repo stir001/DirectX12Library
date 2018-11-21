@@ -1,5 +1,6 @@
 #pragma once
 #include "PipelineState\PipelineStateObject.h"
+#include <memory>
 
 class RootSignatureObject;
 
