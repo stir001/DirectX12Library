@@ -1,5 +1,6 @@
 #pragma once
 #include "Rootsignature\RootSignatureObject.h"
+
 class SkeletonRootSignature :
 	public RootSignatureObject
 {
