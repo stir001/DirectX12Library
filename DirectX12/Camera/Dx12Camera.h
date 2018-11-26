@@ -6,7 +6,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/11/16
+*	@par 最終更新日	2018/11/23
 */
 #include "CameraBufferStructure.h"
 
@@ -180,12 +180,6 @@ public:
 	DirectX::XMFLOAT4X4 GetWorld();
 
 	/**
-	*	@brief	カメラの持つコンスタントバッファを得る
-	*	@return	カメラのもつコンスタントバッファ
-	*/
-	std::shared_ptr<ConstantBufferObject>& GetCameraBuffer();
-
-	/**
 	*	カメラ情報を取得する
 	*/
 	Dx12CameraBuffer GetCameraBufferElement();
@@ -199,11 +193,6 @@ private:
 	*	カメラがGPUに投げる要素
 	*/
 	Dx12CameraBuffer mElement;
-
-	/**
-	*	Dx12CameraBufferの要素を書き込むコンスタントバッファ
-	*/
-	std::shared_ptr<ConstantBufferObject> mCameraBuffer;
 
 	/**
 	*	カメラのView行列
@@ -292,11 +281,6 @@ private:
 	*	シェーダーに渡す要素を更新する
 	*/
 	void UpdateElement();
-
-	/**
-	*	ConstantBufferにmElementの内容を書き込む
-	*/
-	void UpdateBuffer();
 
 	/**
 	*	初期化処理

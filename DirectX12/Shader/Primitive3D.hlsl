@@ -94,5 +94,4 @@ void PrimitiveGS(in triangle PriVSOutput vertices[3], inout TriangleStream<PriGS
         }
         gsOut.RestartStrip();
     }
-
 }

@@ -20,7 +20,6 @@ Dx12Camera::Dx12Camera(int wWidth,int wHeight)
 	mElement.target = { 0.f, 9.f, 0.f, 1.f };
 	Init();
 	UpdateElement();
-	UpdateBuffer();
 }
 
 Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
@@ -36,7 +35,6 @@ Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 	mElement.target = { target.x, target.y, target.z, 1.f };
 	Init();
 	UpdateElement();
-	UpdateBuffer();
 }
 
 Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3 & eye,
@@ -51,12 +49,10 @@ Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const Di
 	mElement.target = { target.x, target.y, target.z, 1.f };
 	Init();
 	UpdateElement();
-	UpdateBuffer();
 }
 
 Dx12Camera::~Dx12Camera()
 {
-	mCameraBuffer.reset();
 }
 
 void Dx12Camera::UpdateElement()
@@ -69,18 +65,11 @@ void Dx12Camera::UpdateElement()
 	
 }
 
-void Dx12Camera::UpdateBuffer()
-{	
-	mCameraBuffer->WriteBuffer(&mElement, static_cast<unsigned int>(sizeof(mElement)));
-	size_t s = sizeof(mElement);
-}
-
 void Dx12Camera::Init()
 {
 	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));//カメラのプロジェクション行列
 	DirectX::XMStoreFloat4x4(&mElement.world, DirectX::XMMatrixIdentity());
 	mWorldRotation = mElement.world;
-	mCameraBuffer = std::make_shared<ConstantBufferObject>("CameraConstantBuffer", Dx12Ctrl::Instance().GetDev(), static_cast<unsigned int>(sizeof(mElement)), 1U);
 }
 
 void Dx12Camera::SetElementToHolder()
@@ -101,7 +90,6 @@ void Dx12Camera::SetPos(DirectX::XMFLOAT3& pos)
 	mElement.eye = { pos.x,pos.y,pos.z ,1};
 	mElement.target = { t.x,t.y,t.z,1 };
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -109,7 +97,6 @@ void Dx12Camera::SetTarget(DirectX::XMFLOAT3& target)
 {
 	mElement.target = { target.x, target.y, target.z, 1 };
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -117,7 +104,6 @@ void Dx12Camera::AddXAxisRota(float deg)
 {
 	AddRotationAxis(XMMatrixRotationX(XMConvertToRadians(deg)));
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -125,7 +111,6 @@ void Dx12Camera::AddYAxisRota(float deg)
 {
 	AddRotationAxis(XMMatrixRotationY(XMConvertToRadians(deg)));
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -133,7 +118,6 @@ void Dx12Camera::AddZAxisRota(float deg)
 {
 	AddRotationAxis(XMMatrixRotationZ(XMConvertToRadians(deg)));
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -142,7 +126,6 @@ void Dx12Camera::MoveUp(float vel)
 	mElement.eye.y += vel;
 	mElement.target.y += vel;
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -157,7 +140,6 @@ void Dx12Camera::MoveFront(float vel)
 	mElement.eye = { mElement.eye.x + eyeToTarget.x,mElement.eye.y + eyeToTarget.y, mElement.eye.z + eyeToTarget.z,1 };
 	mElement.target = { mElement.target.x + eyeToTarget.x,mElement.target.y + eyeToTarget.y, mElement.target.z + eyeToTarget.z, 1 };
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -170,7 +152,6 @@ void Dx12Camera::MoveSide(float vel)
 	mElement.eye += cross;
 	mElement.target += cross;
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -186,7 +167,6 @@ void Dx12Camera::TurnRightLeft(float deg)
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
 
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -212,7 +192,6 @@ void Dx12Camera::TurnUpDown(float deg)
 	}
 
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 }
 
@@ -225,7 +204,6 @@ void Dx12Camera::SetViewPort(float width, float height,
 	mHeight = height;
 	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
 	UpdateElement();
-	UpdateBuffer();
 	(this->*mHolderSetter)();
 	mHolder.lock()->SetCameraViewPort(this);
 }
@@ -315,11 +293,6 @@ DirectX::XMFLOAT4 Dx12Camera::GetCameraPosition()
 DirectX::XMFLOAT4X4 Dx12Camera::GetWorld()
 {
 	return mElement.world;
-}
-
-std::shared_ptr<ConstantBufferObject>& Dx12Camera::GetCameraBuffer()
-{
-	return mCameraBuffer;
 }
 
 Dx12CameraBuffer Dx12Camera::GetCameraBufferElement()

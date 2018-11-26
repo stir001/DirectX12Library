@@ -15,8 +15,13 @@ PipelineStateObject::PipelineStateObject(const std::string & name, D3D12_COMPUTE
 	SetName(mName);
 }
 
-PipelineStateObject::PipelineStateObject():mPipelineState(nullptr),mName()
+PipelineStateObject::PipelineStateObject() :mPipelineState(nullptr), mName()
 {
+}
+
+void PipelineStateObject::SetPipelineState(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList)
+{
+	cmdList->SetPipelineState(mPipelineState.Get());
 }
 
 PipelineStateObject::~PipelineStateObject()
@@ -79,3 +84,4 @@ void PipelineStateObject::SetName(const std::string & name)
 	ToWChar(buf, name);
 	mPipelineState->SetName(buf.data());
 }
+

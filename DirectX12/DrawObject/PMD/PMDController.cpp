@@ -28,8 +28,6 @@ PMDController::PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<D
 	mBoneMatrixBuffer->WriteBuffer(&mBoneMatrix[0], static_cast<unsigned int>(sizeof(DirectX::XMMATRIX) * mModel->mBoneDatas.size()));
 	mVmdPlayer = std::make_shared<VMDPlayer>(mModel->mBoneDatas, mModel->mBoneNode, mBoneMatrix,mBoneMatrixBuffer);
 
-	//mCameraBuffer = Dx12Ctrl::Instance().GetCamera()->GetCameraBuffer();
-
 	CreateDescriptorHeap(dev, name);
 }
 

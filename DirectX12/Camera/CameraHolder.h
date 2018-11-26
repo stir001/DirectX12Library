@@ -27,6 +27,7 @@ public:
 	void SetCameraScissorRect(Dx12Camera* camera);
 	std::vector<D3D12_VIEWPORT>& GetViewPorts();
 	std::vector<D3D12_RECT>& GetScissorRects();
+	std::shared_ptr<ConstantBufferObject> GetCamerasBuffer();
 private:
 	const static unsigned int MAXCAMERA_NUM = 4;
 	struct MultiCameras

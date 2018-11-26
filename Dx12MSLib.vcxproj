@@ -245,6 +245,7 @@
     <ClInclude Include="DirectX12\PipelineState\PipelineStateObject.h" />
     <ClInclude Include="DirectX12\PipelineState\PrimitivePipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\SkeletonPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\WireFramePipelineState.h" />
     <ClInclude Include="DirectX12\RenderingPass\BackGroundPass.h" />
     <ClInclude Include="DirectX12\RenderingPass\Base\RenderingPassObject.h" />
     <ClInclude Include="DirectX12\RenderingPass\Manager\RenderingPassManager.h" />
@@ -258,6 +259,7 @@
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveRootSignature.h" />
     <ClInclude Include="DirectX12\Rootsignature\RootSignatureObject.h" />
     <ClInclude Include="DirectX12\Rootsignature\SkeletonRootSignature.h" />
+    <ClInclude Include="DirectX12\Rootsignature\WireFrameRootSignature.h" />
     <ClInclude Include="DirectX12\Shader\HlslInclude.h" />
     <ClInclude Include="DirectX12\Shader\ShaderCompiler.h" />
     <ClInclude Include="DirectX12\Shader\ShaderDatasStructure.h" />
@@ -345,6 +347,7 @@
     <ClCompile Include="DirectX12\PipelineState\PipelineStateObject.cpp" />
     <ClCompile Include="DirectX12\PipelineState\PrimitivePipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\SkeletonPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\WireFramePipelineState.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\BackGroundPass.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\Base\RenderingPassObject.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\Manager\RenderingPassManager.cpp" />
@@ -358,6 +361,7 @@
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveRootSignature.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\RootSignatureObject.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\SkeletonRootSignature.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\WireFrameRootSignature.cpp" />
     <ClCompile Include="DirectX12\Shader\HlslInclude.cpp" />
     <ClCompile Include="DirectX12\Shader\ShaderCompiler.cpp" />
     <ClCompile Include="DirectX12\Shader\ShaderDatasStructure.cpp" />
@@ -460,6 +464,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\WireFrameShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

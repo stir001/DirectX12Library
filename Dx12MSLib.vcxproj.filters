@@ -408,6 +408,12 @@
     <ClInclude Include="DirectX12\RenderingPass\UIPass.h">
       <Filter>DirectX12\RenderingPass</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\WireFramePipelineState.h">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\WireFrameRootSignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -701,6 +707,12 @@
     <ClCompile Include="DirectX12\RenderingPass\UIPass.cpp">
       <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\WireFramePipelineState.cpp">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\WireFrameRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -737,6 +749,9 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\Billboard.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\WireFrameShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

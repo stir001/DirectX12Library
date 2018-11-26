@@ -42,6 +42,13 @@ public:
 	*	@return	作瀬下PipelineState
 	*/
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> GetPipelineState() const;
+
+	/**
+	*	@brief PipelineStateを設定する
+	*	@param[in] cmdList	設定するコマンドリスト
+	*/
+	void SetPipelineState(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList);
+
 protected:
 	PipelineStateObject();
 

@@ -52,8 +52,6 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 
 	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mBones, mModel->mVertexes, mVertexElements);
 
-	//mCameraBuffer = Dx12Ctrl::Instance().GetCamera()->GetCameraBuffer();
-
 	UpdateMatrix();
 
 	//骨用のバッファ、ヒープの処理

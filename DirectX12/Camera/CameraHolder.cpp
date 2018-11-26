@@ -97,6 +97,11 @@ std::vector<D3D12_RECT>& CameraHolder::GetScissorRects()
 	return mScissorRects;
 }
 
+std::shared_ptr<ConstantBufferObject> CameraHolder::GetCamerasBuffer()
+{
+	return mCamerasBuffer;
+}
+
 void CameraHolder::UpdateControllerHeap()
 {
 	std::list<std::list<DrawController3D*>::iterator> deleteIterators;
