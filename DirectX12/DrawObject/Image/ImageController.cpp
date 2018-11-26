@@ -72,9 +72,9 @@ ImageController::~ImageController()
 
 void ImageController::AddPos(const float x, const float y, const float z)
 {
-	mPivot.x = x;
-	mPivot.y = y;
-	mPivot.z = z;
+	mPivot.x += x;
+	mPivot.y += y;
+	mPivot.z += z;
 	UpdateBuffer();
 }
 
