@@ -3,13 +3,17 @@
 #include "Util/CharToWChar.h"
 #include "d3dx12.h"
 
-PipelineStateObject::PipelineStateObject(const std::string& name, D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev):mName(name + "GraphicsPipelineState")
+PipelineStateObject::PipelineStateObject(const std::string& name
+	, D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+	: mName(name + "GraphicsPipelineState")
 {
 	dev->CreateGraphicsPipelineState(&gpsDesc, IID_PPV_ARGS(&mPipelineState));
 	SetName(mName);
 }
 
-PipelineStateObject::PipelineStateObject(const std::string & name, D3D12_COMPUTE_PIPELINE_STATE_DESC & cpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev):mName(name + "ComputePipelineState")
+PipelineStateObject::PipelineStateObject(const std::string & name
+	, D3D12_COMPUTE_PIPELINE_STATE_DESC & cpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+	: mName(name + "ComputePipelineState")
 {
 	dev->CreateComputePipelineState(&cpsDesc, IID_PPV_ARGS(&mPipelineState));
 	SetName(mName);
@@ -34,7 +38,8 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> PipelineStateObject::GetPipelineStat
 	return mPipelineState;
 }
 
-void PipelineStateObject::CreatePipelineState(const std::string& name, D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+void PipelineStateObject::CreatePipelineState(const std::string& name
+	, D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	if (mPipelineState != nullptr) return;
 	mName = name + "GraphicsPipelineState";
@@ -42,7 +47,8 @@ void PipelineStateObject::CreatePipelineState(const std::string& name, D3D12_GRA
 	SetName(mName);
 }
 
-void PipelineStateObject::CreatePipelineState(const std::string & name, D3D12_COMPUTE_PIPELINE_STATE_DESC & gpsDesc,const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+void PipelineStateObject::CreatePipelineState(const std::string& name
+	, D3D12_COMPUTE_PIPELINE_STATE_DESC& gpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	if (mPipelineState != nullptr) return;
 	mName = name + "ComputePipelineState";
