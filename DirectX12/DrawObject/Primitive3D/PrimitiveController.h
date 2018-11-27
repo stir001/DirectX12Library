@@ -1,4 +1,13 @@
 #pragma once
+/**
+*	@addtogroup primitive
+*	@file	PrimitiveController.h
+*	@brief	primitiveクラスで定義した頂点を描画するクラス定義
+*
+*	@author 真鍋奨一郎
+*
+*	@par 最終更新日	2018/11/27
+*/
 #include "DrawObject/DrawController3D.h"
 #include <vector>
 
@@ -11,23 +20,82 @@ class LightObject;
 class Dx12Camera;
 class TextureObject;
 
+/**
+*	@ingroup primitive
+*	@class PrimitiveController
+*	@brief primitiveクラスで定義した頂点を描画するクラス
+*/
 class PrimitiveController :
 	public DrawController3D
 {
 public:
+	/**
+	*	@param[in]	primitive	頂点を作成したプリミティブクラス
+	*	@param[in]	dev			使用するID3D12Device
+	*	@param[in]	cmdList		使用するコマンドリスト
+	*/
 	PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
 		,Microsoft::WRL::ComPtr<ID3D12Device>& dev
 		, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 	~PrimitiveController();
 
+	/**
+	*	@brief	テクスチャを設定する
+	*	@param[in]	texture		設定するテクスチャ
+	*/
 	void SetTexture(std::shared_ptr<TextureObject>& texture);
+
+	/**
+	*	@brief	ライトを設定する
+	*	@param[in]	light	設定するライト
+	*/
 	void SetLightBuffer(std::shared_ptr<LightObject>& light);
+
+	/**
+	*	@brief	インスタンシングでオブジェクトを描画する
+	*	@param[in]	instancePositions	各オブジェクトの位置
+	*/
 	void Instancing(std::vector<DirectX::XMFLOAT3>& instancePositions);
+
+	/**
+	*	@brief	インスタンシング描画時に使うアフィン行列を設定する
+	*	@param[in]	matrix	アフィン行列
+	*	@param[in]	startIndex	行列を適応するオブジェクトの始めの番号
+	*	@param[in]	endIndex	行列を適応するオブジェクトの最後の番号
+	*/
 	void SetInstancingMatrix(std::vector<DirectX::XMFLOAT4X4>& matrix, unsigned int startIndex, unsigned int endIndex);
+
+	/**
+	*	@brief	アフィン行列を取得する
+	*	@return		アフィン行列
+	*/
+	DirectX::XMFLOAT4X4 GetMatrix() const;
+
+	/**
+	*	描画する
+	*/
 	void Draw();
+
+	/**
+	*	@brief	座標を設定する
+	*	@param[in]	pos		設定する座標
+	*/
 	void SetPosition(const DirectX::XMFLOAT3& pos);
+
+	/**
+	*	@brief	拡大率を等倍で設定する
+	*	@param[in]	scale	拡大率
+	*/
 	void SetScale(float scale);
+
+	/**
+	*	@brief	拡大率を各種設定する
+	*	@param[in]	scaleX	xの拡大率
+	*	@param[in]	scaleY	yの拡大率
+	*	@param[in]	scaleZ	zの拡大率
+	*/
 	void SetScale(float scaleX, float scaleY, float scaleZ);
+
 	/**
 	*	@brief	x軸中心で追加で回転させる
 	*	@param[in]	deg		回転量(degree,度数法)

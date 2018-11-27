@@ -79,11 +79,21 @@ void PrimitiveController::Instancing(std::vector<DirectX::XMFLOAT3>& instancePos
 
 void PrimitiveController::SetInstancingMatrix(std::vector<DirectX::XMFLOAT4X4>& matrix, unsigned int startIndex, unsigned int endIndex)
 {
-	for (unsigned int i = 0; i <= endIndex - startIndex; ++i)
+	//if (startIndex == 0)
+	//{
+	//	mInstanceDatas[startIndex].aMatrix *= matrix[startIndex];
+	//	++startIndex;
+	//}
+	for (unsigned int i = startIndex; i <= endIndex; ++i)
 	{
-		mInstanceDatas[startIndex + i].aMatrix = matrix[i];
+		mInstanceDatas[i].aMatrix = matrix[i - startIndex];
 	}
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+}
+
+DirectX::XMFLOAT4X4 PrimitiveController::GetMatrix() const
+{
+	return mInstanceDatas[0].aMatrix;
 }
 
 void PrimitiveController::Draw()
@@ -137,14 +147,14 @@ void PrimitiveController::AddRotaX(float deg)
 void PrimitiveController::AddRotaY(float deg)
 {
 	DrawController3D::AddRotaY(deg);
-	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceDatas[0].aMatrix = mModelMatrix * mInstanceDatas[0].aMatrix;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
 void PrimitiveController::AddRotaZ(float deg)
 {
 	DrawController3D::AddRotaZ(deg);
-	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceDatas[0].aMatrix = mModelMatrix * mInstanceDatas[0].aMatrix;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 

@@ -65,10 +65,10 @@ float4 PrimitivePS(PriGSOut data) : SV_Target
     return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) + color * 0.2f + data.color * 0.2f));
 }
 
-#define VERTEX_COUNT 12U
+#define VERTEX_NUM (3U)
 
-[maxvertexcount(VERTEX_COUNT)]
-void PrimitiveGS(in triangle PriVSOutput vertices[3], inout TriangleStream<PriGSOut> gsOut)
+[maxvertexcount(MAX_CAMERA_NUM * VERTEX_NUM)]
+void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStream<PriGSOut> gsOut)
 {
     uint i = 0;
     uint j = 0;
@@ -76,12 +76,12 @@ void PrimitiveGS(in triangle PriVSOutput vertices[3], inout TriangleStream<PriGS
     float4x4 pvw = identity();
     PriGSOut gsVert;
     PriVSOutput vsout;
-	[unroll(4)]
+	[unroll(MAX_CAMERA_NUM)]
     for (i = 0; i < cameraNum; ++i)
     {
         pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
-		[unroll(3)]
-        for (j = 0; j < 3; ++j)
+		[unroll(VERTEX_NUM)]
+        for (j = 0; j < VERTEX_NUM; ++j)
         {
             vsout = vertices[j];
             gsVert.svpos = mul(pvw, vsout.pos);

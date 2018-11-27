@@ -51,6 +51,11 @@ public:
 	*	@param[in]	cmdList	使用するコマンドリスト
 	*/
 	virtual void SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
+	/**
+	*	描画する
+	*/
+	virtual void Draw() = 0;
 protected:
 
 	/**

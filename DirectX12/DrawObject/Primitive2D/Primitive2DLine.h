@@ -9,7 +9,7 @@ public:
 	~Primitive2DLine();
 
 	void SetCenter(const DirectX::XMFLOAT3& pos);
-	void Draw() const;
+	void Draw();
 	void SetScale(float scale);
 	void SetRota(float deg);
 	void SetBasePoints(const DirectX::XMFLOAT3& point1, const DirectX::XMFLOAT3& point2);

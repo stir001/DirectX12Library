@@ -67,7 +67,7 @@ void Dx12Camera::UpdateElement()
 
 void Dx12Camera::Init()
 {
-	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));//カメラのプロジェクション行列
+	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 1.0f, 500.f));//カメラのプロジェクション行列
 	DirectX::XMStoreFloat4x4(&mElement.world, DirectX::XMMatrixIdentity());
 	mWorldRotation = mElement.world;
 }

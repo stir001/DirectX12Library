@@ -85,10 +85,10 @@ float4 ExitTexPS(GSOutput data) : SV_Target
     return color * dot(data.normal.xyz, -dir.xyz) + color * ambient ;
 }
 
-#define VERTEX_COUNT 12U
+#define VERTEX_NUM (3U)
 
-[maxvertexcount(VERTEX_COUNT)]
-void PmdGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
+[maxvertexcount(MAX_CAMERA_NUM * VERTEX_NUM)]
+void PmdGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOutput> gsOut)
 {
     uint i = 0;
     uint j = 0;
@@ -96,12 +96,12 @@ void PmdGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOu
     float4x4 pvw = identity();
     GSOutput gsVert;
     VSOutput vsout;
-	[unroll(4)]
+	[unroll(MAX_CAMERA_NUM)]
     for (i = 0; i < cameraNum; ++i)
     {
         pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
-		[unroll(3)]
-        for (j = 0; j < 3; ++j)
+		[unroll(VERTEX_NUM)]
+        for (j = 0; j < VERTEX_NUM; ++j)
         {
             vsout = vertices[j];
             gsVert.svpos = mul(pvw, vsout.pos);

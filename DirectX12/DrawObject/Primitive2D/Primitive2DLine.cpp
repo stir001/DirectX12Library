@@ -45,7 +45,7 @@ void Primitive2DLine::SetCenter(const DirectX::XMFLOAT3& pos)
 	UpdateBuffer();
 }
 
-void Primitive2DLine::Draw() const
+void Primitive2DLine::Draw()
 {
 	mCmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
 	mCmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());

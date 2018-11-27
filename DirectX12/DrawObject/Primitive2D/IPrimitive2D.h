@@ -20,8 +20,6 @@ class IPrimitive2D : public DrawObjectController
 public:
 	IPrimitive2D(unsigned int vertexCount,const std::string& name,const Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 	virtual ~IPrimitive2D();
-
-	virtual void Draw() const = 0;
 protected:
 	std::vector<Primitive2DVertex> mVertices;
 	VertexBufferObject* mVertexBuffer;

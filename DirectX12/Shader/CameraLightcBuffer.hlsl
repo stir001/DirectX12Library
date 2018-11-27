@@ -16,9 +16,11 @@ struct CameraElement
     float4x4 c_projection;
 };
 
+#define MAX_CAMERA_NUM (4U)
+
 #define MULTI_CAMERA(bnum) cbuffer mulcamera : register(bnum) \
 {	\
-	CameraElement	cameras[4];	\
+	CameraElement	cameras[MAX_CAMERA_NUM];	\
 	uint cameraNum;	\
 }	
 

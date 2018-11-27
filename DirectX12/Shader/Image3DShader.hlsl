@@ -62,10 +62,10 @@ float4 Image3DPS(GSOutput gsout) : SV_Target
     return pow(colortex.Sample(texsampler, gsout.uv), gsout.gamma);
 }
 
-#define VERTEX_COUNT 12U
+#define VERTEX_NUM (3)
 
-[maxvertexcount(VERTEX_COUNT)]
-void Image3DGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
+[maxvertexcount(MAX_CAMERA_NUM * VERTEX_NUM)]
+void Image3DGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOutput> gsOut)
 {
     uint i = 0;
     uint j = 0;
@@ -73,12 +73,12 @@ void Image3DGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> 
     float4x4 pvw = identity();
     GSOutput gsVert;
     VSOutput vsout;
-	[unroll(4)]
+	[unroll(MAX_CAMERA_NUM)]
     for (i = 0; i < cameraNum; ++i)
     {
         pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
-		[unroll(3)]
-        for (j = 0; j < 3; ++j)
+		[unroll(VERTEX_NUM)]
+        for (j = 0; j < VERTEX_NUM; ++j)
         {
             vsout = vertices[j];
             gsVert.svpos = mul(pvw, vsout.pos);
