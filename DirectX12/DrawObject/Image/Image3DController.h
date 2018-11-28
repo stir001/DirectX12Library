@@ -22,6 +22,7 @@ class Dx12DescriptorHeapObject;
 *	@ingroup DrawObjectController
 *	@class Image3DController
 *	@brief 3D空間に存在するImageを操作するクラス
+		大きさは50ピクセルで1unitとしている
 */
 class Image3DController :
 	public DrawController3D
