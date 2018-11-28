@@ -16,6 +16,7 @@
 #include "CommandList/Dx12CommandList.h"
 
 const unsigned int DEFAULT_RESOURCE_NUM = 3;
+const float UNIT_POSITION_PER_PIXEL = 0.05f;
 
 Image3DController::Image3DController(std::shared_ptr<ImageObject> img, 
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
@@ -24,13 +25,13 @@ Image3DController::Image3DController(std::shared_ptr<ImageObject> img,
 	std::shared_ptr<RootSignatureObject>& rootsignature)
 	:DrawController3D(img->GetTextureName() + "Bundle",dev, cmdList),
 	mImgObj(img)
-	, mVertex{ { { 0.f, img->GetImageSize().y, 0.f ,1.f}, {0.f,0.f,-1.f,0.f}, { 0.f, 0.f } , img->GetGamma() }/* v1 */,
-{ { img->GetImageSize().x,img->GetImageSize().y, 0.f ,1.f}, { 0.f,0.f,-1.f,0.f }, { 1.f, 0.f }, img->GetGamma() }/* v2 */
-,{ { 0.0f, 0.0f, 0.0f,1.f },{ 0.f,0.f,-1.f,0.f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
-,{ { img->GetImageSize().x, 0.0f, 0.f, 1.f },{ 0.f,0.f,-1.f,0.f }, { 1.f, 1.f }, img->GetGamma() }/* v4 */ }
-, mScaleX(1.0f), mScaleY(1.0f), mScaleZ(1.0f), mCenter({ 0.f,0.f,0.f })
-, mRect(std::make_shared<Rect>(mCenter, img->GetImageSize().x, img->GetImageSize().y))
-, mTurnSign(1, 1),mBundleUpdate(&Image3DController::UpdateBundle)
+	, mVertex{ { { -img->GetImageSize().x * 0.5f * UNIT_POSITION_PER_PIXEL, img->GetImageSize().y * 0.5f * UNIT_POSITION_PER_PIXEL, 0.f ,1.f}, {0.f,0.f,-1.f,0.f}, { 0.f, 0.f } , img->GetGamma() }/* v1 */
+	,{ { img->GetImageSize().x * 0.5f * UNIT_POSITION_PER_PIXEL, img->GetImageSize().y * 0.5f * UNIT_POSITION_PER_PIXEL, 0.f ,1.f}, { 0.f,0.f,-1.f,0.f }, { 1.f, 0.f }, img->GetGamma() }/* v2 */
+	,{ { -img->GetImageSize().x * 0.5f* UNIT_POSITION_PER_PIXEL, -img->GetImageSize().y * 0.5f* UNIT_POSITION_PER_PIXEL, 0.0f,1.f },{ 0.f,0.f,-1.f,0.f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
+	,{ { img->GetImageSize().x * 0.5f* UNIT_POSITION_PER_PIXEL, -img->GetImageSize().y * 0.5f* UNIT_POSITION_PER_PIXEL, 0.f, 1.f },{ 0.f,0.f,-1.f,0.f }, { 1.f, 1.f }, img->GetGamma() }/* v4 */ }
+	, mScaleX(1.0f), mScaleY(1.0f), mScaleZ(1.0f), mCenter({ 0.f,0.f,0.f })
+	, mRect(std::make_shared<Rect>(mCenter, img->GetImageSize().x, img->GetImageSize().y))
+	, mTurnSign(1, 1),mBundleUpdate(&Image3DController::UpdateBundle)
 {
 	mPipelinestate = pipelinestate;
 	mRootsignature = rootsignature;
