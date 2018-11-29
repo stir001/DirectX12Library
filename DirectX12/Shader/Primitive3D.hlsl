@@ -49,7 +49,7 @@ struct PriGSOut
 PriVSOutput PrimitiveVS(PriVSInput vsInput)
 {
     PriVSOutput po;
-    po.pos = mul(vsInput.aMat, vsInput.pos) + vsInput.instanceOffset;
+    po.pos = mul(vsInput.aMat, vsInput.pos) + float4(vsInput.instanceOffset.xyz, 0);
     po.color = vsInput.color;
 	po.uv = vsInput.uv;
     matrix rotaMat = vsInput.aMat;
