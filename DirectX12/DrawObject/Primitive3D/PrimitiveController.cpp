@@ -6,7 +6,6 @@
 #include "Buffer/ConstantBufferObject.h"
 #include "Buffer/ShaderResourceObject.h"
 #include "Util/XMFloatOperators.h"
-#include "Camera/Dx12Camera.h"
 #include "Texture/TextureObject.h"
 #include "Texture/TextureLoader.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
