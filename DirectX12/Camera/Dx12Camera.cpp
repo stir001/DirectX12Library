@@ -83,12 +83,7 @@ void Dx12Camera::NonSetElementToHolder()
 
 void Dx12Camera::SetPos(DirectX::XMFLOAT3& pos)
 {
-	XMFLOAT3 t = 
-		{ mElement.target.x + pos.x - mElement.eye.x
-		, mElement.target.y + pos.y - mElement.eye.y
-		, mElement.target.z + pos.z - mElement.eye.z };
 	mElement.eye = { pos.x,pos.y,pos.z ,1};
-	mElement.target = { t.x,t.y,t.z,1 };
 	UpdateElement();
 	(this->*mHolderSetter)();
 }

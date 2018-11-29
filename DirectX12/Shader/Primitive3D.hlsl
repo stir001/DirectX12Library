@@ -29,7 +29,7 @@ struct PriVSInput
 
 struct PriVSOutput
 {
-    float4 pos : POSITION0;
+    float4 pos : POSITION;
     float4 normal : NORMAL;
     float4 color : COLOR;
     float2 uv : TEXCOORD;
@@ -38,7 +38,6 @@ struct PriVSOutput
 struct PriGSOut
 {
     float4 svpos : SV_POSITION;
-    float4 pos : POSITION0;
     float4 normal : NORMAL;
     float4 color : COLOR;
     float2 uv : TEXCOORD;
@@ -85,7 +84,6 @@ void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStr
         {
             vsout = vertices[j];
             gsVert.svpos = mul(pvw, vsout.pos);
-            gsVert.pos = vsout.pos;
             gsVert.normal = vsout.normal;
             gsVert.color = vsout.color;
             gsVert.uv = vsout.uv;
