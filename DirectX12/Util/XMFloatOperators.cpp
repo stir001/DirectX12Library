@@ -6,9 +6,10 @@ DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOA
 	return DirectX::XMFLOAT3(lval.x + rval.x, lval.y + rval.y, lval.z + rval.z);
 }
 
-void operator+=(DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
+DirectX::XMFLOAT3 operator+=(DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
 {
 	lval = lval + rval;
+	return lval;
 }
 
 DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
@@ -16,9 +17,10 @@ DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOA
 	return DirectX::XMFLOAT3(lval.x - rval.x, lval.y - rval.y, lval.z - rval.z);
 }
 
-void operator-=(DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
+DirectX::XMFLOAT3 operator-=(DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
 {
 	lval = lval - rval;
+	return lval;
 }
 
 DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& lval, float rato)
@@ -31,9 +33,10 @@ DirectX::XMFLOAT3 operator*(float rato, const DirectX::XMFLOAT3& rval)
 	return rval * rato;
 }
 
-void operator*=(DirectX::XMFLOAT3& lval, float rato)
+DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& lval, float rato)
 {
 	lval = lval * rato;
+	return lval;
 }
 
 DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lval, float rato)
@@ -41,9 +44,10 @@ DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lval, float rato)
 	return DirectX::XMFLOAT3(lval.x / rato, lval.y / rato, lval.z / rato);
 }
 
-void operator/=(DirectX::XMFLOAT3& lval, float rato)
+DirectX::XMFLOAT3 operator/=(DirectX::XMFLOAT3& lval, float rato)
 {
 	lval = lval / rato;
+	return lval;
 }
 
 DirectX::XMFLOAT3 NormalizeXMFloat3(const DirectX::XMFLOAT3& val)
@@ -92,9 +96,10 @@ bool operator!=(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
 	return !(lval == rval);
 }
 
-void operator+=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT3& rval)
+DirectX::XMFLOAT4 operator+=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT3& rval)
 {
 	lval.x += rval.x; lval.y += rval.y; lval.z += rval.z;
+	return lval;
 }
 
 DirectX::XMFLOAT4 operator+=(DirectX::XMFLOAT4 & lval, const DirectX::XMFLOAT4 & rval)
@@ -129,9 +134,10 @@ DirectX::XMFLOAT4X4 operator+(const DirectX::XMFLOAT4X4& lval, const DirectX::XM
 		rval._41 + lval._41, rval._42 + lval._42, rval._43 + lval._43, rval._44 + lval._44);
 }
 
-void operator+=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
+DirectX::XMFLOAT4X4 operator+=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
 {
 	lval = lval + rval;
+	return lval;
 }
 
 DirectX::XMFLOAT4X4 operator-(const DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
@@ -143,9 +149,10 @@ DirectX::XMFLOAT4X4 operator-(const DirectX::XMFLOAT4X4& lval, const DirectX::XM
 		rval._41 - lval._41, rval._42 - lval._42, rval._43 - lval._43, rval._44 - lval._44);
 }
 
-void operator-=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
+DirectX::XMFLOAT4X4 operator-=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
 {
 	lval = lval - rval;
+	return lval;
 }
 
 DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4X4& rval)
@@ -157,9 +164,10 @@ DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOA
 		lval.x * rval._14 + lval.y * rval._24 + lval.z * rval._34 + lval.w * rval._44);
 }
 
-void operator*=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4X4& rval)
+DirectX::XMFLOAT4 operator*=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4X4& rval)
 {
 	lval = lval * rval;
+	return lval;
 }
 
 DirectX::XMFLOAT4X4 operator*(const DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
@@ -187,9 +195,10 @@ DirectX::XMFLOAT4X4 operator*(const DirectX::XMFLOAT4X4& lval, const DirectX::XM
 		);
 }
 
-void operator*=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
+DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval)
 {
 	lval = lval * rval;
+	return lval;
 }
 
 float GetLengthXMFloat3(const DirectX::XMFLOAT3& val)
@@ -197,12 +206,12 @@ float GetLengthXMFloat3(const DirectX::XMFLOAT3& val)
 	return sqrtf(DotXMFloat3(val, val));
 }
 
-DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3 & val)
+DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3& val)
 {
 	return DirectX::XMFLOAT4(val.x, val.y, val.z, 1);
 }
 
-DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX & val)
+DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val)
 {
 	DirectX::XMFLOAT4X4 rtn;
 	rtn._11 = val.r[0].m128_f32[0]; rtn._12 = val.r[0].m128_f32[1]; rtn._13 = val.r[0].m128_f32[2]; rtn._14 = val.r[0].m128_f32[3];
@@ -212,7 +221,7 @@ DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX & val)
 	return rtn;
 }
 
-DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4 & val)
+DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4& val)
 {
 	DirectX::XMMATRIX rtn;
 	rtn.r[0].m128_f32[0] = val._11; rtn.r[0].m128_f32[1] = val._12; rtn.r[0].m128_f32[2] = val._13; rtn.r[0].m128_f32[3] = val._14;
@@ -220,5 +229,25 @@ DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4 & val)
 	rtn.r[2].m128_f32[0] = val._31; rtn.r[2].m128_f32[1] = val._32; rtn.r[2].m128_f32[2] = val._33; rtn.r[2].m128_f32[3] = val._34;
 	rtn.r[3].m128_f32[0] = val._41; rtn.r[3].m128_f32[1] = val._42; rtn.r[3].m128_f32[2] = val._43; rtn.r[3].m128_f32[3] = val._44;
 	return rtn;
+}
+
+DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4& xmf4)
+{
+	return DirectX::XMFLOAT3(xmf3.x - xmf4.x,  xmf3.y - xmf4.y, xmf3.z - xmf4.z);
+}
+
+DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOAT3& xmf3)
+{
+	return DirectX::XMFLOAT4(xmf4.x - xmf3.x, xmf4.y - xmf3.y, xmf4.z - xmf3.z, 1.0f);
+}
+
+DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4& xmf4)
+{
+	return DirectX::XMFLOAT3(xmf3.x + xmf4.x, xmf3.y + xmf4.y, xmf3.z + xmf4.z);
+}
+
+DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOAT3& xmf3)
+{
+	return DirectX::XMFLOAT4(xmf4.x + xmf3.x, xmf4.y + xmf3.y, xmf4.z + xmf3.z, 1.0f);
 }
 

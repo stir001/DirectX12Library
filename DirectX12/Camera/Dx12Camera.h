@@ -60,13 +60,20 @@ public:
 	*	@brief	カメラの座標を設定する
 	*	@param[in]	pos		設定する座標
 	*/
-	void SetPos(DirectX::XMFLOAT3& pos);
+	void SetPos(const DirectX::XMFLOAT3& pos);
 
 	/**
 	*	@brief	カメラの注視点を設定する
 	*	@param[in]	target	設定する座標
 	*/
-	void SetTarget(DirectX::XMFLOAT3& target);
+	void SetTarget(const DirectX::XMFLOAT3& target);
+
+	/**
+	*	@brief	視線の方向を変えないように
+				カメラの座標を設定する(注視点も一緒にずれる)
+	*	@param[in]	pos		設定する座標
+	*/
+	void ParallelSetPos(const DirectX::XMFLOAT3& pos);
 
 	/**
 	*	@brief	ワールド基準でX軸回転する
@@ -87,7 +94,7 @@ public:
 	void AddZAxisRota(float deg);
 
 	/**
-	*	@brief	カメラのローカル上方向へ移動する
+	*	@brief	y方向へ移動する
 	*	@param[in]	val	移動成分の大きさ
 	*/
 	void MoveUp(float val);
@@ -99,13 +106,13 @@ public:
 	void MoveFront(float vel);
 
 	/**
-	*	@brief	カメラのローカル横方向へ移動する
+	*	@brief	XZ平面上のローカル横方向へ移動する
 	*	@param[in]	val	移動成分の大きさ
 	*/
 	void MoveSide(float vel);
 
 	/**
-	*	@brief	カメラのローカル横方向へ回転する
+	*	@brief	Y軸中心で回転する
 	*	@param[in]	deg	回転成分の大きさ(degree,度数法)
 	*/
 	void TurnRightLeft(float deg);
@@ -188,6 +195,24 @@ public:
 	*	カメラが保持されているインデックス
 	*/
 	int GetHoldIndex() const;
+
+	/**
+	*	@brief fovを設定する
+	*	@param[in]	rad		視野角(ラジアン)
+	*/
+	void SetFoV(float rad);
+
+	/**
+	*	@brief	クリッピングのnearを
+	*	@param[in]	cameraNear	ニアの距離
+	*/
+	void SetNear(float cameraNear);
+
+	/**
+	*	@brief	カメラの
+	*/
+	void SetFar(float cameraFar);
+
 private:
 	/**
 	*	カメラがGPUに投げる要素

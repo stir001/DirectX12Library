@@ -40,7 +40,8 @@ Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3 & eye,
 	const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & upper,
 	std::shared_ptr<CameraHolder> holder, unsigned int holdIndex)
-	: mWidth(viewport.Width), mHeight(viewport.Height),mViewPort(viewport), mScissorRect(scissorRect)
+	: mWidth(static_cast<int>(viewport.Width)), mHeight(static_cast<int>(viewport.Height))
+	, mViewPort(viewport), mScissorRect(scissorRect)
 	, mElement()
 	, mUpper(upper), mLocalUpper(mUpper), mHolder(holder), mHoldIndex(holdIndex)
 	, mHolderSetter(&Dx12Camera::SetElementToHolder)
@@ -81,18 +82,23 @@ void Dx12Camera::NonSetElementToHolder()
 {
 }
 
-void Dx12Camera::SetPos(DirectX::XMFLOAT3& pos)
+void Dx12Camera::SetPos(const DirectX::XMFLOAT3& pos)
 {
 	mElement.eye = { pos.x,pos.y,pos.z ,1};
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::SetTarget(DirectX::XMFLOAT3& target)
+void Dx12Camera::SetTarget(const DirectX::XMFLOAT3& target)
 {
 	mElement.target = { target.x, target.y, target.z, 1 };
 	UpdateElement();
 	(this->*mHolderSetter)();
+}
+
+void Dx12Camera::ParallelSetPos(const DirectX::XMFLOAT3 & pos)
+{
+	DirectX::XMFLOAT3 offset = pos - mElement.eye;
 }
 
 void Dx12Camera::AddXAxisRota(float deg)
@@ -132,8 +138,8 @@ void Dx12Camera::MoveFront(float vel)
 	eyeToTarget = NormalizeXMFloat3(eyeToTarget);
 
 	eyeToTarget *= vel;
-	mElement.eye = { mElement.eye.x + eyeToTarget.x,mElement.eye.y + eyeToTarget.y, mElement.eye.z + eyeToTarget.z,1 };
-	mElement.target = { mElement.target.x + eyeToTarget.x,mElement.target.y + eyeToTarget.y, mElement.target.z + eyeToTarget.z, 1 };
+	mElement.eye = mElement.eye + eyeToTarget;
+	mElement.target = mElement.target + eyeToTarget;
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
@@ -154,11 +160,11 @@ void Dx12Camera::TurnRightLeft(float deg)
 {
 	DirectX::XMVECTOR t = DirectX::XMLoadFloat4(&mElement.target);
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
-	DirectX::XMFLOAT3 eyeToTarget = { mElement.target.x - mElement.eye.x, mElement.target.y - mElement.eye.y, mElement.target.z - mElement.eye.z };
+	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
 	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(GetLocalUpper(), deg));
 	trans *= DirectX::XMMatrixTranslationFromVector(e);
-	t = DirectX::XMVector4Transform(t - e,trans);
+	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
 
 	UpdateElement();
@@ -195,8 +201,8 @@ void Dx12Camera::SetViewPort(float width, float height,
 	float minDepth, float maxDepth)
 {
 	mViewPort = { topLX, topLY, width, height, minDepth, maxDepth };
-	mWidth = width;
-	mHeight = height;
+	mWidth = static_cast<int>(width);
+	mHeight = static_cast<int>(height);
 	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
 	UpdateElement();
 	(this->*mHolderSetter)();
@@ -322,7 +328,7 @@ DirectX::XMFLOAT3 Dx12Camera::GetLocalUpper()
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMFLOAT3 crossVec = CrossXMFloat3(eyeToTarget, mUpper);
-	crossVec = NormalizeXMFloat3(crossVec);
-	mLocalUpper = CrossXMFloat3(crossVec, eyeToTarget);
+	/*crossVec = NormalizeXMFloat3(crossVec);*/
+	mLocalUpper = NormalizeXMFloat3(CrossXMFloat3(crossVec, eyeToTarget));
 	return  mLocalUpper;
 }
