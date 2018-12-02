@@ -252,6 +252,7 @@ void PMDLoader::LoadRigidBody()
 		mFp->LoadFile(&r.rigidbodyRelBoneIndex);
 		mFp->LoadFile(&r.rigidbodyGroupIndex);
 		mFp->LoadFile(&r.rigidbodyGroupTarget);
+		r.rigidbodyGroupTarget = 0xffff - r.rigidbodyGroupTarget;
 		mFp->LoadFile(&r.shapeType);
 		mFp->LoadFile(&r.shapeW);
 		mFp->LoadFile(&r.shapeH);
