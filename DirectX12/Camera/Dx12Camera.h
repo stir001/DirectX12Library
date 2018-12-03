@@ -63,10 +63,26 @@ public:
 	void SetPos(const DirectX::XMFLOAT3& pos);
 
 	/**
+	*	@brief	カメラの座標を設定する
+	*	@param[in]	x	設定するx座標
+	*	@param[in]	y	設定するy座標
+	*	@param[in]	z	設定するz座標
+	*/
+	void SetPos(float x, float y, float z);
+
+	/**
 	*	@brief	カメラの注視点を設定する
 	*	@param[in]	target	設定する座標
 	*/
 	void SetTarget(const DirectX::XMFLOAT3& target);
+
+	/**
+	*	@brief	カメラの注視点を設定する
+	*	@param[in]	x	設定する注視点x座標
+	*	@param[in]	y	設定する注視点y座標
+	*	@param[in]	z	設定する注視点z座標
+	*/
+	void SetTarget(float x, float y, float z);
 
 	/**
 	*	@brief	視線の方向を変えないように
