@@ -8,7 +8,7 @@
 *
 *	@par 最終更新日	2018/11/27
 */
-#include "DrawObject/DrawController3D.h"
+#include "DirectX12/DrawObject/DrawController3D.h"
 #include <vector>
 
 class PrimitiveObject;
@@ -130,7 +130,7 @@ public:
 	*	@brief プリミティブの色を設定する
 	*	@param color 0~1の範囲のrbgの色情報
 	*/
-	void SetColor(const DirectX::XMFLOAT4& color);
+	void SetColor(const DirectX::XMFLOAT4& color, int index = 0);
 
 protected:
 	void UpdateInstanceVertexBuffer();

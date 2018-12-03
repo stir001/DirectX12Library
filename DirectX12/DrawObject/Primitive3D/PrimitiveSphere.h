@@ -1,5 +1,5 @@
 #pragma once
-#include "DrawObject/Primitive3D/PrimitiveObject.h"
+#include "PrimitiveObject.h"
 
 class PrimitiveSphere :
 	public PrimitiveObject

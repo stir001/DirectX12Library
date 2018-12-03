@@ -113,6 +113,8 @@ namespace Fbx
 		MaterialElements<DirectX::XMFLOAT4> transparentColor;
 		MaterialElements<float> transparencyFactor;
 
+		MaterialElements<DirectX::XMFLOAT4> normalmap;
+
 		enum eELEMENT_TYPE
 		{
 			eELEMENT_TYPE_DIFFUSE,
@@ -126,6 +128,7 @@ namespace Fbx
 			eELEMENT_TYPE_EMISSIVE_FACTOR,
 			eELEMENT_TYPE_TRANSPARENT_COLOR,
 			eELEMENT_TYPE_TRANSPARENCY_FACTOR,
+			eELEMENT_TYPE_NORMALMAP,
 			eELEMENT_TYPE_NUM,
 		};
 

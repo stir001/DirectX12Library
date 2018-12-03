@@ -93,9 +93,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BT_THREADSAFE=1;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -103,7 +103,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\debug;$(FBXSDK_DIR)lib\vs2015\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\debug;$(FBXSDK_DIR)lib\vs2015\x64\debug;$(BULLET_DIR)\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -113,9 +113,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BT_THREADSAFE=1;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -123,7 +123,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\debug;$(FBXSDK_DIR)lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BULLET_DIR)\x86\debug;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\debug;$(FBXSDK_DIR)lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -135,9 +135,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BT_THREADSAFE=1;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -147,7 +147,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\release;$(FBXSDK_DIR)lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BULLET_DIR)\x86\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\release;$(FBXSDK_DIR)lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
@@ -159,9 +159,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BT_THREADSAFE=1;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -171,11 +171,24 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\release;$(FBXSDK_DIR)lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BULLET_DIR)\x64\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\release;$(FBXSDK_DIR)lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BulletInclude.h" />
+    <ClInclude Include="bullet\Action\CollisionAction.h" />
+    <ClInclude Include="bullet\Ghost\BulletGhostObject.h" />
+    <ClInclude Include="bullet\RigidBody\BulletRigidBody.h" />
+    <ClInclude Include="bullet\Shape\BoxCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\BulletCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\CapsuleCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\ConeCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\CylinderCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\SphereCollisionShape.h" />
+    <ClInclude Include="bullet\Shape\StaticPlaneShape.h" />
+    <ClInclude Include="bullet\System\BulletDebugDrawDx.h" />
+    <ClInclude Include="bullet\System\PhysicsSystem.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h" />
@@ -231,7 +244,6 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.h" />
     <ClInclude Include="DirectX12\DrawObject\Transform3DCalculator.h" />
     <ClInclude Include="DirectX12\DrawObject\TransformMatrixCalculator.h" />
-    <ClInclude Include="DirectX12\Dx12MSLib.h" />
     <ClInclude Include="DirectX12\Input\DxInput.h" />
     <ClInclude Include="DirectX12\Light\DirectionalLight.h" />
     <ClInclude Include="DirectX12\Light\LightObject.h" />
@@ -279,10 +291,23 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12RenderTargetViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.h" />
+    <ClInclude Include="Dx12MSLib.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bullet\Action\CollisionAction.cpp" />
+    <ClCompile Include="bullet\Ghost\BulletGhostObject.cpp" />
+    <ClCompile Include="bullet\RigidBody\BulletRigidBody.cpp" />
+    <ClCompile Include="bullet\Shape\BoxCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\BulletCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\CapsuleCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\ConeCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\CylinderCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\SphereCollisionShape.cpp" />
+    <ClCompile Include="bullet\Shape\StaticPlaneShape.cpp" />
+    <ClCompile Include="bullet\System\BulletDebugDrawDx.cpp" />
+    <ClCompile Include="bullet\System\PhysicsSystem.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp" />
@@ -404,6 +429,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\FbxNormalmapShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\FbxShader.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

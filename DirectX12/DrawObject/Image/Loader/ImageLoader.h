@@ -8,8 +8,8 @@
 *	@par ÅIXV“ú	2018/11/13
 */
 
-#include "Shader/ShaderDatasStructure.h"
-#include "DrawObject/DrawObjectLoader.h"
+#include "DirectX12/Shader/ShaderDatasStructure.h"
+#include "DirectX12/DrawObject/DrawObjectLoader.h"
 
 #include <string>
 #include <map>

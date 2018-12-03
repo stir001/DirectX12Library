@@ -1,5 +1,5 @@
 #pragma once
-#include "RenderingPass/Base/RenderingPassObject.h"
+#include "Base/RenderingPassObject.h"
 #include <d3d12.h>
 #include <vector>
 

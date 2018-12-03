@@ -9,7 +9,7 @@
 *	@par ÅIXV“ú	2018/9/14
 */
 
-#include "Shader/ShaderDatasStructure.h"
+#include "DirectX12/Shader/ShaderDatasStructure.h"
 
 #include <string>
 #include <memory>

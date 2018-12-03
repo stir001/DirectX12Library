@@ -62,7 +62,6 @@ void PrimitiveController::SetLightBuffer(std::shared_ptr<LightObject>& light)
 
 void PrimitiveController::Instancing(std::vector<DirectX::XMFLOAT3>& instancePositions)
 {
-	mInstanceDatas.clear();
 	mInstanceDatas.resize(instancePositions.size());
 	DirectX::XMFLOAT4X4 mat;
 	DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixIdentity());
@@ -152,10 +151,10 @@ void PrimitiveController::AddRotaZ(float deg)
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
-void PrimitiveController::SetColor(const DirectX::XMFLOAT4& color)
+void PrimitiveController::SetColor(const DirectX::XMFLOAT4& color, int index)
 {
 	mPrimitive->SetColor(color);
-	mInstanceDatas[0].color = color;
+	mInstanceDatas[index].color = color;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 

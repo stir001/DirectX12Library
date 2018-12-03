@@ -99,6 +99,10 @@ void Dx12Camera::SetTarget(const DirectX::XMFLOAT3& target)
 void Dx12Camera::ParallelSetPos(const DirectX::XMFLOAT3 & pos)
 {
 	DirectX::XMFLOAT3 offset = pos - mElement.eye;
+	mElement.eye += offset;
+	mElement.target += offset;
+	UpdateElement();
+	(this->*mHolderSetter)();
 }
 
 void Dx12Camera::AddXAxisRota(float deg)

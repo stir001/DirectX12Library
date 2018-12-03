@@ -1,5 +1,5 @@
 #pragma once
-#include "Rootsignature\RootSignatureObject.h"
+#include "RootSignatureObject.h"
 
 class Image3DRootSignature :
 	public RootSignatureObject

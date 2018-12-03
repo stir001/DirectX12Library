@@ -16,6 +16,7 @@
 #include "Util/File.h"
 #include "Util/XMFloatOperators.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
+#include "BulletInclude.h"
 
 #include <d3d12.h>
 #include <algorithm>
@@ -421,4 +422,49 @@ std::string PMDLoader::GetModelName(const std::string & path) const
 	size_t length = path.rfind('/') + 1;
 	std::string rtn(path.begin() + length, path.end());
 	return rtn;
+}
+
+void PMDLoader::CreateRigidBodis()
+{
+	for (auto data : mLoadingmodel->mRigidBody.datas)
+	{
+		BulletShapeType type;
+		DirectX::XMFLOAT3 info;
+		if (data.shapeType == 0)
+		{
+			type = BulletShapeType::SPHERE;
+			info.x = data.shapeW;
+		}
+		else if (data.shapeType == 1)
+		{
+			type = BulletShapeType::BOX;
+			info.x = data.shapeW;
+			info.y = data.shapeH;
+			info.z = data.shapeD;
+		}
+		else if (data.shapeType == 2)
+		{
+			type = BulletShapeType::CAPSULE;
+			info.x = data.shapeW;
+			info.y = data.shapeH;
+		}
+		auto rigid = PhysicsSystem::Instance().CreateRigitBody(type, info);
+		rigid->SetMass(data.weight);
+		BulletCollisionState state;
+		if (data.rigidbodyType == 0)
+		{
+			state = BulletCollisionState::KINEMATIC;
+		}
+		else if (data.rigidbodyType == 1 || data.rigidbodyType == 2)
+		{
+			state = BulletCollisionState::STATIC;
+		}
+		rigid->SetCollisionState(state);
+		rigid->SetFriction(data.friction);
+		rigid->SetSpinFriction(data.rotDim);
+		rigid->SetRestitution(data.recoil);
+		
+		
+		
+	}
 }

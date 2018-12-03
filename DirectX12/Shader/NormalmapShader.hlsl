@@ -52,7 +52,7 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
 {
     NormalMapData data;
     matrix pvw = mul(c_projection, mul(c_view, c_world));
-    data.svpos = ((mul(pvw, mul(vsIn.aMat, vsIn.pos)) + mul(pvw, vsIn.instanceOffset)));
+    data.svpos = mul(pvw, mul(vsIn.aMat, vsIn.pos)) + mul(pvw, float4((vsIn.instanceOffset).xyz, 0.0f));
     data.pos = vsIn.pos;
     data.color = vsIn.color;
     data.uv = vsIn.uv;

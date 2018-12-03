@@ -7,7 +7,7 @@
 *
 *	@par 最終更新日	2018/9/21
 */
-#include "DrawObject/DrawObjectLoader.h"
+#include "DirectX12/DrawObject/DrawObjectLoader.h"
 #include <map>
 
 class PMDModel;
@@ -180,5 +180,7 @@ private:
 	*	@return	モデルの名前
 	*/
 	std::string GetModelName(const std::string& path) const;
+
+	void CreateRigidBodis();
 	
 };

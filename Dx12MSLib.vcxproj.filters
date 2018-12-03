@@ -97,6 +97,24 @@
     <Filter Include="DirectX12\RenderingPass\Manager">
       <UniqueIdentifier>{453e4080-ae0e-47c3-982b-f98763f55663}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bullet">
+      <UniqueIdentifier>{088fd9e2-1735-4640-ae43-ade6184365fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\Action">
+      <UniqueIdentifier>{64c696be-97b1-4688-8c53-96882dd23a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\Ghost">
+      <UniqueIdentifier>{c04a095f-8e3f-4b95-b952-ce3286ff12b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\RigidBody">
+      <UniqueIdentifier>{5bd41d11-e906-461f-9ed0-0e9120b77e76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\Shape">
+      <UniqueIdentifier>{126111fe-8bb1-416d-ad2c-8bf6613b29c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\System">
+      <UniqueIdentifier>{89784383-8c94-48f3-8b5d-27ab93336e82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -348,9 +366,6 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12ConstantBufferViewDesc.h">
       <Filter>DirectX12\ViewDesc</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\Dx12MSLib.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Image\Loader\ImageLoader.h">
       <Filter>DirectX12\DrawObject\Image</Filter>
     </ClInclude>
@@ -413,6 +428,48 @@
     </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\WireFrameRootSignature.h">
       <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Action\CollisionAction.h">
+      <Filter>Bullet\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\RigidBody\BulletRigidBody.h">
+      <Filter>Bullet\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Ghost\BulletGhostObject.h">
+      <Filter>Bullet\Ghost</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\ConeCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\CylinderCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\SphereCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\StaticPlaneShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\BoxCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\BulletCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Shape\CapsuleCollisionShape.h">
+      <Filter>Bullet\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\System\PhysicsSystem.h">
+      <Filter>Bullet\System</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\System\BulletDebugDrawDx.h">
+      <Filter>Bullet\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx12MSLib.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletInclude.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -713,6 +770,42 @@
     <ClCompile Include="DirectX12\Rootsignature\WireFrameRootSignature.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
+    <ClCompile Include="bullet\Action\CollisionAction.cpp">
+      <Filter>Bullet\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\RigidBody\BulletRigidBody.cpp">
+      <Filter>Bullet\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Ghost\BulletGhostObject.cpp">
+      <Filter>Bullet\Ghost</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\CylinderCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\SphereCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\StaticPlaneShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\BoxCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\BulletCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\CapsuleCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\Shape\ConeCollisionShape.cpp">
+      <Filter>Bullet\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\System\PhysicsSystem.cpp">
+      <Filter>Bullet\System</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\System\BulletDebugDrawDx.cpp">
+      <Filter>Bullet\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -752,6 +845,9 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\WireFrameShader.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\FbxNormalmapShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

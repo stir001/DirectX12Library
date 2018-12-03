@@ -8,7 +8,7 @@
 *
 *	@par ÅIXV“ú	2018/9/18
 */
-#include "Shader/ShaderDatasStructure.h"
+#include "DirectX12/Shader/ShaderDatasStructure.h"
 
 #include <vector>
 #include <d3dcommon.h>

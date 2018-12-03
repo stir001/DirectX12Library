@@ -7,7 +7,7 @@
 *
 *	@par ÅIXV“ú	2018/11/15
 */
-#include "DrawObject/DrawController3D.h"
+#include "DirectX12/DrawObject/DrawController3D.h"
 #include "PMDDataStructure.h"
 
 class PMDModel;

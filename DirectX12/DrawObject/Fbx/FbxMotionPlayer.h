@@ -1,6 +1,6 @@
 #pragma once
 #include "FbxStructure.h"
-#include "Animation/AnimationPlayer.h"
+#include "DirectX12/Animation/AnimationPlayer.h"
 #include "FbxMotionData.h"
 #include <memory>
 

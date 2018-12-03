@@ -1,6 +1,6 @@
 #include "FbxRootsiganatureDefine.hlsli"
 
-#define SMAPLWEDEFINE ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
+#define SMAPLERDEFINE ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_CLAMP, addressV = TEXTURE_ADDRESS_CLAMP, addressW = TEXTURE_ADDRESS_CLAMP)"
 
 Texture2D<float4> diffuseMap:register(t0);
@@ -61,7 +61,7 @@ struct GSOutput
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-[RootSignature(FBXRS SMAPLWEDEFINE)]
+[RootSignature(FBXRS SMAPLERDEFINE)]
 VSOutput FbxVS(VSInput input)
 {
     VSOutput o;

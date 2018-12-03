@@ -8,3 +8,6 @@
 /Dx12MSLib.vcxproj.user
 /DirectX12/Rootsignature/WireRootSignature.h
 /DirectX12/Rootsignature/WireRootSignature.cpp
+/bullet/Action/TestAction.cpp
+/bullet/Action/TestAction.h
+/DirectX12/Shader/FbxNormalmapShader.hlsl
