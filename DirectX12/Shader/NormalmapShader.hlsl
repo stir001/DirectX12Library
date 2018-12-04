@@ -99,7 +99,7 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
     tangentSpace._21_22_23 = normalize(tangentSpace._21_22_23);
     tangentSpace._31_32_33 = normalize(tangentSpace._31_32_33);
 
-    matrix tMat = transpose(tangentSpace);
+    matrix tMat = inverse(tangentSpace);
     matrix localMat = inverse(vertices[0].aMatrix);
     float4 localLight = mul(localMat, dir);
     float4 tangentLight = float4(normalize(mul(localLight, tMat).xyz), 1.0f);

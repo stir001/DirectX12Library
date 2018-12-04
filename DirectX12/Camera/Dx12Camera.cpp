@@ -89,9 +89,23 @@ void Dx12Camera::SetPos(const DirectX::XMFLOAT3& pos)
 	(this->*mHolderSetter)();
 }
 
+void Dx12Camera::SetPos(float x, float y, float z)
+{
+	mElement.eye = { x, y, z ,1.0f};
+	UpdateElement();
+	(this->*mHolderSetter)();
+}
+
 void Dx12Camera::SetTarget(const DirectX::XMFLOAT3& target)
 {
 	mElement.target = { target.x, target.y, target.z, 1 };
+	UpdateElement();
+	(this->*mHolderSetter)();
+}
+
+void Dx12Camera::SetTarget(float x, float y, float z)
+{
+	mElement.target = { x, y, z, 1.0f };
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
