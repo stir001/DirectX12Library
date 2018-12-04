@@ -177,7 +177,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BulletInclude.h" />
-    <ClInclude Include="bullet\Action\CollisionAction.h" />
+    <ClInclude Include="bullet\Action\CollisionDetector.h" />
     <ClInclude Include="bullet\Ghost\BulletGhostObject.h" />
     <ClInclude Include="bullet\RigidBody\BulletRigidBody.h" />
     <ClInclude Include="bullet\Shape\BoxCollisionShape.h" />
@@ -292,11 +292,12 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.h" />
     <ClInclude Include="Dx12MSLib.h" />
+    <ClInclude Include="Bullet\Action\IActionDefiner.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bullet\Action\CollisionAction.cpp" />
+    <ClCompile Include="Bullet\Action\CollisionDetector.cpp" />
     <ClCompile Include="bullet\Ghost\BulletGhostObject.cpp" />
     <ClCompile Include="bullet\RigidBody\BulletRigidBody.cpp" />
     <ClCompile Include="bullet\Shape\BoxCollisionShape.cpp" />
@@ -406,6 +407,7 @@
     <ClCompile Include="DirectX12\ViewDesc\Dx12RenderTargetViewDesc.cpp" />
     <ClCompile Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.cpp" />
     <ClCompile Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.cpp" />
+    <ClCompile Include="Bullet\Action\IActionDefiner.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

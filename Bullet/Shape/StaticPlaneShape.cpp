@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BulletlibLink.h"
 #include "StaticPlaneShape.h"
+#include <btBulletDynamicsCommon.h>
 
 
 StaticPlaneShape::StaticPlaneShape(float constans

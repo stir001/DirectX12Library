@@ -7,8 +7,6 @@
 *
 *	@par 最終更新日	2018/11/27
 */
-#include <btBulletDynamicsCommon.h>
-#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <memory>
 #include <DirectXMath.h>
 #include <map>
@@ -16,8 +14,15 @@
 class BulletDebugDrawDx;
 class BulletRigidBody;
 class BulletCollisionShape;
-class CollisionAction;
+class CollisionDetector;
 class BulletGhostObject;
+class btGhostObject;
+class btBroadphaseInterface;
+class btDefaultCollisionConfiguration;
+class btCollisionDispatcher;
+class btSequentialImpulseConstraintSolver;
+class btDiscreteDynamicsWorld;
+class btGhostPairCallback;
 
 /**
 *	@enum	BulletShapeType
@@ -83,6 +88,12 @@ public:
 	void Simulation();
 
 	/**
+	*	@brief 剛体シュミレーションをする
+	*	@param[in]	de;taTime	進める時間
+	*/
+	void Simulation(float deltaTime);
+
+	/**
 	*	@brief	剛体を管理下から解放する
 	*	@param[in]	collider	解放する剛体
 	*/
@@ -127,7 +138,7 @@ public:
 	*	@brief	アクションを追加する
 	*	@param[in]	action	追加するアクション
 	*/
-	void AddAction(std::shared_ptr<CollisionAction> action);
+	void AddAction(std::shared_ptr<CollisionDetector> action);
 
 	/**
 	*	@brief	ゴーストを追加する

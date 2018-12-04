@@ -429,9 +429,6 @@
     <ClInclude Include="DirectX12\Rootsignature\WireFrameRootSignature.h">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
-    <ClInclude Include="bullet\Action\CollisionAction.h">
-      <Filter>Bullet\Action</Filter>
-    </ClInclude>
     <ClInclude Include="bullet\RigidBody\BulletRigidBody.h">
       <Filter>Bullet\RigidBody</Filter>
     </ClInclude>
@@ -470,6 +467,12 @@
     </ClInclude>
     <ClInclude Include="BulletInclude.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet\Action\CollisionDetector.h">
+      <Filter>Bullet\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet\Action\IActionDefiner.h">
+      <Filter>Bullet\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -770,9 +773,6 @@
     <ClCompile Include="DirectX12\Rootsignature\WireFrameRootSignature.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
-    <ClCompile Include="bullet\Action\CollisionAction.cpp">
-      <Filter>Bullet\Action</Filter>
-    </ClCompile>
     <ClCompile Include="bullet\RigidBody\BulletRigidBody.cpp">
       <Filter>Bullet\RigidBody</Filter>
     </ClCompile>
@@ -805,6 +805,12 @@
     </ClCompile>
     <ClCompile Include="bullet\System\BulletDebugDrawDx.cpp">
       <Filter>Bullet\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet\Action\CollisionDetector.cpp">
+      <Filter>Bullet\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet\Action\IActionDefiner.cpp">
+      <Filter>Bullet\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

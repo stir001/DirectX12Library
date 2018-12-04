@@ -18,7 +18,6 @@ LIGHT_CBUFFER(b1)
 
 struct NormalMapData
 {
-    float4 svpos : SV_POSITION;
     float4 pos : POSITION0;
     float4 normal : NORMAL;
     matrix aMatrix : MATRIX;
@@ -40,9 +39,12 @@ struct NormalMapVSInput
 struct PrimitiveVertexData
 {
     float4 svpos : SV_POSITION;
+    float4 pos : POSITION;
     float4 color : COLOR;
+    float4 normal : NORMAL;
     float2 uv : TEXCOORD;
     float4 tangentLight : LIGHT;
+    float4 eyeDir : EYEDIR;
 	matrix uvzMatrix : UVZMAT;
 	matrix localMat : INSTANCEMAT;
 };
@@ -51,9 +53,7 @@ struct PrimitiveVertexData
 NormalMapData NormalMapVS(NormalMapVSInput vsIn)
 {
     NormalMapData data;
-    matrix pvw = mul(c_projection, mul(c_view, c_world));
-    data.svpos = mul(pvw, mul(vsIn.aMat, vsIn.pos)) + mul(pvw, float4((vsIn.instanceOffset).xyz, 0.0f));
-    data.pos = vsIn.pos;
+    data.pos = mul(vsIn.aMat, vsIn.pos) + float4((vsIn.instanceOffset).xyz, 0.0f);
     data.color = vsIn.color;
     data.uv = vsIn.uv;
     matrix rotaMat = vsIn.aMat;
@@ -104,6 +104,7 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
     float4 localLight = mul(localMat, dir);
     float4 tangentLight = float4(normalize(mul(localLight, tMat).xyz), 1.0f);
 
+    matrix pvw = mul(c_projection, mul(c_view, c_world));
     PrimitiveVertexData ret;
     ret.color = vertices[0].color;
     ret.tangentLight = float4(normalize(tangentLight.xyz), 1.0);
@@ -111,7 +112,10 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
     ret.localMat = vertices[0].aMatrix;
     for (uint i = 0; i < VERTEX_COUNT; ++i)
     {
-        ret.svpos = vertices[i].svpos;
+        ret.pos = vertices[i].pos;
+        ret.eyeDir = mul(mul(localMat, float4(normalize(ret.pos - eye).xyz, 0)), tMat);
+        ret.normal = mul(vertices[i].aMatrix, vertices[i].normal);
+        ret.svpos = mul(pvw, ret.pos);
         ret.uv = vertices[i].uv;
         gsOut.Append(ret);
     }
@@ -124,6 +128,10 @@ float4 NormalMapPS(PrimitiveVertexData psIn) : SV_target
 
     float brightness = (dot(-psIn.tangentLight.xyz, normalize(normal.xyz)) + 1.0f) * 0.5f;
 
-    float4 color = saturate(float4((psIn.color * brightness).xyz, 1.0f));
+    float3 refLight = normalize(reflect(normalize(psIn.tangentLight.xyz), normalize(normal.xyz)));
+    float spec = pow(saturate(dot(normalize(refLight), -psIn.eyeDir.xyz)), 5);
+    //return float4(spec, spec, spec, 1.0f);
+
+    float4 color = saturate(float4((psIn.color * brightness + saturate(float4(1, 1, 1, 0) * spec)).xyz, 1.0f));
     return color;
 }

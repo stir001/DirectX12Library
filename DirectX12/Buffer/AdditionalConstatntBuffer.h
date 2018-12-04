@@ -2,7 +2,7 @@
 #include "ConstantBufferObject.h"
 #include <vector>
 /**
-*	@file AdditionalCOnstantBuffer.h
+*	@file AdditionalConstantBuffer.h
 *	@brief 後から追加するコンスタントバッファ
 *
 *	@author 真鍋奨一郎

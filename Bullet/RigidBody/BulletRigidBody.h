@@ -7,20 +7,21 @@
 *
 *	@par 最終更新日	2018/11/26
 */
-#include <btBulletDynamicsCommon.h>
 #include <memory>
 #include <DirectXMath.h>
 
+class btRigidBody;
+class btMotionState;
 class BulletCollisionObject;
 class PhysicsSystem;
 class BulletCollisionShape;
 
 enum class BulletCollisionState 
 {
-	STATIC = 1,			//!移動しない固定オブジェクト　物理計算なし　当たり判定あり
-	KINEMATIC = 2,		//!任意移動可能オブジェクト　物理計算なし	当たり判定あり
-	NON_CONTACT = 4,	//!任意移動不可オブジェクト	重力のみ?あり　当たり判定なし
-	CHARACTER = 16,		//!任意移動不可オブジェクト	物理計算あり	当たり判定あり
+	STATIC = 1,			//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化あり
+	KINEMATIC = 2,		//!任意移動可能オブジェクト 物理計算なし  当たり判定あり 非アクティブ化なし
+	NON_CONTACT = 4,	//!任意移動不可オブジェクト 重力のみ?あり 当たり判定なし 非アクティブ化あり
+	CHARACTER = 16,		//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化なし
 };
 
 int operator|(const BulletCollisionState lval, const BulletCollisionState rval);
@@ -101,14 +102,16 @@ public:
 	void SetTag(int tag);
 
 	/**
-	*	コリジョンの状態を変更する
-		enum BulletCollisionState	の値を基準にする
+	*	@brief	コリジョンの状態を変更する
+	*		enum BulletCollisionState	の値を基準にする
+	*	@param[in]	state	設定するステート
 	*/
 	void SetCollisionState(int state);
 
 	/**
-	*	コリジョンの状態を変更する
-			enum BulletCollisionState	の値を基準にする
+	*	@brief	コリジョンの状態を変更する
+	*		enum BulletCollisionState	の値を基準にする
+	*	@param[in]	state	設定するステート
 	*/
 	void SetCollisionState(BulletCollisionState state);
 
@@ -164,6 +167,6 @@ protected:
 	/**
 	*	質量
 	*/
-	btScalar mMass;
+	float mMass;
 };
 

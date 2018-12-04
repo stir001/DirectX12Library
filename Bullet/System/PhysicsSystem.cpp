@@ -11,7 +11,7 @@
 #include "bullet/Shape/CapsuleCollisionShape.h"
 #include "bullet/Shape/ConeCollisionShape.h"
 #include "bullet/Shape/CylinderCollisionShape.h"
-#include "bullet/Action/CollisionAction.h"
+#include "bullet/Action/CollisionDetector.h"
 #include "bullet/Ghost/BulletGhostObject.h"
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
@@ -99,8 +99,13 @@ void PhysicsSystem::AddRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 void PhysicsSystem::Simulation()
 {
 	long currentTime = clock();
-	mWorld->stepSimulation(1.0 / 60.0f, 1);
+	mWorld->stepSimulation(currentTime - mTime);
 	mTime = currentTime;
+}
+
+void PhysicsSystem::Simulation(float deltaTime)
+{
+	mWorld->stepSimulation(deltaTime);
 }
 
 void PhysicsSystem::RemoveRigidBody(std::shared_ptr<BulletRigidBody> rigid)
@@ -170,7 +175,7 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 	return shape;
 }
 
-void PhysicsSystem::AddAction(std::shared_ptr<CollisionAction> action)
+void PhysicsSystem::AddAction(std::shared_ptr<CollisionDetector> action)
 {
 	mWorld->addAction(action.get());
 	AddGhost(action->GetGhostObject());
@@ -179,7 +184,7 @@ void PhysicsSystem::AddAction(std::shared_ptr<CollisionAction> action)
 
 void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 {
-	if (ghost->GetWorldID() != -1) return;
+	if (ghost->GetTag() != -1) return;
 	int index = 0;
 	for (auto gID = mGhosts.begin(); gID != mGhosts.end(); ++gID)
 	{
@@ -196,7 +201,7 @@ void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 		++index;
 	}
 	mGhosts[index] = ghost;
-	ghost->mWorldID = index;
+	ghost->mTag = index;
 	auto col = ghost->GetGhostObject();
 	mWorld->addCollisionObject(col.get());
 }

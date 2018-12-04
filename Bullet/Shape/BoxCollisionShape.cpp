@@ -2,6 +2,7 @@
 #include "BulletlibLink.h"
 #include "BoxCollisionShape.h"
 
+#include <btBulletDynamicsCommon.h>
 
 
 BoxCollisionShape::BoxCollisionShape(const DirectX::XMFLOAT3& length)

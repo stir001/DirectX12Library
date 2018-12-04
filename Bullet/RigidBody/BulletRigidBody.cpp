@@ -4,6 +4,8 @@
 #include "bullet/System/PhysicsSystem.h"
 #include "bullet/Shape/BulletCollisionShape.h"
 
+#include <btBulletDynamicsCommon.h>
+
 int operator|(const BulletCollisionState lval, const BulletCollisionState rval)
 {
 	return static_cast<int>(lval) | static_cast<int>(rval);

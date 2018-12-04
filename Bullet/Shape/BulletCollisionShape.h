@@ -1,6 +1,7 @@
 #pragma once
-#include <btBulletDynamicsCommon.h>
 #include <memory>
+
+class btCollisionShape;
 
 class BulletCollisionShape
 {

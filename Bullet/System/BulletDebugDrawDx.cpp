@@ -11,6 +11,8 @@
 #include "Buffer/ConstantBufferObject.h"
 #include "Buffer/IndexBufferObject.h"
 
+#include <btBulletDynamicsCommon.h>
+
 BulletDebugDrawDx::BulletDebugDrawDx(const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	: mMode(DebugDrawModes::DBG_NoDebug), mDev(dev)
 	, mCamerasBuffer(Dx12Ctrl::Instance().GetCameraHolder()->GetCamerasBuffer())

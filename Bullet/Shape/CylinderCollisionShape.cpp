@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BulletlibLink.h"
 #include "CylinderCollisionShape.h"
-
+#include <btBulletDynamicsCommon.h>
 
 
 CylinderCollisionShape::CylinderCollisionShape(float radius, float height)
