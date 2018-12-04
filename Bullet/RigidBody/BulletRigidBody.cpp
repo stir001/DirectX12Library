@@ -122,12 +122,28 @@ void BulletRigidBody::SetRestitution(float restitution)
 
 void BulletRigidBody::SetYawPitchRoll(const DirectX::XMFLOAT3 & ypr)
 {
+	SetYawPitchRoll(ypr.x, ypr.y, ypr.z);
+}
+
+void BulletRigidBody::SetYawPitchRoll(float x, float y, float z)
+{
 	btMatrix3x3 mat;
 	mat.setIdentity();
-	mat.setEulerYPR(ypr.x, ypr.y, ypr.z);
+	mat.setEulerYPR(x, y, z);
 	btTransform trans = mRigidBody->getWorldTransform();
 	trans.setBasis(mat);
 	mRigidBody->setWorldTransform(trans);
+}
+
+void BulletRigidBody::SetOrigin(const DirectX::XMFLOAT3& pos)
+{
+	SetOrigin(pos.x, pos.y, pos.z);
+}
+
+void BulletRigidBody::SetOrigin(float x, float y, float z)
+{
+	auto trans = mRigidBody->getWorldTransform();
+	trans.setOrigin(btVector3(x, y, z));
 }
 
 void BulletRigidBody::CreateRigidBody()

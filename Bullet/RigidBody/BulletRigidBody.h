@@ -134,10 +134,32 @@ public:
 	void SetRestitution(float restitution);
 
 	/**
-	*	@broef	Yaw Pitch Rollを設定する
+	*	@brief	Yaw Pitch Rollを設定する
 	*	@param[in]	ypr		(Pitch,Yaw,Roll)
 	*/
 	void SetYawPitchRoll(const DirectX::XMFLOAT3& ypr);
+
+	/**
+	*	@brief	Yaw Pitch Rollを設定する
+	*	@param[in]	x	Pitch
+	*	@param[in]	y	Yaw
+	*	@param[in]	z	Roll
+	*/
+	void SetYawPitchRoll(float x, float y,float z);
+
+	/**
+	*	@brief	中心点を設定する
+	*	@param[in]	pos		設定する座標
+	*/
+	void SetOrigin(const DirectX::XMFLOAT3& pos);
+
+	/**
+	*	@brief	中心点を設定する
+	*	@param[in]	x	設定するx座標
+	*	@param[in]	y	設定するy座標
+	*	@param[in]	z	設定するz座標
+	*/
+	void SetOrigin(float x, float y, float z);
 protected:
 	/**
 	*	btRigidBodyを作成する
