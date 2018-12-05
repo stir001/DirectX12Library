@@ -37,6 +37,10 @@ public:
 	*	@return	自身のタグ
 	*/
 	int GetTag() const;
+
+	void Translate(float x, float y, float z);
+
+	void Translate(const DirectX::XMFLOAT3& pos);
 private:
 	/**
 	*	衝突検知用オブジェクト

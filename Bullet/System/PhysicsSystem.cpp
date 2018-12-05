@@ -24,42 +24,53 @@ PhysicsSystem* PhysicsSystem::mInstance = nullptr;
 PhysicsSystem::PhysicsSystem()
 {
 	//広域位相アルゴリズムの実装をインスタンス化
-	mBroadphase = std::make_shared<btDbvtBroadphase>();
-	mGhostCallBack = std::make_shared<btGhostPairCallback>();
+	mBroadphase.reset( new btDbvtBroadphase());
+	mGhostCallBack.reset( new btGhostPairCallback());
 	mBroadphase->getOverlappingPairCache()->setInternalGhostPairCallback(mGhostCallBack.get());
 
 	//狭域位相アルゴリズムの実装をインスタンス化
-	mCollisionConfiguration = std::make_shared<btDefaultCollisionConfiguration>();
-	mDispatcher = std::make_shared<btCollisionDispatcher>(mCollisionConfiguration.get());
+	mCollisionConfiguration.reset(new btDefaultCollisionConfiguration());
+	mDispatcher.reset(new btCollisionDispatcher(mCollisionConfiguration.get()));
 
 	//ソルバー
-	mSolver = std::make_shared<btSequentialImpulseConstraintSolver>();
+	mSolver.reset(new btSequentialImpulseConstraintSolver());
 
 	//設定を適応した世界を作る
-	mWorld = std::make_shared<btDiscreteDynamicsWorld>(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get());
+	mWorld.reset(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
 
 	//重力を設定する
 	mWorld->setGravity(btVector3(0.f, -9.8f, 0.f));	
 
-	mDebugDrawer = std::make_shared<BulletDebugDrawDx>(Dx12Ctrl::Instance().GetDev());
+	mDebugDrawer.reset(new BulletDebugDrawDx(Dx12Ctrl::Instance().GetDev()));
 	mDebugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe);
 	mWorld->setDebugDrawer(mDebugDrawer.get());
 
 	mTime = clock();
 }
 
-
-PhysicsSystem::~PhysicsSystem()
+void PhysicsSystem::Release()
 {
 	for (auto rigid : mRigidBodies)
 	{
-		mWorld->removeRigidBody(rigid.second->GetRigidBody().get());
-	}
-	for (auto ghost : mGhosts)
-	{
-		mWorld->removeCollisionObject(ghost.second->GetGhostObject().get());
+		RemoveRigidBody(rigid.second);
 	}
 	mRigidBodies.clear();
+	for (auto ghost : mGhosts)
+	{
+		RemoveGhost(ghost.second->GetWorldID());
+	}
+	mGhosts.clear();
+}
+
+
+PhysicsSystem::~PhysicsSystem()
+{
+	mWorld.reset();
+	mSolver.reset();
+	mDispatcher.reset();
+	mCollisionConfiguration.reset();
+	mBroadphase.reset();
+	mGhostCallBack.reset();
 }
 
 void PhysicsSystem::DebugDraw()
@@ -102,7 +113,7 @@ int PhysicsSystem::GetValidityWorldID()
 void PhysicsSystem::Simulation()
 {
 	long currentTime = clock();
-	mWorld->stepSimulation(currentTime - mTime);
+	mWorld->stepSimulation(static_cast<float>(currentTime - mTime));
 	mTime = currentTime;
 }
 
@@ -123,6 +134,7 @@ void PhysicsSystem::RemoveRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 		return;
 	}
 	mWorld->removeRigidBody(rigid->GetRigidBody().get());
+	(*fitr).second->mWorldID = -1;
 	mRigidBodies.erase(fitr);
 }
 
@@ -134,6 +146,7 @@ void PhysicsSystem::RemoveRigidBody(int worldID)
 		return;
 	}
 	mWorld->removeRigidBody((*itr).second->GetRigidBody().get());
+	(*itr).second->mWorldID = -1;
 	mRigidBodies.erase(itr);
 }
 
@@ -210,5 +223,6 @@ void PhysicsSystem::RemoveGhost(int index)
 	});
 	if (fitr == mGhosts.end()) return;
 	mWorld->removeCollisionObject((*fitr).second->GetGhostObject().get());
+	(*fitr).second->mWorldID = -1;
 	mGhosts.erase(fitr);
 }

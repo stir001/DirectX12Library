@@ -8,12 +8,15 @@
 *	@par 最終更新日	2018/12/5
 */
 
+class PhysicsSystem;
+
 /**
 *	@class ICollisionObject
 *	@brief 衝突オブジェクトの定義
 */
 class ICollisionObject
 {
+	friend PhysicsSystem;
 public:
 	/**
 	*	@param[in] worldID	個別のID

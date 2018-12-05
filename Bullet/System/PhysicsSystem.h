@@ -60,7 +60,9 @@ public:
 	{
 		if (mInstance != nullptr)
 		{
+			mInstance->Release();
 			delete mInstance;
+			mInstance = nullptr;
 		}
 	}
 
@@ -177,6 +179,11 @@ private:
 	PhysicsSystem();
 	PhysicsSystem(const PhysicsSystem&) = delete;
 	PhysicsSystem(const PhysicsSystem&&) = delete;
+
+	/**
+	*	管理しているオブジェクトを解放する
+	*/
+	void Release();
 
 	/**
 	*	広域位相フェーズ
