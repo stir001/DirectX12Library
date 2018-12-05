@@ -53,13 +53,21 @@ void PhysicsSystem::Release()
 	for (auto rigid : mRigidBodies)
 	{
 		RemoveRigidBody(rigid.second);
+		if (mRigidBodies.size() == 0)
+		{
+			break;
+		}
 	}
 	mRigidBodies.clear();
 	for (auto ghost : mGhosts)
 	{
 		RemoveGhost(ghost.second->GetWorldID());
+		if (mGhosts.size() == 0)
+		{
+			break;
+		}
 	}
-	mGhosts.clear();
+	//mGhosts.clear();
 }
 
 
