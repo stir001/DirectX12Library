@@ -47,8 +47,6 @@ class PhysicsSystem : public std::enable_shared_from_this<PhysicsSystem>
 public:
 	~PhysicsSystem();
 
-	static PhysicsSystem* mInstance;
-
 	static PhysicsSystem& Instance()
 	{
 		if (mInstance == nullptr)
@@ -174,6 +172,8 @@ public:
 	*/
 	void RemoveGhost(int worldID);
 private:
+	static PhysicsSystem* mInstance;
+
 	PhysicsSystem();
 	PhysicsSystem(const PhysicsSystem&) = delete;
 	PhysicsSystem(const PhysicsSystem&&) = delete;
