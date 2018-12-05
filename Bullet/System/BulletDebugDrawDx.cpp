@@ -38,8 +38,6 @@ void BulletDebugDrawDx::drawLine(const btVector3 & from, const btVector3 & to, c
 {
 	mVertices.emplace_back(DebugDrawVertex(from, color));
 	mVertices.emplace_back(DebugDrawVertex(to, color));
-	mIndices.emplace_back(static_cast<unsigned int>(mVertices.size()) - 2U);
-	mIndices.emplace_back(static_cast<unsigned int>(mVertices.size()) - 1U);
 }
 
 void BulletDebugDrawDx::setDebugMode(int debugMode)
@@ -69,7 +67,6 @@ void BulletDebugDrawDx::draw3dText(const btVector3 & location, const char * text
 void BulletDebugDrawDx::ClearLines()
 {
 	mVertices.clear();
-	mIndices.clear();
 }
 
 void BulletDebugDrawDx::DebugDraw()
@@ -89,9 +86,7 @@ void BulletDebugDrawDx::DebugDraw()
 	mCmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
 	mCmdList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
 	mVertexBuffer->SetBuffer(mCmdList);
-	//mIndexBuffer->SetBuffer(mCmdList);
 	mDescHeap->SetDescriptorHeap(mCmdList);
 	mDescHeap->SetGprahicsDescriptorTable(mCmdList, 0, 0);
 	mCmdList->DrawInstanced(static_cast<unsigned int>(mVertices.size()), 1, 0, 0);
-	//mCmdList->DrawIndexedInstanced(static_cast<unsigned int>(mIndices.size()), 1, 0, 0, 0);
 }

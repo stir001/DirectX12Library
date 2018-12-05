@@ -11,14 +11,11 @@ int operator|(const BulletCollisionState lval, const BulletCollisionState rval)
 	return static_cast<int>(lval) | static_cast<int>(rval);
 }
 
-BulletRigidBody::BulletRigidBody() : mMass(1.0f), mTag(-1)
-{
-}
 
-BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape
+BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID
 	, const DirectX::XMFLOAT3& pos)
-	: mCollisionShape(collisionShape)
-	, mMass(1.0f), mTag(-1)
+	: ICollisionObject(worldID), mCollisionShape(collisionShape)
+	, mMass(1.0f)
 {
 	CreateRigidBody();
 	Translate(pos.x, pos.y, pos.z);
@@ -82,11 +79,6 @@ void BulletRigidBody::SetWorldTransform(const DirectX::XMFLOAT4X4& matrix)
 	transform.setOrigin(btVector3(matrix._41, matrix._42, matrix._43));
 	transform.setFromOpenGLMatrix(mat);
 	mMotionState->setWorldTransform(transform);
-}
-
-int BulletRigidBody::GetTag() const
-{
-	return mTag;
 }
 
 void BulletRigidBody::SetTag(int tag)

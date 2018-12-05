@@ -3,7 +3,7 @@
 #include "PhysicsSystem.h"
 #include "BulletDebugDrawDx.h"
 #include "Master/Dx12Ctrl.h"
-#include "bullet/RigidBody/BulletRigidBody.h"
+#include "bullet/CollisionObject/BulletRigidBody.h"
 #include "bullet/Shape/BulletCollisionShape.h"
 #include "bullet/Shape/SphereCollisionShape.h"
 #include "bullet/Shape/BoxCollisionShape.h"
@@ -12,7 +12,7 @@
 #include "bullet/Shape/ConeCollisionShape.h"
 #include "bullet/Shape/CylinderCollisionShape.h"
 #include "bullet/Action/CollisionDetector.h"
-#include "bullet/Ghost/BulletGhostObject.h"
+#include "bullet/CollisionObject/BulletGhostObject.h"
 
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <btBulletDynamicsCommon.h>
@@ -75,25 +75,28 @@ void PhysicsSystem::ClearDebugDraw()
 
 void PhysicsSystem::AddRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 {
-	if (rigid->GetTag() != -1) return;
-	int key = 0;
+	if (rigid->GetWorldID() == -1) return;
+	mRigidBodies[rigid->GetWorldID()] = rigid;
+	mWorld->addRigidBody(rigid->GetRigidBody().get());
+}
+
+int PhysicsSystem::GetValidityWorldID()
+{
+	int worldID = 0;
 
 	for (auto itr = mRigidBodies.begin(); itr != mRigidBodies.end(); ++itr)
 	{
-		if ((*itr).first != key)
+		if ((*itr).first != worldID)
 		{
-			auto fitr = std::find_if(itr, mRigidBodies.end(), [key](std::pair<const int, std::shared_ptr<BulletRigidBody>> data) { return data.first == key; });
+			auto fitr = std::find_if(itr, mRigidBodies.end(), [worldID](std::pair<const int, std::shared_ptr<BulletRigidBody>> data) { return data.first == worldID; });
 			if (fitr == mRigidBodies.end())
 			{
 				break;
 			}
 		}
-		++key;
+		++worldID;
 	}
-
-	mRigidBodies[key] = rigid;
-	rigid->mTag = key;
-	mWorld->addRigidBody(rigid->GetRigidBody().get());
+	return worldID;
 }
 
 void PhysicsSystem::Simulation()
@@ -135,10 +138,8 @@ void PhysicsSystem::RemoveRigidBody(int tag)
 }
 
 std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigitBody(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
-{
-	std::shared_ptr<BulletCollisionShape> shape;
-	
-	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), pos);
+{	
+	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetValidityWorldID(), pos);
 
 	AddRigidBody(rigidBody);
 
@@ -175,33 +176,27 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 	return shape;
 }
 
+std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
+{
+	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetValidityWorldID());
+
+	return ghost;
+}
+
 void PhysicsSystem::AddAction(std::shared_ptr<CollisionDetector> action)
 {
 	mWorld->addAction(action.get());
-	AddGhost(action->GetGhostObject());
-	//mWorld->addCollisionObject(action->GetGhostObject()->GetGhostObject().get());
+}
+
+void PhysicsSystem::RemoveAction(std::shared_ptr<CollisionDetector> action)
+{
+	mWorld->removeAction(action.get());
 }
 
 void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 {
-	if (ghost->GetTag() != -1) return;
-	int index = 0;
-	for (auto gID = mGhosts.begin(); gID != mGhosts.end(); ++gID)
-	{
-		if ((*gID).first < index)
-		{
-			if(std::find_if(gID, mGhosts.end(), [index](std::pair<int, std::shared_ptr<BulletGhostObject>> value) 
-			{
-				return value.first == index;
-			})
-			 == mGhosts.end())
-			break;
-		}
-		index = (*gID).first;
-		++index;
-	}
-	mGhosts[index] = ghost;
-	ghost->mTag = index;
+	if (ghost->GetWorldID() == -1) return;
+	mGhosts[ghost->GetWorldID()] = ghost;
 	auto col = ghost->GetGhostObject();
 	mWorld->addCollisionObject(col.get());
 }

@@ -10,7 +10,6 @@
 #include <BulletDynamics/Dynamics/btActionInterface.h>
 #include <btBulletDynamicsCommon.h>
 #include <memory>
-#include <list>
 #include <functional>
 
 enum class BulletShapeType;
@@ -102,11 +101,21 @@ public:
 	*	@return 保持しているタグ
 	*/
 	int GetTag() const;
+
+	/**
+	*	@brief	タグを設定する
+	*	@param[in]	設定するタグ
+	*/
+	void SetTag(int tag);
 protected:
+	/**
+	*	衝突検知用のオブジェクト
+	*/
 	std::shared_ptr<BulletGhostObject> mGhost;
 
-	std::list<int> mTargetTags;
-
+	/**
+	*	衝突時に起こすアクションの関数
+	*/
 	std::function<void(int)> mAction;
 };
 

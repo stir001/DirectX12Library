@@ -6,15 +6,20 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
 
-BulletGhostObject::BulletGhostObject(int tag)
-	: mTag(tag), mGhost(std::make_shared<btGhostObject>())
+BulletGhostObject::BulletGhostObject(int worldID)
+	: ICollisionObject(worldID),  mGhost(std::make_shared<btGhostObject>())
 {
-	mGhost->setUserIndex(tag);
+}
+
+BulletGhostObject::BulletGhostObject(std::shared_ptr<BulletCollisionShape> collisionShape
+	, int worldID)
+	: ICollisionObject(worldID), mGhost(std::make_shared<btGhostObject>())
+{
+	SetCollisionShape(collisionShape);
 }
 
 BulletGhostObject::~BulletGhostObject()
 {
-	PhysicsSystem::Instance().RemoveGhost(mTag);
 }
 
 std::shared_ptr<btGhostObject> BulletGhostObject::GetGhostObject()
@@ -28,7 +33,14 @@ void BulletGhostObject::SetCollisionShape(std::shared_ptr<BulletCollisionShape> 
 	mGhost->setCollisionShape(mShape->GetShape().get());
 }
 
-int BulletGhostObject::GetTag() const
+void BulletGhostObject::SetTag(int tag)
 {
-	return mTag;
+	mTag = tag;
+	mGhost->setUserIndex(tag);
 }
+
+void BulletGhostObject::RemoveWorld()
+{
+	PhysicsSystem::Instance().RemoveGhost(GetWorldID());
+}
+

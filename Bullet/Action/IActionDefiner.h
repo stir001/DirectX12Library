@@ -38,6 +38,9 @@ public:
 	*/
 	int GetTag() const;
 private:
+	/**
+	*	衝突検知用オブジェクト
+	*/
 	std::shared_ptr<CollisionDetector> mDetector;
 };
 

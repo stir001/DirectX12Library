@@ -82,11 +82,9 @@ private:
 	};
 
 	std::vector<DebugDrawVertex> mVertices;
-	std::vector<unsigned int> mIndices;
 	std::shared_ptr<PipelineStateObject> mPipelinestate;
 	std::shared_ptr<RootSignatureObject> mRootsignature;
 	std::shared_ptr<VertexBufferObject> mVertexBuffer;
-	std::shared_ptr<IndexBufferObject> mIndexBuffer;
 	std::shared_ptr<ConstantBufferObject> mCamerasBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDescHeap;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;

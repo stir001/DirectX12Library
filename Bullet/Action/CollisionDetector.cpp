@@ -2,7 +2,8 @@
 #include "BulletlibLink.h"
 #include "CollisionDetector.h"
 #include "bullet/Shape/BulletCollisionShape.h"
-#include "bullet/Ghost/BulletGhostObject.h"
+#include "bullet/CollisionObject/BulletGhostObject.h"
+#include "Bullet/System/PhysicsSystem.h"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
@@ -16,10 +17,10 @@ CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
 	trans.setOrigin(btVector3(0, 0, 0));
 	mGhost->GetGhostObject()->setWorldTransform(trans);
 	int num = mGhost->GetGhostObject()->getCollisionFlags();
-	//mCollision->GetGhostObject()->setActivationState(DISABLE_DEACTIVATION);
 	mGhost->GetGhostObject()->setCollisionFlags(num | 
 		btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE | 
 		btCollisionObject::CollisionFlags::CF_STATIC_OBJECT);
+	PhysicsSystem::Instance().AddGhost(mGhost);
 }
 
 
@@ -105,4 +106,9 @@ void CollisionDetector::SetAction(std::function<void(int)> action)
 int CollisionDetector::GetTag() const
 {
 	return mGhost->GetTag();
+}
+
+void CollisionDetector::SetTag(int tag)
+{
+	mGhost->SetTag(tag);
 }

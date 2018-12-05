@@ -7,6 +7,7 @@
 *
 *	@par 最終更新日	2018/11/26
 */
+#include "Base/ICollisionObject.h"
 #include <memory>
 #include <DirectXMath.h>
 
@@ -30,21 +31,14 @@ int operator|(const BulletCollisionState lval, const BulletCollisionState rval);
 *	@class BulletRigidBody
 *	@brief btRigidBodyのラッパークラス
 */
-class BulletRigidBody : public std::enable_shared_from_this<BulletRigidBody>
+class BulletRigidBody : public ICollisionObject
 {
 public:
-	friend PhysicsSystem;
-
-	/**
-	*	何もしないコンストラクタ
-	*/
-	BulletRigidBody();
-
 	/**
 	*	@param[in]	collisionShape	rigidBodyに設定する形状
 	*	@param[in]	pos		初期位置
 	*/
-	BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape
+	BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID
 		, const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 	virtual ~BulletRigidBody();
 
@@ -86,13 +80,6 @@ public:
 	*	@param[in]	matrix	ワールド変換行列
 	*/
 	void SetWorldTransform(const DirectX::XMFLOAT4X4& matrix);
-
-	/**
-	*	@brief	タグを取得する
-	*	@return	設定されたタグ
-	*/
-	int GetTag() const;
-
 
 	/**
 	*	@brief	任意のタグを設定する
@@ -180,11 +167,6 @@ protected:
 	*	モーションステート	剛体との同期に必要
 	*/
 	std::shared_ptr<btMotionState> mMotionState;
-
-	/**
-	*	タグ
-	*/
-	int mTag;
 
 	/**
 	*	質量

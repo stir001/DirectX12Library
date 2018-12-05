@@ -178,8 +178,8 @@
   <ItemGroup>
     <ClInclude Include="BulletInclude.h" />
     <ClInclude Include="bullet\Action\CollisionDetector.h" />
-    <ClInclude Include="bullet\Ghost\BulletGhostObject.h" />
-    <ClInclude Include="bullet\RigidBody\BulletRigidBody.h" />
+    <ClInclude Include="Bullet\CollisionObject\BulletGhostObject.h" />
+    <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h" />
     <ClInclude Include="bullet\Shape\BoxCollisionShape.h" />
     <ClInclude Include="bullet\Shape\BulletCollisionShape.h" />
     <ClInclude Include="bullet\Shape\CapsuleCollisionShape.h" />
@@ -189,6 +189,7 @@
     <ClInclude Include="bullet\Shape\StaticPlaneShape.h" />
     <ClInclude Include="bullet\System\BulletDebugDrawDx.h" />
     <ClInclude Include="bullet\System\PhysicsSystem.h" />
+    <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h" />
@@ -298,8 +299,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet\Action\CollisionDetector.cpp" />
-    <ClCompile Include="bullet\Ghost\BulletGhostObject.cpp" />
-    <ClCompile Include="bullet\RigidBody\BulletRigidBody.cpp" />
+    <ClCompile Include="Bullet\CollisionObject\BulletGhostObject.cpp" />
+    <ClCompile Include="Bullet\CollisionObject\BulletRigidBody.cpp" />
     <ClCompile Include="bullet\Shape\BoxCollisionShape.cpp" />
     <ClCompile Include="bullet\Shape\BulletCollisionShape.cpp" />
     <ClCompile Include="bullet\Shape\CapsuleCollisionShape.cpp" />
@@ -309,6 +310,7 @@
     <ClCompile Include="bullet\Shape\StaticPlaneShape.cpp" />
     <ClCompile Include="bullet\System\BulletDebugDrawDx.cpp" />
     <ClCompile Include="bullet\System\PhysicsSystem.cpp" />
+    <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp" />

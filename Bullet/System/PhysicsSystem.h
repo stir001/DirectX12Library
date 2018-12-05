@@ -82,6 +82,8 @@ public:
 	*/
 	void AddRigidBody(std::shared_ptr<BulletRigidBody> rigid);
 
+	int GetValidityWorldID();
+
 	/**
 	*	剛体シュミレーションをする
 	*/
@@ -135,10 +137,30 @@ public:
 		, const DirectX::XMFLOAT3& data);
 
 	/**
+	*	@brief	ghostを作成する
+	*	@param[in]	type	作成する形状
+	*	@param[in]	data	形状により異なる (x,y,z)
+	BOX			(x, y, z)				各方向の辺の長さ
+	SPHERE		(radius, nan, nan)		x半径 y無視	z無視
+	CYLINDER	(radius, height, nan)	x半径 y高さ z無視
+	CAPSULE		(radisu, height, nan)	x半径 y高さ z無視
+	PLANE		(x, y, z)				x法線 y法線 z法線
+	CONE		(radius, height, nan)	x半径 y高さ z無視
+	*	@param[in]	pos		初期位置
+	*/
+	std::shared_ptr<BulletGhostObject> CreateGhostObject(const BulletShapeType type
+		, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
+
+	/**
 	*	@brief	アクションを追加する
 	*	@param[in]	action	追加するアクション
 	*/
 	void AddAction(std::shared_ptr<CollisionDetector> action);
+
+	/**
+	*
+	*/
+	void RemoveAction(std::shared_ptr<CollisionDetector> action);
 
 	/**
 	*	@brief	ゴーストを追加する
@@ -146,6 +168,10 @@ public:
 	*/
 	void AddGhost(std::shared_ptr<BulletGhostObject> ghost);
 
+	/**
+	*	@brief	Ghostを世界から削除する
+	*	@parma[in]	index	削除するインデックス
+	*/
 	void RemoveGhost(int index);
 private:
 	PhysicsSystem();
@@ -197,6 +223,9 @@ private:
 	*/
 	long mTime;
 
+	/**
+	*	ghostをペアリングするためのコールバッククラス
+	*/
 	std::shared_ptr<btGhostPairCallback> mGhostCallBack;
 };
 
