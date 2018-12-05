@@ -8,6 +8,7 @@
 *	@par ÅIXV“ú	2018/12/04
 */
 #include <memory>
+#include <DirectXMath.h>
 
 class CollisionDetector;
 class BulletCollisionShape;
