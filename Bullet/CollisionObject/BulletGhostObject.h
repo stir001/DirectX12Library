@@ -55,7 +55,7 @@ private:
 	/**
 	*	世界から登録を外す
 	*/
-	void RemoveWorld();
+	void RemoveWorld() override;
 
 	/**
 	*	バレットのghost

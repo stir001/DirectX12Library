@@ -151,7 +151,7 @@ private:
 	/**
 	*	¢ŠE‚©‚ç©•ª‚ğíœ‚·‚é
 	*/
-	void RemoveWorld();
+	void RemoveWorld() override;
 
 	/**
 	*	btRigidBody‚ğì¬‚·‚é

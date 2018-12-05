@@ -24,6 +24,7 @@ BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collision
 
 BulletRigidBody::~BulletRigidBody()
 {
+	RemoveWorld();
 }
 
 std::shared_ptr<btRigidBody> BulletRigidBody::GetRigidBody()

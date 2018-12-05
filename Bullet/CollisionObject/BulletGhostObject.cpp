@@ -20,6 +20,7 @@ BulletGhostObject::BulletGhostObject(std::shared_ptr<BulletCollisionShape> colli
 
 BulletGhostObject::~BulletGhostObject()
 {
+	RemoveWorld();
 }
 
 std::shared_ptr<btGhostObject> BulletGhostObject::GetGhostObject()
