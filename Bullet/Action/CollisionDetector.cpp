@@ -76,7 +76,7 @@ void CollisionDetector::SetCollisionState(int state)
 	mGhost->GetGhostObject()->setCollisionFlags(state);
 }
 
-void CollisionDetector::SetCollisionSate(BulletCollisionState state)
+void CollisionDetector::SetCollisionState(BulletCollisionState state)
 {
 	mGhost->GetGhostObject()->setCollisionFlags(static_cast<int>(state));
 }

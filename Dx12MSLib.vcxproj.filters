@@ -103,12 +103,6 @@
     <Filter Include="Bullet\Action">
       <UniqueIdentifier>{64c696be-97b1-4688-8c53-96882dd23a2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Bullet\Ghost">
-      <UniqueIdentifier>{c04a095f-8e3f-4b95-b952-ce3286ff12b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Bullet\RigidBody">
-      <UniqueIdentifier>{5bd41d11-e906-461f-9ed0-0e9120b77e76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Bullet\Shape">
       <UniqueIdentifier>{126111fe-8bb1-416d-ad2c-8bf6613b29c2}</UniqueIdentifier>
     </Filter>
@@ -117,6 +111,9 @@
     </Filter>
     <Filter Include="Bullet\CollisionObject">
       <UniqueIdentifier>{071b8e81-99aa-451b-89d7-0b50792e6fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bullet\CollisionObject\Base">
+      <UniqueIdentifier>{b3578752-1ae7-48d0-b147-f181c0f89180}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -471,14 +468,14 @@
     <ClInclude Include="Bullet\Action\IActionDefiner.h">
       <Filter>Bullet\Action</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h">
+      <Filter>Bullet\CollisionObject\Base</Filter>
+    </ClInclude>
     <ClInclude Include="Bullet\CollisionObject\BulletGhostObject.h">
-      <Filter>Bullet\Ghost</Filter>
+      <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
     <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
-      <Filter>Bullet\RigidBody</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -812,14 +809,14 @@
     <ClCompile Include="Bullet\Action\IActionDefiner.cpp">
       <Filter>Bullet\Action</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp">
+      <Filter>Bullet\CollisionObject\Base</Filter>
+    </ClCompile>
     <ClCompile Include="Bullet\CollisionObject\BulletGhostObject.cpp">
-      <Filter>Bullet\Ghost</Filter>
+      <Filter>Bullet\CollisionObject</Filter>
     </ClCompile>
     <ClCompile Include="Bullet\CollisionObject\BulletRigidBody.cpp">
-      <Filter>Bullet\RigidBody</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Bullet\CollisionObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -68,7 +68,7 @@ public:
 	*	@brief	状態を設定する
 	*	@param[in]	state	設定する状態(bit単位でのフラグで管理)
 	*/
-	void SetCollisionSate(BulletCollisionState state);
+	void SetCollisionState(BulletCollisionState state);
 
 	/**
 	*	@brief	中心座標を任意の点に設定する

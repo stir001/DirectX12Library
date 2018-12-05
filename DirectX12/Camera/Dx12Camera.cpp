@@ -9,7 +9,8 @@
 using namespace DirectX;
 
 Dx12Camera::Dx12Camera(int wWidth,int wHeight)
-	: mWidth(wWidth),mHeight(wHeight)
+	: mWidth(wWidth), mHeight(wHeight)
+	, mFov(DirectX::XM_PIDIV4), mNear(1.0f), mFar(500.f)
 	, mElement()
 	, mUpper(0, 1, 0), mLocalUpper(mUpper), mHoldIndex(-1)
 	, mHolderSetter(&Dx12Camera::NonSetElementToHolder)
@@ -24,7 +25,8 @@ Dx12Camera::Dx12Camera(int wWidth,int wHeight)
 
 Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 	const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper)
-	: mWidth(wWidth),mHeight(wHeight)
+	: mWidth(wWidth), mHeight(wHeight)
+	, mFov(DirectX::XM_PIDIV4), mNear(1.0f), mFar(500.f)
 	, mElement()
 	, mUpper(upper), mLocalUpper(mUpper), mHoldIndex(-1)
 	, mHolderSetter(&Dx12Camera::NonSetElementToHolder)
@@ -41,6 +43,7 @@ Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const Di
 	const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & upper,
 	std::shared_ptr<CameraHolder> holder, unsigned int holdIndex)
 	: mWidth(static_cast<int>(viewport.Width)), mHeight(static_cast<int>(viewport.Height))
+	, mFov(DirectX::XM_PIDIV4), mNear(1.0f), mFar(500.f)
 	, mViewPort(viewport), mScissorRect(scissorRect)
 	, mElement()
 	, mUpper(upper), mLocalUpper(mUpper), mHolder(holder), mHoldIndex(holdIndex)
@@ -68,7 +71,7 @@ void Dx12Camera::UpdateElement()
 
 void Dx12Camera::Init()
 {
-	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 1.0f, 500.f));//カメラのプロジェクション行列
+	UpdateProjection();
 	DirectX::XMStoreFloat4x4(&mElement.world, DirectX::XMMatrixIdentity());
 	mWorldRotation = mElement.world;
 }
@@ -80,6 +83,11 @@ void Dx12Camera::SetElementToHolder()
 
 void Dx12Camera::NonSetElementToHolder()
 {
+}
+
+void Dx12Camera::UpdateProjection()
+{
+	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
 }
 
 void Dx12Camera::SetPos(const DirectX::XMFLOAT3& pos)
@@ -221,7 +229,7 @@ void Dx12Camera::SetViewPort(float width, float height,
 	mViewPort = { topLX, topLY, width, height, minDepth, maxDepth };
 	mWidth = static_cast<int>(width);
 	mHeight = static_cast<int>(height);
-	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
+	UpdateProjection();
 	UpdateElement();
 	(this->*mHolderSetter)();
 	mHolder.lock()->SetCameraViewPort(this);
@@ -324,6 +332,30 @@ int Dx12Camera::GetHoldIndex() const
 	return mHoldIndex;
 }
 
+void Dx12Camera::SetFoV(float rad)
+{
+	mFov = rad;
+	UpdateProjection();
+	UpdateElement();
+	(this->*mHolderSetter)();
+}
+
+void Dx12Camera::SetNear(float cameraNear)
+{
+	mNear = cameraNear;
+	UpdateProjection();
+	UpdateElement();
+	(this->*mHolderSetter)();
+}
+
+void Dx12Camera::SetFar(float cameraFar)
+{
+	mFar = cameraFar;
+	UpdateProjection();
+	UpdateElement();
+	(this->*mHolderSetter)();
+}
+
 void Dx12Camera::AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix)
 {
 	DirectX::XMStoreFloat4x4(&mWorldRotation, /*DirectX::XMLoadFloat4x4(&mWorldRotation) **/ rotaMatrix);
@@ -346,7 +378,7 @@ DirectX::XMFLOAT3 Dx12Camera::GetLocalUpper()
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMFLOAT3 crossVec = CrossXMFloat3(eyeToTarget, mUpper);
-	/*crossVec = NormalizeXMFloat3(crossVec);*/
+	crossVec = NormalizeXMFloat3(crossVec);
 	mLocalUpper = NormalizeXMFloat3(CrossXMFloat3(crossVec, eyeToTarget));
 	return  mLocalUpper;
 }

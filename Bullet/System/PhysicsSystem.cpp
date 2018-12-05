@@ -126,9 +126,9 @@ void PhysicsSystem::RemoveRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 	mRigidBodies.erase(fitr);
 }
 
-void PhysicsSystem::RemoveRigidBody(int tag)
+void PhysicsSystem::RemoveRigidBody(int worldID)
 {
-	auto itr = mRigidBodies.find(tag);
+	auto itr = mRigidBodies.find(worldID);
 	if (itr == mRigidBodies.end())
 	{
 		return;

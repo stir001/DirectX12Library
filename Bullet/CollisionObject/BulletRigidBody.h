@@ -147,7 +147,12 @@ public:
 	*	@param[in]	z	İ’è‚·‚ézÀ•W
 	*/
 	void SetOrigin(float x, float y, float z);
-protected:
+private:
+	/**
+	*	¢ŠE‚©‚ç©•ª‚ğíœ‚·‚é
+	*/
+	void RemoveWorld();
+
 	/**
 	*	btRigidBody‚ğì¬‚·‚é
 	*/

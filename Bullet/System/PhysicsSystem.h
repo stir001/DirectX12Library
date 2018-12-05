@@ -105,7 +105,7 @@ public:
 	*	@brief 剛体を管理下から解放する
 	*	@param[in]	tag		解放する剛体のタグ
 	*/
-	void RemoveRigidBody(int tag);
+	void RemoveRigidBody(int worldID);
 
 	/**
 	*	@brief	rigidBodyを作成する
@@ -114,7 +114,7 @@ public:
 			BOX			(x, y, z)				各方向の辺の長さ
 			SPHERE		(radius, nan, nan)		x半径 y無視	z無視
 			CYLINDER	(radius, height, nan)	x半径 y高さ z無視
-			CAPSULE		(radisu, height, nan)	x半径 y高さ z無視
+			CAPSULE		(radius, height, nan)	x半径 y高さ z無視
 			PLANE		(x, y, z)				x法線 y法線 z法線 
 			CONE		(radius, height, nan)	x半径 y高さ z無視
 	*	@param[in]	pos		初期位置
@@ -129,7 +129,7 @@ public:
 			BOX			(x, y, z)				各方向の辺の長さ
 			SPHERE		(radius, nan, nan)		x半径 y無視	z無視
 			CYLINDER	(radius, height, nan)	x半径 y高さ z無視
-			CAPSULE		(radisu, height, nan)	x半径 y高さ z無視
+			CAPSULE		(radius, height, nan)	x半径 y高さ z無視
 			PLANE		(x, y, z)				x法線 y法線 z法線 
 			CONE		(radius, height, nan)	x半径 y高さ z無視
 	*/
@@ -143,7 +143,7 @@ public:
 	BOX			(x, y, z)				各方向の辺の長さ
 	SPHERE		(radius, nan, nan)		x半径 y無視	z無視
 	CYLINDER	(radius, height, nan)	x半径 y高さ z無視
-	CAPSULE		(radisu, height, nan)	x半径 y高さ z無視
+	CAPSULE		(radius, height, nan)	x半径 y高さ z無視
 	PLANE		(x, y, z)				x法線 y法線 z法線
 	CONE		(radius, height, nan)	x半径 y高さ z無視
 	*	@param[in]	pos		初期位置
@@ -172,7 +172,7 @@ public:
 	*	@brief	Ghostを世界から削除する
 	*	@parma[in]	index	削除するインデックス
 	*/
-	void RemoveGhost(int index);
+	void RemoveGhost(int worldID);
 private:
 	PhysicsSystem();
 	PhysicsSystem(const PhysicsSystem&) = delete;

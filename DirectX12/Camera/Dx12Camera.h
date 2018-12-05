@@ -296,6 +296,21 @@ private:
 	int mHoldIndex;
 
 	/**
+	*	視野角
+	*/
+	float mFov;
+
+	/**
+	*	nearClipping
+	*/
+	float mNear;
+
+	/**
+	*	flarClipping
+	*/
+	float mFar;
+
+	/**
 	*	更新をCameraHolderに通知するステート用
 	*/
 	void (Dx12Camera::*mHolderSetter)();
@@ -337,4 +352,6 @@ private:
 	*	holderにカメラ情報変更後の値を設定しない状態
 	*/
 	void NonSetElementToHolder();
+
+	void UpdateProjection();
 };

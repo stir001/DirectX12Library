@@ -138,6 +138,11 @@ void BulletRigidBody::SetOrigin(float x, float y, float z)
 	trans.setOrigin(btVector3(x, y, z));
 }
 
+void BulletRigidBody::RemoveWorld()
+{
+	PhysicsSystem::Instance().RemoveRigidBody(GetWorldID());
+}
+
 void BulletRigidBody::CreateRigidBody()
 {
 	mMotionState = std::make_shared<btDefaultMotionState>();

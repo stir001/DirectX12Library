@@ -9,7 +9,6 @@
 #include "Camera/CameraHolder.h"
 #include "Buffer/VertexBufferObject.h"
 #include "Buffer/ConstantBufferObject.h"
-#include "Buffer/IndexBufferObject.h"
 
 #include <btBulletDynamicsCommon.h>
 
@@ -77,10 +76,6 @@ void BulletDebugDrawDx::DebugDraw()
 	unsigned int dataNum = static_cast<unsigned int>(mVertices.size());
 	mVertexBuffer = std::make_shared<VertexBufferObject>("btDebugVertexBuffer",mDev, dataSize, dataNum);
 	mVertexBuffer->WriteBuffer(mVertices.data(), dataSize * dataNum);
-	dataSize = static_cast<unsigned int>(sizeof(mIndices[0]));
-	dataNum = static_cast<unsigned int>(mIndices.size());
-	mIndexBuffer = std::make_shared<IndexBufferObject>("btDebugIndexBuffer", mDev, dataSize, dataNum);
-	mIndexBuffer->WriteBuffer(mIndices.data(), dataSize * dataNum);
 
 	mCmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
 	mCmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
