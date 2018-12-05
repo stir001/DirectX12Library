@@ -14,6 +14,7 @@ IActionDefiner::IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int 
 
 IActionDefiner::~IActionDefiner()
 {
+	PhysicsSystem::Instance().RemoveAction(mDetector);
 }
 
 int IActionDefiner::GetTag() const
