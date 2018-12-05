@@ -9,8 +9,9 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
 CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape, int tag)
-	: mGhost(std::make_shared<BulletGhostObject>(tag))
 {
+	mGhost = PhysicsSystem::Instance().CreateGhostObject(shape);
+	mGhost->SetTag(tag);
 	mGhost->SetCollisionShape(shape);
 	auto trans = mGhost->GetGhostObject()->getWorldTransform();
 	trans.setIdentity();
@@ -41,12 +42,12 @@ void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar
 		btManifoldArray manifoldArray;
 		findPair->m_algorithm->getAllContactManifolds(manifoldArray);
 		int arraySize = manifoldArray.size();
-		for (int i = 0; i < arraySize; ++i)
+		for (int j = 0; j < arraySize; ++j)
 		{
-			int contactNum = manifoldArray[i]->getNumContacts();
+			int contactNum = manifoldArray[j]->getNumContacts();
 			for (int point = 0; point < contactNum; ++point)
 			{
-				auto p = manifoldArray[i]->getContactPoint(point);
+				auto p = manifoldArray[j]->getContactPoint(point);
 				if (p.getDistance() < 0)
 				{
 					mAction(tag);

@@ -52,22 +52,17 @@ void PhysicsSystem::Release()
 {
 	for (auto rigid : mRigidBodies)
 	{
-		RemoveRigidBody(rigid.second);
-		if (mRigidBodies.size() == 0)
-		{
-			break;
-		}
+		mWorld->removeRigidBody(rigid.second->GetRigidBody().get());
+		rigid.second->mWorldID = -1;
 	}
 	mRigidBodies.clear();
 	for (auto ghost : mGhosts)
 	{
-		RemoveGhost(ghost.second->GetWorldID());
-		if (mGhosts.size() == 0)
-		{
-			break;
-		}
+		mWorld->removeCollisionObject(ghost.second->GetGhostObject().get());
+		ghost.second->mWorldID = -1;
+
 	}
-	//mGhosts.clear();
+	mGhosts.clear();
 }
 
 
@@ -200,7 +195,12 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {
 	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetValidityWorldID());
+	return ghost;
+}
 
+std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape)
+{
+	auto ghost = std::make_shared<BulletGhostObject>(shape, GetValidityWorldID());
 	return ghost;
 }
 
@@ -219,7 +219,7 @@ void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 	if (ghost->GetWorldID() == -1) return;
 	mGhosts[ghost->GetWorldID()] = ghost;
 	auto col = ghost->GetGhostObject();
-	mWorld->addCollisionObject(col.get());
+	mWorld->addCollisionObject(col.get(),1,-1);
 }
 
 void PhysicsSystem::RemoveGhost(int index)

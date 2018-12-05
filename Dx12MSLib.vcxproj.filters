@@ -477,9 +477,6 @@
     <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
       <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet\Action\TestAction2.h">
-      <Filter>Bullet\Action</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -820,9 +817,6 @@
     </ClCompile>
     <ClCompile Include="Bullet\CollisionObject\BulletRigidBody.cpp">
       <Filter>Bullet\CollisionObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet\Action\TestAction2.cpp">
-      <Filter>Bullet\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

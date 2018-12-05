@@ -151,6 +151,8 @@ public:
 	std::shared_ptr<BulletGhostObject> CreateGhostObject(const BulletShapeType type
 		, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 
+	std::shared_ptr<BulletGhostObject> CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape);
+
 	/**
 	*	@brief	アクションを追加する
 	*	@param[in]	action	追加するアクション
