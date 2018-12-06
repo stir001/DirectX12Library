@@ -52,12 +52,6 @@ public:
 	*	@param[in]	pos	移動させる座標
 	*/
 	void Translate(const DirectX::XMFLOAT3& pos);
-
-	/**
-	*	テスト関数
-	*	@brief	アクションと当たり判定を削除する
-	*/
-	void Remove();
 private:
 	/**
 	*	衝突検知用オブジェクト

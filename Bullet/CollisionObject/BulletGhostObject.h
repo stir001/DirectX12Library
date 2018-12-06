@@ -58,7 +58,6 @@ public:
 	*/
 	btCollisionObject* GetPtr() const;
 
-	void TestRemove();
 private:
 	/**
 	*	¢ŠE‚©‚ç“o˜^‚ğŠO‚·

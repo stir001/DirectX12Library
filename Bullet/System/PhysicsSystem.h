@@ -82,7 +82,9 @@ public:
 	*/
 	void AddRigidBody(std::shared_ptr<BulletRigidBody> rigid);
 
-	int GetValidityWorldID();
+	int GetRigidBodyValidityWorldID();
+
+	int GetGhostValidityWorldID();
 
 	/**
 	*	剛体シュミレーションをする

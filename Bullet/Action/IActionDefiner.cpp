@@ -31,9 +31,3 @@ void IActionDefiner::Translate(const DirectX::XMFLOAT3 & pos)
 {
 	mDetector->Translate(pos.x, pos.y, pos.z);
 }
-
-void IActionDefiner::Remove()
-{
-	PhysicsSystem::Instance().RemoveAction(mDetector);
-	mDetector->TestRemove();
-}

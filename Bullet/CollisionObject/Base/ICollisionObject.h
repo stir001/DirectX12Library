@@ -31,7 +31,6 @@ public:
 	*/
 	virtual void SetTag(int tag) = 0;
 
-
 	/**
 	*	@brief	ユーザー定義のタグを取得する
 	*	@return	タグ

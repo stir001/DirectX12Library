@@ -114,7 +114,3 @@ void CollisionDetector::SetTag(int tag)
 	mGhost->SetTag(tag);
 }
 
-void CollisionDetector::TestRemove()
-{
-	mGhost->TestRemove();
-}

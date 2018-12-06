@@ -108,7 +108,6 @@ public:
 	*/
 	void SetTag(int tag);
 
-	void TestRemove();
 protected:
 	/**
 	*	衝突検知用のオブジェクト

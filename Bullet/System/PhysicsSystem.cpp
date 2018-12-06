@@ -55,13 +55,13 @@ void PhysicsSystem::Release()
 		mWorld->removeRigidBody(rigid.second->GetRigidBody().get());
 		rigid.second->mWorldID = -1;
 	}
-	mRigidBodies.clear();
 	for (auto ghost : mGhosts)
 	{
 		mWorld->removeCollisionObject(ghost.second->GetGhostObject().get());
 		ghost.second->mWorldID = -1;
 
 	}
+	mRigidBodies.clear();
 	mGhosts.clear();
 }
 
@@ -94,7 +94,7 @@ void PhysicsSystem::AddRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 	mWorld->addRigidBody(rigid->GetRigidBody().get());
 }
 
-int PhysicsSystem::GetValidityWorldID()
+int PhysicsSystem::GetRigidBodyValidityWorldID()
 {
 	int worldID = 0;
 
@@ -104,6 +104,25 @@ int PhysicsSystem::GetValidityWorldID()
 		{
 			auto fitr = std::find_if(itr, mRigidBodies.end(), [worldID](std::pair<const int, std::shared_ptr<BulletRigidBody>> data) { return data.first == worldID; });
 			if (fitr == mRigidBodies.end())
+			{
+				break;
+			}
+		}
+		++worldID;
+	}
+	return worldID;
+}
+
+int PhysicsSystem::GetGhostValidityWorldID()
+{
+	int worldID = 0;
+
+	for (auto itr = mGhosts.begin(); itr != mGhosts.end(); ++itr)
+	{
+		if ((*itr).first != worldID)
+		{
+			auto fitr = std::find_if(itr, mGhosts.end(), [worldID](std::pair<const int, std::shared_ptr<BulletGhostObject>> data) { return data.first == worldID; });
+			if (fitr == mGhosts.end())
 			{
 				break;
 			}
@@ -155,7 +174,7 @@ void PhysicsSystem::RemoveRigidBody(int worldID)
 
 std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigitBody(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {	
-	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetValidityWorldID(), pos);
+	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetRigidBodyValidityWorldID(), pos);
 
 	AddRigidBody(rigidBody);
 
@@ -194,13 +213,13 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 
 std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {
-	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetValidityWorldID());
+	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetGhostValidityWorldID());
 	return ghost;
 }
 
 std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape)
 {
-	auto ghost = std::make_shared<BulletGhostObject>(shape, GetValidityWorldID());
+	auto ghost = std::make_shared<BulletGhostObject>(shape, GetGhostValidityWorldID());
 	return ghost;
 }
 
