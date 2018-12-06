@@ -39,9 +39,25 @@ public:
 	*/
 	int GetTag() const;
 
+	/**
+	*	@brief	当たり判定を瞬間移動させる
+	*	@param[in]	x	移動させるx座標
+	*	@param[in]	y	移動させるy座標
+	*	@param[in]	z	移動させるz座標
+	*/
 	void Translate(float x, float y, float z);
 
+	/**
+	*	@brief	当たり判定を瞬間移動させる
+	*	@param[in]	pos	移動させる座標
+	*/
 	void Translate(const DirectX::XMFLOAT3& pos);
+
+	/**
+	*	テスト関数
+	*	@brief	アクションと当たり判定を削除する
+	*/
+	void Remove();
 private:
 	/**
 	*	衝突検知用オブジェクト

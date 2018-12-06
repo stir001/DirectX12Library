@@ -9,6 +9,7 @@
 */
 
 class PhysicsSystem;
+class btCollisionObject;
 
 /**
 *	@class ICollisionObject
@@ -42,6 +43,12 @@ public:
 	*	@return	識別子
 	*/
 	int GetWorldID() const;
+
+	/**
+	*	@brief	btCollisionObjectのポインタを取得する
+	*	@return btCollisionObjectのポインタ
+	*/
+	virtual btCollisionObject* GetPtr() const = 0;
 protected:
 	/**
 	*	自身を世界から削除する

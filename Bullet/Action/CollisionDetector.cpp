@@ -20,7 +20,7 @@ CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
 	int num = mGhost->GetGhostObject()->getCollisionFlags();
 	mGhost->GetGhostObject()->setCollisionFlags(num | 
 		btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE | 
-		btCollisionObject::CollisionFlags::CF_KINEMATIC_OBJECT);
+		btCollisionObject::CollisionFlags::CF_STATIC_OBJECT);
 	PhysicsSystem::Instance().AddGhost(mGhost);
 }
 
@@ -112,4 +112,9 @@ int CollisionDetector::GetTag() const
 void CollisionDetector::SetTag(int tag)
 {
 	mGhost->SetTag(tag);
+}
+
+void CollisionDetector::TestRemove()
+{
+	mGhost->TestRemove();
 }

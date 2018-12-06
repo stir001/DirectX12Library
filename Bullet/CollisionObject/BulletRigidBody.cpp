@@ -139,6 +139,11 @@ void BulletRigidBody::SetOrigin(float x, float y, float z)
 	trans.setOrigin(btVector3(x, y, z));
 }
 
+btCollisionObject * BulletRigidBody::GetPtr() const
+{
+	return mRigidBody.get();
+}
+
 void BulletRigidBody::RemoveWorld()
 {
 	PhysicsSystem::Instance().RemoveRigidBody(GetWorldID());

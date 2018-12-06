@@ -40,8 +40,19 @@ void BulletGhostObject::SetTag(int tag)
 	mGhost->setUserIndex(tag);
 }
 
+btCollisionObject * BulletGhostObject::GetPtr() const
+{
+	return mGhost.get();
+}
+
+void BulletGhostObject::TestRemove()
+{
+	PhysicsSystem::Instance().RemoveGhost(GetWorldID());
+}
+
 void BulletGhostObject::RemoveWorld()
 {
 	PhysicsSystem::Instance().RemoveGhost(GetWorldID());
+	auto pairs = mGhost->getOverlappingPairs();
 }
 

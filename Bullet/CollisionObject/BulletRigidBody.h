@@ -147,6 +147,12 @@ public:
 	*	@param[in]	z	設定するz座標
 	*/
 	void SetOrigin(float x, float y, float z);
+
+	/**
+	*	@brief	btCollisionObjectのポインタを取得する
+	*	@return btCollisionObjectのポインタ
+	*/
+	btCollisionObject* GetPtr() const;
 private:
 	/**
 	*	世界から自分を削除する

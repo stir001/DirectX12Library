@@ -51,6 +51,14 @@ public:
 	*	@param[in]	tag	設定するタグ
 	*/
 	void SetTag(int tag);
+
+	/**
+	*	@brief	btCollisionObjectのポインタを取得する
+	*	@return btCollisionObjectのポインタ
+	*/
+	btCollisionObject* GetPtr() const;
+
+	void TestRemove();
 private:
 	/**
 	*	世界から登録を外す

@@ -180,7 +180,7 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 		shape = std::make_shared<CapsuleCollisionShape>(data.x, data.y);
 		break;
 	case BulletShapeType::PLANE:
-		shape = std::make_shared<StaticPlaneShape>(0, data);
+		shape = std::make_shared<StaticPlaneShape>(0.0f, data);
 		break;
 	case BulletShapeType::CONE:
 		shape = std::make_shared<ConeCollisionShape>(data.x, data.y);
@@ -219,18 +219,29 @@ void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 	if (ghost->GetWorldID() == -1) return;
 	mGhosts[ghost->GetWorldID()] = ghost;
 	auto col = ghost->GetGhostObject();
-	mWorld->addCollisionObject(col.get(),1,-1);
+	mWorld->addCollisionObject(col.get()
+		/*, btBroadphaseProxy::CollisionFilterGroups::KinematicFilter
+		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter*/);
 }
 
-void PhysicsSystem::RemoveGhost(int index)
+void PhysicsSystem::RemoveGhost(int worldID)
 {
-	if (index == -1)return;
-	auto fitr = std::find_if(mGhosts.begin(), mGhosts.end(), [index](std::pair<int, std::shared_ptr<BulletGhostObject>> value)
+	if (worldID == -1)return;
+	auto fitr = std::find_if(mGhosts.begin(), mGhosts.end(), [worldID](std::pair<int, std::shared_ptr<BulletGhostObject>> value)
 	{
-		return index == value.first;
+		return worldID == value.first;
 	});
 	if (fitr == mGhosts.end()) return;
 	mWorld->removeCollisionObject((*fitr).second->GetGhostObject().get());
 	(*fitr).second->mWorldID = -1;
+	mGhosts.erase(fitr);
+}
+
+void PhysicsSystem::RemoveGhost(std::shared_ptr<BulletGhostObject> ghost)
+{
+	if (ghost->GetWorldID() == -1) return;
+	mWorld->removeCollisionObject(ghost->GetGhostObject().get());
+	auto fitr = mGhosts.find(ghost->GetWorldID());
+	ghost->mWorldID = -1;
 	mGhosts.erase(fitr);
 }

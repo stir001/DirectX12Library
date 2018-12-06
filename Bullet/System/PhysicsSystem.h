@@ -172,9 +172,16 @@ public:
 
 	/**
 	*	@brief	Ghostを世界から削除する
-	*	@parma[in]	index	削除するインデックス
+	*	@parma[in]	worldID	削除するghostのID
 	*/
 	void RemoveGhost(int worldID);
+
+	/**
+	*	@brief	Ghostを世界から削除する
+	*	@param[in]	ghost	削除するghost
+	*/
+	void RemoveGhost(std::shared_ptr<BulletGhostObject> ghost);
+
 private:
 	static PhysicsSystem* mInstance;
 
