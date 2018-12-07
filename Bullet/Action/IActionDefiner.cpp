@@ -2,12 +2,15 @@
 #include "IActionDefiner.h"
 #include "CollisionDetector.h"
 #include "Bullet/System/PhysicsSystem.h"
+#include "Bullet/Action/CollisionActionCaller.h"
 
 IActionDefiner::IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int tag)
 {
-	mDetector = std::make_shared<CollisionDetector>(shape, tag);
-	mDetector->SetAction([&](int tag)->void { Action(tag); }
-	);
+	std::shared_ptr<CalliedAction> action = std::make_shared<CalliedAction>();
+	action->stayAction = [&](int tag) { StayAction(tag); };
+	action->onAction = [&](int tag) { OnAction(tag); };
+	action->exitAction = [&](int tag) { ExitAction(tag); };
+	mDetector = std::make_shared<CollisionDetector>(shape, tag, action);
 	PhysicsSystem::Instance().AddAction(mDetector);
 }
 

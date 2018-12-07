@@ -11,6 +11,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <memory>
 #include <functional>
+#include <map>
 
 enum class BulletShapeType;
 enum class BulletCollisionState;
@@ -18,6 +19,8 @@ class BulletGhostObject;
 class BulletCollisionShape;
 class btGhostObject;
 class IActionDefiner;
+class CollisionActionCaller;
+struct CalliedAction;
 
 /**
 *	@class CollisionDetector
@@ -30,7 +33,8 @@ public:
 	*	@param[in]	shape	衝突検知するghostの型
 	*	@param[in]	tag		ghostに設定するユーザー定義のタグ
 	*/
-	CollisionDetector(std::shared_ptr<BulletCollisionShape> shape, int tag);
+	CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
+		, int tag, std::shared_ptr<CalliedAction> calliedAction);
 	virtual ~CollisionDetector();
 
 	/**
@@ -86,12 +90,6 @@ public:
 
 
 	/**
-	*	@brief	衝突検知している間ずっと呼ばれる関数を設定する
-	*	@param[in]	action	衝突検知時に実行されるアクション
-	*/
-	void SetAction(std::function<void(int)> action);
-
-	/**
 	*	@brief タグを取得する
 	*	@return 保持しているタグ
 	*/
@@ -103,11 +101,27 @@ public:
 	*/
 	void SetTag(int tag);
 
-protected:
+private:
+	/**
+	*	@brief	ペアが当たっているかどうかを判定する
+	*	@param[in]	pair	ペア
+	*/
+	bool IsCollide(btBroadphasePair* pair);
+
+	int GetOtherProxyID(btBroadphasePair* pair, btBroadphaseProxy* mine);
+
 	/**
 	*	衝突検知用のオブジェクト
 	*/
 	std::shared_ptr<BulletGhostObject> mGhost;
+
+	std::map<int, std::shared_ptr<CollisionActionCaller>> mCallers;
+
+	/**
+	*	アクションを呼ぶクラスの設定保存用
+	*/
+	std::shared_ptr<CalliedAction> mCalliedAction;
+
 
 	/**
 	*	衝突時に起こすアクションの関数

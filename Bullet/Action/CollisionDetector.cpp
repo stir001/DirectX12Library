@@ -4,11 +4,15 @@
 #include "bullet/Shape/BulletCollisionShape.h"
 #include "bullet/CollisionObject/BulletGhostObject.h"
 #include "Bullet/System/PhysicsSystem.h"
+#include "Bullet/Action/CollisionActionCaller.h"
+
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
-CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape, int tag)
+CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
+	, int tag, std::shared_ptr<CalliedAction> calliedAction)
+	: mCalliedAction(calliedAction)
 {
 	mGhost = PhysicsSystem::Instance().CreateGhostObject(shape);
 	mGhost->SetTag(tag);
@@ -32,28 +36,51 @@ CollisionDetector::~CollisionDetector()
 void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar deltaTimeStep)
 {
 	int num = mGhost->GetNumOvwelappingObjects();
+	auto mineProxy = mGhost->GetPtr()->getBroadphaseHandle();
 	for (int i = 0; i < num; ++i)
 	{
 		auto pairCollision = mGhost->GetOverlappingObject(i);
 		auto findPair = collisionWorld->getPairCache()->findPair(mGhost->GetPtr()->getBroadphaseHandle()
 			, pairCollision->getBroadphaseHandle());
 		if (!findPair) continue;
-		int tag = pairCollision->getUserIndex();
-		btManifoldArray manifoldArray;
-		findPair->m_algorithm->getAllContactManifolds(manifoldArray);
-		int arraySize = manifoldArray.size();
-		for (int j = 0; j < arraySize; ++j)
+		int otherid = GetOtherProxyID(findPair, mineProxy);
+		auto caller = mCallers.find(otherid);
+		if (caller == mCallers.end())
 		{
-			int contactNum = manifoldArray[j]->getNumContacts();
-			for (int point = 0; point < contactNum; ++point)
+			int tag = pairCollision->getUserIndex();
+			mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction,tag);
+			caller = mCallers.find(otherid);
+		}
+		if (IsCollide(findPair))
+		{
+			(*caller).second->Collide();
+		}
+	}
+
+	const unsigned int maxRoop = static_cast<unsigned int>(mCallers.size());
+	unsigned int roopCounter = 0;
+	for (auto itr = mCallers.begin(); itr != mCallers.end(); ++itr)
+	{
+		(*itr).second->Action();
+		roopCounter = 0;
+		while (roopCounter < maxRoop)
+		{
+			++roopCounter;
+			if (!(*itr).second->IsCollide() && !(*itr).second->IsPreCollide())
 			{
-				auto p = manifoldArray[j]->getContactPoint(point);
-				if (p.getDistance() < 0)
+				
+				itr = mCallers.erase(itr);
+				if (itr != mCallers.end())
 				{
-					mAction(tag);
-					break;
+					continue;
 				}
+
 			}
+			break;
+		}
+		if (itr == mCallers.end())
+		{
+			break;
 		}
 	}
 }
@@ -94,11 +121,6 @@ std::shared_ptr<BulletGhostObject> CollisionDetector::GetPtr()
 	return mGhost;
 }
 
-void CollisionDetector::SetAction(std::function<void(int)> action)
-{
-	mAction = action;
-}
-
 int CollisionDetector::GetTag() const
 {
 	return mGhost->GetTag();
@@ -108,4 +130,42 @@ void CollisionDetector::SetTag(int tag)
 {
 	mGhost->SetTag(tag);
 }
+
+bool CollisionDetector::IsCollide(btBroadphasePair* pair)
+{
+	bool rtn = false;
+	btManifoldArray manifoldArray;
+	pair->m_algorithm->getAllContactManifolds(manifoldArray);
+	int arraySize = manifoldArray.size();
+	for (int j = 0; j < arraySize; ++j)
+	{
+		int contactNum = manifoldArray[j]->getNumContacts();
+		for (int point = 0; point < contactNum; ++point)
+		{
+			auto p = manifoldArray[j]->getContactPoint(point);
+			if (p.getDistance() < 0)
+			{
+				rtn = true;
+				break;
+			}
+		}
+	}
+	return rtn;
+}
+
+int CollisionDetector::GetOtherProxyID(btBroadphasePair * pair, btBroadphaseProxy* mine)
+{
+	int id = -1;
+	if (pair->m_pProxy0 != mine)
+	{
+		id = pair->m_pProxy0->m_uniqueId;
+	}
+	else if(pair->m_pProxy1 != mine)
+	{
+		id = pair->m_pProxy1->m_uniqueId;
+	}
+	return id;
+}
+
+
 

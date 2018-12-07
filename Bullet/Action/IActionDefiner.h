@@ -28,10 +28,22 @@ public:
 	~IActionDefiner();
 
 	/**
-	*	@brief	衝突している間ずっと呼び出される関数
-	*	@param[in]	tag		各コリジョンに設定するタグ
+	*	@brief	衝突した最初に呼び出される関数
+	*	@brief	tag		衝突したコリジョンのタグ
 	*/
-	virtual void Action(int tag) = 0;
+	virtual void OnAction(int tag) = 0;
+
+	/**
+	*	@brief	衝突している間OnActionの後ずっと呼び出される関数
+	*	@param[in]	tag		衝突したコリジョンのタグ
+	*/
+	virtual void StayAction(int tag) = 0;
+
+	/**
+	*	@brief	衝突しなくなった時に飛び出される関数
+	*	@param[in]	tag		衝突したコリジョンのタグ
+	*/
+	virtual void ExitAction(int tag) = 0;
 
 	/**
 	*	@brief	自身のタグを取得する
