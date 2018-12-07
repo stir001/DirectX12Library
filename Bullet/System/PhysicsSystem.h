@@ -60,7 +60,6 @@ public:
 	{
 		if (mInstance != nullptr)
 		{
-			mInstance->Release();
 			delete mInstance;
 			mInstance = nullptr;
 		}

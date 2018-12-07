@@ -48,6 +48,17 @@ PhysicsSystem::PhysicsSystem()
 	mTime = clock();
 }
 
+PhysicsSystem::~PhysicsSystem()
+{
+	Release();
+	mWorld.reset();
+	mSolver.reset();
+	mDispatcher.reset();
+	mCollisionConfiguration.reset();
+	mBroadphase.reset();
+	mGhostCallBack.reset();
+}
+
 void PhysicsSystem::Release()
 {
 	for (auto rigid : mRigidBodies)
@@ -63,17 +74,6 @@ void PhysicsSystem::Release()
 	}
 	mRigidBodies.clear();
 	mGhosts.clear();
-}
-
-
-PhysicsSystem::~PhysicsSystem()
-{
-	mWorld.reset();
-	mSolver.reset();
-	mDispatcher.reset();
-	mCollisionConfiguration.reset();
-	mBroadphase.reset();
-	mGhostCallBack.reset();
 }
 
 void PhysicsSystem::DebugDraw()
