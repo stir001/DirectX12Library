@@ -43,11 +43,6 @@ public:
 	virtual ~BulletRigidBody();
 
 	/**
-	*	btRigidBodyを取得する
-	*/
-	virtual std::shared_ptr<btRigidBody> GetRigidBody();
-
-	/**
 	*	@brief	質量を設定する
 	*	@param[in]	mass	設定する質量
 	*/
@@ -152,7 +147,13 @@ public:
 	*	@brief	btCollisionObjectのポインタを取得する
 	*	@return btCollisionObjectのポインタ
 	*/
-	btCollisionObject* GetPtr() const;
+	std::shared_ptr<btCollisionObject> GetPtr() const;
+
+	/**
+	*	@brief	btRigidBodyのポインタを取得する
+	*	@return btRigidBodyのポインタ
+	*/
+	std::shared_ptr<btRigidBody> GetRigidPtr() const;
 private:
 	/**
 	*	世界から自分を削除する

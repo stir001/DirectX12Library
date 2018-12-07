@@ -24,24 +24,24 @@ PhysicsSystem* PhysicsSystem::mInstance = nullptr;
 PhysicsSystem::PhysicsSystem()
 {
 	//広域位相アルゴリズムの実装をインスタンス化
-	mBroadphase.reset( new btDbvtBroadphase());
-	mGhostCallBack.reset( new btGhostPairCallback());
+	mBroadphase = std::make_shared<btDbvtBroadphase>();
+	mGhostCallBack = std::make_shared<btGhostPairCallback>();
 	mBroadphase->getOverlappingPairCache()->setInternalGhostPairCallback(mGhostCallBack.get());
 
 	//狭域位相アルゴリズムの実装をインスタンス化
-	mCollisionConfiguration.reset(new btDefaultCollisionConfiguration());
-	mDispatcher.reset(new btCollisionDispatcher(mCollisionConfiguration.get()));
+	mCollisionConfiguration = std::make_shared<btDefaultCollisionConfiguration>();
+	mDispatcher = std::make_shared<btCollisionDispatcher>(mCollisionConfiguration.get());
 
 	//ソルバー
-	mSolver.reset(new btSequentialImpulseConstraintSolver());
+	mSolver = std::make_shared<btSequentialImpulseConstraintSolver>();
 
 	//設定を適応した世界を作る
-	mWorld.reset(new btDiscreteDynamicsWorld(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get()));
+	mWorld = std::make_shared<btDiscreteDynamicsWorld>(mDispatcher.get(), mBroadphase.get(), mSolver.get(), mCollisionConfiguration.get());
 
 	//重力を設定する
 	mWorld->setGravity(btVector3(0.f, -9.8f, 0.f));	
 
-	mDebugDrawer.reset(new BulletDebugDrawDx(Dx12Ctrl::Instance().GetDev()));
+	mDebugDrawer = std::make_shared<BulletDebugDrawDx>(Dx12Ctrl::Instance().GetDev());
 	mDebugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe);
 	mWorld->setDebugDrawer(mDebugDrawer.get());
 
@@ -50,19 +50,23 @@ PhysicsSystem::PhysicsSystem()
 
 void PhysicsSystem::Release()
 {
-	for (auto rigid : mRigidBodies)
+	for (auto collision : mCollisions)
 	{
-		mWorld->removeRigidBody(rigid.second->GetRigidBody().get());
-		rigid.second->mWorldID = -1;
-	}
-	for (auto ghost : mGhosts)
-	{
-		mWorld->removeCollisionObject(ghost.second->GetGhostObject().get());
-		ghost.second->mWorldID = -1;
+		auto rigid = btRigidBody::upcast(collision.second.get());
+		if (rigid)
+		{
+			mWorld->removeRigidBody(rigid);
+			continue;
+		}
 
+		auto ghost = btGhostObject::upcast(collision.second.get());
+		if (ghost)
+		{
+			mWorld->removeCollisionObject(ghost);
+		}
 	}
-	mRigidBodies.clear();
-	mGhosts.clear();
+
+	mCollisions.clear();
 }
 
 
@@ -74,6 +78,7 @@ PhysicsSystem::~PhysicsSystem()
 	mCollisionConfiguration.reset();
 	mBroadphase.reset();
 	mGhostCallBack.reset();
+	mDebugDrawer.reset();
 }
 
 void PhysicsSystem::DebugDraw()
@@ -90,46 +95,8 @@ void PhysicsSystem::ClearDebugDraw()
 void PhysicsSystem::AddRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 {
 	if (rigid->GetWorldID() == -1) return;
-	mRigidBodies[rigid->GetWorldID()] = rigid;
-	mWorld->addRigidBody(rigid->GetRigidBody().get());
-}
-
-int PhysicsSystem::GetRigidBodyValidityWorldID()
-{
-	int worldID = 0;
-
-	for (auto itr = mRigidBodies.begin(); itr != mRigidBodies.end(); ++itr)
-	{
-		if ((*itr).first != worldID)
-		{
-			auto fitr = std::find_if(itr, mRigidBodies.end(), [worldID](std::pair<const int, std::shared_ptr<BulletRigidBody>> data) { return data.first == worldID; });
-			if (fitr == mRigidBodies.end())
-			{
-				break;
-			}
-		}
-		++worldID;
-	}
-	return worldID;
-}
-
-int PhysicsSystem::GetGhostValidityWorldID()
-{
-	int worldID = 0;
-
-	for (auto itr = mGhosts.begin(); itr != mGhosts.end(); ++itr)
-	{
-		if ((*itr).first != worldID)
-		{
-			auto fitr = std::find_if(itr, mGhosts.end(), [worldID](std::pair<const int, std::shared_ptr<BulletGhostObject>> data) { return data.first == worldID; });
-			if (fitr == mGhosts.end())
-			{
-				break;
-			}
-		}
-		++worldID;
-	}
-	return worldID;
+	mWorld->addRigidBody(rigid->GetRigidPtr().get());
+	mCollisions[rigid->GetWorldID()] = rigid->GetPtr();
 }
 
 void PhysicsSystem::Simulation()
@@ -146,35 +113,40 @@ void PhysicsSystem::Simulation(float deltaTime)
 
 void PhysicsSystem::RemoveRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 {
-	if (rigid->GetTag() == -1)
+	if (rigid->GetWorldID() == -1)
 	{
 		return;
 	}
-	auto fitr = mRigidBodies.find(rigid->GetTag());
-	if (fitr == mRigidBodies.end())
+	auto fitr = mCollisions.find(rigid->GetWorldID());
+	if (fitr == mCollisions.end())
 	{
 		return;
 	}
-	mWorld->removeRigidBody(rigid->GetRigidBody().get());
-	(*fitr).second->mWorldID = -1;
-	mRigidBodies.erase(fitr);
+	mWorld->removeRigidBody(rigid->GetRigidPtr().get());
+	mCollisions.erase(fitr);
+	rigid->mWorldID = -1;
 }
 
 void PhysicsSystem::RemoveRigidBody(int worldID)
 {
-	auto itr = mRigidBodies.find(worldID);
-	if (itr == mRigidBodies.end())
+	auto itr = mCollisions.find(worldID);
+	if (itr == mCollisions.end())
 	{
 		return;
 	}
-	mWorld->removeRigidBody((*itr).second->GetRigidBody().get());
-	(*itr).second->mWorldID = -1;
-	mRigidBodies.erase(itr);
+	auto rigid = btRigidBody::upcast((*itr).second.get());
+	if (rigid)
+	{
+		mWorld->removeRigidBody(rigid);
+	}
+
+	
+	mCollisions.erase(itr);
 }
 
 std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigitBody(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {	
-	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetRigidBodyValidityWorldID(), pos);
+	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetAvailableMinID(), pos);
 
 	AddRigidBody(rigidBody);
 
@@ -213,13 +185,13 @@ std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const 
 
 std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {
-	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetGhostValidityWorldID());
+	auto ghost = std::make_shared<BulletGhostObject>(CreateCollisionShape(type, data), GetAvailableMinID());
 	return ghost;
 }
 
 std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape)
 {
-	auto ghost = std::make_shared<BulletGhostObject>(shape, GetGhostValidityWorldID());
+	auto ghost = std::make_shared<BulletGhostObject>(shape, GetAvailableMinID());
 	return ghost;
 }
 
@@ -236,31 +208,49 @@ void PhysicsSystem::RemoveAction(std::shared_ptr<CollisionDetector> action)
 void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 {
 	if (ghost->GetWorldID() == -1) return;
-	mGhosts[ghost->GetWorldID()] = ghost;
-	auto col = ghost->GetGhostObject();
+	auto col = ghost->GetPtr();
 	mWorld->addCollisionObject(col.get()
-		/*, btBroadphaseProxy::CollisionFilterGroups::KinematicFilter
-		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter*/);
+		, btBroadphaseProxy::CollisionFilterGroups::KinematicFilter
+		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter
+		| btBroadphaseProxy::CollisionFilterGroups::KinematicFilter);
+	mCollisions[ghost->GetWorldID()] = ghost->GetPtr();
 }
 
 void PhysicsSystem::RemoveGhost(int worldID)
 {
 	if (worldID == -1)return;
-	auto fitr = std::find_if(mGhosts.begin(), mGhosts.end(), [worldID](std::pair<int, std::shared_ptr<BulletGhostObject>> value)
-	{
-		return worldID == value.first;
-	});
-	if (fitr == mGhosts.end()) return;
-	mWorld->removeCollisionObject((*fitr).second->GetGhostObject().get());
-	(*fitr).second->mWorldID = -1;
-	mGhosts.erase(fitr);
+	auto fitr = mCollisions.find(worldID);
+	if (fitr == mCollisions.end()) return;
+	mWorld->removeCollisionObject((*fitr).second.get());
+	mCollisions.erase(fitr);
 }
 
 void PhysicsSystem::RemoveGhost(std::shared_ptr<BulletGhostObject> ghost)
 {
 	if (ghost->GetWorldID() == -1) return;
-	mWorld->removeCollisionObject(ghost->GetGhostObject().get());
-	auto fitr = mGhosts.find(ghost->GetWorldID());
+	auto fitr = mCollisions.find(ghost->GetWorldID());
+	if (fitr == mCollisions.end()) return;
+	mWorld->removeCollisionObject(ghost->GetPtr().get());
+	mCollisions.erase(fitr);
 	ghost->mWorldID = -1;
-	mGhosts.erase(fitr);
+}
+
+int PhysicsSystem::GetAvailableMinID()
+{
+	int id = 0;
+	auto endItr = mCollisions.end();
+	for (auto itr = mCollisions.begin(); itr != endItr; ++itr, ++id)
+	{
+		if (itr->first == id)
+		{
+			continue;
+		}
+		auto fitr = std::find_if(itr, endItr, [id](std::pair<int, std::shared_ptr<btCollisionObject>> col) {return col.first == id; });
+		if (fitr == endItr)
+		{
+			break;
+		}
+	}
+
+	return id;
 }

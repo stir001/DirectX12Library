@@ -23,7 +23,7 @@ class BulletGhostObject :public ICollisionObject
 {
 public:
 	/**
-	*	@param[in]	worldID	固有のID
+	*	
 	*/
 	BulletGhostObject(int worldID);
 
@@ -33,12 +33,6 @@ public:
 	*/
 	BulletGhostObject(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID);
 	virtual ~BulletGhostObject();
-
-	/**
-	*	@brief	バレットのGhostObjectを取得する
-	*	@return	btGhostObject
-	*/
-	std::shared_ptr<btGhostObject> GetGhostObject();
 
 	/**
 	*	@brief	衝突形状の設定
@@ -56,7 +50,20 @@ public:
 	*	@brief	btCollisionObjectのポインタを取得する
 	*	@return btCollisionObjectのポインタ
 	*/
-	btCollisionObject* GetPtr() const;
+	std::shared_ptr<btCollisionObject> GetPtr() const;
+
+	/**
+	*	@brief	重複しているオブジェクトの数を取得する(AABB単位かグループ単位?)
+	*	@return 重複オブジェクトの数
+	*/
+	int GetNumOvwelappingObjects();
+
+	/**
+	*	@brief	重複しているオブジェクトを取得する
+	*	@param[in]	オブジェクトのインデックス
+	*	@return		重複オブジェクト
+	*/
+	btCollisionObject* GetOverlappingObject(int i);
 
 private:
 	/**

@@ -15,7 +15,7 @@ class BulletCollisionShape;
 
 /**
 *	@class IActionDefiner
-*	@brief	衝突時のアクションを定義する規定するクラス
+*	@brief	衝突時のアクションを定義する基底するクラス
 */
 class IActionDefiner
 {
