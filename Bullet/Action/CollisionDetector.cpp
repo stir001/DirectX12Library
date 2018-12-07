@@ -13,12 +13,12 @@ CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
 	mGhost = PhysicsSystem::Instance().CreateGhostObject(shape);
 	mGhost->SetTag(tag);
 	mGhost->SetCollisionShape(shape);
-	auto trans = mGhost->GetGhostObject()->getWorldTransform();
+	auto trans = mGhost->GetPtr()->getWorldTransform();
 	trans.setIdentity();
 	trans.setOrigin(btVector3(0, 0, 0));
-	mGhost->GetGhostObject()->setWorldTransform(trans);
-	int num = mGhost->GetGhostObject()->getCollisionFlags();
-	mGhost->GetGhostObject()->setCollisionFlags(num | 
+	mGhost->GetPtr()->setWorldTransform(trans);
+	int num = mGhost->GetPtr()->getCollisionFlags();
+	mGhost->GetPtr()->setCollisionFlags(num |
 		btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE | 
 		btCollisionObject::CollisionFlags::CF_STATIC_OBJECT);
 	PhysicsSystem::Instance().AddGhost(mGhost);
@@ -31,11 +31,11 @@ CollisionDetector::~CollisionDetector()
 
 void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar deltaTimeStep)
 {
-	int num = mGhost->GetGhostObject()->getNumOverlappingObjects();
+	int num = mGhost->GetNumOvwelappingObjects();
 	for (int i = 0; i < num; ++i)
 	{
-		auto pairCollision = mGhost->GetGhostObject()->getOverlappingObject(i);
-		auto findPair = collisionWorld->getPairCache()->findPair(mGhost->GetGhostObject()->getBroadphaseHandle()
+		auto pairCollision = mGhost->GetOverlappingObject(i);
+		auto findPair = collisionWorld->getPairCache()->findPair(mGhost->GetPtr()->getBroadphaseHandle()
 			, pairCollision->getBroadphaseHandle());
 		if (!findPair) continue;
 		int tag = pairCollision->getUserIndex();
@@ -74,29 +74,24 @@ void CollisionDetector::SetShape(std::shared_ptr<BulletCollisionShape> shape)
 
 void CollisionDetector::SetCollisionState(int state)
 {
-	mGhost->GetGhostObject()->setCollisionFlags(state);
+	mGhost->GetPtr()->setCollisionFlags(state);
 }
 
 void CollisionDetector::SetCollisionState(BulletCollisionState state)
 {
-	mGhost->GetGhostObject()->setCollisionFlags(static_cast<int>(state));
+	mGhost->GetPtr()->setCollisionFlags(static_cast<int>(state));
 }
 
 void CollisionDetector::Translate(float x, float y, float z)
 {
-	auto trans = mGhost->GetGhostObject()->getWorldTransform();
+	auto trans = mGhost->GetPtr()->getWorldTransform();
 	trans.setOrigin({ x,y,z });
-	mGhost->GetGhostObject()->setWorldTransform(trans);
+	mGhost->GetPtr()->setWorldTransform(trans);
 }
 
-std::shared_ptr<BulletGhostObject> CollisionDetector::GetGhostObject()
+std::shared_ptr<BulletGhostObject> CollisionDetector::GetPtr()
 {
 	return mGhost;
-}
-
-btGhostObject* CollisionDetector::GetbtGhostPtr()
-{
-	return mGhost->GetGhostObject().get();
 }
 
 void CollisionDetector::SetAction(std::function<void(int)> action)

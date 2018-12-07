@@ -7,12 +7,11 @@
 
 
 BulletGhostObject::BulletGhostObject(int worldID)
-	: ICollisionObject(worldID),  mGhost(std::make_shared<btGhostObject>())
+	: ICollisionObject(worldID), mGhost(std::make_shared<btGhostObject>())
 {
 }
 
-BulletGhostObject::BulletGhostObject(std::shared_ptr<BulletCollisionShape> collisionShape
-	, int worldID)
+BulletGhostObject::BulletGhostObject(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID)
 	: ICollisionObject(worldID), mGhost(std::make_shared<btGhostObject>())
 {
 	SetCollisionShape(collisionShape);
@@ -21,11 +20,6 @@ BulletGhostObject::BulletGhostObject(std::shared_ptr<BulletCollisionShape> colli
 BulletGhostObject::~BulletGhostObject()
 {
 	RemoveWorld();
-}
-
-std::shared_ptr<btGhostObject> BulletGhostObject::GetGhostObject()
-{
-	return mGhost;
 }
 
 void BulletGhostObject::SetCollisionShape(std::shared_ptr<BulletCollisionShape> collisionShape)
@@ -40,9 +34,19 @@ void BulletGhostObject::SetTag(int tag)
 	mGhost->setUserIndex(tag);
 }
 
-btCollisionObject * BulletGhostObject::GetPtr() const
+std::shared_ptr<btCollisionObject> BulletGhostObject::GetPtr() const
 {
-	return mGhost.get();
+	return mGhost;
+}
+
+int BulletGhostObject::GetNumOvwelappingObjects()
+{
+	return mGhost->getNumOverlappingObjects();
+}
+
+btCollisionObject* BulletGhostObject::GetOverlappingObject(int i)
+{
+	return mGhost->getOverlappingObject(i);
 }
 
 void BulletGhostObject::RemoveWorld()

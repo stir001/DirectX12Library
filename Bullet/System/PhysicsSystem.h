@@ -23,6 +23,7 @@ class btCollisionDispatcher;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btGhostPairCallback;
+class btCollisionObject;
 
 /**
 *	@enum	BulletShapeType
@@ -47,6 +48,9 @@ class PhysicsSystem : public std::enable_shared_from_this<PhysicsSystem>
 public:
 	~PhysicsSystem();
 
+	/**
+	*	インスタンスの参照を取得する
+	*/
 	static PhysicsSystem& Instance()
 	{
 		if (mInstance == nullptr)
@@ -56,6 +60,9 @@ public:
 		return *mInstance;
 	}
 
+	/**
+	*	インスタンスを破棄する
+	*/
 	static void Destory()
 	{
 		if (mInstance != nullptr)
@@ -80,10 +87,6 @@ public:
 	*	@param[in]	collider	追加する剛体
 	*/
 	void AddRigidBody(std::shared_ptr<BulletRigidBody> rigid);
-
-	int GetRigidBodyValidityWorldID();
-
-	int GetGhostValidityWorldID();
 
 	/**
 	*	剛体シュミレーションをする
@@ -119,6 +122,7 @@ public:
 			PLANE		(x, y, z)				x法線 y法線 z法線 
 			CONE		(radius, height, nan)	x半径 y高さ z無視
 	*	@param[in]	pos		初期位置
+	*	@return		生成したRigidBody
 	*/
 	std::shared_ptr<BulletRigidBody> CreateRigitBody(const BulletShapeType type
 		, const DirectX::XMFLOAT3& data , const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f,0.f,0.f));
@@ -133,6 +137,7 @@ public:
 			CAPSULE		(radius, height, nan)	x半径 y高さ z無視
 			PLANE		(x, y, z)				x法線 y法線 z法線 
 			CONE		(radius, height, nan)	x半径 y高さ z無視
+	*	@return		生成したコリジョン形状
 	*/
 	std::shared_ptr<BulletCollisionShape> CreateCollisionShape(const BulletShapeType type
 		, const DirectX::XMFLOAT3& data);
@@ -141,17 +146,23 @@ public:
 	*	@brief	ghostを作成する
 	*	@param[in]	type	作成する形状
 	*	@param[in]	data	形状により異なる (x,y,z)
-	BOX			(x, y, z)				各方向の辺の長さ
-	SPHERE		(radius, nan, nan)		x半径 y無視	z無視
-	CYLINDER	(radius, height, nan)	x半径 y高さ z無視
-	CAPSULE		(radius, height, nan)	x半径 y高さ z無視
-	PLANE		(x, y, z)				x法線 y法線 z法線
-	CONE		(radius, height, nan)	x半径 y高さ z無視
+			BOX			(x, y, z)				各方向の辺の長さ
+			SPHERE		(radius, nan, nan)		x半径 y無視	z無視
+			CYLINDER	(radius, height, nan)	x半径 y高さ z無視
+			CAPSULE		(radius, height, nan)	x半径 y高さ z無視
+			PLANE		(x, y, z)				x法線 y法線 z法線
+			CONE		(radius, height, nan)	x半径 y高さ z無視
 	*	@param[in]	pos		初期位置
+	*	@return		生成したghost
 	*/
 	std::shared_ptr<BulletGhostObject> CreateGhostObject(const BulletShapeType type
 		, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 
+	/**
+	*	@brief	ghostを生成する
+	*	@param[in]	shape	生成するghostの形状
+	*	@return		生成したghost
+	*/
 	std::shared_ptr<BulletGhostObject> CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape);
 
 	/**
@@ -183,7 +194,14 @@ public:
 	*/
 	void RemoveGhost(std::shared_ptr<BulletGhostObject> ghost);
 
+	/**
+	*	@brief	衝突する物体の未使用の最小識別IDを取得する
+	*/
+	int GetAvailableMinID();
 private:
+	/**
+	*	シングルトン用インスタンス
+	*/
 	static PhysicsSystem* mInstance;
 
 	PhysicsSystem();
@@ -198,42 +216,37 @@ private:
 	/**
 	*	広域位相フェーズ
 	*/
-	std::shared_ptr<btBroadphaseInterface>					mBroadphase;
+	std::shared_ptr<btBroadphaseInterface> mBroadphase;
 
 	/**
 	*	狭域位相フェーズ設定
 	*/
-	std::shared_ptr<btDefaultCollisionConfiguration>		mCollisionConfiguration;
+	std::shared_ptr<btDefaultCollisionConfiguration> mCollisionConfiguration;
 
 	/**
 	*	狭域位相フェーズ
 	*/
-	std::shared_ptr<btCollisionDispatcher>					mDispatcher;
+	std::shared_ptr<btCollisionDispatcher> mDispatcher;
 
 	/**
 	*	拘束解決
 	*/
-	std::shared_ptr<btSequentialImpulseConstraintSolver>	mSolver;
+	std::shared_ptr<btSequentialImpulseConstraintSolver> mSolver;
 
 	/**
 	*	世界
 	*/
-	std::shared_ptr<btDiscreteDynamicsWorld>				mWorld;
+	std::shared_ptr<btDiscreteDynamicsWorld> mWorld;
 
 	/**
 	*	デバッグ描画システム
 	*/
-	std::shared_ptr<BulletDebugDrawDx>						mDebugDrawer;
+	std::shared_ptr<BulletDebugDrawDx> mDebugDrawer;
 
 	/**
-	*	剛体保持
+	*	衝突体保持用
 	*/
-	std::map<int, std::shared_ptr<BulletRigidBody>>			mRigidBodies;
-	
-	/**
-	*	ゴースト保持
-	*/
-	std::map<int, std::shared_ptr<BulletGhostObject>> mGhosts;
+	std::map<int, std::shared_ptr<btCollisionObject>> mCollisions;
 
 	/**
 	*	現在の時間

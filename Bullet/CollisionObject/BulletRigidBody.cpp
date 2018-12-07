@@ -27,11 +27,6 @@ BulletRigidBody::~BulletRigidBody()
 	RemoveWorld();
 }
 
-std::shared_ptr<btRigidBody> BulletRigidBody::GetRigidBody()
-{
-	return mRigidBody;
-}
-
 void BulletRigidBody::SetMass(float mass)
 {
 	mMass = mass;
@@ -139,9 +134,14 @@ void BulletRigidBody::SetOrigin(float x, float y, float z)
 	trans.setOrigin(btVector3(x, y, z));
 }
 
-btCollisionObject * BulletRigidBody::GetPtr() const
+std::shared_ptr<btCollisionObject> BulletRigidBody::GetPtr() const
 {
-	return mRigidBody.get();
+	return mRigidBody;
+}
+
+std::shared_ptr<btRigidBody> BulletRigidBody::GetRigidPtr() const
+{
+	return mRigidBody;
 }
 
 void BulletRigidBody::RemoveWorld()

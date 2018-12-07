@@ -82,13 +82,8 @@ public:
 	*	@brief	ghostを取得する
 	*	@return	保持しているghost
 	*/
-	std::shared_ptr<BulletGhostObject> GetGhostObject();
+	std::shared_ptr<BulletGhostObject> GetPtr();
 
-	/**
-	*	@brief	bulletのghostObject(btGhostObject)のポインタを取得する
-	*	@return	btGhostObjectのポインタ
-	*/
-	btGhostObject* GetbtGhostPtr();
 
 	/**
 	*	@brief	衝突検知している間ずっと呼ばれる関数を設定する

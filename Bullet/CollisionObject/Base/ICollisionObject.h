@@ -7,6 +7,7 @@
 *
 *	@par 最終更新日	2018/12/5
 */
+#include <memory>
 
 class PhysicsSystem;
 class btCollisionObject;
@@ -19,9 +20,7 @@ class ICollisionObject
 {
 	friend PhysicsSystem;
 public:
-	/**
-	*	@param[in] worldID	個別のID
-	*/
+
 	ICollisionObject(int worldID);
 	virtual ~ICollisionObject();
 
@@ -30,6 +29,12 @@ public:
 	*	@param[in]	tag		ユーザー定義のタグ
 	*/
 	virtual void SetTag(int tag) = 0;
+
+	/**
+	*	@brief	btCollisionObjectのポインタを取得する
+	*	@return btCollisionObjectのポインタ
+	*/
+	virtual std::shared_ptr<btCollisionObject> GetPtr() const = 0;
 
 	/**
 	*	@brief	ユーザー定義のタグを取得する
@@ -43,11 +48,6 @@ public:
 	*/
 	int GetWorldID() const;
 
-	/**
-	*	@brief	btCollisionObjectのポインタを取得する
-	*	@return btCollisionObjectのポインタ
-	*/
-	virtual btCollisionObject* GetPtr() const = 0;
 protected:
 	/**
 	*	自身を世界から削除する
@@ -59,9 +59,8 @@ protected:
 	*/
 	int mTag;
 private:
-
 	/**
-	*	ワールドに存在するオブジェクトを決めるための個別ID
+	*	個別識別子
 	*/
 	int mWorldID;
 };
