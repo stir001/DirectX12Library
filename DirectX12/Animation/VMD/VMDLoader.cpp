@@ -70,6 +70,7 @@ void VMDLoader::CreatePoses()
 		VMDPose p;
 		p.frameNo = m.frameNo;
 		p.quoternion = m.quoternion;
+		p.location = m.location;
 		mLoadingMotion->mPoses[boneName].push_back(p);
 	}
 

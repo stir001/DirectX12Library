@@ -46,57 +46,48 @@ void VMDPlayer::SetVMD(std::shared_ptr<VMDMotion>& vmd)
 
 	}
 	WriteBoneMatrix(mBoneConstantBuffer);
-	//mAnimationId = AnimationPlayerManager::Instance().SetAnimation(this);
-	//mUpdate = &VMDPlayer::PlayingUpdate;
+	PoseSet();
 }
 
 void VMDPlayer::PlayingUpdate()
 {
 	DirectX::XMMATRIX identity = DirectX::XMMatrixIdentity();
-	for (auto& cMat : mCurrentBoneMatrix)
-	{
-		DirectX::XMStoreFloat4x4(&cMat, identity);
-	}
+	DirectX::XMFLOAT4X4 iMat;
+	DirectX::XMStoreFloat4x4(&iMat, identity);
+	std::fill(mCurrentBoneMatrix.begin(), mCurrentBoneMatrix.end(), iMat);
 
-	for (auto& p : *mPoses)
+	auto posesItr = mPoses->begin();
+
+	for (auto& p : mCurrentPoses)
 	{
-		auto findritr = p.second.rbegin();
-		for (; findritr != p.second.rend(); findritr++)
+		if ((p + 1) != posesItr->second.end() && (p + 1)->frameNo < mFrame * 0.5f)
 		{
-			if (findritr->frameNo <= mFrame / 2) break;
+			++p;
 		}
-		if (findritr == p.second.rbegin())
+		if (p == (posesItr->second.end() - 1))
 		{
 			
-			XMVECTOR v = XMLoadFloat4(&findritr->quoternion);
-			XMMATRIX q = XMMatrixRotationQuaternion(v);
-			VMDBoneRotation(p.first, q);
+			DirectX::XMVECTOR v = DirectX::XMLoadFloat4(&p->quoternion);
+			DirectX::XMMATRIX q = DirectX::XMMatrixRotationQuaternion(v);
+			VMDBoneRotation(posesItr->first, q);
 		}
 		else
 		{
-			float t = (static_cast<float>(mFrame) * 0.5f - static_cast<float>(findritr->frameNo)) / static_cast<float>(findritr.base()->frameNo - findritr->frameNo);
-			XMVECTOR q = XMQuaternionSlerp(XMLoadFloat4(&findritr->quoternion), XMLoadFloat4(&findritr.base()->quoternion), t);
-			DirectX::XMMATRIX mat = XMMatrixRotationQuaternion(q);
-			VMDBoneRotation(p.first, mat);
+			float t = (static_cast<float>(mFrame) * 0.5f - static_cast<float>(p->frameNo)) / static_cast<float>((p + 1)->frameNo - p->frameNo);
+			XMVECTOR q = DirectX::XMQuaternionSlerp(DirectX::XMLoadFloat4(&p->quoternion), DirectX::XMLoadFloat4(&(p + 1)->quoternion), t);
+			DirectX::XMMATRIX mat = DirectX::XMMatrixRotationQuaternion(q);
+			VMDBoneRotation(posesItr->first, mat);
 		}
+		++posesItr;
 	}
-	/*for (auto& p : *poses)
-	{
-		auto rit = std::find_if(p.second.rbegin(), p.second.rend(), [&](Pose& pose) {return pose.frameNo <= mFrame / 2; });
-		if (rit == p.second.rbegin())
-		{
-			BoneRotation(p.first, XMMatrixRotationQuaternion(rit->quoternion));
-		}
-		else
-		{
-			float t = (static_cast<float>(mFrame) * 0.5f - static_cast<float>(rit->frameNo)) / static_cast<float>(rit.base()->frameNo - rit->frameNo);
-			DirectX::XMVECTOR q = DirectX::XMQuaternionSlerp(rit->quoternion, rit.base()->quoternion, t);
-			BoneRotation(p.first, XMMatrixRotationQuaternion(q));
-		}
-	}*/
 	VMDBoneChildRotation(mCurrentBoneMatrix[0], 0);
 	WriteBoneMatrix(mBoneConstantBuffer);
-	++mFrame %= mMaxFrame * 2;
+	++mFrame;
+	if (mIsLoop && mFrame == mMaxFrame * 2)
+	{
+		PoseSet();
+		mFrame = 0;
+	}
 	(this->*mEndCheck)();
 }
 
@@ -105,9 +96,20 @@ void VMDPlayer::StopUpdate()
 
 }
 
+void VMDPlayer::PoseSet()
+{
+	unsigned int size = static_cast<unsigned int>(mPoses->size());
+	mCurrentPoses.resize(size);
+	auto posesItr = mPoses->begin();
+	for (unsigned int i = 0; i < size; ++i, ++posesItr)
+	{
+		mCurrentPoses[i] = posesItr->second.begin();
+	}
+}
+
 void VMDPlayer::VMDBoneRotation(const std::string& boneName, const XMMATRIX& boneRotaMatrix)
 {
-	PMDBoneData* data = nullptr;
+	const PMDBoneData* data = nullptr;
 	unsigned int i = 0;
 	for (; i < mBoneDatas.size(); i++)
 	{

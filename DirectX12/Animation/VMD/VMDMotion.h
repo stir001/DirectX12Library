@@ -90,6 +90,8 @@ struct VMDPose
 	*	‰ñ“]î•ñ
 	*/
 	DirectX::XMFLOAT4 quoternion;
+
+	DirectX::XMFLOAT3 location;
 };
 
 /**

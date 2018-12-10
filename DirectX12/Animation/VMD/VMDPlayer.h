@@ -15,6 +15,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <list>
 
 class VMDMotion;
 class ConstantBufferObject;
@@ -81,7 +82,7 @@ private:
 	/**
 	*	ボーンの情報
 	*/
-	std::vector<PMDBoneData>& mBoneDatas;
+	const std::vector<PMDBoneData>& mBoneDatas;
 
 	/**
 	*	ボーンの親子関係情報
@@ -113,6 +114,8 @@ private:
 	*	終了チェックステート保持変数
 	*/
 	void (VMDPlayer::*mEndCheck)();
+
+	std::vector<std::vector<VMDPose>::iterator> mCurrentPoses;
 
 	/**
 	*	@brief	対象のボーンを回転させる
@@ -147,5 +150,7 @@ private:
 	*	停止状態のUpdateステート
 	*/
 	void StopUpdate();
+
+	void PoseSet();
 };
 

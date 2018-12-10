@@ -82,7 +82,11 @@ VSOutput BasicVS(VSInput vInput)
 float4 ExitTexPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
-    return color * dot(data.normal.xyz, -dir.xyz) + color * ambient ;
+    float4 light = dir;
+    float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
+    vray = float4(normalize(vray.xyz), 1);
+    float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
+    return saturate(color * dot(data.normal.xyz, -dir.xyz) + color * ambient + specular * spec);
 }
 
 #define VERTEX_NUM (3U)
