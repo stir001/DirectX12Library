@@ -41,10 +41,16 @@ public:
 	void SetCollisionShape(std::shared_ptr<BulletCollisionShape> collisionShape);
 
 	/**
-	*	@brief	タグを設定する
-	*	@param[in]	tag	設定するタグ
+	*	@brief	タグ1を設定する
+	*	@param[in]	tag	設定するタグ1
 	*/
-	void SetTag(int tag);
+	void SetTag1(int tag);
+
+	/**
+	*	@brief	タグ2を設定する
+	*	@param[in]	tag	設定するタグ2
+	*/
+	void SetTag2(int tag);
 
 	/**
 	*	@brief	btCollisionObjectのポインタを取得する

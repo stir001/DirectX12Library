@@ -77,11 +77,16 @@ public:
 	void SetWorldTransform(const DirectX::XMFLOAT4X4& matrix);
 
 	/**
-	*	@brief	任意のタグを設定する
-				コリジョンの判定時にオブジェクトを判別するためのタグ
-	*	@param[in]	tag		設定するタグ
+	*	@brief	任意のタグ1を設定する
+	*	@param[in]	tag		設定するタグ1
 	*/
-	void SetTag(int tag);
+	void SetTag1(int tag);
+
+	/**
+	*	@brief	任意のタグ2を設定する
+	*	@param[in]	tag		設定するタグ2
+	*/
+	void SetTag2(int tag);
 
 	/**
 	*	@brief	コリジョンの状態を変更する

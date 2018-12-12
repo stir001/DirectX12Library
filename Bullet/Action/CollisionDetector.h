@@ -88,19 +88,29 @@ public:
 	*/
 	std::shared_ptr<BulletGhostObject> GetPtr();
 
+	/**
+	*	@brief	タグ1を設定する
+	*	@param[in]	設定するタグ1
+	*/
+	void SetTag1(int tag);
 
 	/**
-	*	@brief タグを取得する
-	*	@return 保持しているタグ
+	*	@brief タグ1を取得する
+	*	@return 保持しているタグ1
 	*/
-	int GetTag() const;
+	int GetTag1() const;
 
 	/**
-	*	@brief	タグを設定する
-	*	@param[in]	設定するタグ
+	*	@brief	タグ2を設定する
+	*	@param[in]	設定するタグ2
 	*/
-	void SetTag(int tag);
+	void SetTag2(int tag);
 
+	/**
+	*	@brief	タグ2を取得する
+	*	@return	保持しているタグ2
+	*/
+	int GetTag2() const;
 private:
 	/**
 	*	@brief	ペアが当たっているかどうかを判定する

@@ -25,22 +25,30 @@ public:
 	virtual ~ICollisionObject();
 
 	/**
-	*	@brief	タグを設定する
-	*	@param[in]	tag		ユーザー定義のタグ
-	*/
-	virtual void SetTag(int tag) = 0;
-
-	/**
 	*	@brief	btCollisionObjectのポインタを取得する
 	*	@return btCollisionObjectのポインタ
 	*/
 	virtual std::shared_ptr<btCollisionObject> GetPtr() const = 0;
 
 	/**
-	*	@brief	ユーザー定義のタグを取得する
-	*	@return	タグ
+	*	@brief	タグを設定する
+	*	@param[in]	tag		ユーザー定義のタグ
 	*/
-	int GetTag() const;
+	virtual void SetTag1(int tag) = 0;
+
+	/**
+	*	@brief	ユーザー定義のタグ1を取得する
+	*	@return	タグ1
+	*/
+	int GetTag1() const;
+
+	virtual void SetTag2(int tag) = 0;
+
+	/**
+	*	@brief	ユーザー定義のタグ2を取得す
+	*	@return	タグ2
+	*/
+	int GetTag2() const;
 
 	/**
 	*	@brief	ワールド個別識別子を取得する
@@ -55,9 +63,14 @@ protected:
 	virtual void RemoveWorld() = 0;
 
 	/**
-	*	ユーザー定義のタグ デフォルトは-1
+	*	ユーザー定義のタグ1 デフォルトは-1
 	*/
-	int mTag;
+	int mTag1;
+
+	/**
+	*	ユーザー定義のタグ2	デフォルトは-1
+	*/
+	int mTag2;
 private:
 	/**
 	*	個別識別子

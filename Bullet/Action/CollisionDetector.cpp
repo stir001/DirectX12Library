@@ -15,7 +15,7 @@ CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
 	: mCalliedAction(calliedAction)
 {
 	mGhost = PhysicsSystem::Instance().CreateGhostObject(shape);
-	mGhost->SetTag(tag);
+	mGhost->SetTag1(tag);
 	mGhost->SetCollisionShape(shape);
 	auto trans = mGhost->GetPtr()->getWorldTransform();
 	trans.setIdentity();
@@ -47,8 +47,9 @@ void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar
 		auto caller = mCallers.find(otherid);
 		if (caller == mCallers.end())
 		{
-			int tag = pairCollision->getUserIndex();
-			mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction,tag);
+			int tag1 = pairCollision->getUserIndex();
+			int tag2 = pairCollision->getUserIndex2();
+			mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction, tag1, tag2);
 			caller = mCallers.find(otherid);
 		}
 		if (IsCollide(findPair))
@@ -57,13 +58,13 @@ void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar
 		}
 	}
 
-	const unsigned int maxRoop = static_cast<unsigned int>(mCallers.size());
+	const unsigned int maxLoop = static_cast<unsigned int>(mCallers.size());
 	unsigned int roopCounter = 0;
 	for (auto itr = mCallers.begin(); itr != mCallers.end(); ++itr)
 	{
 		(*itr).second->Action();
 		roopCounter = 0;
-		while (roopCounter < maxRoop)
+		while (roopCounter < maxLoop)
 		{
 			++roopCounter;
 			if (!(*itr).second->IsCollide() && !(*itr).second->IsPreCollide())
@@ -121,14 +122,24 @@ std::shared_ptr<BulletGhostObject> CollisionDetector::GetPtr()
 	return mGhost;
 }
 
-int CollisionDetector::GetTag() const
+int CollisionDetector::GetTag1() const
 {
-	return mGhost->GetTag();
+	return mGhost->GetTag1();
 }
 
-void CollisionDetector::SetTag(int tag)
+void CollisionDetector::SetTag1(int tag)
 {
-	mGhost->SetTag(tag);
+	mGhost->SetTag1(tag);
+}
+
+void CollisionDetector::SetTag2(int tag)
+{
+	mGhost->SetTag2(tag);
+}
+
+int CollisionDetector::GetTag2() const
+{
+	return mGhost->GetTag2();
 }
 
 bool CollisionDetector::IsCollide(btBroadphasePair* pair)

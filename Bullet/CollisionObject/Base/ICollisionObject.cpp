@@ -2,7 +2,7 @@
 #include "ICollisionObject.h"
 
 
-ICollisionObject::ICollisionObject(int worldID) : mWorldID(worldID), mTag(-1)
+ICollisionObject::ICollisionObject(int worldID) : mWorldID(worldID), mTag1(-1), mTag2(-1)
 {
 }
 
@@ -11,9 +11,14 @@ ICollisionObject::~ICollisionObject()
 {
 }
 
-int ICollisionObject::GetTag() const
+int ICollisionObject::GetTag1() const
 {
-	return mTag;
+	return mTag1;
+}
+
+int ICollisionObject::GetTag2() const
+{
+	return mTag2;
 }
 
 int ICollisionObject::GetWorldID() const

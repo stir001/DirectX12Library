@@ -22,34 +22,52 @@ class IActionDefiner
 public:
 	/**
 	*	@param[in]	shape	衝突形状
-	*	@param[in]	tag		自身のタグ(ユーザーが自由に定義)
+	*	@param[in]	tag1	自身のタグ1(ユーザーが自由に定義)
 	*/
-	IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int tag);
+	IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int tag1);
 	~IActionDefiner();
 
 	/**
 	*	@brief	衝突した最初に呼び出される関数
 	*	@brief	tag		衝突したコリジョンのタグ
 	*/
-	virtual void OnAction(int tag) = 0;
+	virtual void OnAction(int tag1, int tag2) = 0;
 
 	/**
 	*	@brief	衝突している間OnActionの後ずっと呼び出される関数
 	*	@param[in]	tag		衝突したコリジョンのタグ
 	*/
-	virtual void StayAction(int tag) = 0;
+	virtual void StayAction(int tag1, int tag2) = 0;
 
 	/**
 	*	@brief	衝突しなくなった時に飛び出される関数
 	*	@param[in]	tag		衝突したコリジョンのタグ
 	*/
-	virtual void ExitAction(int tag) = 0;
+	virtual void ExitAction(int tag1, int tag2) = 0;
 
 	/**
-	*	@brief	自身のタグを取得する
-	*	@return	自身のタグ
+	*	@brief	タグ1を設定する
+	*	@param[in]	tag	設定するタグ1
 	*/
-	int GetTag() const;
+	void SetTag1(int tag);
+
+	/**
+	*	@brief	自身のタグ1を取得する
+	*	@return	タグ1
+	*/
+	int GetTag1() const;
+
+	/**
+	*	@brief	タグ2を設定する
+	*	@param[in]	tag	設定するタグ2
+	*/
+	void SetTag2(int tag);
+
+	/**
+	*	@brief	自身のタグ2を取得する
+	*	@return	タグ2
+	*/
+	int GetTag2() const;
 
 	/**
 	*	@brief	当たり判定を瞬間移動させる

@@ -77,10 +77,16 @@ void BulletRigidBody::SetWorldTransform(const DirectX::XMFLOAT4X4& matrix)
 	mMotionState->setWorldTransform(transform);
 }
 
-void BulletRigidBody::SetTag(int tag)
+void BulletRigidBody::SetTag1(int tag)
 {
-	mTag = tag;
+	mTag1 = tag;
 	mRigidBody->setUserIndex(tag);
+}
+
+void BulletRigidBody::SetTag2(int tag)
+{
+	mTag2 = tag;
+	mRigidBody->setUserIndex2(tag);
 }
 
 void BulletRigidBody::SetCollisionState(int state)

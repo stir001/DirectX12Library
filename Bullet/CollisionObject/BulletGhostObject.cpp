@@ -28,10 +28,16 @@ void BulletGhostObject::SetCollisionShape(std::shared_ptr<BulletCollisionShape> 
 	mGhost->setCollisionShape(mShape->GetShape().get());
 }
 
-void BulletGhostObject::SetTag(int tag)
+void BulletGhostObject::SetTag1(int tag)
 {
-	mTag = tag;
+	mTag1 = tag;
 	mGhost->setUserIndex(tag);
+}
+
+void BulletGhostObject::SetTag2(int tag)
+{
+	mTag2 = tag;
+	mGhost->setUserIndex2(tag);
 }
 
 std::shared_ptr<btCollisionObject> BulletGhostObject::GetPtr() const

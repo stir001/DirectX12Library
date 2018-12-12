@@ -7,9 +7,9 @@
 IActionDefiner::IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int tag)
 {
 	std::shared_ptr<CalliedAction> action = std::make_shared<CalliedAction>();
-	action->stayAction = [&](int tag) { StayAction(tag); };
-	action->onAction = [&](int tag) { OnAction(tag); };
-	action->exitAction = [&](int tag) { ExitAction(tag); };
+	action->stayAction = [&](int tag1, int tag2) { StayAction(tag, tag2); };
+	action->onAction = [&](int tag1, int tag2) { OnAction(tag1, tag2); };
+	action->exitAction = [&](int tag1, int tag2) { ExitAction(tag, tag2); };
 	mDetector = std::make_shared<CollisionDetector>(shape, tag, action);
 	PhysicsSystem::Instance().AddAction(mDetector);
 }
@@ -21,9 +21,24 @@ IActionDefiner::~IActionDefiner()
 	PhysicsSystem::Instance().RemoveGhost(mDetector->GetPtr());
 }
 
-int IActionDefiner::GetTag() const
+void IActionDefiner::SetTag1(int tag)
 {
-	return mDetector->GetTag();
+	mDetector->SetTag1(tag);
+}
+
+int IActionDefiner::GetTag1() const
+{
+	return mDetector->GetTag1();
+}
+
+void IActionDefiner::SetTag2(int tag)
+{
+	mDetector->SetTag2(tag);
+}
+
+int IActionDefiner::GetTag2() const
+{
+	return mDetector->GetTag2();
 }
 
 void IActionDefiner::Translate(float x, float y, float z)
