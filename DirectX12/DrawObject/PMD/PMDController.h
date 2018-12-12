@@ -69,13 +69,13 @@ public:
 	void SetLight(std::shared_ptr<DirectionalLight> dlight);
 
 	/**
-	*	@brief	マテリアルを使って描画する際に使用するPipelineStateを設定する
+	*	@brief	描画する際に使用するPipelineStateを設定する
 	*	@param[in]	pipelineState	使用するPipelineState
 	*/
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState);
 
 	/**
-	*	@brief	マテリアルを使って描画する際に使用するRootSignatureを設定する
+	*	@brief	描画する際に使用するRootSignatureを設定する
 	*	@param[in]	rootsignature	設定するRootSignature
 	*/
 	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
@@ -84,14 +84,17 @@ public:
 	*	@brief	テクスチャを使って描画する際に使用するPipelineStateを設定する
 	*	@param[in]	pipelineState	使用するPipelineState
 	*/
-	void SetSubPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState);
+	void SetToonPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState);
 
 	/**
 	*	@brief	テクスチャを使って描画する際に使用するRootSignatureを設定する
 	*	@param[in]	rootsignature	設定するRootSignature
 	*/
-	void SetSubRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
+	void SetToonRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
 
+	/**
+	*	descriptorHeapを再構築する 未実装
+	*/
 	void UpdateDescriptorHeap();
 private:
 	/**
@@ -120,19 +123,29 @@ private:
 	std::shared_ptr<VMDPlayer> mVmdPlayer;
 
 	/**
-	*	テクスチャを使用するときに使うPipelineState
+	*	toonのテクスチャを使用するpipeline
 	*/
-	std::shared_ptr<PipelineStateObject> mSubPipeline;
+	std::shared_ptr<PipelineStateObject> mToonPipeline;
 
 	/**
-	*	テクスチャを使用するときに使うRootSignature
+	*	toonテクスチャを使用するrootsignature
 	*/
-	std::shared_ptr<RootSignatureObject> mSubRootsignature;
+	std::shared_ptr<RootSignatureObject> mToonRootsignature;
 
 	/**
 	*	このコントローラーで使用するDescriptorHeap
 	*/
 	std::unique_ptr<Dx12DescriptorHeapObject> mDescHeap;
+
+	/**
+	*	DescriptorHeapでのコンスタントバッファまでのオフセット
+	*/
+	unsigned int mConstantBufferOffset;
+
+	/**
+	*	テクスチャの数
+	*/
+	unsigned int mTextureNum;
 
 	/**
 	*	bundleの更新状態をもつステート変数
@@ -152,6 +165,7 @@ private:
 	*/
 	void SetTexture(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
 
+	void SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
 	/**
 	*	@brief	マテリアル情報をCommandListに設定する
 	*	@param[in]	cmdList		マテリアルを設定するCommandList

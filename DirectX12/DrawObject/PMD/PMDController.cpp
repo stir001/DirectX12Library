@@ -20,7 +20,9 @@
 
 PMDController::PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<DirectionalLight>& dlight, const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
-	: DrawController3D(name, dev, cmdList), mModel(model), mDirLight(dlight), mBundleUpdate(&PMDController::UpdateBundle)
+	: DrawController3D(name, dev, cmdList), mModel(model)
+	, mDirLight(dlight), mBundleUpdate(&PMDController::UpdateBundle)
+	, mConstantBufferOffset(0U), mTextureNum(0U)
 {
 	mBoneMatrixBuffer = std::make_shared<ConstantBufferObject>("PMDBoneMatrixBuffer", mDevice, static_cast<unsigned int>(sizeof(DirectX::XMMATRIX) * mModel->mBoneDatas.size()), 1);
 	mBoneMatrix.resize(mModel->mBoneDatas.size());
@@ -78,16 +80,16 @@ void PMDController::SetRootSignature(std::shared_ptr<RootSignatureObject>& roots
 	DrawObjectController::SetRootSignature(rootsiganture);
 }
 
-void PMDController::SetSubPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState)
+void PMDController::SetToonPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState)
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
-	mSubPipeline = pipelineState;
+	mToonPipeline = pipelineState;
 }
 
-void PMDController::SetSubRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture)
+void PMDController::SetToonRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture)
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
-	mSubRootsignature = rootsiganture;
+	mToonRootsignature = rootsiganture;
 }
 
 void PMDController::UpdateDescriptorHeap()
@@ -103,17 +105,9 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 
 	for (auto& material : mModel->mMaterials)
 	{
-		if (material.texid != -1)
-		{
-			SetTexture(cmdList, material);
-		}
-		else
-		{
-			cmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-			cmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
-		}
+		SetTexture(cmdList, material);
 		SetConstantBuffers(cmdList);
-		SetMaterial(cmdList, static_cast<unsigned int>(mModel->GetTextureObjects().size() + PMDModel::eROOT_PARAMATER_INDEX_MATERIAL), offsetCount);
+		SetMaterial(cmdList, static_cast<unsigned int>(mConstantBufferOffset + PMDModel::eROOT_PARAMATER_INDEX_MATERIAL), offsetCount);
 		cmdList->DrawIndexedInstanced(material.indexCount, 1, indexOffset, 0, 0);
 		indexOffset += material.indexCount;
 		++offsetCount;
@@ -122,9 +116,17 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 
 void PMDController::SetTexture(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material)
 {
-	cmdList->SetPipelineState(mSubPipeline->GetPipelineState().Get());
-	cmdList->SetGraphicsRootSignature(mSubRootsignature->GetRootSignature().Get());
+	cmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
+	cmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
 	mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+}
+
+void PMDController::SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial & material)
+{
+	cmdList->SetPipelineState(mToonPipeline->GetPipelineState().Get());
+	cmdList->SetGraphicsRootSignature(mToonRootsignature->GetRootSignature().Get());
+	mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
 }
 
 void PMDController::SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
@@ -135,12 +137,18 @@ void PMDController::SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsComma
 void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name)
 {
 	auto texObjs = mModel->GetTextureObjects();
+	auto toonTexs = mModel->mToonTextures;
+	mTextureNum = static_cast<unsigned int>(texObjs.size());
+	mConstantBufferOffset = static_cast<unsigned int>(mTextureNum + toonTexs.size());
 	std::vector<std::shared_ptr<Dx12BufferObject>> buffers;
-	int constantBufferNum = PMDModel::eROOT_PARAMATER_INDEX_MAX - 1;
-	buffers.reserve(texObjs.size() + constantBufferNum);
+	buffers.reserve(mConstantBufferOffset + PMDModel::CONSTANT_BUFFER_NUM);
 	for (auto& tex : texObjs)
 	{
 		buffers.push_back(tex->GetShaderResource());
+	}
+	for (auto toon : toonTexs)
+	{
+		buffers.push_back(toon->GetShaderResource());
 	}
 	buffers.push_back(mCameraBuffer);
 	buffers.push_back(mDirLight->GetLightBuffer());
@@ -153,7 +161,7 @@ void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Devi
 
 void PMDController::SetConstantBuffers(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
 {
-	unsigned int resourceIndex = static_cast<unsigned int>(mModel->GetTextureObjects().size());
+	unsigned int resourceIndex = mConstantBufferOffset;
 	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++
 		, PMDModel::eROOT_PARAMATER_INDEX_CAMERA);
 	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++

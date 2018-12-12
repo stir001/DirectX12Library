@@ -76,4 +76,6 @@ DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOA
 DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4& xmf4);
 
 DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOAT3& xmf3);
+
+DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& f44, const float scaler);
 #endif

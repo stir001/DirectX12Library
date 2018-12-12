@@ -408,21 +408,6 @@
     <ClInclude Include="DirectX12\Camera\CameraBufferStructure.h">
       <Filter>DirectX12\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPass\BackGroundPass.h">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPass\ModelPass.h">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPass\Base\RenderingPassObject.h">
-      <Filter>DirectX12\RenderingPass\Base</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPass\Manager\RenderingPassManager.h">
-      <Filter>DirectX12\RenderingPass\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\RenderingPass\UIPass.h">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\PipelineState\WireFramePipelineState.h">
       <Filter>DirectX12\PipelineState</Filter>
     </ClInclude>
@@ -479,6 +464,27 @@
     </ClInclude>
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h">
       <Filter>Bullet\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\Base\RenderingPassObject.h">
+      <Filter>DirectX12\RenderingPass\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\Manager\RenderingPassManager.h">
+      <Filter>DirectX12\RenderingPass\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\BackGroundPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\ModelPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\UIPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -758,21 +764,6 @@
     <ClCompile Include="DirectX12\Camera\CameraHolder.cpp">
       <Filter>DirectX12\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPass\ModelPass.cpp">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPass\BackGroundPass.cpp">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPass\Base\RenderingPassObject.cpp">
-      <Filter>DirectX12\RenderingPass\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPass\Manager\RenderingPassManager.cpp">
-      <Filter>DirectX12\RenderingPass\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\RenderingPass\UIPass.cpp">
-      <Filter>DirectX12\RenderingPass</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\WireFramePipelineState.cpp">
       <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
@@ -824,6 +815,27 @@
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp">
       <Filter>Bullet\Action</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PMDToonRootsignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\Base\RenderingPassObject.cpp">
+      <Filter>DirectX12\RenderingPass\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\Manager\RenderingPassManager.cpp">
+      <Filter>DirectX12\RenderingPass\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\BackGroundPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\ModelPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\UIPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -839,12 +851,6 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\NormalmapShader.hlsl">
-      <Filter>DirectX12\Shader\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="DirectX12\Shader\PMDexistTexShader.hlsl">
-      <Filter>DirectX12\Shader\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="DirectX12\Shader\PMDShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\Primitive2D.hlsl">
@@ -866,6 +872,12 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\FbxNormalmapShader.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\PMDToonShader.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\PMDBasicShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

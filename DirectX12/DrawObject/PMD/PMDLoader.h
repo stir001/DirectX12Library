@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/9/21
+*	@par 最終更新日	2018/12/12
 */
 #include "DirectX12/DrawObject/DrawObjectLoader.h"
 #include <map>
@@ -55,14 +55,14 @@ private:
 	ShaderDatas mSubShader;
 
 	/**
-	*	テクスチャを使って描画するときに使うrootsiganture
+	*	Toonテクスチャを使って描画するときに使うrootsiganture
 	*/
-	std::shared_ptr<RootSignatureObject> mSubRootsiganture;
+	std::shared_ptr<RootSignatureObject> mToonRootsiganture;
 
 	/**
-	*	テクスチャを使って描画するときに使うPipelinestate
+	*	Toonテクスチャを使って描画するときに使うPipelinestate
 	*/
-	std::shared_ptr<PipelineStateObject> mSubPipelineState;
+	std::shared_ptr<PipelineStateObject> mToonPipelineState;
 
 	/**
 	*	Header部分をロード
@@ -148,6 +148,11 @@ private:
 	*	テクスチャをロードしShaderResourceを作成
 	*/
 	void CreateTexture();
+
+	/**
+	*	toonTextureを作成する
+	*/
+	void CreateToonTexture();
 
 	/**
 	*	マテリアル用のバッファを作成

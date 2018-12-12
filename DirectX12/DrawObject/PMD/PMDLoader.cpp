@@ -6,11 +6,13 @@
 #include "Buffer/VertexBufferObject.h"
 #include "Buffer/ConstantBufferObject.h"
 #include "Rootsignature/RootSignatureObject.h"
+#include "Rootsignature/PMDToonRootsignature.h"
 #include "Texture/TextureObject.h"
 #include "Master/Dx12Ctrl.h"
 #include "Animation/VMD/VMDPlayer.h"
 #include "Texture/TextureLoader.h"
 #include "PipelineState/PipelineStateObject.h"
+#include "PipelineState/PMDToonPipelineState.h"
 #include "Light/DirectionalLight.h"
 #include "Shader/ShaderCompiler.h"
 #include "Util/File.h"
@@ -21,7 +23,6 @@
 #include <d3d12.h>
 #include <algorithm>
 
-const std::string PMDSHADER_PATH = "shader.hlsl";
 
 PMDLoader::PMDLoader():mLight(std::make_shared<DirectionalLight>(1.f,-1.f,1.f))
 {
@@ -68,6 +69,7 @@ std::shared_ptr<PMDController> PMDLoader::Load(const std::string& path)
 	CreateIndexBuffer();
 	CreateVertexBuffer();
 	CreateTexture();
+	CreateToonTexture();
 	CreateMaterialBuffer();
 
 	std::shared_ptr<PMDController> controller = CreateController(mLoadingmodel, path);
@@ -158,7 +160,7 @@ void PMDLoader::LoadBone()
 		mFp->LoadFile(&b.type);
 		mFp->LoadFile(&b.ikParentIndex);
 		mFp->LoadFile(&b.pos);
-		if (b.tailIndex != 0 && b.parentIndex != 0xffff)
+		if (/*b.tailIndex != 0 && */b.parentIndex != 0xffff)
 		{
 			mLoadingmodel->mBoneNode.node[b.parentIndex].push_back(index);
 		}
@@ -304,11 +306,33 @@ void PMDLoader::CreateVertexBuffer()
 void PMDLoader::CreateTexture()
 {
 	mLoadingmodel->mTextureObjects.resize(mLoadingmodel->mTexturecount);
+	mLoadingmodel->mTextureObjects.reserve(mLoadingmodel->mMaterials.size());
+	unsigned int materialTextures = 0;
 	for (auto& mat : mLoadingmodel->mMaterials)
 	{
-		if (mat.texid == -1) continue;
-		std::string loadPath = mRelativePath + mat.texturePath;
-		mLoadingmodel->mTextureObjects[mat.texid] = TextureLoader::Instance().LoadTexture(loadPath);
+		if (mat.texid == -1)
+		{
+			mat.texid = mLoadingmodel->mTexturecount + materialTextures++;
+			mLoadingmodel->mTextureObjects.push_back(
+				TextureLoader::Instance().CreateSingleColorTexture({mat.diffuse.x, mat.diffuse.y, mat.diffuse.z, 1.0f}));
+		}
+		else
+		{
+			std::string loadPath = mRelativePath + mat.texturePath;
+			mLoadingmodel->mTextureObjects[mat.texid] = TextureLoader::Instance().LoadTexture(loadPath);
+		}
+	}
+	mLoadingmodel->mTextureObjects.shrink_to_fit();
+}
+
+void PMDLoader::CreateToonTexture()
+{
+	const unsigned int texNum = 10U;
+	mLoadingmodel->mToonTextures.resize(texNum);
+	for (unsigned int i = 0; i < texNum; ++i)
+	{
+		auto path = mRelativePath + mLoadingmodel->mToonpath.path[i * 10];
+		mLoadingmodel->mToonTextures[i] = TextureLoader::Instance().LoadTexture(path);
 	}
 }
 
@@ -348,7 +372,7 @@ void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	gpsDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	gpsDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	gpsDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	gpsDesc.DepthStencilState.StencilEnable = false;		//???
+	gpsDesc.DepthStencilState.StencilEnable = false;
 	gpsDesc.InputLayout.NumElements = sizeof(inputDescs) / sizeof(D3D12_INPUT_ELEMENT_DESC);
 	gpsDesc.InputLayout.pInputElementDescs = inputDescs;	//要素へのポインタ(先頭?)
 	gpsDesc.pRootSignature = mRootsignature->GetRootSignature().Get();				//ルートシグネチャポインタ
@@ -360,41 +384,24 @@ void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 	gpsDesc.SampleMask = 0xffffff;
 	gpsDesc.NodeMask = 0;
 
+	gpsDesc.pRootSignature = mRootsignature->GetRootSignature().Get();
 	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mShader.vertexShader.Get());
 	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mShader.pixelShader.Get());
 	gpsDesc.DS;
 	gpsDesc.GS = CD3DX12_SHADER_BYTECODE(mShader.geometryShader.Get());
 	gpsDesc.HS;
 
-	mPipelinestate = std::make_shared<PipelineStateObject>("PMDMaterial", gpsDesc,dev);
+	mPipelinestate = std::make_shared<PipelineStateObject>("PMDTex", gpsDesc, dev);
 
-	gpsDesc.pRootSignature = mSubRootsiganture->GetRootSignature().Get();
-	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mSubShader.vertexShader.Get());
-	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mSubShader.pixelShader.Get());
-	gpsDesc.DS;
-	gpsDesc.GS = CD3DX12_SHADER_BYTECODE(mShader.geometryShader.Get());
-	gpsDesc.HS;
-
-	mSubPipelineState = std::make_shared<PipelineStateObject>("PMDTex", gpsDesc, dev);
-
+	mToonPipelineState = std::make_shared<PMDToonPipelineState>(mToonRootsiganture, dev);
 }
 
 void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDShader.hlsl"
-		, "BasicVS"
-		, "BasicPS"
-		, "PmdGS"
-		, ""
-		, ""
-		, true);
-
-	mRootsignature = std::make_shared<RootSignatureObject>("PMDMaterial",mShader.rootSignature.Get(), dev);
-
 	ShaderCompiler::Instance().AddDefineMacro("CAMERA_REGISTER", "b0");
 	ShaderCompiler::Instance().AddDefineMacro("LIGHT_REGISTER", "b1");
 
-	mSubShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDexistTexShader.hlsl"
+	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDBasicShader.hlsl"
 		, "BasicVS"
 		, "ExitTexPS"
 		, "PmdGS"
@@ -402,7 +409,11 @@ void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 		, ""
 		, true);
 
-	mSubRootsiganture = std::make_shared<RootSignatureObject>("PMDTex",mSubShader.rootSignature.Get(), dev);
+	mRootsignature = std::make_shared<RootSignatureObject>("PMDTex", mShader.rootSignature.Get(), dev);
+
+	ShaderCompiler::Instance().AddDefineMacro("CAMERA_REGISTER", "b0");
+	ShaderCompiler::Instance().AddDefineMacro("LIGHT_REGISTER", "b1");
+	mToonRootsiganture = std::make_shared<PMDToonRootsignature>(dev);
 }
 
 std::shared_ptr<PMDController> PMDLoader::CreateController(std::shared_ptr<PMDModel>& model, const std::string& path)
@@ -412,8 +423,8 @@ std::shared_ptr<PMDController> PMDLoader::CreateController(std::shared_ptr<PMDMo
 	controller->SetLight(mLight);
 	controller->SetRootSignature(mRootsignature);
 	controller->SetPipelineState(mPipelinestate);
-	controller->SetSubRootSignature(mSubRootsiganture);
-	controller->SetSubPipelineState(mSubPipelineState);
+	controller->SetToonPipelineState(mToonPipelineState);
+	controller->SetToonRootSignature(mToonRootsiganture);
 	return controller;
 }
 

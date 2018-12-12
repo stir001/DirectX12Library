@@ -62,7 +62,6 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 		mNormvec[i] = NormalizeXMFloat3(vec);
 		mLength[i] = sqrt(DotXMFloat3(vec, vec));
 	}
-	mBundleCmdList->Close();
 	SetPos(mPivot);
 }
 

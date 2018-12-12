@@ -13,6 +13,8 @@ class PMDModel : public Model
 public:
 	virtual ~PMDModel();
 
+	static const unsigned int CONSTANT_BUFFER_NUM = 5U;
+
 	enum eROOT_PARAMATER_INDEX
 	{
 		eROOT_PARAMATER_INDEX_CAMERA,
@@ -21,6 +23,7 @@ public:
 		eROOT_PARAMATER_INDEX_MODEL_MATRIX,
 		eROOT_PARAMATER_INDEX_MATERIAL,
 		eROOT_PARAMATER_INDEX_TEXTURE,
+		eROOT_PARAMATER_INDEX_TOON,
 		eROOT_PARAMATER_INDEX_MAX,
 	};
 
@@ -30,6 +33,7 @@ public:
 	std::vector<unsigned short> mIndices;
 	std::vector<PMDMaterial> mMaterials;
 	std::vector<PMDBoneData> mBoneDatas;
+	std::vector<std::shared_ptr<TextureObject>> mToonTextures;
 	PMDIKList mIkLists;
 	PMDSkin mSkins;//表情
 	PMDSkinDisp mSkinDisps;//表情枠表示用リスト
@@ -42,8 +46,8 @@ public:
 	BoneTree mBoneNode;
 
 	void SetMaterialBuffer();
-
 private:
+	
 	static std::shared_ptr<PMDModel> Create();
 	PMDModel();
 };

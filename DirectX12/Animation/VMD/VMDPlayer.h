@@ -151,6 +151,14 @@ private:
 	*/
 	void StopUpdate();
 
+	/**
+	*	現在のポーズを初期設定にする
+	*/
 	void PoseSet();
+
+	/**
+	*	ルートの移動を全体に適応する
+	*/
+	void ApplyRootLocation();
 };
 
