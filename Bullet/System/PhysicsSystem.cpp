@@ -210,9 +210,8 @@ void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 	if (ghost->GetWorldID() == -1) return;
 	auto col = ghost->GetPtr();
 	mWorld->addCollisionObject(col.get()
-		, btBroadphaseProxy::CollisionFilterGroups::KinematicFilter
-		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter
-		| btBroadphaseProxy::CollisionFilterGroups::KinematicFilter);
+		, btBroadphaseProxy::CollisionFilterGroups::SensorTrigger
+		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter);
 	mCollisions[ghost->GetWorldID()] = ghost->GetPtr();
 }
 
