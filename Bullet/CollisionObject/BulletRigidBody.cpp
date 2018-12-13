@@ -138,6 +138,7 @@ void BulletRigidBody::SetOrigin(float x, float y, float z)
 {
 	auto trans = mRigidBody->getWorldTransform();
 	trans.setOrigin(btVector3(x, y, z));
+	mRigidBody->setWorldTransform(trans);
 }
 
 std::shared_ptr<btCollisionObject> BulletRigidBody::GetPtr() const
