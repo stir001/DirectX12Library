@@ -87,7 +87,7 @@ void Dx12Camera::NonSetElementToHolder()
 
 void Dx12Camera::UpdateProjection()
 {
-	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV4, static_cast<float>(mWidth) / static_cast<float>(mHeight), 20.0f, 500.f));
+	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(mFov, static_cast<float>(mWidth) / static_cast<float>(mHeight), mNear, mFar));
 }
 
 void Dx12Camera::SetPos(const DirectX::XMFLOAT3& pos)
