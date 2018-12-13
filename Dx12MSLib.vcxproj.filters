@@ -484,7 +484,7 @@
       <Filter>DirectX12\RenderingPass</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -834,7 +834,7 @@
       <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

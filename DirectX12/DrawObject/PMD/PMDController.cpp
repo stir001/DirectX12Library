@@ -105,7 +105,14 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 
 	for (auto& material : mModel->mMaterials)
 	{
-		SetTexture(cmdList, material);
+		if (material.toonIndex != 255)
+		{
+			SetTextureWithToon(cmdList, material);
+		}
+		else
+		{
+			SetTexture(cmdList, material);
+		}
 		SetConstantBuffers(cmdList);
 		SetMaterial(cmdList, static_cast<unsigned int>(mConstantBufferOffset + PMDModel::eROOT_PARAMATER_INDEX_MATERIAL), offsetCount);
 		cmdList->DrawIndexedInstanced(material.indexCount, 1, indexOffset, 0, 0);
@@ -126,7 +133,7 @@ void PMDController::SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12Graphi
 	cmdList->SetPipelineState(mToonPipeline->GetPipelineState().Get());
 	cmdList->SetGraphicsRootSignature(mToonRootsignature->GetRootSignature().Get());
 	mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
 }
 
 void PMDController::SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)

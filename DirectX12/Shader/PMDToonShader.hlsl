@@ -86,11 +86,11 @@ float4 PmdToonPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
     float4 light = dir;
-    float lambert = dot(data.normal.xyz, -dir.xyz);
+    float lambert = abs(dot(data.normal.xyz, -dir.xyz));
     float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
-    return saturate(color * toon.Sample(smp, float2(lambert, 0)) + color * ambient + specular * spec);
+    return saturate(color * toon.Sample(smp, float2(0, lambert)) /*+ color * ambient*/ + specular * spec);
 }
 
 #define VERTEX_NUM (3U)
