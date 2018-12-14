@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/11/27
+*	@par 最終更新日	2018/12/14
 */
 #include <memory>
 #include <DirectXMath.h>
@@ -119,8 +119,16 @@ public:
 	*	@param[in]	pos		初期位置
 	*	@return		生成したRigidBody
 	*/
-	std::shared_ptr<BulletRigidBody> CreateRigitBody(const BulletShapeType type
-		, const DirectX::XMFLOAT3& data , const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f,0.f,0.f));
+	std::shared_ptr<BulletRigidBody> CreateRigidBody(const BulletShapeType type
+		, const DirectX::XMFLOAT3& data , const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
+
+	/**
+	*	@brief	rigidBodyを作成する
+	*	@param[in]	shape	適応する形状
+	*	@param[in]	pos		初期位置
+	*/
+	std::shared_ptr<BulletRigidBody> CreateRigidBody(const std::shared_ptr<BulletCollisionShape> shape
+		, const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 
 	/**
 	*	@brief	コリジョン形状を作成する
@@ -158,7 +166,8 @@ public:
 	*	@param[in]	shape	生成するghostの形状
 	*	@return		生成したghost
 	*/
-	std::shared_ptr<BulletGhostObject> CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape);
+	std::shared_ptr<BulletGhostObject> CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape
+	,  const DirectX::XMFLOAT3& pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f));
 
 	/**
 	*	@brief	アクションを追加する

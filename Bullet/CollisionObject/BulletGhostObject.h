@@ -71,8 +71,17 @@ public:
 	*/
 	btCollisionObject* GetOverlappingObject(int i);
 
-	void SetCollisionFlags(int flags);
+	/**
+	*	@brief	コリジョンの状態を設定する
+				BulletCollisionStateをもとに設定する
+	*/
+	void SetCollisionState(int flags);
 
+	/**
+	*	@brief	位置を指定の場所へ移動させる
+	*	@param[in]	pos		移動させる場所
+	*/
+	void SetOrigin(float x, float y, float z);
 private:
 	/**
 	*	世界から登録を外す

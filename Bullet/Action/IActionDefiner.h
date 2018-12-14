@@ -76,13 +76,13 @@ public:
 	*	@param[in]	y	移動させるy座標
 	*	@param[in]	z	移動させるz座標
 	*/
-	void Translate(float x, float y, float z);
+	void SetOrigin(float x, float y, float z);
 
 	/**
 	*	@brief	当たり判定を瞬間移動させる
 	*	@param[in]	pos	移動させる座標
 	*/
-	void Translate(const DirectX::XMFLOAT3& pos);
+	void SetOrigin(const DirectX::XMFLOAT3& pos);
 
 	/**
 	*	@brief	当たり判定用ghostを取得する

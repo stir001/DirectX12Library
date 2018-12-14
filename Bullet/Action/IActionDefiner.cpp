@@ -41,14 +41,14 @@ int IActionDefiner::GetTag2() const
 	return mDetector->GetTag2();
 }
 
-void IActionDefiner::Translate(float x, float y, float z)
+void IActionDefiner::SetOrigin(float x, float y, float z)
 {
-	mDetector->Translate(x, y, z);
+	mDetector->SetOrigin(x, y, z);
 }
 
-void IActionDefiner::Translate(const DirectX::XMFLOAT3 & pos)
+void IActionDefiner::SetOrigin(const DirectX::XMFLOAT3 & pos)
 {
-	mDetector->Translate(pos.x, pos.y, pos.z);
+	mDetector->SetOrigin(pos.x, pos.y, pos.z);
 }
 
 std::shared_ptr<BulletGhostObject> IActionDefiner::GetGhost() const

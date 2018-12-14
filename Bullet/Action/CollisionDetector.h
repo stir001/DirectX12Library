@@ -80,7 +80,7 @@ public:
 	*	@param[in]	y	İ’è‚·‚éyÀ•W
 	*	@param[in]	z	İ’è‚·‚ézÀ•W
 	*/
-	void Translate(float x, float y, float z);
+	void SetOrigin(float x, float y, float z);
 
 	/**
 	*	@brief	ghost‚ğæ“¾‚·‚é

@@ -110,11 +110,9 @@ void CollisionDetector::SetCollisionState(BulletCollisionState state)
 	mGhost->GetPtr()->setCollisionFlags(static_cast<int>(state));
 }
 
-void CollisionDetector::Translate(float x, float y, float z)
+void CollisionDetector::SetOrigin(float x, float y, float z)
 {
-	auto trans = mGhost->GetPtr()->getWorldTransform();
-	trans.setOrigin({ x,y,z });
-	mGhost->GetPtr()->setWorldTransform(trans);
+	mGhost->SetOrigin(x, y, z);
 }
 
 std::shared_ptr<BulletGhostObject> CollisionDetector::GetPtr()

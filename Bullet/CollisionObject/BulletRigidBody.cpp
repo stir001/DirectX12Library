@@ -14,7 +14,7 @@ BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collision
 	, mMass(1.0f)
 {
 	CreateRigidBody();
-	Translate(pos.x, pos.y, pos.z);
+	SetOrigin(pos.x, pos.y, pos.z);
 }
 
 
@@ -44,7 +44,7 @@ void BulletRigidBody::Translate(float x, float y, float z)
 
 void BulletRigidBody::Translate(const DirectX::XMFLOAT3 & pos)
 {
-	Translate(pos.x, pos.y, pos.z);
+	SetOrigin(pos.x, pos.y, pos.z);
 }
 
 DirectX::XMFLOAT4X4 BulletRigidBody::GetWorldTransform() const
