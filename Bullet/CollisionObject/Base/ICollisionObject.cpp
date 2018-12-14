@@ -16,7 +16,7 @@ int operator|(const int lval, const BulletCollisionState rval)
 	return lval | static_cast<int>(rval);
 }
 
-int operator&(const const BulletCollisionState lval, const BulletCollisionState rval)
+int operator&(const BulletCollisionState lval, const BulletCollisionState rval)
 {
 	return static_cast<int>(lval) & static_cast<int>(rval);
 }
