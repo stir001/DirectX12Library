@@ -216,6 +216,20 @@ public:
 	*	@return	現在の速度
 	*/
 	DirectX::XMFLOAT3 GetVelocity() const;
+
+	/**
+	*	@brief	重力を設定する
+	*	@param[in]	gravity	設定する重力成分
+	*/
+	void SetGravity(const DirectX::XMFLOAT3& gravity);
+
+	/**
+	*	@brief	重力を設定する
+	*	@param[in]	x	x軸方向の重力成分
+	*	@param[in]	y	y軸方向の重力成分
+	*	@param[in]	z	z軸方向の重力成分
+	*/
+	void SetGravity(float x, float y, float z);
 private:
 	/**
 	*	世界から自分を削除する

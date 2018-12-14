@@ -210,6 +210,16 @@ DirectX::XMFLOAT3 BulletRigidBody::GetVelocity() const
 	return DirectX::XMFLOAT3(vel.x(),vel.y(),vel.z());
 }
 
+void BulletRigidBody::SetGravity(const DirectX::XMFLOAT3 & gravity)
+{
+	mRigidBody->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+}
+
+void BulletRigidBody::SetGravity(float x, float y, float z)
+{
+	mRigidBody->setGravity({ x,y,z });
+}
+
 void BulletRigidBody::RemoveWorld()
 {
 	PhysicsSystem::Instance().RemoveRigidBody(GetWorldID());
