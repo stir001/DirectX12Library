@@ -3,14 +3,10 @@
 #include "BulletRigidBody.h"
 #include "bullet/System/PhysicsSystem.h"
 #include "bullet/Shape/BulletCollisionShape.h"
+#include "Bullet/Action/IActionDefiner.h"
+#include "Bullet/CollisionObject/BulletGhostObject.h"
 
 #include <btBulletDynamicsCommon.h>
-
-int operator|(const BulletCollisionState lval, const BulletCollisionState rval)
-{
-	return static_cast<int>(lval) | static_cast<int>(rval);
-}
-
 
 BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID
 	, const DirectX::XMFLOAT3& pos)
@@ -37,7 +33,13 @@ void BulletRigidBody::SetMass(float mass)
 
 void BulletRigidBody::Translate(float x, float y, float z)
 {
-	mRigidBody->translate(btVector3(x, y, z));
+	btVector3 offset = { x,y,z };
+	mRigidBody->translate(offset);
+	mRigidBody->forceActivationState(ACTIVE_TAG);
+	if (!(x == 0 && y == 0 && z == 0))
+	{
+		mRigidBody->setLinearVelocity(offset.normalized());
+	}
 }
 
 void BulletRigidBody::Translate(const DirectX::XMFLOAT3 & pos)
@@ -52,10 +54,10 @@ DirectX::XMFLOAT4X4 BulletRigidBody::GetWorldTransform() const
 	btScalar mat[16];
 	transform.getOpenGLMatrix(mat);
 	DirectX::XMFLOAT4X4 rtn{
-		(float)mat[0], (float)mat[1], (float)mat[2] , (float)mat[3]
-		, (float)mat[4], (float)mat[5], (float)mat[6], (float)mat[7]
-		, (float)mat[8], (float)mat[9], (float)mat[10], (float)mat[11]
-		, (float)mat[12] , (float)mat[13], (float)mat[14], (float)mat[15]
+		mat[0], mat[1], mat[2] , mat[3]
+		, mat[4], mat[5], mat[6], mat[7]
+		, mat[8], mat[9], mat[10], mat[11]
+		, mat[12] , mat[13], mat[14], mat[15]
 	};
 
 	return rtn;
@@ -139,6 +141,7 @@ void BulletRigidBody::SetOrigin(float x, float y, float z)
 	auto trans = mRigidBody->getWorldTransform();
 	trans.setOrigin(btVector3(x, y, z));
 	mRigidBody->setWorldTransform(trans);
+	mRigidBody->forceActivationState(ACTIVE_TAG);
 }
 
 std::shared_ptr<btCollisionObject> BulletRigidBody::GetPtr() const
@@ -149,6 +152,62 @@ std::shared_ptr<btCollisionObject> BulletRigidBody::GetPtr() const
 std::shared_ptr<btRigidBody> BulletRigidBody::GetRigidPtr() const
 {
 	return mRigidBody;
+}
+
+void BulletRigidBody::SetIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction)
+{
+	mRigidBody->setIgnoreCollisionCheck(ignoreAction->GetGhost()->GetPtr().get(), true);
+}
+
+void BulletRigidBody::SetAcnglerFactor(float factor)
+{
+	mRigidBody->setAngularFactor(factor);
+}
+
+DirectX::XMFLOAT3 BulletRigidBody::GetOrigin() const
+{
+	auto trans = mRigidBody->getWorldTransform();
+	auto origin = trans.getOrigin();
+	return DirectX::XMFLOAT3(origin.x(), origin.y(), origin.z());
+}
+
+void BulletRigidBody::AddForce(float x, float y, float z)
+{
+	Activation();
+	mRigidBody->applyCentralForce({ x,y,z });
+}
+
+void BulletRigidBody::AddForce(const DirectX::XMFLOAT3 & force)
+{
+	AddForce(force.x, force.y, force.z);
+}
+
+void BulletRigidBody::AddImpulse(float x, float y, float z)
+{
+	Activation();
+	mRigidBody->applyCentralImpulse({ x, y, z });
+}
+
+void BulletRigidBody::AddImpulse(const DirectX::XMFLOAT3 & impulse)
+{
+	AddImpulse(impulse.x, impulse.y, impulse.z);
+}
+
+void BulletRigidBody::SetVelocity(float x, float y, float z)
+{
+	Activation();
+	mRigidBody->setLinearVelocity({ x,y,z });
+}
+
+void BulletRigidBody::SetVelocity(const DirectX::XMFLOAT3 & vel)
+{
+	SetVelocity(vel.x, vel.y, vel.z);
+}
+
+DirectX::XMFLOAT3 BulletRigidBody::GetVelocity() const
+{
+	auto vel = mRigidBody->getLinearVelocity();
+	return DirectX::XMFLOAT3(vel.x(),vel.y(),vel.z());
 }
 
 void BulletRigidBody::RemoveWorld()
@@ -168,7 +227,13 @@ void BulletRigidBody::CreateRigidBody()
 
 	mRigidBody = std::make_shared<btRigidBody>(bodyCI);
 
-	auto trans = mRigidBody->getWorldTransform();
+	int flag = mRigidBody->getCollisionFlags();
+	mRigidBody->setCollisionFlags(static_cast<int>(BulletCollisionState::CHARACTER) | flag);
+}
+
+void BulletRigidBody::Activation()
+{
+	mRigidBody->forceActivationState(ACTIVE_TAG);
 }
 
 

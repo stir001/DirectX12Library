@@ -78,11 +78,6 @@ public:
 	void DebugDraw();
 
 	/**
-	*	デバッグ用に取得したデータを解放する　毎フレーム呼ぶ
-	*/
-	void ClearDebugDraw();
-
-	/**
 	*	@brief	剛体をsystemの管理下に追加する
 	*	@param[in]	collider	追加する剛体
 	*/
@@ -172,7 +167,8 @@ public:
 	void AddAction(std::shared_ptr<CollisionDetector> action);
 
 	/**
-	*
+	*	@brief	アクションを削除する
+	*	@param[in]	action	削除するアクション
 	*/
 	void RemoveAction(std::shared_ptr<CollisionDetector> action);
 

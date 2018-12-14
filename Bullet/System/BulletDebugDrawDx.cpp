@@ -63,11 +63,6 @@ void BulletDebugDrawDx::draw3dText(const btVector3 & location, const char * text
 {
 }
 
-void BulletDebugDrawDx::ClearLines()
-{
-	mVertices.clear();
-}
-
 void BulletDebugDrawDx::DebugDraw()
 {
 	if (mVertices.size() < 2) return;
@@ -84,4 +79,5 @@ void BulletDebugDrawDx::DebugDraw()
 	mDescHeap->SetDescriptorHeap(mCmdList);
 	mDescHeap->SetGprahicsDescriptorTable(mCmdList, 0, 0);
 	mCmdList->DrawInstanced(static_cast<unsigned int>(mVertices.size()), 1, 0, 0);
+	mVertices.clear();
 }

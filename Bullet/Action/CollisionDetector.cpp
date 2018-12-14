@@ -24,7 +24,7 @@ CollisionDetector::CollisionDetector(std::shared_ptr<BulletCollisionShape> shape
 	int num = mGhost->GetPtr()->getCollisionFlags();
 	mGhost->GetPtr()->setCollisionFlags(num |
 		btCollisionObject::CollisionFlags::CF_NO_CONTACT_RESPONSE | 
-		btCollisionObject::CollisionFlags::CF_STATIC_OBJECT);
+		btCollisionObject::CollisionFlags::CF_KINEMATIC_OBJECT);
 	PhysicsSystem::Instance().AddGhost(mGhost);
 }
 
@@ -146,6 +146,7 @@ bool CollisionDetector::IsCollide(btBroadphasePair* pair)
 {
 	bool rtn = false;
 	btManifoldArray manifoldArray;
+	if (!pair->m_algorithm) return rtn;
 	pair->m_algorithm->getAllContactManifolds(manifoldArray);
 	int arraySize = manifoldArray.size();
 	for (int j = 0; j < arraySize; ++j)

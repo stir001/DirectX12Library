@@ -87,11 +87,6 @@ void PhysicsSystem::DebugDraw()
 	mDebugDrawer->DebugDraw();
 }
 
-void PhysicsSystem::ClearDebugDraw()
-{
-	mDebugDrawer->ClearLines();
-}
-
 void PhysicsSystem::AddRigidBody(std::shared_ptr<BulletRigidBody> rigid)
 {
 	if (rigid->GetWorldID() == -1) return;
@@ -211,7 +206,7 @@ void PhysicsSystem::AddGhost(std::shared_ptr<BulletGhostObject> ghost)
 	auto col = ghost->GetPtr();
 	mWorld->addCollisionObject(col.get()
 		, btBroadphaseProxy::CollisionFilterGroups::SensorTrigger
-		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter);
+		, btBroadphaseProxy::CollisionFilterGroups::DefaultFilter | btBroadphaseProxy::CollisionFilterGroups::StaticFilter);
 	mCollisions[ghost->GetWorldID()] = ghost->GetPtr();
 }
 

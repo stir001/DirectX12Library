@@ -66,8 +66,6 @@ public:
 	*/
 	void draw3dText(const btVector3& location, const char* textString);
 
-	void ClearLines();
-
 	void DebugDraw();
 private:
 	int mMode;

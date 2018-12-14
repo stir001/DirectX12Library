@@ -71,6 +71,8 @@ public:
 	*/
 	btCollisionObject* GetOverlappingObject(int i);
 
+	void SetCollisionFlags(int flags);
+
 private:
 	/**
 	*	¢ŠE‚©‚ç“o˜^‚ğŠO‚·

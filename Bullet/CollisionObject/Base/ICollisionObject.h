@@ -12,6 +12,21 @@
 class PhysicsSystem;
 class btCollisionObject;
 
+enum class BulletCollisionState
+{
+	STATIC = 1,			//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化あり
+	KINEMATIC = 2,		//!任意移動可能オブジェクト 物理計算なし  当たり判定あり 非アクティブ化なし
+	NON_CONTACT = 4,	//!任意移動不可オブジェクト 重力のみ?あり 当たり判定なし 非アクティブ化あり
+	CHARACTER = 16,		//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化なし
+};
+
+int operator|(const BulletCollisionState lval, const BulletCollisionState rval);
+int operator|(const BulletCollisionState lval, const int rval);
+int operator|(const int lval, const BulletCollisionState rval);
+int operator&(const BulletCollisionState lval, const BulletCollisionState rval);
+int operator&(const BulletCollisionState lval, const int rval);
+int operator&(const int lval, const BulletCollisionState rval);
+
 /**
 *	@class ICollisionObject
 *	@brief 衝突オブジェクトの定義

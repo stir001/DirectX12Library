@@ -12,6 +12,7 @@
 
 class CollisionDetector;
 class BulletCollisionShape;
+class BulletGhostObject;
 
 /**
 *	@class IActionDefiner
@@ -82,6 +83,12 @@ public:
 	*	@param[in]	pos	移動させる座標
 	*/
 	void Translate(const DirectX::XMFLOAT3& pos);
+
+	/**
+	*	@brief	当たり判定用ghostを取得する
+	*	@return	判定用ghost
+	*/
+	std::shared_ptr<BulletGhostObject> GetGhost() const;
 private:
 	/**
 	*	衝突検知用オブジェクト

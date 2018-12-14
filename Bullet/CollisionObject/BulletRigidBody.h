@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/11/26
+*	@par 最終更新日	2018/12/14
 */
 #include "Base/ICollisionObject.h"
 #include <memory>
@@ -16,16 +16,7 @@ class btMotionState;
 class BulletCollisionObject;
 class PhysicsSystem;
 class BulletCollisionShape;
-
-enum class BulletCollisionState 
-{
-	STATIC = 1,			//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化あり
-	KINEMATIC = 2,		//!任意移動可能オブジェクト 物理計算なし  当たり判定あり 非アクティブ化なし
-	NON_CONTACT = 4,	//!任意移動不可オブジェクト 重力のみ?あり 当たり判定なし 非アクティブ化あり
-	CHARACTER = 16,		//!任意移動不可オブジェクト 物理計算あり  当たり判定あり 非アクティブ化なし
-};
-
-int operator|(const BulletCollisionState lval, const BulletCollisionState rval);
+class IActionDefiner;
 
 /**
 *	@class BulletRigidBody
@@ -49,18 +40,18 @@ public:
 	virtual void SetMass(float mass);
 
 	/**
-	*	@brief 位置を設定する	
+	*	@brief 現在の位置から指定分だけ中心点を移動させる(addの計算)	
 				瞬間移動なので当たり判定時に不具合が起きる可能性あり
-	*	@param[in]	x	x座標
-	*	@param[in]	y	y座標
-	*	@param[in]	z	z座標
+	*	@param[in]	x	x移動成分
+	*	@param[in]	y	y移動成分
+	*	@param[in]	z	z移動成分
 	*/
 	virtual void Translate(float x, float y, float z);
 
 	/**
-	*	@brief 位置を設定する
+	*	@brief 現在の位置から指定分だけ中心点を移動させる(addの計算)	
 				瞬間移動なので当たり判定時に不具合が起きる可能性あり
-	*	@param[in]	pos	設定する座標
+	*	@param[in]	pos	移動成分情報
 	*/
 	virtual void Translate(const DirectX::XMFLOAT3& pos);
 
@@ -159,6 +150,72 @@ public:
 	*	@return btRigidBodyのポインタ
 	*/
 	std::shared_ptr<btRigidBody> GetRigidPtr() const;
+
+	/**
+	*	@brief	当たり判定をとらないアクションを定義する
+	*	@param[in]	ignoreAction	無視するアクション
+	*/
+	void SetIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction);
+
+	/**
+	*	@brief	物理演算時に回転する力の強さを定義する
+	*	@param[in]	factor	回転する要素の大きさ(0で回転しない)
+	*/
+	void SetAcnglerFactor(float factor);
+
+	/**
+	*	@brief	現在の衝突形状の中心点座標を得る
+	*	@return	現在の衝突形状の中心座標
+	*/
+	DirectX::XMFLOAT3 GetOrigin() const;
+
+	/**
+	*	@brief	剛体に力を加える
+	*	@param[in]	x	x軸方向の力の成分
+	*	@param[in]	y	y軸方向の力の成分
+	*	@param[in]	z	z軸方向の力の成分
+	*/
+	void AddForce(float x, float y, float z);
+
+	/**
+	*	@broef	剛体に力を加える
+	*	@param[in]	force	加える力の成分
+	*/
+	void AddForce(const DirectX::XMFLOAT3& force);
+
+	/**
+	*	@brief	剛体に瞬間的に力を加える
+	*	@param[in]	x	x軸方向の力の成分
+	*	@param[in]	y	y軸方向の力の成分
+	*	@param[in]	z	z軸方向の力の成分
+	*/
+	void AddImpulse(float x, float y, float z);
+
+	/**
+	*	@brief	剛体に瞬間的に力を加える
+	*	@param[in]	impulse	加える力の成分
+	*/
+	void AddImpulse(const DirectX::XMFLOAT3& impulse);
+
+	/**
+	*	@brief	速度を設定する
+	*	@param[in]	x	x軸方向の速度成分
+	*	@param[in]	y	y軸方向の速度成分
+	*	@param[in]	z	z軸方向の速度成分
+	*/
+	void SetVelocity(float x, float y, float z);
+
+	/**
+	*	@brief	速度を設定する
+	*	@param[in]	vel	設定する速度成分
+	*/
+	void SetVelocity(const DirectX::XMFLOAT3& vel);
+
+	/**
+	*	@brief	速度を取得する
+	*	@return	現在の速度
+	*/
+	DirectX::XMFLOAT3 GetVelocity() const;
 private:
 	/**
 	*	世界から自分を削除する
@@ -169,6 +226,11 @@ private:
 	*	btRigidBodyを作成する
 	*/
 	virtual void CreateRigidBody();
+
+	/**
+	*	物理演算を有効な状態にする
+	*/
+	void Activation();
 
 	/**
 	*	rigidBody

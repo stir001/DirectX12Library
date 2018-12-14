@@ -459,9 +459,6 @@
     <ClInclude Include="Bullet\CollisionObject\BulletGhostObject.h">
       <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
-      <Filter>Bullet\CollisionObject</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h">
       <Filter>Bullet\Action</Filter>
     </ClInclude>
@@ -485,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
       <Filter>DirectX12\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
+      <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

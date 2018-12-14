@@ -13,9 +13,11 @@
 #include <wrl.h>
 #include <memory>
 #include <string>
+#include <vector>
 
 class Dx12BufferObject;
 class Dx12DescriptorHeapObject;
+class DrawObjectController;
 
 /**
 *	@ingroup Dx12CommandList
@@ -51,7 +53,7 @@ public:
 	*	@brief	コマンドリストをリセットする
 	*	@return	リセットの結果
 	*/
-	virtual HRESULT Reset() const;
+	virtual HRESULT Reset();
 
 	/**
 	*	@brief	コマンドリストを任意のPipelineStateを使ってリセットする
@@ -158,6 +160,8 @@ public:
 	*	コマンドリストを閉じる
 	*/
 	void Close() const;
+
+	void SetDrawController(std::shared_ptr<DrawObjectController> controller);
 private:
 	/**
 	*	コマンドリストの名前
@@ -178,6 +182,8 @@ private:
 	*	コマンドリストのタイプ
 	*/
 	const D3D12_COMMAND_LIST_TYPE mType;
+
+	std::vector<std::shared_ptr<DrawObjectController>> mControllers;
 
 	/**
 	*	@brief	ID3D12DeviecがRemoveされたかどうかをチェックする

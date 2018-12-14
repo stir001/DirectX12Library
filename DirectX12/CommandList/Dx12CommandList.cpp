@@ -42,8 +42,9 @@ D3D12_COMMAND_LIST_TYPE Dx12CommandList::GetType() const
 	return mType;
 }
 
-HRESULT Dx12CommandList::Reset() const
+HRESULT Dx12CommandList::Reset()
 {
+	mControllers.clear();
 	mCmdallcator->Reset();
 	return mCmdList->Reset(mCmdallcator.Get(), nullptr);
 }
@@ -159,6 +160,11 @@ const std::string & Dx12CommandList::GetName() const
 void Dx12CommandList::Close() const
 {
 	mCmdList->Close();
+}
+
+void Dx12CommandList::SetDrawController(std::shared_ptr<DrawObjectController> controller)
+{
+	mControllers.push_back(controller);
 }
 
 HRESULT Dx12CommandList::GetDeviceRemoveReason() const

@@ -17,6 +17,7 @@
 #include "DrawObject/Primitive2D/Primitive2DManager.h"
 #include "DrawObject/Fbx/FbxLoader.h"
 #include "DrawObject/Primitive3D/PrimitiveCreator.h"
+#include "Bullet/System/PhysicsSystem.h"
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -348,6 +349,7 @@ void Dx12Ctrl::Release()
 	mFactory.Reset();
 	mFence.Reset();
 	PrimitiveCreator::Destroy();
+	PhysicsSystem::Destory();
 
 	ReportLiveObject();
 }
