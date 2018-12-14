@@ -159,7 +159,7 @@ void BulletRigidBody::SetIgnoreAction(std::shared_ptr<IActionDefiner> ignoreActi
 	mRigidBody->setIgnoreCollisionCheck(ignoreAction->GetGhost()->GetPtr().get(), true);
 }
 
-void BulletRigidBody::SetAcnglerFactor(float factor)
+void BulletRigidBody::SetAngularFactor(float factor)
 {
 	mRigidBody->setAngularFactor(factor);
 }
