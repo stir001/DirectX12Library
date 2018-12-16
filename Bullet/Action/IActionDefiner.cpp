@@ -17,7 +17,7 @@ IActionDefiner::IActionDefiner(std::shared_ptr<BulletCollisionShape> shape, int 
 
 IActionDefiner::~IActionDefiner()
 {
-	PhysicsSystem::Instance().RemoveAction(mDetector);
+	PhysicsSystem::Instance().RemoveIgnoreAction(mDetector);
 	PhysicsSystem::Instance().RemoveGhost(mDetector->GetPtr());
 }
 

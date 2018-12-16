@@ -131,11 +131,5 @@ private:
 	*	アクションを呼ぶクラスの設定保存用
 	*/
 	std::shared_ptr<CalliedAction> mCalliedAction;
-
-
-	/**
-	*	衝突時に起こすアクションの関数
-	*/
-	std::function<void(int)> mAction;
 };
 

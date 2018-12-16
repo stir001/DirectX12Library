@@ -7,6 +7,7 @@
 #include "Bullet/CollisionObject/BulletGhostObject.h"
 
 #include <btBulletDynamicsCommon.h>
+#include <algorithm>
 
 BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collisionShape, int worldID
 	, const DirectX::XMFLOAT3& pos)
@@ -21,6 +22,11 @@ BulletRigidBody::BulletRigidBody(std::shared_ptr<BulletCollisionShape> collision
 BulletRigidBody::~BulletRigidBody()
 {
 	RemoveWorld();
+	for (auto action : mIgnoreActions)
+	{
+		mRigidBody->setIgnoreCollisionCheck(action->GetGhost()->GetPtr().get(), false);
+	}
+	mIgnoreActions.clear();
 }
 
 void BulletRigidBody::SetMass(float mass)
@@ -157,6 +163,20 @@ std::shared_ptr<btRigidBody> BulletRigidBody::GetRigidPtr() const
 void BulletRigidBody::SetIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction)
 {
 	mRigidBody->setIgnoreCollisionCheck(ignoreAction->GetGhost()->GetPtr().get(), true);
+	mIgnoreActions.push_back(ignoreAction);
+}
+
+void BulletRigidBody::RemoveIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction)
+{
+	auto find = std::find_if(mIgnoreActions.begin(), mIgnoreActions.end(), [ignoreAction](std::shared_ptr<IActionDefiner> action) 
+	{
+		return ignoreAction->GetGhost()->GetWorldID() == action->GetGhost()->GetWorldID();
+	});
+	if (find != mIgnoreActions.end())
+	{
+		mIgnoreActions.erase(find);
+		mRigidBody->setIgnoreCollisionCheck(ignoreAction->GetGhost()->GetPtr().get(), false);
+	}
 }
 
 void BulletRigidBody::SetAngularFactor(float factor)

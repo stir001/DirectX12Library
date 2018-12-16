@@ -10,6 +10,7 @@
 #include "Base/ICollisionObject.h"
 #include <memory>
 #include <DirectXMath.h>
+#include <list>
 
 class btRigidBody;
 class btMotionState;
@@ -152,10 +153,16 @@ public:
 	std::shared_ptr<btRigidBody> GetRigidPtr() const;
 
 	/**
-	*	@brief	当たり判定をとらないアクションを定義する
+	*	@brief	当たり判定をとらないアクションを登録する
 	*	@param[in]	ignoreAction	無視するアクション
 	*/
 	void SetIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction);
+
+	/**
+	*	@brief	当たり判定無視登録を削除する
+	*	@param[in]	ignoreAction	登録を削除したいアクション
+	*/
+	void RemoveIgnoreAction(std::shared_ptr<IActionDefiner> ignoreAction);
 
 	/**
 	*	@brief	物理演算時に回転する力の強さを定義する
@@ -265,5 +272,10 @@ private:
 	*	質量
 	*/
 	float mMass;
+
+	/**
+	*	無視登録しているアクション(重複するので注意)
+	*/
+	std::list<std::shared_ptr<IActionDefiner>> mIgnoreActions;
 };
 

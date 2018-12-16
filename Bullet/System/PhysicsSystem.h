@@ -179,7 +179,7 @@ public:
 	*	@brief	アクションを削除する
 	*	@param[in]	action	削除するアクション
 	*/
-	void RemoveAction(std::shared_ptr<CollisionDetector> action);
+	void RemoveIgnoreAction(std::shared_ptr<CollisionDetector> action);
 
 	/**
 	*	@brief	ゴーストを追加する

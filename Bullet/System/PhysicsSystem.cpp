@@ -202,7 +202,7 @@ void PhysicsSystem::AddAction(std::shared_ptr<CollisionDetector> action)
 	mWorld->addAction(action.get());
 }
 
-void PhysicsSystem::RemoveAction(std::shared_ptr<CollisionDetector> action)
+void PhysicsSystem::RemoveIgnoreAction(std::shared_ptr<CollisionDetector> action)
 {
 	mWorld->removeAction(action.get());
 }

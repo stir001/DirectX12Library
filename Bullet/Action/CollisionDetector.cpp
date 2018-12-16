@@ -44,16 +44,16 @@ void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar
 			, pairCollision->getBroadphaseHandle());
 		if (!findPair) continue;
 		int otherid = GetOtherProxyID(findPair, mineProxy);
-		auto caller = mCallers.find(otherid);
-		if (caller == mCallers.end())
-		{
-			int tag1 = pairCollision->getUserIndex();
-			int tag2 = pairCollision->getUserIndex2();
-			mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction, tag1, tag2);
-			caller = mCallers.find(otherid);
-		}
 		if (IsCollide(findPair))
 		{
+			auto caller = mCallers.find(otherid);
+			if (caller == mCallers.end())
+			{
+				int tag1 = pairCollision->getUserIndex();
+				int tag2 = pairCollision->getUserIndex2();
+				mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction, tag1, tag2);
+				caller = mCallers.find(otherid);
+			}
 			(*caller).second->Collide();
 		}
 	}
