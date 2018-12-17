@@ -80,7 +80,7 @@ public:
 	*	@param[in]	y	設定するy座標
 	*	@param[in]	z	設定するz座標
 	*/
-	void Translate(float x, float y, float z);
+	void SetOrigin(float x, float y, float z);
 
 	/**
 	*	@brief	ghostを取得する
@@ -131,11 +131,5 @@ private:
 	*	アクションを呼ぶクラスの設定保存用
 	*/
 	std::shared_ptr<CalliedAction> mCalliedAction;
-
-
-	/**
-	*	衝突時に起こすアクションの関数
-	*/
-	std::function<void(int)> mAction;
 };
 

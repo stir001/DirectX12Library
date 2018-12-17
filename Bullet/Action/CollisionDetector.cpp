@@ -44,16 +44,16 @@ void CollisionDetector::updateAction(btCollisionWorld * collisionWorld, btScalar
 			, pairCollision->getBroadphaseHandle());
 		if (!findPair) continue;
 		int otherid = GetOtherProxyID(findPair, mineProxy);
-		auto caller = mCallers.find(otherid);
-		if (caller == mCallers.end())
-		{
-			int tag1 = pairCollision->getUserIndex();
-			int tag2 = pairCollision->getUserIndex2();
-			mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction, tag1, tag2);
-			caller = mCallers.find(otherid);
-		}
 		if (IsCollide(findPair))
 		{
+			auto caller = mCallers.find(otherid);
+			if (caller == mCallers.end())
+			{
+				int tag1 = pairCollision->getUserIndex();
+				int tag2 = pairCollision->getUserIndex2();
+				mCallers[otherid] = std::make_shared<CollisionActionCaller>(*mCalliedAction, tag1, tag2);
+				caller = mCallers.find(otherid);
+			}
 			(*caller).second->Collide();
 		}
 	}
@@ -110,11 +110,9 @@ void CollisionDetector::SetCollisionState(BulletCollisionState state)
 	mGhost->GetPtr()->setCollisionFlags(static_cast<int>(state));
 }
 
-void CollisionDetector::Translate(float x, float y, float z)
+void CollisionDetector::SetOrigin(float x, float y, float z)
 {
-	auto trans = mGhost->GetPtr()->getWorldTransform();
-	trans.setOrigin({ x,y,z });
-	mGhost->GetPtr()->setWorldTransform(trans);
+	mGhost->SetOrigin(x, y, z);
 }
 
 std::shared_ptr<BulletGhostObject> CollisionDetector::GetPtr()

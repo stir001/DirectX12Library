@@ -139,13 +139,19 @@ void PhysicsSystem::RemoveRigidBody(int worldID)
 	mCollisions.erase(itr);
 }
 
-std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigitBody(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
+std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigidBody(const BulletShapeType type, const DirectX::XMFLOAT3& data, const DirectX::XMFLOAT3& pos)
 {	
 	auto rigidBody = std::make_shared<BulletRigidBody>(CreateCollisionShape(type, data), GetAvailableMinID(), pos);
 
 	AddRigidBody(rigidBody);
 
 	return rigidBody;
+}
+
+std::shared_ptr<BulletRigidBody> PhysicsSystem::CreateRigidBody(const std::shared_ptr<BulletCollisionShape> shape, const DirectX::XMFLOAT3& pos)
+{
+	auto rigid = std::make_shared<BulletRigidBody>(shape, GetAvailableMinID(), pos);
+	return rigid;
 }
 
 std::shared_ptr<BulletCollisionShape> PhysicsSystem::CreateCollisionShape(const BulletShapeType type, const DirectX::XMFLOAT3& data)
@@ -184,7 +190,8 @@ std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(const Bullet
 	return ghost;
 }
 
-std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape)
+std::shared_ptr<BulletGhostObject> PhysicsSystem::CreateGhostObject(std::shared_ptr<BulletCollisionShape> shape
+	, const DirectX::XMFLOAT3& pos)
 {
 	auto ghost = std::make_shared<BulletGhostObject>(shape, GetAvailableMinID());
 	return ghost;
@@ -195,7 +202,7 @@ void PhysicsSystem::AddAction(std::shared_ptr<CollisionDetector> action)
 	mWorld->addAction(action.get());
 }
 
-void PhysicsSystem::RemoveAction(std::shared_ptr<CollisionDetector> action)
+void PhysicsSystem::RemoveIgnoreAction(std::shared_ptr<CollisionDetector> action)
 {
 	mWorld->removeAction(action.get());
 }

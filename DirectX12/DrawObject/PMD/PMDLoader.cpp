@@ -459,7 +459,7 @@ void PMDLoader::CreateRigidBodis()
 			info.x = data.shapeW;
 			info.y = data.shapeH;
 		}
-		auto rigid = PhysicsSystem::Instance().CreateRigitBody(type, info);
+		auto rigid = PhysicsSystem::Instance().CreateRigidBody(type, info);
 		rigid->SetMass(data.weight);
 		BulletCollisionState state;
 		if (data.rigidbodyType == 0)

@@ -55,6 +55,18 @@ btCollisionObject* BulletGhostObject::GetOverlappingObject(int i)
 	return mGhost->getOverlappingObject(i);
 }
 
+void BulletGhostObject::SetCollisionState(int flags)
+{
+	mGhost->setCollisionFlags(flags);
+}
+
+void BulletGhostObject::SetOrigin(float x, float y, float z)
+{
+	auto trans = mGhost->getWorldTransform();
+	trans.setOrigin(btVector3(x, y, z));
+	mGhost->setWorldTransform(trans);
+}
+
 void BulletGhostObject::RemoveWorld()
 {
 	PhysicsSystem::Instance().RemoveGhost(GetWorldID());
