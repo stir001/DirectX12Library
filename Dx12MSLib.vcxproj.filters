@@ -486,6 +486,12 @@
     <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
       <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PMDShadowRootSignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDShadowPipelineState.h">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -834,6 +840,12 @@
       <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PMDShadowRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDShadowPipelineState.cpp">
       <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>

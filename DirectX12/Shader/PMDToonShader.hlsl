@@ -1,4 +1,4 @@
-#define PMDTOONEXRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
+#define PMDTOONRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
 	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
 	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
 	", DescriptorTable(CBV(b2), visibility = SHADER_VISIBILITY_ALL)" \
@@ -66,7 +66,7 @@ struct GSOutput
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-[RootSignature(PMDTOONEXRS)]
+[RootSignature(PMDTOONRS)]
 VSOutput PmdToonVS(VSInput vInput)
 {
     float wgt1 = (float) vInput.weight / 100.0;
@@ -121,4 +121,16 @@ void PmdGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOut
         }
         gsOut.RestartStrip();
     }
+}
+
+[RootSignature(PMDTOONRS)]
+float4 PmdShadowVS(VSInput vsInput) : SV_Position
+{
+	float4 svpos;
+    float wgt1 = (float) vsInput.weight / 100.0f;
+    float wgt2 = 1.0 - wgt1;
+    matrix m = mul(modelMatrix, bones[vsInput.boneno[0]] * wgt1 + bones[vsInput.boneno[1]] * wgt2);
+    svpos = mul(lightviewProj, mul(m, float4(vsInput.pos, 1)));
+
+	return svpos;
 }
