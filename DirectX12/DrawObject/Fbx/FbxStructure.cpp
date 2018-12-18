@@ -89,9 +89,9 @@ std::shared_ptr<TextureObject> Fbx::FbxMaterial::CreateTextureUseElement(eELEMEN
 	case Fbx::FbxMaterial::eELEMENT_TYPE_TRANSPARENCY_FACTOR:
 		rtn = TextureLoader::Instance().CreateSingleColorTexture(transparencyFactor.element);
 		break;
-	case Fbx::FbxMaterial::eELEMENT_TYPE_NORMALMAP:
-		rtn = TextureLoader::Instance().CreateSingleColorTexture(normalmap.element);
-		break;
+	//case Fbx::FbxMaterial::eELEMENT_TYPE_NORMALMAP:
+	//	rtn = TextureLoader::Instance().CreateSingleColorTexture(normalmap.element);
+	//	break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_NUM:
 		break;
 	default:
@@ -137,8 +137,8 @@ void Fbx::FbxMaterial::SetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type, Fbx::Fbx
 	case Fbx::FbxMaterial::eELEMENT_TYPE_TRANSPARENCY_FACTOR:
 		transparencyFactor.textures = std::move(texSet);
 		break;
-	case Fbx::FbxMaterial::eELEMENT_TYPE_NORMALMAP:
-		normalmap.textures = std::move(texSet);
+	//case Fbx::FbxMaterial::eELEMENT_TYPE_NORMALMAP:
+	//	normalmap.textures = std::move(texSet);
 	case Fbx::FbxMaterial::eELEMENT_TYPE_NUM:
 		break;
 	default:

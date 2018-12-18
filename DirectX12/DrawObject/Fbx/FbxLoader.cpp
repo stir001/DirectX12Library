@@ -1432,23 +1432,23 @@ void StoreTransparencyFactor(Fbx::FbxMaterial& material, const fbxsdk::FbxSurfac
 	}
 }
 
-void StoreNormalMap(Fbx::FbxMaterial& material, const fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
-{
-	if (surfaceMaterial->GetClassId().Is(fbxsdk::FbxSurfaceLambert::ClassId))
-	{
-		auto lambert = (fbxsdk::FbxSurfaceLambert*)(surfaceMaterial);
-		material.normalmap.element.x = static_cast<float>(lambert->NormalMap.Get()[0]);
-		material.normalmap.element.y = static_cast<float>(lambert->NormalMap.Get()[1]);
-		material.normalmap.element.z = static_cast<float>(lambert->NormalMap.Get()[2]);
-	}
-	else if (surfaceMaterial->GetClassId().Is(fbxsdk::FbxSurfacePhong::ClassId))
-	{
-		auto phong = (fbxsdk::FbxSurfaceLambert*)(surfaceMaterial);
-		material.normalmap.element.x = static_cast<float>(phong->NormalMap.Get()[0]);
-		material.normalmap.element.y = static_cast<float>(phong->NormalMap.Get()[1]);
-		material.normalmap.element.z = static_cast<float>(phong->NormalMap.Get()[2]);
-	}
-}
+//void StoreNormalMap(Fbx::FbxMaterial& material, const fbxsdk::FbxSurfaceMaterial* surfaceMaterial)
+//{
+//	if (surfaceMaterial->GetClassId().Is(fbxsdk::FbxSurfaceLambert::ClassId))
+//	{
+//		auto lambert = (fbxsdk::FbxSurfaceLambert*)(surfaceMaterial);
+//		material.normalmap.element.x = static_cast<float>(lambert->NormalMap.Get()[0]);
+//		material.normalmap.element.y = static_cast<float>(lambert->NormalMap.Get()[1]);
+//		material.normalmap.element.z = static_cast<float>(lambert->NormalMap.Get()[2]);
+//	}
+//	else if (surfaceMaterial->GetClassId().Is(fbxsdk::FbxSurfacePhong::ClassId))
+//	{
+//		auto phong = (fbxsdk::FbxSurfaceLambert*)(surfaceMaterial);
+//		material.normalmap.element.x = static_cast<float>(phong->NormalMap.Get()[0]);
+//		material.normalmap.element.y = static_cast<float>(phong->NormalMap.Get()[1]);
+//		material.normalmap.element.z = static_cast<float>(phong->NormalMap.Get()[2]);
+//	}
+//}
 
 //ファイルパスの文字コード変換関数　FbxUTF8ToAnsi　などを使った変換をしていないので一部ファイルは読み込めない
 bool GetTexture(fbxsdk::FbxProperty& prop, Fbx::FbxTexturesSet& textures)
@@ -1530,7 +1530,7 @@ void FbxLoader::LoadMatarial(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::F
 		//fbxsdk::FbxSurfaceMaterial::sBump,
 		fbxsdk::FbxSurfaceMaterial::sTransparentColor,
 		fbxsdk::FbxSurfaceMaterial::sTransparencyFactor,
-		fbxsdk::FbxSurfaceMaterial::sNormalMap,
+		//fbxsdk::FbxSurfaceMaterial::sNormalMap,
 		//fbxsdk::FbxSurfaceMaterial::sReflection,
 		//fbxsdk::FbxSurfaceMaterial::sReflectionFactor,
 	};
@@ -1547,7 +1547,7 @@ void FbxLoader::LoadMatarial(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::F
 		StoreEmissiveFactor,
 		StoreTransparentColor,
 		StoreTransparencyFactor,
-		StoreNormalMap,
+		//StoreNormalMap,
 	};
 
 	//マテリアルは１メッシュに一つの場合のみ対応
