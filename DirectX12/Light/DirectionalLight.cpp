@@ -32,6 +32,7 @@ DirectionalLight::DirectionalLight(float dirX, float dirY, float dirZ, float len
 	mPos = {0, 0, 0};
 	mLength = length;
 	DirectX::XMFLOAT3 tdir = { dirX, dirY, dirZ };
+	mPos = tdir * length * 0.5f;
 	mElement.dir = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(tdir));
 
 	XMVECTOR upper = { 0,1,0 };
@@ -41,7 +42,7 @@ DirectionalLight::DirectionalLight(float dirX, float dirY, float dirZ, float len
 	mElement.dir = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(t_dir));
 	DirectX::XMVECTOR lightpos = XMLoadFloat3(&mPos);
 	DirectX::XMMATRIX lightview = DirectX::XMMatrixLookAtLH(lightpos, target, upper);
-	DirectX::XMMATRIX lightprojection = DirectX::XMMatrixOrthographicLH(50, 50, 1.0f, 200.0f);//lightprojectionçsóÒ
+	DirectX::XMMATRIX lightprojection = DirectX::XMMatrixOrthographicLH(50, 50, 1.0f, length);//lightprojectionçsóÒ
 	XMStoreFloat4x4(&mElement.viewProj, lightview * lightprojection);
 	mCbuffer = std::make_shared<ConstantBufferObject>("DirectionalLightConstantBuffer", Dx12Ctrl::Instance().GetDev(), static_cast<unsigned int>(sizeof(DirectionalLightElement)), 1);
 

@@ -35,7 +35,7 @@ PrimitiveCreator::~PrimitiveCreator()
 {
 }
 
-std::shared_ptr<PrimitiveController> PrimitiveCreator::CreatePlane(DirectX::XMFLOAT3 pos, float length, float height, DirectX::XMFLOAT3 normal)
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreatePlane(const DirectX::XMFLOAT3& pos, float length, float height, const DirectX::XMFLOAT3& normal)
 {
 	return CreateController(std::shared_ptr<PrimitivePlane>(std::make_shared<PrimitivePlane>(pos, length, height, normal)));
 }

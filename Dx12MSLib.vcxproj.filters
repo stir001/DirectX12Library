@@ -516,6 +516,9 @@
     <ClInclude Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.h">
       <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\ShadowmapPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -889,6 +892,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.cpp">
       <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\ShadowmapPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
