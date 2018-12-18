@@ -1,9 +1,8 @@
 #include "stdafx.h"
-#include "PMDToonPipelineState.h"
+#include "PMDToonShadowPipelineState.h"
 #include "Rootsignature/RootSignatureObject.h"
 
-
-PMDToonPipelineState::PMDToonPipelineState(std::shared_ptr<RootSignatureObject>& rootsignature,
+PMDToonShadowPipelineState::PMDToonShadowPipelineState(std::shared_ptr<RootSignatureObject>& rootsignature,
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	D3D12_INPUT_ELEMENT_DESC inputDescs[] = {
@@ -48,7 +47,7 @@ PMDToonPipelineState::PMDToonPipelineState(std::shared_ptr<RootSignatureObject>&
 	}
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
-	gpsDesc.BlendState = blendDesc;	
+	gpsDesc.BlendState = blendDesc;
 	gpsDesc.DepthStencilState.DepthEnable = true;
 	gpsDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	gpsDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
@@ -68,10 +67,9 @@ PMDToonPipelineState::PMDToonPipelineState(std::shared_ptr<RootSignatureObject>&
 	gpsDesc.pRootSignature = rootsignature->GetRootSignature().Get();
 	SetShaders(gpsDesc, rootsignature->GetShaderDatas());
 
-	CreatePipelineState("PmdToon", gpsDesc, dev);
+	CreatePipelineState("PmdToonShadow", gpsDesc, dev);
 }
 
-
-PMDToonPipelineState::~PMDToonPipelineState()
+PMDToonShadowPipelineState::~PMDToonShadowPipelineState()
 {
 }

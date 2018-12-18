@@ -1,24 +1,23 @@
 #include "stdafx.h"
-#include "PMDToonRootsignature.h"
+#include "PMDToonShadowRootSignature.h"
 #include "Shader/ShaderCompiler.h"
 
-
-PMDToonRootsignature::PMDToonRootsignature(const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+PMDToonShadowRootSignature::PMDToonShadowRootSignature(const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	ShaderCompiler::Instance().AddDefineMacro("CAMERA_REGISTER", "b0");
 	ShaderCompiler::Instance().AddDefineMacro("LIGHT_REGISTER", "b1");
 
 	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDToonShader.hlsl"
-		, "PmdToonVS"
-		, "PmdToonPS"
+		, "PmdToonShadowVS"
+		, "PmdToonShadowPS"
 		, "PmdGS"
 		, ""
 		, ""
 		, true);
-	CreateRootSignature("PmdToon", mShader.rootSignature.Get(), dev);
+	CreateRootSignature("PmdToonShadow", mShader.rootSignature.Get(), dev);
 }
 
 
-PMDToonRootsignature::~PMDToonRootsignature()
+PMDToonShadowRootSignature::~PMDToonShadowRootSignature()
 {
 }

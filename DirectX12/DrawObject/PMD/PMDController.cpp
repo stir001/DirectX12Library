@@ -55,18 +55,25 @@ void PMDController::DrawShadowmap()
 	mModel->SetVertexBuffer(mShadowmapCmdList);
 	mModel->SetIndexBuffer(mShadowmapCmdList);
 	mDescHeap->SetDescriptorHeap(mShadowmapCmdList);
-	DrawWhileSetTable(mShadowmapCmdList);
+	SetConstantBuffers(mShadowmapCmdList);
+	mShadowmapCmdList->DrawIndexedInstanced(static_cast<UINT>(mModel->mIndices.size()), 1, 0, 0, 0);
 }
 
 void PMDController::DrawShadow()
 {
-	mCmdList->SetPipelineState(mShadowRenderPipeline->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mShadowRenderRootsignature->GetRootSignature().Get());
+	mCmdList->SetPipelineState(mShadowToonRenderPipeline->GetPipelineState().Get());
+	mCmdList->SetGraphicsRootSignature(mShadowToonRenderRootsignature->GetRootSignature().Get());
 	mModel->SetVertexBuffer(mCmdList);
 	mModel->SetIndexBuffer(mCmdList);
 	mShadowRenderDescHeap->SetDescriptorHeap(mCmdList);
-	mShadowRenderDescHeap->SetGprahicsDescriptorTable(mCmdList, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size()));
-	DrawWhileSetTable(mShadowmapCmdList);
+	mShadowRenderDescHeap->SetGprahicsDescriptorTable(mCmdList
+		, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
+		, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP);
+
+	auto toonPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mShadowToonRenderPipeline, mShadowToonRenderRootsignature);
+	auto basicPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mShadowRenderPipeline, mShadowRenderRootsignature);
+
+	DrawWhileSetTable(mShadowmapCmdList, toonPair, basicPair);
 }
 
 void PMDController::SetMotion(std::shared_ptr<VMDMotion> motion)
@@ -125,12 +132,12 @@ void PMDController::SetShadowmapPipelineState(std::shared_ptr<PipelineStateObjec
 
 void PMDController::SetShadowRenderRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
-	mShadowRenderRootsignature = rootsignature;
+	mShadowToonRenderRootsignature = rootsignature;
 }
 
 void PMDController::SetShadowRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
 {
-	mShadowRenderRootsignature = pipelinestate;
+	mShadowToonRenderPipeline = pipelinestate;
 }
 
 void PMDController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList)
@@ -143,7 +150,9 @@ void PMDController::UpdateDescriptorHeap()
 }
 
 
-void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
+	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
+	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair)
 {
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	unsigned int indexOffset = 0;
@@ -153,11 +162,16 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 	{
 		if (material.toonIndex != 255)
 		{
-			SetTextureWithToon(cmdList, material);
+			cmdList->SetPipelineState(toonPair.first->GetPipelineState().Get());
+			cmdList->SetGraphicsRootSignature(toonPair.second->GetRootSignature().Get());
+			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+			mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
 		}
 		else
 		{
-			SetTexture(cmdList, material);
+			cmdList->SetPipelineState(basicPair.first->GetPipelineState().Get());
+			cmdList->SetGraphicsRootSignature(basicPair.second->GetRootSignature().Get());
+			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
 		}
 		SetConstantBuffers(cmdList);
 		SetMaterial(cmdList, static_cast<unsigned int>(mConstantBufferOffset + PMDModel::eROOT_PARAMATER_INDEX_MATERIAL), offsetCount);
@@ -167,20 +181,6 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 	}
 }
 
-void PMDController::SetTexture(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material)
-{
-	cmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	cmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
-}
-
-void PMDController::SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial & material)
-{
-	cmdList->SetPipelineState(mToonPipeline->GetPipelineState().Get());
-	cmdList->SetGraphicsRootSignature(mToonRootsignature->GetRootSignature().Get());
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
-}
 
 void PMDController::SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
 {
@@ -236,7 +236,10 @@ void PMDController::UpdateBundle()
 	mModel->SetVertexBuffer(bundle);
 	mDescHeap->SetDescriptorHeap(bundle);
 
-	DrawWhileSetTable(bundle);
+	auto toonPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mToonPipeline, mToonRootsignature);
+	auto basicPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mPipelinestate, mRootsignature);
+
+	DrawWhileSetTable(bundle, toonPair, basicPair);
 	mBundleCmdList->Close();
 	mBundleUpdate = &PMDController::NonUpdateBundle;
 }

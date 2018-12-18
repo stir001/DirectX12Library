@@ -20,7 +20,7 @@ struct CameraElement
 
 #define MULTI_CAMERA(bnum) cbuffer mulcamera : register(bnum) \
 {	\
-	CameraElement	cameras[MAX_CAMERA_NUM];	\
+	CameraElement cameras[MAX_CAMERA_NUM];	\
 	uint cameraNum;	\
 }	
 

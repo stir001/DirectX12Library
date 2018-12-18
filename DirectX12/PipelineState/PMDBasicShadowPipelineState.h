@@ -4,12 +4,12 @@
 
 class RootSignatureObject;
 
-class PMDShadowPipelineState :
+class PMDBasicShadowPipelineState :
 	public PipelineStateObject
 {
 public:
-	PMDShadowPipelineState(std::shared_ptr<RootSignatureObject>& rootsignature,
+	PMDBasicShadowPipelineState(std::shared_ptr<RootSignatureObject>& rootsignature,
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev);
-	~PMDShadowPipelineState();
+	~PMDBasicShadowPipelineState();
 };
 

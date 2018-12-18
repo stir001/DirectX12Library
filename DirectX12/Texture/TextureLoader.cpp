@@ -61,7 +61,7 @@ std::shared_ptr<TextureObject> TextureLoader::LoadTexture(const std::string& fil
 	if (FAILED(d12.result))
 	{
 		#ifdef _DEBUG
-		std::wstring outputstr = L"テクスチャパスが違うか対応していない拡張子なんやで\n FilePath:";
+		std::wstring outputstr = L"テクスチャパスが違うか対応していない拡張子です\n FilePath: ";
 		outputstr += wstrPath;
 		MessageBox(nullptr, outputstr.data() , L"CAUTION", MB_OK);
 		#endif

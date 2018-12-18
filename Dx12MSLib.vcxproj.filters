@@ -115,6 +115,12 @@
     <Filter Include="Bullet\CollisionObject\Base">
       <UniqueIdentifier>{b3578752-1ae7-48d0-b147-f181c0f89180}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX12\Rootsignature\PMD">
+      <UniqueIdentifier>{13ca41db-41c8-4efd-8084-398e2927200d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX12\PipelineState\PMD">
+      <UniqueIdentifier>{f3802494-e4ee-4f29-bc56-8258ac924dfc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -459,11 +465,11 @@
     <ClInclude Include="Bullet\CollisionObject\BulletGhostObject.h">
       <Filter>Bullet\CollisionObject</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
+      <Filter>Bullet\CollisionObject</Filter>
+    </ClInclude>
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h">
       <Filter>Bullet\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h">
-      <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\RenderingPass\Base\RenderingPassObject.h">
       <Filter>DirectX12\RenderingPass\Base</Filter>
@@ -480,23 +486,38 @@
     <ClInclude Include="DirectX12\RenderingPass\UIPass.h">
       <Filter>DirectX12\RenderingPass</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
-      <Filter>DirectX12\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet\CollisionObject\BulletRigidBody.h">
-      <Filter>Bullet\CollisionObject</Filter>
+    <ClInclude Include="DirectX12\Rootsignature\PMDBasicRootSignature.h">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\PMDShadowRootSignature.h">
-      <Filter>DirectX12\Rootsignature</Filter>
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDBasicPipelineState.h">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\PipelineState\PMDShadowPipelineState.h">
-      <Filter>DirectX12\PipelineState</Filter>
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.h">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDToonShadowPipelineState.h">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.h">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.h">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
       <Filter>DirectX12\Animation</Filter>
     </ClCompile>
@@ -821,9 +842,6 @@
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp">
       <Filter>Bullet\Action</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\Rootsignature\PMDToonRootsignature.cpp">
-      <Filter>DirectX12\Rootsignature</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\RenderingPass\Base\RenderingPassObject.cpp">
       <Filter>DirectX12\RenderingPass\Base</Filter>
     </ClCompile>
@@ -839,14 +857,38 @@
     <ClCompile Include="DirectX12\RenderingPass\UIPass.cpp">
       <Filter>DirectX12\RenderingPass</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
-      <Filter>DirectX12\PipelineState</Filter>
+    <ClCompile Include="DirectX12\Rootsignature\PMDBasicRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\PMDShadowRootSignature.cpp">
-      <Filter>DirectX12\Rootsignature</Filter>
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PMDToonRootsignature.cpp">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDBasicPipelineState.cpp">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\PMDShadowPipelineState.cpp">
-      <Filter>DirectX12\PipelineState</Filter>
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDToonShadowPipelineState.cpp">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature\PMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.cpp">
+      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

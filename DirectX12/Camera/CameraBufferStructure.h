@@ -13,7 +13,7 @@ struct Dx12CameraBuffer
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMFLOAT4X4 view;
 	DirectX::XMFLOAT4X4 projection;
-	Dx12CameraBuffer(): eye{0.f, 0.f, 0.f, 1.f},
+	Dx12CameraBuffer(): eye{0.0f, 0.0f, 0.0f, 1.0f},
 		target{0.0f, 0.0f, 1.0f, 1.0f},
 		world{ 1.0f,0.0f,0.0f,0.0f,
 			   0.0f,1.0f,0.0f,0.0f,

@@ -18,6 +18,7 @@ class DirectionalLight;
 class Dx12DescriptorHeapObject;
 class PipelineStateObject;
 class RootSignatureObject;
+class Dx12BufferObject;
 
 /**
 *	@ingroup Model
@@ -168,22 +169,32 @@ private:
 	std::shared_ptr<RootSignatureObject> mToonRootsignature;
 
 	/**
-	*	toonのshadowmap作成用pipelinestate
+	*	shadowmap作成用pipelinestate
 	*/
 	std::shared_ptr<PipelineStateObject> mShadowmapPipeline;
 
 	/**
-	*	toonのshadowmap作成用rootsignature
+	*	shadowmap作成用rootsignature
 	*/
 	std::shared_ptr<RootSignatureObject> mShadowmapRootsignature;
 
 	/**
 	*	toonのshadowをつけるpipelinestate
 	*/
-	std::shared_ptr<PipelineStateObject> mShadowRenderPipeline;
+	std::shared_ptr<PipelineStateObject> mShadowToonRenderPipeline;
 
 	/**
 	*	toonのshadowをつけるrootsignature
+	*/
+	std::shared_ptr<RootSignatureObject> mShadowToonRenderRootsignature;
+
+	/**
+	*	toonなしのshadowをつけるpipelinestate
+	*/
+	std::shared_ptr<PipelineStateObject> mShadowRenderPipeline;
+
+	/**
+	*	toonなしのshadowをつけるrootsignature
 	*/
 	std::shared_ptr<RootSignatureObject> mShadowRenderRootsignature;
 
@@ -223,24 +234,12 @@ private:
 	void (PMDController::*mBundleUpdate)();
 
 	/**
-	*	@brief	マテリアルやテクスチャを使用する部分を分けながらCommandListに命令を登録する
+	*	@brief	toonを使用する部分と使用しない部分を分けながらCommandListに命令を登録する
 	*	@param[in]	cmdList		命令を登録するコマンドリスト
 	*/
-	void DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
-
-	/**
-	*	@brief	マテリアルに設定されているテクスチャをCommandListに設定する
-	*	@param[in]	cmdList		テクスチャを設定するCommandList
-	*	@param[in]	matarial	テクスチャ情報を保持しているマテリアル
-	*/
-	void SetTexture(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
-
-	/**
-	*	@brief	Toonテクスチャを使用してレンダリングするためのもの
-	*	@param[in]	cmdlist		設定するコマンドリスト
-	*	@param[in]	material	使用するマテリアル情報
-	*/
-	void SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
+	void DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
+	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
+	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair);
 
 	/**
 	*	@brief	マテリアル情報をCommandListに設定する

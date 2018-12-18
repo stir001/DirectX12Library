@@ -96,7 +96,9 @@ void BillboardGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput
     for (i = 0; i < cameraNum; ++i)
     {
         pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
-        invMat = mul(ExcludeRotation(imageMatrix), mul(ExcludeRotation(cameras[i].c_world), inverse(cameras[i].c_view)));
+        invMat = inverse(cameras[i].c_view);
+        invMat._41_42_43 = invMat._14_24_34 = 0.0f;
+        invMat = mul(ExcludeRotation(imageMatrix), mul(ExcludeRotation(cameras[i].c_world), invMat));
 		[unroll(3)]
         for (j = 0; j < 3; ++j)
         {

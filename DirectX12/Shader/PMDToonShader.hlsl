@@ -11,6 +11,17 @@
 #define SMP ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
 
+
+#define SHADOWRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
+	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
+	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
+	", DescriptorTable(CBV(b2), visibility = SHADER_VISIBILITY_ALL)" \
+    ", DescriptorTable(CBV(b3), visibility = SHADER_VISIBILITY_ALL)" \
+
+
+#define SHADOWTEX ", DescriptorTable(SRV(t2), visibility = SHADER_VISIBILITY_PIXEL)" \
+
+
 Texture2D<float4> tex : register(t0);
 Texture2D<float4> toon : register(t1);
 Texture2D<float> shadowmap : register(t2);
@@ -126,7 +137,7 @@ void PmdGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOut
     }
 }
 
-[RootSignature(PMDTOONRS)]
+[RootSignature(SHADOWRS)]
 float4 PmdShadowVS(VSInput vsInput) : SV_Position
 {
 	float4 svpos;
@@ -138,7 +149,7 @@ float4 PmdShadowVS(VSInput vsInput) : SV_Position
 	return svpos;
 }
 
-[RootSignature(PMDTOONRS ", DescriptorTable(SRV(t2), visibility = SHADER_VISIBILITY_PIXEL)") SMP]
+[RootSignature(PMDTOONRS SHADOWTEX SMP)]
 VSOutput PmdToonShadowVS(VSInput vInput)
 {
     float wgt1 = (float) vInput.weight / 100.0;
@@ -163,7 +174,7 @@ float4 PmdToonShadowPS(GSOutput data) : SV_Target
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
 	
-    float3 shadowpos = mul(lightviewProj, data.pos);
+    float3 shadowpos = mul(lightviewProj, data.pos).xyz;
     shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
     float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
 

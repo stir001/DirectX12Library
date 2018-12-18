@@ -299,6 +299,12 @@
     <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDShadowRootSignature.h" />
     <ClInclude Include="DirectX12\PipelineState\PMDShadowPipelineState.h" />
+    <ClInclude Include="DirectX12\Rootsignature\PMDBasicRootSignature.h" />
+    <ClInclude Include="DirectX12\PipelineState\PMDBasicPipelineState.h" />
+    <ClInclude Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.h" />
+    <ClInclude Include="DirectX12\PipelineState\PMDToonShadowPipelineState.h" />
+    <ClInclude Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.h" />
+    <ClInclude Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -420,6 +426,12 @@
     <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDShadowRootSignature.cpp" />
     <ClCompile Include="DirectX12\PipelineState\PMDShadowPipelineState.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\PMDBasicRootSignature.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\PMDBasicPipelineState.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\PMDToonShadowPipelineState.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -18,7 +18,8 @@ Dx12BufferObject::Dx12BufferObject(const std::string& name) : mBuffer(nullptr),m
 }
 
 Dx12BufferObject::Dx12BufferObject(Microsoft::WRL::ComPtr<ID3D12Resource>& rsc, const std::string& name,
-	unsigned int elemenetSize, unsigned int elementCount):mBuffer(rsc),mElementSize(elemenetSize),mElementCount(elementCount)
+	unsigned int elemenetSize, unsigned int elementCount)
+	: mBuffer(rsc), mElementSize(elemenetSize), mElementCount(elementCount), mElementBuffer(nullptr)
 {
 #ifdef _DEBUG
 	mRscDesc = rsc->GetDesc();

@@ -10,6 +10,15 @@
 #define SMP ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
 
+#define SHADOWRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
+	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
+	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
+	", DescriptorTable(CBV(b2), visibility = SHADER_VISIBILITY_ALL)" \
+    ", DescriptorTable(CBV(b3), visibility = SHADER_VISIBILITY_ALL)" \
+    ", DescriptorTable(CBV(b4), visibility = SHADER_VISIBILITY_ALL)" \
+
+#define SHADOWTEX ", DescriptorTable(SRV(t1), visibility = SHADER_VISIBILITY_PIXEL)" \
+
 Texture2D<float4> tex : register(t0);
 Texture2D<float> shadowmap : register(t1);
 SamplerState smp : register(s0);
@@ -82,7 +91,7 @@ VSOutput BasicVS(VSInput vInput)
     return o;
 }
 
-float4 ExitTexPS(GSOutput data) : SV_Target
+float4 BasicPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
     float4 light = dir;
@@ -120,4 +129,47 @@ void PmdGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOut
         }
         gsOut.RestartStrip();
     }
+}
+
+[RootSignature(SHADOWRS)]
+float4 ShadowVS(VSInput vInput) : SV_Position
+{
+    float wgt1 = (float) vInput.weight / 100.0;
+    float wgt2 = 1.0 - wgt1;
+    float4 svpos;
+    matrix m = mul(modelMatrix, bones[vInput.boneno[0]] * wgt1 + bones[vInput.boneno[1]] * wgt2);
+    svpos = mul(m, float4(vInput.pos, 1));
+  
+    return svpos;
+}
+
+[RootSignature(PMDRS SHADOWTEX SMP)]
+VSOutput BasicShadowVS(VSInput vInput)
+{
+    float wgt1 = (float) vInput.weight / 100.0;
+    float wgt2 = 1.0 - wgt1;
+    VSOutput o;
+    matrix m = mul(modelMatrix, bones[vInput.boneno[0]] * wgt1 + bones[vInput.boneno[1]] * wgt2);
+    o.pos = mul(m, float4(vInput.pos, 1));
+    matrix n = m;
+    n._m03_m13_m23 = 0;
+
+    o.normal = normalize(mul(n, float4(vInput.normal, 1)));
+    o.uv = vInput.uv;
+    return o;
+}
+
+float4 BasicShadowPS(GSOutput data) : SV_Target
+{
+    float4 color = tex.Sample(smp, data.uv);
+    float4 light = dir;
+    float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
+    vray = float4(normalize(vray.xyz), 1);
+    float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
+
+    float3 shadowpos = mul(lightviewProj, data.pos).xyz;
+    shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
+    float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
+
+    return saturate(color * dot(data.normal.xyz, -dir.xyz) + color * ambient + specular * spec) * shadow;
 }

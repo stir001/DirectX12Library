@@ -228,7 +228,7 @@ namespace dx12_getter
 		case DXGI_FORMAT_V208:
 		case DXGI_FORMAT_V408:
 		case DXGI_FORMAT_FORCE_UINT:
-			MessageBox(nullptr, L"COUTION", L"DXGI_FORTMAT ‚Í–¢‘Î‰ž‚Å‚·", MB_OK);
+			MessageBox(nullptr, L"CAUTION", L"DXGI_FORTMAT ‚Í–¢‘Î‰ž‚Å‚·", MB_OK);
 			break;
 		default:
 			break;

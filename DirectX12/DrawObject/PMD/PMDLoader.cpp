@@ -7,12 +7,14 @@
 #include "Buffer/ConstantBufferObject.h"
 #include "Rootsignature/RootSignatureObject.h"
 #include "Rootsignature/PMDToonRootsignature.h"
+#include "Rootsignature/PMDBasicRootSignature.h"
 #include "Texture/TextureObject.h"
 #include "Master/Dx12Ctrl.h"
 #include "Animation/VMD/VMDPlayer.h"
 #include "Texture/TextureLoader.h"
 #include "PipelineState/PipelineStateObject.h"
 #include "PipelineState/PMDToonPipelineState.h"
+#include "PipelineState/PMDBasicPipelineState.h"
 #include "Light/DirectionalLight.h"
 #include "Shader/ShaderCompiler.h"
 #include "Util/File.h"
@@ -355,64 +357,17 @@ void PMDLoader::CreateMaterialBuffer()
 
 void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	D3D12_INPUT_ELEMENT_DESC inputDescs[] = {
-		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 },
-		{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 },
-		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 },
-		{ "BONENO",0,DXGI_FORMAT_R16G16_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 },
-		{ "WEIGHT",0,DXGI_FORMAT_R8_UINT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 }
-	};
 
-	CD3DX12_RASTERIZER_DESC rastarizer = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	rastarizer.CullMode = D3D12_CULL_MODE_NONE;
-
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
-	gpsDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);	//ブレンドするか
-	gpsDesc.DepthStencilState.DepthEnable = true;			//デプスを使うか
-	gpsDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	gpsDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-	gpsDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-	gpsDesc.DepthStencilState.StencilEnable = false;
-	gpsDesc.InputLayout.NumElements = sizeof(inputDescs) / sizeof(D3D12_INPUT_ELEMENT_DESC);
-	gpsDesc.InputLayout.pInputElementDescs = inputDescs;	//要素へのポインタ(先頭?)
-	gpsDesc.pRootSignature = mRootsignature->GetRootSignature().Get();				//ルートシグネチャポインタ
-	gpsDesc.RasterizerState = rastarizer;	//ラスタライザーの設定
-	gpsDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		//
-	gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	gpsDesc.SampleDesc.Count = 1;
-	gpsDesc.NumRenderTargets = 1;
-	gpsDesc.SampleMask = 0xffffff;
-	gpsDesc.NodeMask = 0;
-
-	gpsDesc.pRootSignature = mRootsignature->GetRootSignature().Get();
-	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mShader.vertexShader.Get());
-	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mShader.pixelShader.Get());
-	gpsDesc.DS;
-	gpsDesc.GS = CD3DX12_SHADER_BYTECODE(mShader.geometryShader.Get());
-	gpsDesc.HS;
-
-	mPipelinestate = std::make_shared<PipelineStateObject>("PMDTex", gpsDesc, dev);
+	mPipelinestate = std::make_shared<PMDBasicPipelineState>(mRootsignature, dev);
 
 	mToonPipelineState = std::make_shared<PMDToonPipelineState>(mToonRootsiganture, dev);
 }
 
 void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	ShaderCompiler::Instance().AddDefineMacro("CAMERA_REGISTER", "b0");
-	ShaderCompiler::Instance().AddDefineMacro("LIGHT_REGISTER", "b1");
+	
+	mRootsignature = std::make_shared<PMDBasicRootSignature>(dev);
 
-	mShader = ShaderCompiler::Instance().CompileShader(ShaderCompiler::Instance().GetShaderDirPath() + "PMDBasicShader.hlsl"
-		, "BasicVS"
-		, "ExitTexPS"
-		, "PmdGS"
-		, ""
-		, ""
-		, true);
-
-	mRootsignature = std::make_shared<RootSignatureObject>("PMDTex", mShader.rootSignature.Get(), dev);
-
-	ShaderCompiler::Instance().AddDefineMacro("CAMERA_REGISTER", "b0");
-	ShaderCompiler::Instance().AddDefineMacro("LIGHT_REGISTER", "b1");
 	mToonRootsiganture = std::make_shared<PMDToonRootsignature>(dev);
 }
 
