@@ -1,14 +1,17 @@
-#define PMDEXRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
+#define PMDRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
 	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
 	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
 	", DescriptorTable(CBV(b2), visibility = SHADER_VISIBILITY_ALL)" \
     ", DescriptorTable(CBV(b3), visibility = SHADER_VISIBILITY_ALL)" \
     ", DescriptorTable(CBV(b4), visibility = SHADER_VISIBILITY_ALL)" \
     ", DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)" \
-	", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
+	
+
+#define SMP ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
 
 Texture2D<float4> tex : register(t0);
+Texture2D<float> shadowmap : register(t1);
 SamplerState smp : register(s0);
 
 #include "CameraLightcBuffer.hlsl"
@@ -63,7 +66,7 @@ struct GSOutput
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-[RootSignature(PMDEXRS)]
+[RootSignature(PMDRS SMP)]
 VSOutput BasicVS(VSInput vInput)
 {
     float wgt1 = (float) vInput.weight / 100.0;

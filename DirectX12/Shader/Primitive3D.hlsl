@@ -6,6 +6,8 @@
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
 
 Texture2D<float4> tex : register(t0);
+Texture2D<float> shadowmap : register(t1);
+
 SamplerState smp : register(s0);
 
 #include "CameraLightcBuffer.hlsl"
@@ -38,6 +40,7 @@ struct PriVSOutput
 struct PriGSOut
 {
     float4 svpos : SV_POSITION;
+    float4 pos : POSITION;
     float4 normal : NORMAL;
     float4 color : COLOR;
     float2 uv : TEXCOORD;
@@ -84,6 +87,7 @@ void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStr
         {
             vsout = vertices[j];
             gsVert.svpos = mul(pvw, vsout.pos);
+            gsVert.pos = vsout.pos;
             gsVert.normal = vsout.normal;
             gsVert.color = vsout.color;
             gsVert.uv = vsout.uv;
@@ -92,4 +96,35 @@ void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStr
         }
         gsOut.RestartStrip();
     }
+}
+
+[RootSignature(PRM3DRS)]
+float4 ShadowVS(PriVSInput vsInput) : SV_Position
+{
+    float4 svpos = mul(lightviewProj, mul(vsInput.aMat, vsInput.pos) + float4(vsInput.instanceOffset.xyz, 0));
+    return svpos;
+}
+
+[RootSignature(PRM3DRS ", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)")]
+PriVSOutput PrimitiveShadowVS(PriVSInput vsInput)
+{
+    PriVSOutput po;
+    po.pos = mul(vsInput.aMat, vsInput.pos) + float4(vsInput.instanceOffset.xyz, 0);
+    po.color = vsInput.color;
+    po.uv = vsInput.uv;
+    matrix rotaMat = vsInput.aMat;
+    rotaMat._14_24_34 = 0;
+    po.normal = mul(rotaMat, vsInput.normal);
+    return po;
+}
+
+float4 PrimitiveShadowPS(PriGSOut data) : SV_Target
+{
+    float4 color = (tex.Sample(smp, data.uv)) * 0.5f + data.color * 0.5f;
+
+    float3 shadowpos = mul(lightviewProj, data.pos);
+    shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
+    float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
+
+    return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) + color * 0.2f + data.color * 0.2f));
 }

@@ -46,6 +46,16 @@ public:
 	void Draw();
 
 	/**
+	*	shadowmap作成用
+	*/
+	void DrawShadowmap();
+
+	/**
+	*	shadowを使う描画
+	*/
+	void DrawShadow();
+
+	/**
 	*	@brief	VMDモーションを設定する
 	*	@param[in]	motion	モデルに適応するモーション
 	*/
@@ -93,6 +103,31 @@ public:
 	void SetToonRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
 
 	/**
+	*	shadowmapを作成するためのrootsignature
+	*/
+	void SetShadowmapRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+
+	/**
+	*	shadowmapを作成するためのpipelinestate
+	*/
+	void SetShadowmapPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+
+	/**
+	*	shadowmapを使ってレンダリングするためのrootsignature
+	*/
+	void SetShadowRenderRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	
+	/**
+	*	shadowmapを使ってレンダリングするためのpipelinestate
+	*/
+	void SetShadowRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+
+	/**
+	*	shadowmapw作成用のコマンドリスト
+	*/
+	void SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList);
+
+	/**
 	*	descriptorHeapを再構築する 未実装
 	*/
 	void UpdateDescriptorHeap();
@@ -133,9 +168,44 @@ private:
 	std::shared_ptr<RootSignatureObject> mToonRootsignature;
 
 	/**
+	*	toonのshadowmap作成用pipelinestate
+	*/
+	std::shared_ptr<PipelineStateObject> mShadowmapPipeline;
+
+	/**
+	*	toonのshadowmap作成用rootsignature
+	*/
+	std::shared_ptr<RootSignatureObject> mShadowmapRootsignature;
+
+	/**
+	*	toonのshadowをつけるpipelinestate
+	*/
+	std::shared_ptr<PipelineStateObject> mShadowRenderPipeline;
+
+	/**
+	*	toonのshadowをつけるrootsignature
+	*/
+	std::shared_ptr<RootSignatureObject> mShadowRenderRootsignature;
+
+	/**
+	*	shadowmap作成用commandlist
+	*/
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mShadowmapCmdList;
+
+	/**
 	*	このコントローラーで使用するDescriptorHeap
 	*/
 	std::unique_ptr<Dx12DescriptorHeapObject> mDescHeap;
+
+	/**
+	*	shadowレンダリング用descriptorheap
+	*/
+	std::unique_ptr<Dx12DescriptorHeapObject> mShadowRenderDescHeap;
+
+	/**
+	*	shadowmapのテクスチャ
+	*/
+	std::shared_ptr<Dx12BufferObject> mShadowmapTexture;
 
 	/**
 	*	DescriptorHeapでのコンスタントバッファまでのオフセット
@@ -165,7 +235,13 @@ private:
 	*/
 	void SetTexture(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
 
+	/**
+	*	@brief	Toonテクスチャを使用してレンダリングするためのもの
+	*	@param[in]	cmdlist		設定するコマンドリスト
+	*	@param[in]	material	使用するマテリアル情報
+	*/
 	void SetTextureWithToon(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, PMDMaterial& material);
+
 	/**
 	*	@brief	マテリアル情報をCommandListに設定する
 	*	@param[in]	cmdList		マテリアルを設定するCommandList
@@ -196,5 +272,10 @@ private:
 	*	BundleCommandListを更新しない
 	*/
 	void NonUpdateBundle();
+
+	/**
+	*	shadowrender用のDescHeapを作成する
+	*/
+	void CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name);
 };
 

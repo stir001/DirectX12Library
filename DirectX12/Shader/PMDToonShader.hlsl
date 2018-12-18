@@ -6,11 +6,14 @@
     ", DescriptorTable(CBV(b4), visibility = SHADER_VISIBILITY_ALL)" \
     ", DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)" \
     ", DescriptorTable(SRV(t1), visibility = SHADER_VISIBILITY_PIXEL)" \
-	", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
+	
+
+#define SMP ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
 
 Texture2D<float4> tex : register(t0);
 Texture2D<float4> toon : register(t1);
+Texture2D<float> shadowmap : register(t2);
 
 SamplerState smp : register(s0);
 
@@ -66,7 +69,7 @@ struct GSOutput
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-[RootSignature(PMDTOONRS)]
+[RootSignature(PMDTOONRS SMP)]
 VSOutput PmdToonVS(VSInput vInput)
 {
     float wgt1 = (float) vInput.weight / 100.0;
@@ -133,4 +136,36 @@ float4 PmdShadowVS(VSInput vsInput) : SV_Position
     svpos = mul(lightviewProj, mul(m, float4(vsInput.pos, 1)));
 
 	return svpos;
+}
+
+[RootSignature(PMDTOONRS ", DescriptorTable(SRV(t2), visibility = SHADER_VISIBILITY_PIXEL)") SMP]
+VSOutput PmdToonShadowVS(VSInput vInput)
+{
+    float wgt1 = (float) vInput.weight / 100.0;
+    float wgt2 = 1.0 - wgt1;
+    VSOutput o;
+    matrix m = mul(modelMatrix, bones[vInput.boneno[0]] * wgt1 + bones[vInput.boneno[1]] * wgt2);
+    o.pos = mul(m, float4(vInput.pos, 1));
+    matrix n = m;
+    n._m03_m13_m23 = 0;
+
+    o.normal = normalize(mul(n, float4(vInput.normal, 1)));
+    o.uv = vInput.uv;
+    return o;
+}
+
+float4 PmdToonShadowPS(GSOutput data) : SV_Target
+{
+    float4 color = tex.Sample(smp, data.uv);
+    float4 light = dir;
+    float lambert = abs(dot(data.normal.xyz, -dir.xyz));
+    float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
+    vray = float4(normalize(vray.xyz), 1);
+    float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
+	
+    float3 shadowpos = mul(lightviewProj, data.pos);
+    shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
+    float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
+
+    return saturate(color * toon.Sample(smp, float2(0, lambert)) + specular * spec) * shadow;
 }

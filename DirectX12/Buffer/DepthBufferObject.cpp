@@ -7,7 +7,7 @@
 #include <cassert>
 
 DepthBufferObject::DepthBufferObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, 
-	int height,int width, DXGI_FORMAT format)
+	int height, int width, DXGI_FORMAT format)
 	:Dx12BufferObject(name)
 {
 	D3D12_RESOURCE_DESC rscDesc;
@@ -89,17 +89,17 @@ void DepthBufferObject::CreateShaderResourceViewDesc()
 {
 	auto format = (mBuffer->GetDesc().Format);
 	DXGI_FORMAT srvFormat = DXGI_FORMAT_UNKNOWN;
-	if (format == DXGI_FORMAT_D32_FLOAT)
+	if (format == DXGI_FORMAT_D32_FLOAT || format == DXGI_FORMAT_R32_TYPELESS)
 	{
 		srvFormat = DXGI_FORMAT_R32_FLOAT;
 	}
-	else if(format == DXGI_FORMAT_D16_UNORM)
+	else if(format == DXGI_FORMAT_D16_UNORM || format == DXGI_FORMAT_R16_TYPELESS)
 	{
-		srvFormat = DXGI_FORMAT_R16_UNORM;
+		srvFormat = DXGI_FORMAT_R16_FLOAT;
 	}
 	else
 	{
-		MessageBoxA(nullptr, "対応していない深度値の型です\nDXGI_FORMAT_D32_FLOAT,DXGI_FORMAT_D16_UNORMのみ対応しています",
+		MessageBoxA(nullptr, "対応していない深度値の型です\nDXGI_FORMAT_D32_FLOAT, DXGI_FORMAT_D16_UNORM, DXGI_FORMAT_R32_TYPELESSのみ対応しています",
 			"ViewCreationError", MB_OK);
 	}
 	mViewDescs = std::make_shared<Dx12ShaderResourceViewDesc>(srvFormat);

@@ -48,6 +48,27 @@ void PMDController::Draw()
 	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
 }
 
+void PMDController::DrawShadowmap()
+{
+	mShadowmapCmdList->SetPipelineState(mShadowmapPipeline->GetPipelineState().Get());
+	mShadowmapCmdList->SetGraphicsRootSignature(mShadowmapRootsignature->GetRootSignature().Get());
+	mModel->SetVertexBuffer(mShadowmapCmdList);
+	mModel->SetIndexBuffer(mShadowmapCmdList);
+	mDescHeap->SetDescriptorHeap(mShadowmapCmdList);
+	DrawWhileSetTable(mShadowmapCmdList);
+}
+
+void PMDController::DrawShadow()
+{
+	mCmdList->SetPipelineState(mShadowRenderPipeline->GetPipelineState().Get());
+	mCmdList->SetGraphicsRootSignature(mShadowRenderRootsignature->GetRootSignature().Get());
+	mModel->SetVertexBuffer(mCmdList);
+	mModel->SetIndexBuffer(mCmdList);
+	mShadowRenderDescHeap->SetDescriptorHeap(mCmdList);
+	mShadowRenderDescHeap->SetGprahicsDescriptorTable(mCmdList, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size()));
+	DrawWhileSetTable(mShadowmapCmdList);
+}
+
 void PMDController::SetMotion(std::shared_ptr<VMDMotion> motion)
 {
 	mVmdPlayer->SetVMD(motion);
@@ -90,6 +111,31 @@ void PMDController::SetToonRootSignature(std::shared_ptr<RootSignatureObject>& r
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
 	mToonRootsignature = rootsiganture;
+}
+
+void PMDController::SetShadowmapRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+{
+	mShadowmapRootsignature = (rootsignature);
+}
+
+void PMDController::SetShadowmapPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
+{
+	mShadowmapPipeline = pipelinestate;
+}
+
+void PMDController::SetShadowRenderRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+{
+	mShadowRenderRootsignature = rootsignature;
+}
+
+void PMDController::SetShadowRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
+{
+	mShadowRenderRootsignature = pipelinestate;
+}
+
+void PMDController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList)
+{
+	mShadowmapCmdList = cmdList;
 }
 
 void PMDController::UpdateDescriptorHeap()
@@ -198,4 +244,30 @@ void PMDController::UpdateBundle()
 void PMDController::NonUpdateBundle()
 {
 
+}
+
+void PMDController::CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name)
+{
+	auto texObjs = mModel->GetTextureObjects();
+	auto toonTexs = mModel->mToonTextures;
+	mTextureNum = static_cast<unsigned int>(texObjs.size());
+	mConstantBufferOffset = static_cast<unsigned int>(mTextureNum + toonTexs.size()) + 1;
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers;
+	buffers.reserve(mConstantBufferOffset + PMDModel::CONSTANT_BUFFER_NUM);
+	for (auto& tex : texObjs)
+	{
+		buffers.push_back(tex->GetShaderResource());
+	}
+	for (auto toon : toonTexs)
+	{
+		buffers.push_back(toon->GetShaderResource());
+	}
+	buffers.push_back(mShadowmapTexture);
+	buffers.push_back(mCameraBuffer);
+	buffers.push_back(mDirLight->GetLightBuffer());
+	buffers.push_back(mBoneMatrixBuffer);
+	buffers.push_back(mModelMatrixBuffer);
+	buffers.push_back(mModel->GetMaterialBuffer());
+	std::string descName = name + "DescriptorHeap";
+	mShadowRenderDescHeap = std::make_unique<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
