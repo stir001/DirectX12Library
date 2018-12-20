@@ -185,7 +185,7 @@ void PrimitiveController::SetShadowmapTexture(std::shared_ptr<Dx12BufferObject> 
 
 void PrimitiveController::CreateShadowmapDescHeap()
 {
-	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(eROOT_PARAMATER_INDEX_MAX);
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(4);
 	buffers[eROOT_PARAMATER_INDEX_TEXTURE] = mTexObj->GetShaderResource();
 	buffers[eROOT_PARAMATER_INDEX_CAMERA] = mCameraBuffer;
 	buffers[eROOT_PARAMATER_INDEX_LIGHT] = mLightBuffer;
@@ -253,7 +253,7 @@ void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion)
 
 void PrimitiveController::UpdateDescriptorHeap()
 {
-	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(eROOT_PARAMATER_INDEX_MAX);
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(3);
 	buffers[eROOT_PARAMATER_INDEX_TEXTURE] = mTexObj->GetShaderResource();
 	buffers[eROOT_PARAMATER_INDEX_CAMERA] = mCameraBuffer;
 	buffers[eROOT_PARAMATER_INDEX_LIGHT] = mLightBuffer;
