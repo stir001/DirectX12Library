@@ -93,3 +93,8 @@ void PrimitiveCreator::SetLightObject(std::shared_ptr<LightObject> inlight)
 {
 	mLight = inlight;
 }
+
+void PrimitiveCreator::SetRenderingCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+	mCommnadList = cmdList;
+}

@@ -86,6 +86,21 @@ std::shared_ptr<Image3DController> ImageLoader::LoadImage3D(const std::string& p
 	return imgCtrl;
 }
 
+void ImageLoader::SetUIPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+	mCmdList = cmdList;
+}
+
+void ImageLoader::SetBackGroundPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+	mBackCmdList = cmdList;
+}
+
+void ImageLoader::Set3DPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+	mModelCmdList = cmdList;
+}
+
 void ImageLoader::Release(const std::string& releaseImagePath)
 {
 	TextureLoader::Instance().Release(releaseImagePath);

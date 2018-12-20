@@ -176,7 +176,9 @@ float4 PmdToonShadowPS(GSOutput data) : SV_Target
 	
     float3 shadowpos = mul(lightviewProj, data.pos).xyz;
     shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
-    float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
+    shadowpos.y = 1 - shadowpos.y;
+    float shadowDepth = shadowmap.Sample(smp, shadowpos.xy);
+    float shadow = shadowDepth + 0.001 < shadowpos.z ? 0.5f : 1.0f;
 
-    return saturate(color * toon.Sample(smp, float2(0, lambert)) + specular * spec) * shadow;
+    return saturate(color * shadow * toon.Sample(smp, float2(0, lambert)) + specular * spec);
 }

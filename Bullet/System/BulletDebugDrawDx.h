@@ -67,6 +67,8 @@ public:
 	void draw3dText(const btVector3& location, const char* textString);
 
 	void DebugDraw();
+
+	void SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 private:
 	int mMode;
 	struct DebugDrawVertex

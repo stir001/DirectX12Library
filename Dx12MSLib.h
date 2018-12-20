@@ -82,7 +82,7 @@
 #include "DirectX12/PipelineState/PrimitivePipelineState.h"
 
 /**
-*	RenderringPathフォルダインクルード
+*	RenderringPassフォルダインクルード
 */
 #include "DirectX12/RenderingPass/Base/RenderingPassObject.h"
 #include "DirectX12/RenderingPass/Manager/RenderingPassManager.h"

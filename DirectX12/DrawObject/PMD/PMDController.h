@@ -114,14 +114,24 @@ public:
 	void SetShadowmapPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
 
 	/**
-	*	shadowmapを使ってレンダリングするためのrootsignature
+	*	shadowmapを使ってToonレンダリングするためのrootsignature
 	*/
 	void SetShadowRenderRootsignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 	
 	/**
-	*	shadowmapを使ってレンダリングするためのpipelinestate
+	*	shadowmapを使ってToonレンダリングするためのpipelinestate
 	*/
 	void SetShadowRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+
+	/**
+	*	shadowmapを使って通常レンダリングするためのpipelinestate
+	*/
+	void SetShadowBasicRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+
+	/**
+	*	shadowmapを使って通常レンダリングするためのrootsignature
+	*/
+	void SetShadowBasicRenderRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	shadowmapw作成用のコマンドリスト
@@ -132,6 +142,16 @@ public:
 	*	descriptorHeapを再構築する 未実装
 	*/
 	void UpdateDescriptorHeap();
+
+	/**
+	*	shadowrender用のDescHeapを作成する
+	*/
+	void CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name);
+
+	/**
+	*	@brief	shadowmapテクスチャを設定する
+	*/
+	void SetShadowmap(std::shared_ptr<Dx12BufferObject> shadowmap);
 private:
 	/**
 	*	PMDモデル情報
@@ -206,12 +226,12 @@ private:
 	/**
 	*	このコントローラーで使用するDescriptorHeap
 	*/
-	std::unique_ptr<Dx12DescriptorHeapObject> mDescHeap;
+	std::shared_ptr<Dx12DescriptorHeapObject> mDescHeap;
 
 	/**
 	*	shadowレンダリング用descriptorheap
 	*/
-	std::unique_ptr<Dx12DescriptorHeapObject> mShadowRenderDescHeap;
+	std::shared_ptr<Dx12DescriptorHeapObject> mShadowRenderDescHeap;
 
 	/**
 	*	shadowmapのテクスチャ
@@ -272,9 +292,6 @@ private:
 	*/
 	void NonUpdateBundle();
 
-	/**
-	*	shadowrender用のDescHeapを作成する
-	*/
-	void CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name);
+
 };
 

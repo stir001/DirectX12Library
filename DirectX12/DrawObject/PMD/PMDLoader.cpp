@@ -433,6 +433,5 @@ void PMDLoader::CreateRigidBodis()
 		rigid->SetOrigin(data.pos);
 		
 		
-		
 	}
 }

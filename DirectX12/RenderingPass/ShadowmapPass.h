@@ -1,9 +1,12 @@
 #pragma once
 #include "Base/RenderingPassObject.h"
 #include <memory>
+#include <wrl.h>
 
-class DepthBufferObject;
+class Dx12BufferObject;
 class LightObject;
+class Dx12DescriptorHeapObject;
+struct ID3D12Device;
 
 class ShadowmapPass :
 	public RenderingPassObject
@@ -37,8 +40,16 @@ public:
 	*	コマンドリストを取得する
 	*/
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList();
+
+	/**
+	*	@brief	シャドウマップテクスチャを取得する
+	*	@return	shadowmap
+	*/
+	std::shared_ptr<Dx12BufferObject> GetShadowmap();
 private:
-	std::shared_ptr<DepthBufferObject> mShadowmapDepth;
+	std::shared_ptr<Dx12BufferObject> mShadowmapDepth;
 	std::shared_ptr<LightObject> mDirectionalLight;
+	std::shared_ptr<Dx12DescriptorHeapObject> mShadowDepthDescHeap;
+	float mBufferSize;
 };
 

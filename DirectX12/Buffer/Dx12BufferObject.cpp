@@ -7,6 +7,7 @@
 #include "ViewDesc/Dx12UnorderedAccessViewDesc.h"
 #include "Util/CharToWChar.h"
 #include "Master/Dx12Ctrl.h"
+#include "Util//Dx12Getter.h"
 
 
 Dx12BufferObject::Dx12BufferObject(const std::string& name) : mBuffer(nullptr),mElementBuffer(nullptr)
@@ -111,7 +112,22 @@ void Dx12BufferObject::CreateRenderTargetViewDesc()
 
 void Dx12BufferObject::CreateDepthStecilViewDesc()
 {
-	mViewDescs = std::make_shared<Dx12DepthStencilViewDesc>(mBuffer->GetDesc().Format);
+	DXGI_FORMAT format = mBuffer->GetDesc().Format;
+	if (format != DXGI_FORMAT_D32_FLOAT &&
+		format != DXGI_FORMAT_D16_UNORM &&
+		format != DXGI_FORMAT_D24_UNORM_S8_UINT)
+	{
+		auto byteSize = dx12_getter::GetDxgiFormatByteSize(format);
+		if (byteSize == 4)
+		{
+			format = DXGI_FORMAT_D32_FLOAT;
+		}
+		else if (byteSize == 2)
+		{
+			format = format;
+		}
+	}
+	mViewDescs = std::make_shared<Dx12DepthStencilViewDesc>(format);
 }
 
 const std::shared_ptr<Dx12BufferViewDesc>& Dx12BufferObject::GetViewDesc() const

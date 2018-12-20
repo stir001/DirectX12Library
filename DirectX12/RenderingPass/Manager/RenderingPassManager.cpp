@@ -87,7 +87,7 @@ void RenderingPassManager::Render()
 		pathObj->ResetCommandList();
 	}
 
-	CopyLastPathRenderTarget();
+	CopyLastPassRenderTarget();
 
 	HRESULT result = mSwapChain->SwapChainPresent(1, 0);
 	assert(!FAILED(result));
@@ -115,7 +115,7 @@ void RenderingPassManager::Render()
 	}
 }
 
-void RenderingPassManager::CopyLastPathRenderTarget()
+void RenderingPassManager::CopyLastPassRenderTarget()
 {
 	auto& lastPath = mRenderingPassObjects.back();
 	D3D12_RESOURCE_STATES lastPathBeforeState = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -185,12 +185,12 @@ bool RenderingPassManager::AddRenderingPass(const std::shared_ptr<RenderingPassO
 	return true;
 }
 
-bool RenderingPassManager::InsertRenderingPass(std::shared_ptr<RenderingPassObject>& pathObj, unsigned int insertPathIndex)
+bool RenderingPassManager::InsertRenderingPass(std::shared_ptr<RenderingPassObject>& pathObj, unsigned int insertPassIndex)
 {
-	if (insertPathIndex <= mRenderingPassObjects.size())
+	if (insertPassIndex <= mRenderingPassObjects.size())
 	{
 		auto itr = mRenderingPassObjects.begin();
-		mRenderingPassObjects.insert((itr + insertPathIndex), pathObj);
+		mRenderingPassObjects.insert((itr + insertPassIndex), pathObj);
 		return true;
 	}
 	return false;
@@ -310,7 +310,7 @@ void RenderingPassManager::SetIsActiveValue(std::string pathName, bool isActive)
 	}
 }
 
-void RenderingPassManager::AllPathClear()
+void RenderingPassManager::AllPassClear()
 {
 	mRenderingPassObjects.clear();
 	mRenderingPassObjects.shrink_to_fit();

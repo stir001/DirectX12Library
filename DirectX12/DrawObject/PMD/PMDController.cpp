@@ -56,6 +56,7 @@ void PMDController::DrawShadowmap()
 	mModel->SetIndexBuffer(mShadowmapCmdList);
 	mDescHeap->SetDescriptorHeap(mShadowmapCmdList);
 	SetConstantBuffers(mShadowmapCmdList);
+	mShadowmapCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mShadowmapCmdList->DrawIndexedInstanced(static_cast<UINT>(mModel->mIndices.size()), 1, 0, 0, 0);
 }
 
@@ -66,14 +67,12 @@ void PMDController::DrawShadow()
 	mModel->SetVertexBuffer(mCmdList);
 	mModel->SetIndexBuffer(mCmdList);
 	mShadowRenderDescHeap->SetDescriptorHeap(mCmdList);
-	mShadowRenderDescHeap->SetGprahicsDescriptorTable(mCmdList
-		, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
-		, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP);
+
 
 	auto toonPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mShadowToonRenderPipeline, mShadowToonRenderRootsignature);
 	auto basicPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mShadowRenderPipeline, mShadowRenderRootsignature);
-
-	DrawWhileSetTable(mShadowmapCmdList, toonPair, basicPair);
+	mCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DrawWhileSetTable(mCmdList, toonPair, basicPair);
 }
 
 void PMDController::SetMotion(std::shared_ptr<VMDMotion> motion)
@@ -140,6 +139,16 @@ void PMDController::SetShadowRenderPipelineState(std::shared_ptr<PipelineStateOb
 	mShadowToonRenderPipeline = pipelinestate;
 }
 
+void PMDController::SetShadowBasicRenderPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
+{
+	mShadowRenderPipeline = pipelinestate;
+}
+
+void PMDController::SetShadowBasicRenderRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+{
+	mShadowRenderRootsignature = rootsignature;
+}
+
 void PMDController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList)
 {
 	mShadowmapCmdList = cmdList;
@@ -148,7 +157,6 @@ void PMDController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12Graphic
 void PMDController::UpdateDescriptorHeap()
 {
 }
-
 
 void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
@@ -166,12 +174,18 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 			cmdList->SetGraphicsRootSignature(toonPair.second->GetRootSignature().Get());
 			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
 			mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
+			mShadowRenderDescHeap->SetGprahicsDescriptorTable(cmdList
+				, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
+				, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP);
 		}
 		else
 		{
 			cmdList->SetPipelineState(basicPair.first->GetPipelineState().Get());
 			cmdList->SetGraphicsRootSignature(basicPair.second->GetRootSignature().Get());
 			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+			mShadowRenderDescHeap->SetGprahicsDescriptorTable(cmdList
+				, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
+				, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP - 1);
 		}
 		SetConstantBuffers(cmdList);
 		SetMaterial(cmdList, static_cast<unsigned int>(mConstantBufferOffset + PMDModel::eROOT_PARAMATER_INDEX_MATERIAL), offsetCount);
@@ -209,7 +223,7 @@ void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Devi
 	buffers.push_back(mModelMatrixBuffer);
 	buffers.push_back(mModel->GetMaterialBuffer());
 	std::string descName = name + "DescriptorHeap";
-	mDescHeap = std::make_unique<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
 void PMDController::SetConstantBuffers(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
@@ -265,6 +279,7 @@ void PMDController::CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D
 	{
 		buffers.push_back(toon->GetShaderResource());
 	}
+	mShadowmapTexture->CreateShaderResourceViewDesc();
 	buffers.push_back(mShadowmapTexture);
 	buffers.push_back(mCameraBuffer);
 	buffers.push_back(mDirLight->GetLightBuffer());
@@ -272,5 +287,11 @@ void PMDController::CreateShadowRenderDescHeap(const Microsoft::WRL::ComPtr<ID3D
 	buffers.push_back(mModelMatrixBuffer);
 	buffers.push_back(mModel->GetMaterialBuffer());
 	std::string descName = name + "DescriptorHeap";
-	mShadowRenderDescHeap = std::make_unique<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mShadowRenderDescHeap = std::make_shared<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mDescHeap = mShadowRenderDescHeap;
+}
+
+void PMDController::SetShadowmap(std::shared_ptr<Dx12BufferObject> shadowmap)
+{
+	mShadowmapTexture = shadowmap;
 }

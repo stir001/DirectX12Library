@@ -40,11 +40,11 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	const std::string& dsName, bool existRootSignature)
 {
 
-	auto itr = mDatas.find(shaderPath);
-	if (itr != mDatas.end())
-	{
-		return itr->second;
-	}
+	//auto itr = mDatas.find(shaderPath);
+	//if (itr != mDatas.end())
+	//{
+	//	return itr->second;
+	//}
 #ifdef _DEBUG
 	UINT compileflag = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 	std::function<void(ID3D10Blob*)> outErr = [](ID3D10Blob* err) {
@@ -74,6 +74,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	mMacros.push_back(macro);
 
 	ID3D12ShaderReflection* id3d12ref = nullptr;
+	ShaderDatas data;
 
 	if (vsName.size() > 0)
 	{
@@ -82,7 +83,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
 			vsName.data(), vsModel.data(), compileflag, 0, &vertex, &err);
 		outErr(err);
-		mDatas[shaderPath].vertexShader.Swap(vertex);
+		data.vertexShader.Swap(vertex);
 
 		assert(SUCCEEDED(result));
 
@@ -90,7 +91,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		{
 			ID3DBlob* root = nullptr;
 			result = D3DGetBlobPart(vertex->GetBufferPointer() , vertex->GetBufferSize(), D3D_BLOB_ROOT_SIGNATURE, 0, &root);
-			mDatas[shaderPath].rootSignature.Swap(root);
+			data.rootSignature.Swap(root);
 			assert(SUCCEEDED(result));
 		}
 	}
@@ -102,7 +103,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
 			psName.data(), psModel.data(), compileflag, 0, &pixcel, &err);
 		outErr(err);
-		mDatas[shaderPath].pixelShader.Swap(pixcel);
+		data.pixelShader.Swap(pixcel);
 		assert(SUCCEEDED(result));
 	}
 
@@ -113,7 +114,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
 			gsName.data(), gsModel.data(), compileflag, 0, &geometry, &err);
 		outErr(err);
-		mDatas[shaderPath].geometryShader.Swap(geometry);
+		data.geometryShader.Swap(geometry);
 		assert(SUCCEEDED(result));
 	}
 
@@ -124,7 +125,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
 			hsName.data(), hsModel.data(), compileflag, 0, &hull, &err);
 		outErr(err);
-		mDatas[shaderPath].hullShader.Swap(hull);
+		data.hullShader.Swap(hull);
 		assert(SUCCEEDED(result));
 	}
 
@@ -135,14 +136,14 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
 			dsName.data(), dsModel.data(), compileflag, 0, &domain, &err);
 		outErr(err);
-		mDatas[shaderPath].domainShader.Swap(domain);
+		data.domainShader.Swap(domain);
 		assert(SUCCEEDED(result));
 	}
 
 	mMacros.clear();
 	mMacros.shrink_to_fit();
 	mStrData.clear();
-	return mDatas[shaderPath];
+	return data;
 }
 
 void ShaderCompiler::ReleaseShader(std::string shaderpath)

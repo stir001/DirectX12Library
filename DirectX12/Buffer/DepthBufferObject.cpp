@@ -24,7 +24,7 @@ DepthBufferObject::DepthBufferObject(const std::string& name, const Microsoft::W
 	rscDesc.Alignment = 0;
 
 	mClearValue = {}; 
-	mClearValue.Format = format;
+	mClearValue.Format = DXGI_FORMAT_D32_FLOAT;
 	mClearValue.DepthStencil.Depth = 1.0f;
 	mClearValue.DepthStencil.Stencil = 0;
 

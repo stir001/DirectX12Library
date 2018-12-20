@@ -57,37 +57,40 @@ public:
 	/**
 	*	パス番号は0から
 	*	パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
-	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
+	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(unsigned int pathIndex) const;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(unsigned int passIndex) const;
 
 	/**
 	*	パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
-	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
+	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(const std::string& pathName) const;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(const std::string& passName) const;
 
 	/**
 	*	パスの名前からそのパスのインデックスを取得する
 	*	レンダリングパスのインデックスを取得する
-	*	DeleteRenderingPathメソッドを呼んだ後だとインデックスが崩れるので注意
+	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるので注意
 	*/
-	unsigned int GetRenderingPassIndex(const std::string& pathName) const;
+	unsigned int GetRenderingPassIndex(const std::string& passName) const;
 
 
 	/**
 	*
 	*/
-	bool AddRenderingPass(const std::shared_ptr<RenderingPassObject>& pathObj, unsigned int& out_PathIndex);
+	bool AddRenderingPass(const std::shared_ptr<RenderingPassObject>& passObj, unsigned int& out_PassIndex);
 
-	bool InsertRenderingPass(std::shared_ptr<RenderingPassObject>& pathObj, unsigned int insertPathIndex);
+	/**
+	*	@brief	パスを指定の場所に挿入する
+	*/
+	bool InsertRenderingPass(std::shared_ptr<RenderingPassObject>& passObj, unsigned int insertPassIndex);
 
 	/**
 	*	指定したレンダリングパスのコマンドリストをパス上から削除する
 	*	これを実行した後はパスのインデックスが崩れるので注意
 	*/
-	bool DeleteRenderingPass(unsigned int pathIndex);
-	bool DeleteRenderingPass(const std::string& pathName);
+	bool DeleteRenderingPass(unsigned int passIndex);
+	bool DeleteRenderingPass(const std::string& passName);
 
 	/**
 	*	パスの全体の数を取得
@@ -99,10 +102,10 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetCurrentRenderTarget() const;
 
-	void SetIsActiveValue(unsigned int renderingPath, bool isActive);
-	void SetIsActiveValue(std::string pathName, bool isActive);
+	void SetIsActiveValue(unsigned int renderingpass, bool isActive);
+	void SetIsActiveValue(std::string passName, bool isActive);
 
-	void AllPathClear();
+	void AllPassClear();
 
 private:
 	RenderingPassManager();
@@ -127,8 +130,8 @@ private:
 	unsigned int mWidth;
 	unsigned int mHeight;
 
-	unsigned int AddRenderingPassObject(const std::shared_ptr<RenderingPassObject>& pathObj);
+	unsigned int AddRenderingPassObject(const std::shared_ptr<RenderingPassObject>& passObj);
 
 	void WaitCmdQueue();
-	void CopyLastPathRenderTarget();
+	void CopyLastPassRenderTarget();
 };

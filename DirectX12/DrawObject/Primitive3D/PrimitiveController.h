@@ -19,6 +19,7 @@ class IndexBufferObject;
 class LightObject;
 class Dx12Camera;
 class TextureObject;
+class Dx12BufferObject;
 
 /**
 *	@ingroup primitive
@@ -132,6 +133,24 @@ public:
 	*/
 	void SetColor(const DirectX::XMFLOAT4& color, int index = 0);
 
+	void SetShadowmapRootSignature(std::shared_ptr<RootSignatureObject> rootsignature);
+
+	void SetShadowmapPipelineState(std::shared_ptr<PipelineStateObject> pipelinestate);
+
+	void SetShadowRenderRootSignature(std::shared_ptr<RootSignatureObject> rootsignature);
+
+	void SetShadowRenderPipelineState(std::shared_ptr<PipelineStateObject> pipelinestate);
+
+	void SetShadowmapTexture(std::shared_ptr<Dx12BufferObject> shadowmapTex);
+
+	void CreateShadowmapDescHeap();
+
+	void DrawShadowmap();
+
+	void DrawShadow();
+
+	void SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
 protected:
 	void UpdateInstanceVertexBuffer();
 	void NonUpdate();
@@ -141,6 +160,7 @@ protected:
 		eROOT_PARAMATER_INDEX_TEXTURE,
 		eROOT_PARAMATER_INDEX_CAMERA,
 		eROOT_PARAMATER_INDEX_LIGHT,
+		eROOT_PARAMATER_INDEX_SHADOWMAP,
 		eROOT_PARAMATER_INDEX_MAX
 	};
 
@@ -160,5 +180,11 @@ protected:
 	std::shared_ptr<TextureObject> mTexObj;
 	void (PrimitiveController::*mInstanceUpdate)();
 	void (PrimitiveController::*mDescHeapUpdate)();
+	std::shared_ptr<PipelineStateObject> mShadowmapPipeline;
+	std::shared_ptr<PipelineStateObject> mShadowRenderPipeline;
+	std::shared_ptr<RootSignatureObject> mShadowmapRootSignature;
+	std::shared_ptr<RootSignatureObject> mShadowRenderRootSignature;
+	std::shared_ptr<Dx12BufferObject> mShadowmapTexture;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mShadowmapCmdList;
 };
 

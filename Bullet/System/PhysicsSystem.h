@@ -10,6 +10,7 @@
 #include <memory>
 #include <DirectXMath.h>
 #include <map>
+#include <wrl.h>
 
 class BulletDebugDrawDx;
 class BulletRigidBody;
@@ -24,6 +25,7 @@ class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btGhostPairCallback;
 class btCollisionObject;
+struct ID3D12GraphicsCommandList;
 
 /**
 *	@enum	BulletShapeType
@@ -203,6 +205,8 @@ public:
 	*	@brief	衝突する物体の未使用の最小識別IDを取得する
 	*/
 	int GetAvailableMinID();
+
+	void SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 private:
 	/**
 	*	シングルトン用インスタンス

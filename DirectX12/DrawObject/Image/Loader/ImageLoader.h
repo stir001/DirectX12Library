@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/11/13
+*	@par 最終更新日	2018/12/19
 */
 
 #include "DirectX12/Shader/ShaderDatasStructure.h"
@@ -46,6 +46,24 @@ public:
 	*/
 	std::shared_ptr<Image3DController> LoadImage3D(const std::string& path, bool isBillboard = false);
 	
+	/**
+	*	@brief UIレイヤーのコマンドリストを設定する
+	*	@param[in]	cmdList	設定するコマンドリスト
+	*/
+	void SetUIPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
+	/**
+	*	@brief BackGroundレイヤーのコマンドリストを設定する
+	*	@param[in]	cmdList	設定するコマンドリスト
+	*/
+	void SetBackGroundPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
+	/**
+	*	@brief Modelレイヤーのコマンドリストを設定する
+	*	@param[in]	cmdList	設定するコマンドリスト
+	*/
+	void Set3DPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+
 	/**
 	*	@brief	指定されたファイルパスでロードしたオブジェクトの所有権を手放す
 	*	@param[in]	releaseImagePath	解放したいファイルパス

@@ -40,6 +40,7 @@ public:
 	std::shared_ptr<PrimitiveController> CreateCubeNormalMap(float length, const std::string& texPath);
 	std::shared_ptr<PrimitiveController> CreateSphere(float radius, unsigned int div, const std::string& texPath = "");
 	void SetParamaters(std::shared_ptr<PrimitiveController>& ctrl);
+	void SetRenderingCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 private:
 	PrimitiveCreator();
 

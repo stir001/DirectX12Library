@@ -2,8 +2,12 @@
     ", DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)" \
 	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
 	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
-	", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
+	
+
+#define SMP ", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
         ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
+
+#define SHADOWMAP	", DescriptorTable(SRV(t1), visibility = SHADER_VISIBILITY_PIXEL)" \
 
 Texture2D<float4> tex : register(t0);
 Texture2D<float> shadowmap : register(t1);
@@ -48,7 +52,7 @@ struct PriGSOut
 };
 
 
-[RootSignature(PRM3DRS)]
+[RootSignature(PRM3DRS SMP)]
 PriVSOutput PrimitiveVS(PriVSInput vsInput)
 {
     PriVSOutput po;
@@ -98,14 +102,14 @@ void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStr
     }
 }
 
-[RootSignature(PRM3DRS)]
+[RootSignature(PRM3DRS SMP)]
 float4 ShadowVS(PriVSInput vsInput) : SV_Position
 {
     float4 svpos = mul(lightviewProj, mul(vsInput.aMat, vsInput.pos) + float4(vsInput.instanceOffset.xyz, 0));
     return svpos;
 }
 
-[RootSignature(PRM3DRS ", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)")]
+[RootSignature(PRM3DRS SHADOWMAP SMP)]
 PriVSOutput PrimitiveShadowVS(PriVSInput vsInput)
 {
     PriVSOutput po;
@@ -122,9 +126,10 @@ float4 PrimitiveShadowPS(PriGSOut data) : SV_Target
 {
     float4 color = (tex.Sample(smp, data.uv)) * 0.5f + data.color * 0.5f;
 
-    float3 shadowpos = mul(lightviewProj, data.pos);
+    float3 shadowpos = mul(lightviewProj, data.pos).xyz;
     shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
-    float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
+    shadowpos.y = 1 - shadowpos.y;
+    float shadow = shadowmap.Sample(smp, saturate(shadowpos.xy)) + 0.001f < shadowpos.z ? 0.5f : 1.0f;
 
-    return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) + color * 0.2f + data.color * 0.2f));
+    return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) * shadow + color * 0.2f + data.color * 0.2f));
 }

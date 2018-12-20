@@ -81,3 +81,8 @@ void BulletDebugDrawDx::DebugDraw()
 	mCmdList->DrawInstanced(static_cast<unsigned int>(mVertices.size()), 1, 0, 0);
 	mVertices.clear();
 }
+
+void BulletDebugDrawDx::SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+{
+	mCmdList = cmdList;
+}

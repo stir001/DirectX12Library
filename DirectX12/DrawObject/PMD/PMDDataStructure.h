@@ -582,3 +582,11 @@ struct BoneTree
 	*/
 	std::vector<std::vector<int>> node;
 };
+
+class BulletRigidBody;
+
+struct PMDRigid
+{
+	std::shared_ptr<BulletRigidBody> rigidBody;
+	int refBoneIndex;
+};
