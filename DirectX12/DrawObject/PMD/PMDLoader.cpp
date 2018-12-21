@@ -429,7 +429,7 @@ void PMDLoader::CreateRigidBodis()
 		rigid->SetFriction(data.friction);
 		rigid->SetSpinFriction(data.rotDim);
 		rigid->SetRestitution(data.recoil);
-		rigid->SetYawPitchRoll(data.rot);
+		rigid->SetPitchYawRoll(data.rot);
 		rigid->SetOrigin(data.pos);
 		
 		

@@ -122,16 +122,26 @@ void BulletRigidBody::SetRestitution(float restitution)
 	mRigidBody->setRestitution(restitution);
 }
 
-void BulletRigidBody::SetYawPitchRoll(const DirectX::XMFLOAT3 & ypr)
+void BulletRigidBody::SetPitchYawRoll(const DirectX::XMFLOAT3 & ypr)
 {
-	SetYawPitchRoll(ypr.x, ypr.y, ypr.z);
+	SetPitchYawRoll(ypr.x, ypr.y, ypr.z);
 }
 
-void BulletRigidBody::SetYawPitchRoll(float x, float y, float z)
+void BulletRigidBody::SetPitchYawRoll(float x, float y, float z)
 {
 	btMatrix3x3 mat;
 	mat.setIdentity();
 	mat.setEulerYPR(x, y, z);
+	btTransform trans = mRigidBody->getWorldTransform();
+	trans.setBasis(mat);
+	mRigidBody->setWorldTransform(trans);
+}
+
+void BulletRigidBody::SetRotation(const DirectX::XMFLOAT4 & quaternion)
+{
+	btMatrix3x3 mat;
+	btQuaternion quat = {quaternion.x, quaternion.y, quaternion.z, quaternion.w};
+	mat.setRotation(quat);
 	btTransform trans = mRigidBody->getWorldTransform();
 	trans.setBasis(mat);
 	mRigidBody->setWorldTransform(trans);
@@ -252,7 +262,7 @@ void BulletRigidBody::CreateRigidBody()
 	mCollisionShape->GetShape()->calculateLocalInertia(mMass, bodyInertia);
 	auto bodyCI = btRigidBody::btRigidBodyConstructionInfo(mMass, mMotionState.get(), mCollisionShape->GetShape().get(), bodyInertia);
 
-	bodyCI.m_restitution = 0.5f;
+	bodyCI.m_restitution = 0.0f;
 	bodyCI.m_friction = 1.0f;
 
 	mRigidBody = std::make_shared<btRigidBody>(bodyCI);

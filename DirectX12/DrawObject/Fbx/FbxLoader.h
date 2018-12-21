@@ -97,6 +97,7 @@ public:
 
 	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
+	std::shared_ptr<Fbx::FbxModelData> GetMeshData(const std::string& modelPath);
 private:
 	FbxLoader();
 	FbxLoader(const FbxLoader& ref) {};
@@ -174,9 +175,5 @@ private:
 	void LoadSkeletons();
 
 	std::vector<fbxsdk::FbxTime> ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId, std::vector<fbxsdk::FbxNode*>& linkNode);
-
-	//const NodeTree* GetNodeTree(std::string nodename);
-
-	//const NodeTree* GetNodeTreeRecursive(std::string nodeName, const NodeTree& nodeTree);
 };
 

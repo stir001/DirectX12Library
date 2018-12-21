@@ -129,16 +129,6 @@ std::shared_ptr<FbxModelController> FbxLoader::LoadMesh(const std::string& model
 		return nullptr;
 	}
 
-	//const int poseCount = mScene->GetPoseCount();
-	//if (poseCount > 1)
-	//{
-	//	return nullptr;
-	//}
-	//else
-	//{
-	//	mPose = mScene->GetPose(0);
-	//}
-
 	//ルートノードのゲット
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 
@@ -1219,6 +1209,57 @@ std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* sc
 	std::sort(times.begin(), times.end(), [](fbxsdk::FbxTime lval, fbxsdk::FbxTime rval) {return lval.Get() < rval.Get(); });
 
 	return times;
+}
+
+std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & modelPath)
+{
+	if (!LoaderInitializie(modelPath))
+	{
+		return nullptr;
+	}
+
+	//ルートノードのゲット
+	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
+
+	if (rootNode) {
+		FbxAMatrix dummy;
+		dummy.SetIdentity();
+		NodeTree rNode;
+		rNode.nodeName = rootNode->GetName();
+		fbxsdk::FbxTime t = 0;
+		mNodeTree = rNode;
+		StackSearchNode(rootNode, FbxNodeAttribute::EType::eMesh, mNodeTree, [&](fbxsdk::FbxNode* node) {
+			mNodeDatas.push_back(node);
+			mMeshDatas.push_back(node->GetMesh());
+		});
+	}
+	else {
+		MessageBox(nullptr, L"Load Error <rootNode is null>", L"FBXModelLoader", MB_OK);
+		return nullptr;
+	}
+	if (mMeshDatas.size() == 0)
+	{
+		MessageBox(nullptr, L"メッシュがないよ", L"FBXModelLoader", MB_OK);
+		return nullptr;
+	}
+
+	std::vector<std::shared_ptr<Fbx::FbxModelData>> models(mMeshDatas.size());
+
+	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
+	{
+		FbxVector4 t0 = mNodeDatas[i]->GetGeometricTranslation(FbxNode::eSourcePivot);
+		FbxVector4 r0 = mNodeDatas[i]->GetGeometricRotation(FbxNode::eSourcePivot);
+		FbxVector4 s0 = mNodeDatas[i]->GetGeometricScaling(FbxNode::eSourcePivot);
+		DirectX::XMMATRIX xmMat;
+		StoreFbxMatrixToXMMatrix(FbxAMatrix(t0, r0, s0), xmMat);
+		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
+		models[i] = MainLoad(mMeshDatas[i], modelPath);
+		models[i]->modelPath = modelPath;
+	}
+
+	LoadSkeletons();
+	
+	return ConnectMeshes(models);;
 }
 
 void FbxLoader::LoadCurve(Fbx::AnimCurveData& curveData)

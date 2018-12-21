@@ -249,6 +249,9 @@ void PrimitiveController::NonUpdate()
 
 void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion)
 {
+	DrawController3D::SetRotaQuaternion(quaternion);
+	mInstanceDatas[0].aMatrix = mModelMatrix;
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
 void PrimitiveController::UpdateDescriptorHeap()

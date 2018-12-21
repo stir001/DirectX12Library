@@ -113,18 +113,23 @@ public:
 	void SetRestitution(float restitution);
 
 	/**
-	*	@brief	Yaw Pitch Rollを設定する
-	*	@param[in]	ypr		(Pitch,Yaw,Roll)
+	*	@brief	Yaw Pitch Rollを設定する(オイラー角)
+	*	@param[in]	ypr		(Pitch, Yaw, Roll)
 	*/
-	void SetYawPitchRoll(const DirectX::XMFLOAT3& ypr);
+	void SetPitchYawRoll(const DirectX::XMFLOAT3& pyr);
 
 	/**
-	*	@brief	Yaw Pitch Rollを設定する
+	*	@brief	Yaw Pitch Rollを設定する(オイラー角)
 	*	@param[in]	x	Pitch
 	*	@param[in]	y	Yaw
 	*	@param[in]	z	Roll
 	*/
-	void SetYawPitchRoll(float x, float y,float z);
+	void SetPitchYawRoll(float x, float y,float z);
+
+	/**
+	*	@brief	quaternionで回転を設定する
+	*/
+	void SetRotation(const DirectX::XMFLOAT4& quaternion);
 
 	/**
 	*	@brief	中心点を設定する
