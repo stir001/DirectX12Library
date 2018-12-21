@@ -96,10 +96,10 @@ void DrawController3D::UpdateMatrix()
 {
 	XMMATRIX mat = XMMatrixIdentity();
 	XMVECTOR q = XMLoadFloat4(&mQuaternion);
-	mat *= XMMatrixRotationQuaternion(q);
+	mat *= DirectX::XMMatrixScaling(mScale.x, mScale.y, mScale.z);
+	mat *= DirectX::XMMatrixRotationQuaternion(q);
 	mat *= DirectX::XMLoadFloat4x4(&mRotationMatrix);
-	mat *= XMMatrixScaling(mScale.x, mScale.y, mScale.z);
-	mat *= XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
+	mat *= DirectX::XMMatrixTranslation(mPos.x, mPos.y, mPos.z);
 	DirectX::XMStoreFloat4x4(&mModelMatrix, mat);
 
 	mModelMatrixBuffer->WriteBuffer256Alignment(&mModelMatrix, static_cast<unsigned int>(sizeof(mModelMatrix)), 1U);
