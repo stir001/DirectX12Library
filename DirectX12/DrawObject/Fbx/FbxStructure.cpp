@@ -3,52 +3,67 @@
 #include "Texture/TextureLoader.h"
 
 
+Fbx::FbxMaterial::FbxMaterial()
+	: effectIndexNum(0)
+{
+	diffuse.element = { 0.8f,0.8f,0.8f, 1.0f };
+	diffuseFactor.element = 1.0f;
+	ambient.element = { 0.1f, 0.1f, 0.1f, 1.0f };
+	ambientFactor.element = 1.0f;
+	specular.element = { 0.1f, 0.1f, 0.1f, 1.0f };
+	specularFactor.element = 1.0f;
+	shininess.element = 3.0f;
+	emissive.element = { 0.0f, 0.0f, 0.0f, 1.0f };
+	emissiveFactor.element = 1.0f;
+	transparentColor.element = { 1.0f, 1.0f, 1.0f, 1.0f };
+	transparencyFactor.element = 0.0f;
+}
+
 Fbx::FbxTexturesSet Fbx::FbxMaterial::GetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type)
 {
 	Fbx::FbxTexturesSet rtn;
 	switch (type)
 	{
 	case Fbx::FbxMaterial::eELEMENT_TYPE_DIFFUSE:
-		return diffuse.textures;
+		rtn = diffuse.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_DIFFUSE_FACTOR:
-		return diffuseFactor.textures;
+		rtn = diffuseFactor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_AMBIENT:
-		return ambient.textures;
+		rtn = ambient.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_AMBIENT_FACTOR:
-		return ambientFactor.textures;
+		rtn = ambientFactor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_SPECULAR:
-		return specular.textures;
+		rtn = specular.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_SPECULAR_FACTOR:
-		return specularFactor.textures;
+		rtn = specularFactor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_SHININESS:
-		return shininess.textures;
+		rtn = shininess.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_EMISSIVE:
-		return emissive.textures;
+		rtn = emissive.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_EMISSIVE_FACTOR:
-		return emissiveFactor.textures;
+		rtn = emissiveFactor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_TRANSPARENT_COLOR:
-		return transparentColor.textures;
+		rtn = transparentColor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE_TRANSPARENCY_FACTOR:
-		return transparencyFactor.textures;
+		rtn = transparencyFactor.textures;
 		break;
 	case Fbx::FbxMaterial::eELEMENT_TYPE::eELEMENT_TYPE_NUM:
-		return rtn;
 		break;
 	default:
-		return rtn;
+		assert(false);
 		break;
 	}
-	assert(false);
+	return rtn;
 }
 
 std::shared_ptr<TextureObject> Fbx::FbxMaterial::CreateTextureUseElement(eELEMENT_TYPE type)
@@ -95,6 +110,7 @@ std::shared_ptr<TextureObject> Fbx::FbxMaterial::CreateTextureUseElement(eELEMEN
 	case Fbx::FbxMaterial::eELEMENT_TYPE_NUM:
 		break;
 	default:
+		assert(false);
 		break;
 	}
 	return rtn;
@@ -142,6 +158,7 @@ void Fbx::FbxMaterial::SetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type, Fbx::Fbx
 	case Fbx::FbxMaterial::eELEMENT_TYPE_NUM:
 		break;
 	default:
+		assert(false);
 		break;
 	}
 }

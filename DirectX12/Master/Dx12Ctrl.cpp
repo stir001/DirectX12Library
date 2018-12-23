@@ -54,10 +54,14 @@ HRESULT Dx12Ctrl::ReportLiveObject()
 #endif
 }
 
+void Dx12Ctrl::SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam))
+{
+	mWndProc = proc;
+}
+
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}
-, mViewPort{ 0,0,static_cast<float>(mWndWidth),static_cast<float>(mWndHeight),0,1.0f},mRect{0,0,mWndWidth,mWndHeight }
 ,mCmdAllocator(nullptr),mCmdList(nullptr),mCmdQueue(nullptr),mFactory(nullptr)
-,result(S_OK),mFenceValue(0)
+,result(S_OK),mFenceValue(0), mWndProc(WindowProcedure)
 ,mWindowName("DirectX12")
 {
 	setlocale(LC_ALL, "japanese");
@@ -80,6 +84,8 @@ Microsoft::WRL::ComPtr<ID3D12Device>& Dx12Ctrl::GetDev()
 
 bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 {
+	InitWindowCreate();
+
 #ifdef _DEBUG
 	{
 		ID3D12Debug* debug;
@@ -160,8 +166,6 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 
 	mDev->SetName(L"ID3D12Device");
 
-	InitWindowCreate();
-
 	mDepthBuffer = std::make_shared<DepthBufferObject>("MasterDepthBuffer", mDev, mWndWidth, mWndHeight);
 	std::vector<std::shared_ptr<Dx12BufferObject>> t_buffer;
 	t_buffer.push_back(mDepthBuffer);
@@ -184,9 +188,10 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 	
 	result = mDev->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 
-	mCamera = std::make_shared<Dx12Camera>(mWndWidth, mWndHeight);
 	mCameraHolder = std::make_shared<CameraHolder>(mWndWidth, mWndHeight, mDev);
-	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),mViewPort,mRect);
+	D3D12_VIEWPORT viewport = {0, 0, static_cast<float>(mWndWidth), static_cast<float>(mWndHeight), 0.0f, 1.0f};
+	D3D12_RECT sissorRect = { 0, 0, mWndWidth, mWndHeight };
+	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), viewport, sissorRect);
 
 	//RendringManagerÉNÉâÉXÇÃèâä˙âªèàóù
 	InitFirstPath();
@@ -217,30 +222,24 @@ void Dx12Ctrl::InitFirstPath()
 
 void Dx12Ctrl::InitWindowCreate()
 {
-	WNDCLASSEX w = {};
-	w.lpfnWndProc = (WNDPROC)WindowProcedure;
-	w.lpszClassName = _T("DirectX12");
-	w.hInstance = mWinHInstance;
-	w.hIcon = LoadIcon(w.hInstance, _T("DirectX12"));
-	w.cbSize = sizeof(WNDCLASSEX);
-	w.hCursor = LoadCursor(NULL, IDC_ARROW);
-	w.hIcon;
-	RegisterClassEx(&w);
-
 	RECT wrc = { 0,0,mWndWidth,mWndHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
 	const char* name = mWindowName.data();
-	std::string strName;
-	strName.reserve(mWindowName.size());
-	for (auto& s : mWindowName)
-	{
-		strName.push_back(s);
-	}
+	std::string strName = mWindowName;
 	strName.push_back('\0');
 	size_t size = strName.size();
 	wchar_t* buff = nullptr;
 	ToWChar(&buff, size, strName.data(), size);
+
+	WNDCLASSEX w = {};
+	w.lpfnWndProc = mWndProc;
+	w.lpszClassName = buff;
+	w.hInstance = mWinHInstance;
+	w.hIcon = LoadIcon(w.hInstance, buff);
+	w.cbSize = sizeof(WNDCLASSEX);
+	w.hCursor = LoadCursor(NULL, IDC_ARROW);
+	RegisterClassEx(&w);
 
 	HWND hwnd = CreateWindow(w.lpszClassName,
 		buff,
@@ -332,14 +331,12 @@ DirectX::XMFLOAT2 Dx12Ctrl::GetWindowSize() const
 
 void Dx12Ctrl::Release()
 {
-	mShaders.clear();
 	mDepthDescHeap.reset();
 	TextureLoader::Destroy();
 	RenderingPassManager::Destroy();
 	FbxLoader::Destroy();
 	ImageLoader::Destroy();
 	ShaderCompiler::Destroy();
-	mCamera.reset();
 	mCameraHolder.reset();
 	Primitive2DManager::Destory();
 	mDepthBuffer.reset();
@@ -358,10 +355,6 @@ void Dx12Ctrl::SetWindowSize(int inw, int inh)
 {
 	mWndWidth = inw;
 	mWndHeight = inh;
-	mViewPort.Width = static_cast<float>(inw);
-	mViewPort.Height = static_cast<float>(inh);
-	mRect.right = inw;
-	mRect.bottom = inh;
 }
 
 void Dx12Ctrl::SetWindowName(std::string& inWindowName)
@@ -384,22 +377,12 @@ D3D12_CPU_DESCRIPTOR_HANDLE Dx12Ctrl::GetDepthCpuHandle() const
 	return mDepthDescHeap->GetCPUHeapHandleStart();
 }
 
-std::shared_ptr<Dx12Camera> Dx12Ctrl::GetCamera() const
+std::shared_ptr<Dx12Camera> Dx12Ctrl::GetCamera(unsigned int index) const
 {
-	return mCamera;
+	return mCameraHolder->GetCamera(index);
 }
 
 std::shared_ptr<CameraHolder> Dx12Ctrl::GetCameraHolder()
 {
 	return mCameraHolder;
-}
-
-const D3D12_VIEWPORT& Dx12Ctrl::GetViewPort() const
-{
-	return mViewPort;
-}
-
-const D3D12_RECT& Dx12Ctrl::GetRect() const
-{
-	return mRect;
 }

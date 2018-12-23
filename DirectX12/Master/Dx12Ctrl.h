@@ -71,9 +71,6 @@ public:
 	void SetWindowSize(int inw, int inh);
 	void SetWindowName(std::string& inWindowName);
 
-	const D3D12_VIEWPORT& GetViewPort() const;
-	const D3D12_RECT& GetRect() const;
-
 	const HWND& GetWndHandle() const;
 
 	HRESULT GetDeviceRemoveReason();
@@ -82,8 +79,7 @@ public:
 
 	void Release();
 
-	//テスト用関数
-	std::shared_ptr<Dx12Camera> GetCamera() const;
+	std::shared_ptr<Dx12Camera> GetCamera(unsigned int index) const;
 	std::shared_ptr<CameraHolder> GetCameraHolder();
 
 	template<typename T>
@@ -100,6 +96,7 @@ public:
 
 	HRESULT ReportLiveObject();
 
+	void SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam));
 private:
 	Dx12Ctrl();
 	Dx12Ctrl(const Dx12Ctrl&);
@@ -108,6 +105,7 @@ private:
 
 	static Dx12Ctrl* inst;
 
+	LRESULT(*mWndProc)(HWND, UINT, WPARAM, LPARAM);
 	HINSTANCE mWinHInstance;
 	int mWndHeight;
 	int mWndWidth;
@@ -120,12 +118,8 @@ private:
 	Microsoft::WRL::ComPtr<IDXGIFactory4> mFactory;
 	std::shared_ptr<DepthBufferObject> mDepthBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDepthDescHeap;
-	std::shared_ptr<Dx12Camera> mCamera;
 	std::shared_ptr<CameraHolder> mCameraHolder;
-	std::vector<Microsoft::WRL::ComPtr<ID3DBlob>> mShaders;
 	UINT64 mFenceValue;
-	D3D12_VIEWPORT mViewPort;
-	D3D12_RECT mRect;
 	HWND mhWnd;
 	float mClrcolor[4];
 

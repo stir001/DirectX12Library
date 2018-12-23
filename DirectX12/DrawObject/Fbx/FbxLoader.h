@@ -142,7 +142,9 @@ private:
 	std::shared_ptr<Fbx::FbxModelData> ConnectMeshes(std::vector<std::shared_ptr<Fbx::FbxModelData>>& datas);
 
 	//í∏ì_êÆçáópä÷êî
-	int AlignVertex(int vertexIndex, std::vector<Fbx::FbxVertex>& vertex);
+	int AlignVertexSameNormalUV(int vertexIndex, std::vector<Fbx::FbxVertex>& vertex);
+
+	int AlignVertexDiffNormalUV(int vertexIndex, std::vector<Fbx::FbxVertex>& vertex);
 
 	void FixVertexInfo(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::FbxMesh* mesh);
 

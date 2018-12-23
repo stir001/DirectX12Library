@@ -121,63 +121,16 @@ std::shared_ptr<FbxModelController> FbxLoader::LoadMesh(const std::string& model
 	if (itr != mModelDatas.end())
 	{
 		rtn = std::make_shared<FbxModelController>(itr->second, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
+		rtn->SetLight(mLight);
 		return rtn;
 	}
 
-	if (!LoaderInitializie(modelPath))
-	{
-		return nullptr;
-	}
-
-	//ルートノードのゲット
-	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
-
-	if (rootNode) {
-		FbxAMatrix dummy;
-		dummy.SetIdentity();
-		NodeTree rNode;
-		rNode.nodeName = rootNode->GetName();
-		fbxsdk::FbxTime t = 0;
-		mNodeTree = rNode;
-		StackSearchNode(rootNode, FbxNodeAttribute::EType::eMesh, mNodeTree, [&](fbxsdk::FbxNode* node) {
-			mNodeDatas.push_back(node);
-			mMeshDatas.push_back(node->GetMesh());
-		});
-	}
-	else {
-		MessageBox(nullptr, L"Load Error <rootNode is null>", L"FBXModelLoader", MB_OK);
-		return nullptr;
-	}
-	if (mMeshDatas.size() == 0)
-	{
-		MessageBox(nullptr, L"メッシュがないよ", L"FBXModelLoader", MB_OK);
-		return rtn;
-	}
+	auto modeldata = GetMeshData(modelPath);
 	
-	std::vector<std::shared_ptr<Fbx::FbxModelData>> models(mMeshDatas.size());
-
-	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
-	{
-		FbxVector4 t0 = mNodeDatas[i]->GetGeometricTranslation(FbxNode::eSourcePivot);
-		FbxVector4 r0 = mNodeDatas[i]->GetGeometricRotation(FbxNode::eSourcePivot);
-		FbxVector4 s0 = mNodeDatas[i]->GetGeometricScaling(FbxNode::eSourcePivot);
-		DirectX::XMMATRIX xmMat;
-		StoreFbxMatrixToXMMatrix(FbxAMatrix(t0, r0, s0), xmMat);
-		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
-		models[i] = MainLoad(mMeshDatas[i], modelPath);
-		models[i]->modelPath = modelPath;
-	}
-
-	LoadSkeletons();
-	
-	std::shared_ptr<Fbx::FbxModel> model(mModelConverter->ConvertToFbxModel(ConnectMeshes(models)));
+	std::shared_ptr<Fbx::FbxModel> model(mModelConverter->ConvertToFbxModel(modeldata));
 	mModelDatas[modelPath] = model;
 	rtn = std::make_shared<FbxModelController>(model, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
 	rtn->SetLight(mLight);
-
-	DestroyScence(mScene);
-	mManager->Destroy();
-	ClearTmpInfo();
 
 	return rtn;
 }
@@ -372,7 +325,7 @@ void FbxLoader::LoadVertexNormal(fbxsdk::FbxMesh* mesh)
 	fbxsdk::FbxGeometryElement::EReferenceMode referenceMode;
 	fbxsdk::FbxGeometryElement::EMappingMode mappingMode;
 	fbxsdk::FbxVector4 t_normal;
-	Fbx::TmpNormalUV nluv;
+	Fbx::TmpNormal nl;
 
 	//START vertex normal load
 	int normallayercount = mesh->GetElementNormalCount();
@@ -399,29 +352,27 @@ void FbxLoader::LoadVertexNormal(fbxsdk::FbxMesh* mesh)
 			case fbxsdk::FbxLayerElement::eDirect://eByControllPointの場合は頂点の順番に定義すればいいはず
 				for (int i = 0; i < static_cast<int>(mTmpVertices.size()); ++i)
 				{
-					mTmpVertices[i].normalandUV.resize(1);
+					mTmpVertices[i].normal.resize(1);
 
 					t_normal = normalArray->GetAt(i);
-					mTmpVertices[i].normalandUV[0].normal.x = static_cast<float>(t_normal[0]);
-					mTmpVertices[i].normalandUV[0].normal.y = static_cast<float>(t_normal[1]);
-					mTmpVertices[i].normalandUV[0].normal.z = static_cast<float>(t_normal[2]);
-					mTmpVertices[i].normalandUV[0].vertexNo = i;
+					mTmpVertices[i].normal[0].normal.x = static_cast<float>(t_normal[0]);
+					mTmpVertices[i].normal[0].normal.y = static_cast<float>(t_normal[1]);
+					mTmpVertices[i].normal[0].normal.z = static_cast<float>(t_normal[2]);
+					mTmpVertices[i].normal[0].vertexNo = i;
 				}
 				break;
 			case fbxsdk::FbxLayerElement::eIndex:
 			case fbxsdk::FbxLayerElement::eIndexToDirect://おそらくこれは来ない？
-
+				assert(false);
 				eIndexToDirectCount = normalArrayIndicesArray->GetCount();
 				for (int i = 0; i < eIndexToDirectCount; ++i)
 				{
 					t_normal = normalArray->GetAt(normalArrayIndicesArray->GetAt(i));
-					nluv.normal.x = static_cast<float>(t_normal[0]);
-					nluv.normal.y = static_cast<float>(t_normal[1]);
-					nluv.normal.z = static_cast<float>(t_normal[2]);
-					nluv.uv.x = 0;
-					nluv.uv.y = 0;
-					nluv.vertexNo = i;
-					mTmpVertices[i].normalandUV.push_back(nluv);
+					nl.normal.x = static_cast<float>(t_normal[0]);
+					nl.normal.y = static_cast<float>(t_normal[1]);
+					nl.normal.z = static_cast<float>(t_normal[2]);
+					nl.vertexNo = i;
+					mTmpVertices[i].normal.push_back(nl);
 				}
 				break;
 			default:
@@ -436,29 +387,26 @@ void FbxLoader::LoadVertexNormal(fbxsdk::FbxMesh* mesh)
 				{
 
 					t_normal = normalArray->GetAt(i);
-					nluv.normal.x = static_cast<float>(t_normal[0]);
-					nluv.normal.y = static_cast<float>(t_normal[1]);
-					nluv.normal.z = static_cast<float>(t_normal[2]);
-					nluv.vertexNo = polygonvertices[i];
-					mTmpVertices[polygonvertices[i]].normalandUV.push_back(nluv);
+					nl.normal.x = static_cast<float>(t_normal[0]);
+					nl.normal.y = static_cast<float>(t_normal[1]);
+					nl.normal.z = static_cast<float>(t_normal[2]);
+					nl.vertexNo = polygonvertices[i];
+					mTmpVertices[polygonvertices[i]].normal.push_back(nl);
 				}
 				break;
 			case fbxsdk::FbxLayerElement::eIndex:
 			case fbxsdk::FbxLayerElement::eIndexToDirect:
 				for (int i = 0; i < polygonverticesCount; ++i)
 				{
-
 					normalArrayIndices[i] = normalArrayIndicesArray->GetAt(i);
 					vertexIndices[i] = polygonvertices[i];
 
 					t_normal = normalArray->GetAt(normalArrayIndicesArray->GetAt(i));
-					nluv.normal.x = static_cast<float>(t_normal[0]);
-					nluv.normal.y = static_cast<float>(t_normal[1]);
-					nluv.normal.z = static_cast<float>(t_normal[2]);
-					nluv.uv.x = 0;
-					nluv.uv.y = 0;
-					nluv.vertexNo = polygonvertices[i];
-					mTmpVertices[polygonvertices[i]].normalandUV.push_back(nluv);
+					nl.normal.x = static_cast<float>(t_normal[0]);
+					nl.normal.y = static_cast<float>(t_normal[1]);
+					nl.normal.z = static_cast<float>(t_normal[2]);
+					nl.vertexNo = polygonvertices[i];
+					mTmpVertices[polygonvertices[i]].normal.push_back(nl);
 				}
 				break;
 			default:
@@ -490,8 +438,6 @@ void FbxLoader::LoadVertexUV(fbxsdk::FbxMesh* mesh)
 {
 	int* polygonvertices = mesh->GetPolygonVertices();
 	int polygonverticesCount = mesh->GetPolygonVertexCount();
-	std::vector<int> vertexRefCount(mTmpVertices.size());
-	std::fill(vertexRefCount.begin(), vertexRefCount.end(), 0);
 
 	std::vector<int> uvlArrayIndices;
 	std::vector<int> vertexIndices;
@@ -536,21 +482,19 @@ void FbxLoader::LoadVertexUV(fbxsdk::FbxMesh* mesh)
 			case fbxsdk::FbxLayerElement::eDirect:
 				for (int i = 0; i < static_cast<int>(mTmpVertices.size()); ++i)
 				{
-
-					mTmpVertices[i].normalandUV[0].uv.x = static_cast<float>(uvArray->GetAt(i)[0]);
-					mTmpVertices[i].normalandUV[0].uv.y = 1.0f - static_cast<float>(uvArray->GetAt(i)[0]);
-					mTmpVertices[i].normalandUV[0].uvSetName = t_uvSetName;
+					t_uv.x = static_cast<float>(uvArray->GetAt(i)[0]);
+					t_uv.y = 1.0f - static_cast<float>(uvArray->GetAt(i)[0]);
+					mTmpVertices[i].uv.emplace_back(Fbx::TmpUV(t_uv, t_uvSetName));
 				}
 				break;
 			case fbxsdk::FbxLayerElement::eIndex:
-			case fbxsdk::FbxLayerElement::eIndexToDirect:
+			case fbxsdk::FbxLayerElement::eIndexToDirect://多分これはあり得ない
+				assert(false);
 				for (int i = 0; i < uvArrayIndicesCount; ++i)
 				{
-
 					t_uv.x = static_cast<float>(uvArray->GetAt(uvArrayIndicesArray->GetAt(i))[0]);
 					t_uv.y = 1.0f - static_cast<float>(uvArray->GetAt(uvArrayIndicesArray->GetAt(i))[1]);
-					mTmpVertices[i].normalandUV[0].uv = t_uv;
-					mTmpVertices[i].normalandUV[0].uvSetName = t_uvSetName;
+					mTmpVertices[i].uv.emplace_back(Fbx::TmpUV(t_uv, t_uvSetName));
 				}
 				break;
 			default:
@@ -563,27 +507,21 @@ void FbxLoader::LoadVertexUV(fbxsdk::FbxMesh* mesh)
 			case fbxsdk::FbxLayerElement::eDirect:
 				for (int i = 0; i < polygonverticesCount; ++i)
 				{
-
 					t_uv.x = static_cast<float>(uvArray->GetAt(i)[0]);
 					t_uv.y = 1.0f - static_cast<float>(uvArray->GetAt(i)[1]);
-					mTmpVertices[polygonvertices[i]].normalandUV[vertexRefCount[polygonvertices[i]]].uv = t_uv;
-					mTmpVertices[polygonvertices[i]].normalandUV[vertexRefCount[polygonvertices[i]]].uvSetName = t_uvSetName;
-					++vertexRefCount[polygonvertices[i]];
+					mTmpVertices[polygonvertices[i]].uv.emplace_back(Fbx::TmpUV(t_uv, t_uvSetName));
 				}
 				break;
 			case fbxsdk::FbxLayerElement::eIndex:
 			case fbxsdk::FbxLayerElement::eIndexToDirect:
 				for (int i = 0; i < uvArrayIndicesCount; ++i)
 				{
-
 					uvlArrayIndices[i] = uvArrayIndicesArray->GetAt(i);
 					vertexIndices[i] = polygonvertices[i];
 
 					t_uv.x = static_cast<float>(uvArray->GetAt(uvArrayIndicesArray->GetAt(i))[0]);
 					t_uv.y = 1.0f - static_cast<float>(uvArray->GetAt(uvArrayIndicesArray->GetAt(i))[1]);
-					mTmpVertices[polygonvertices[i]].normalandUV[vertexRefCount[polygonvertices[i]]].uv = t_uv;
-					mTmpVertices[polygonvertices[i]].normalandUV[vertexRefCount[polygonvertices[i]]].uvSetName = t_uvSetName;
-					++vertexRefCount[polygonvertices[i]];
+					mTmpVertices[polygonvertices[i]].uv.emplace_back(Fbx::TmpUV(t_uv, t_uvSetName));
 				}
 				break;
 			default:
@@ -697,8 +635,8 @@ void FbxLoader::LoadCluster(fbxsdk::FbxMesh* mesh)
 void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, int tmpvertexId)
 {
 	mv.pos = { tv.pos.x,tv.pos.y,tv.pos.z,1 };
-	mv.normal = { tv.normalandUV[tmpvertexId].normal.x,tv.normalandUV[tmpvertexId].normal.y,tv.normalandUV[tmpvertexId].normal.z,1 };
-	mv.texCoord = tv.normalandUV[tmpvertexId].uv;
+	mv.normal = { tv.normal[tmpvertexId].normal.x,tv.normal[tmpvertexId].normal.y,tv.normal[tmpvertexId].normal.z,1 };
+	mv.texCoord = tv.uv[tmpvertexId].uv;
 	mv.boneIndex.resize(tv.weights.size());
 	mv.boneWeight.resize(tv.weights.size());
 	mv.boneName = tv.boneName;
@@ -711,36 +649,51 @@ void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, i
 
 //頂点整合用関数
 //@return 整合用頂点番号
-int FbxLoader::AlignVertex(int vertexIndex, std::vector<Fbx::FbxVertex>& vertex)
+int FbxLoader::AlignVertexSameNormalUV(int vertexIndex, std::vector<Fbx::FbxVertex>& vertices)
 {
-	int refcount = mTmpVertices[vertexIndex].refcount++;
+	Fbx::TmpVertex& t_vertex = mTmpVertices[vertexIndex];
+	int refcount = t_vertex.refcount++;
 	if (refcount == 0)
 	{
-		StoreTmpVertexToModelVertex(vertex[vertexIndex], mTmpVertices[vertexIndex], refcount);
+		StoreTmpVertexToModelVertex(vertices[vertexIndex], t_vertex, refcount);
 		return vertexIndex;
 	}
 
 	for (int i = 0; i < refcount; ++i)
 	{
-		if (mTmpVertices[vertexIndex].normalandUV[i] == mTmpVertices[vertexIndex].normalandUV[refcount])
+		if (t_vertex.normal[i] == t_vertex.normal[refcount]
+			&& t_vertex.uv[i] == t_vertex.uv[refcount])
 		{
-			mTmpVertices[vertexIndex].normalandUV[refcount].vertexNo = mTmpVertices[vertexIndex].normalandUV[i].vertexNo;
-			StoreTmpVertexToModelVertex(vertex[mTmpVertices[vertexIndex].normalandUV[refcount].vertexNo], mTmpVertices[vertexIndex], refcount);
-			return mTmpVertices[vertexIndex].normalandUV[i].vertexNo;
+			int vertexNo = t_vertex.normal[i].vertexNo;
+			t_vertex.normal[refcount].vertexNo = vertexNo;
+			t_vertex.uv[refcount].vertexNo = vertexNo;
+			StoreTmpVertexToModelVertex(vertices[vertexNo], t_vertex, refcount);
+			return vertexNo;
 		}
 	}
 
+	int newVertexNo = static_cast<int>(mTmpVertices.size());
 	Fbx::TmpVertex v;
-	v.pos = mTmpVertices[vertexIndex].pos;
-	v.normalandUV.push_back(mTmpVertices[vertexIndex].normalandUV[refcount]);
+	v.pos = t_vertex.pos;
+	v.normal.push_back(t_vertex.normal[refcount]);
+	v.uv.push_back(t_vertex.uv[refcount]);
 	v.refcount = 1;
-	v.weights = mTmpVertices[vertexIndex].weights;
-	v.normalandUV[0].vertexNo = static_cast<int>(mTmpVertices.size());
-	v.boneName = mTmpVertices[vertexIndex].boneName;
-	mTmpVertices[vertexIndex].normalandUV[refcount].vertexNo = static_cast<int>(mTmpVertices.size());
+	v.weights = t_vertex.weights;
+	v.normal[0].vertexNo = newVertexNo;
+	v.normal[0].vertexNo = newVertexNo;
+	v.boneName = t_vertex.boneName;
+
+	t_vertex.normal[refcount].vertexNo = newVertexNo;
+	t_vertex.uv[refcount].vertexNo = newVertexNo;
 	mTmpVertices.push_back(v);
-	StoreTmpVertexToModelVertex(vertex[v.normalandUV[0].vertexNo], v, 0);
-	return v.normalandUV[0].vertexNo;
+
+	StoreTmpVertexToModelVertex(vertices[newVertexNo], v, 0);
+	return newVertexNo;
+}
+
+int FbxLoader::AlignVertexDiffNormalUV(int vertexIndex, std::vector<Fbx::FbxVertex>& vertex)
+{
+	return 0;
 }
 
 void FbxLoader::FixVertexInfo(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::FbxMesh* mesh)
@@ -783,24 +736,24 @@ void FbxLoader::FixVertexInfo(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::
 		case 3:
 			for (int i = 0; i < polygonsize; ++i)
 			{
-				indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertex(indexBuffer[pvi++], model->vertexesInfo.vertexes));
+				indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertexSameNormalUV(indexBuffer[pvi++], model->vertexesInfo.vertexes));
 			}
 
 			mats[materialId].effectIndexNum += 3;
 			break;
 		case 4:
-			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus1 = AlignVertex(indexBuffer[pvi], model->vertexesInfo.vertexes));
+			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus1 = AlignVertexSameNormalUV(indexBuffer[pvi], model->vertexesInfo.vertexes));
 
-			indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertex(indexBuffer[pvi + 1], model->vertexesInfo.vertexes));
+			indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertexSameNormalUV(indexBuffer[pvi + 1], model->vertexesInfo.vertexes));
 
-			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus2 = AlignVertex(indexBuffer[pvi + 2], model->vertexesInfo.vertexes));
+			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus2 = AlignVertexSameNormalUV(indexBuffer[pvi + 2], model->vertexesInfo.vertexes));
 
 
 			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus1);
 
 			indicesPerMaterial[*matIDPerPolyItr].push_back(indexplus2);
 
-			indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertex(indexBuffer[pvi + 3], model->vertexesInfo.vertexes));
+			indicesPerMaterial[*matIDPerPolyItr].push_back(AlignVertexSameNormalUV(indexBuffer[pvi + 3], model->vertexesInfo.vertexes));
 
 			mats[materialId].effectIndexNum += 6;
 
@@ -869,8 +822,6 @@ void FbxLoader::FixVertexInfo(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::
 
 void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype, NodeTree& parentTree, std::function<void(fbxsdk::FbxNode*)> hitFunction)
 {
-	fbxsdk::FbxTime t = 0;
-
 	int childNum = parent->GetChildCount();
 	
 	for (int i = 0, skipCount = 0; i < childNum; ++i)
@@ -880,6 +831,7 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 		if (nodeAttribute == nullptr)
 		{
 			++skipCount;
+			StackSearchNode(childNode, searchtype, parentTree, hitFunction);
 			continue;
 		}
 		
@@ -1239,7 +1191,7 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	}
 	if (mMeshDatas.size() == 0)
 	{
-		MessageBox(nullptr, L"メッシュがないよ", L"FBXModelLoader", MB_OK);
+		MessageBox(nullptr, L"Error : メッシュが見つかりません", L"FBXModelLoader", MB_OK);
 		return nullptr;
 	}
 
@@ -1258,8 +1210,14 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	}
 
 	LoadSkeletons();
-	
-	return ConnectMeshes(models);;
+
+	auto rtn = ConnectMeshes(models);
+
+	DestroyScence(mScene);
+	mManager->Destroy();
+	ClearTmpInfo();
+
+	return rtn;
 }
 
 void FbxLoader::LoadCurve(Fbx::AnimCurveData& curveData)
@@ -1628,6 +1586,14 @@ void FbxLoader::LoadMatarial(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::F
 		}
 	}
 
+	if (materialcount == 0)
+	{
+		mMaterialSets.resize(1);
+		mMaterialSets[0].polygonCount = polygonCount;
+		mMaterialIDPerPolygon.resize(polygonCount);
+		std::fill(mMaterialIDPerPolygon.begin(), mMaterialIDPerPolygon.end(), 0);
+	}
+
 	model->materials.resize(materialcount);
 	for (int i = 0; i < materialcount; ++i)
 	{
@@ -1649,6 +1615,13 @@ void FbxLoader::LoadMatarial(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::F
 				}
 			}
 		}
+	}
+
+	if (model->materials.size() == 0)
+	{
+		Fbx::FbxMaterial fbxmat;
+		model->materials.resize(1);
+		model->materials[0] = fbxmat;
 	}
 
 	//EBD store texture path

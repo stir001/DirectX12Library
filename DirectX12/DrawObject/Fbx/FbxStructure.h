@@ -95,6 +95,7 @@ namespace Fbx
 
 	struct FbxMaterial
 	{
+		FbxMaterial();
 		unsigned int effectIndexNum;
 
 		MaterialElements<DirectX::XMFLOAT4> diffuse;
@@ -202,27 +203,43 @@ namespace Fbx
 		int boneNo;
 	};
 
-	struct TmpNormalUV
+	struct TmpUV
 	{
-		DirectX::XMFLOAT3 normal;
 		DirectX::XMFLOAT2 uv;
 		int vertexNo;			//仮想的な頂点番号
 		std::string uvSetName;
-		bool operator ==(const TmpNormalUV& rval)
+		bool operator ==(const TmpUV& rval)
 		{
-			return (this->normal.x == rval.normal.x &&
-				this->normal.y == rval.normal.y &&
-				this->normal.z == rval.normal.z &&
+			return (
 				this->uv.x == rval.uv.x &&
 				this->uv.y == rval.uv.y);
 		}
-		TmpNormalUV() :normal{ 0,0,0 }, uv{ 0, 0 }, vertexNo(0){};
+		TmpUV() : uv{ 0, 0 }, vertexNo(0){};
+		TmpUV(const DirectX::XMFLOAT2& uv, const std::string uvSet)
+			: uv(uv), uvSetName(uvSet), vertexNo(0){};
+	};
+
+	struct TmpNormal
+	{
+		DirectX::XMFLOAT3 normal;
+		int vertexNo;			//仮想的な頂点番号
+		bool operator ==(const TmpNormal& rval)
+		{
+			return (
+				this->normal.x == rval.normal.x &&
+				this->normal.y == rval.normal.y &&
+				this->normal.z == rval.normal.z);
+		}
+		TmpNormal() : normal{ 0,0,0 }, vertexNo(0){};
+		TmpNormal(const DirectX::XMFLOAT3& normal)
+			: normal(normal), vertexNo(0) {};
 	};
 
 	struct TmpVertex
 	{
 		DirectX::XMFLOAT3 pos;
-		std::vector<TmpNormalUV> normalandUV;
+		std::vector<TmpNormal> normal;
+		std::vector<TmpUV> uv;
 		std::vector<TmpWeight> weights;
 		std::vector<std::string> boneName;
 		int refcount;
