@@ -105,7 +105,7 @@ private:
 
 	static Dx12Ctrl* inst;
 
-	LRESULT(*mWndProc)(HWND, UINT, WPARAM, LPARAM);
+	LRESULT (*mWndProc)(HWND, UINT, WPARAM, LPARAM);
 	HINSTANCE mWinHInstance;
 	int mWndHeight;
 	int mWndWidth;

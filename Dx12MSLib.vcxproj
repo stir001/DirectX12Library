@@ -97,6 +97,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -117,6 +118,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,6 +141,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;$(DIRECTXTEX_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,6 +166,7 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>$(BULLET_DIR)\src;$(FBXSDK_DIR)include;$(DIRECTXTEX_DIR);$(SolutionDir)DirectX12Library\DirectX12;$(SolutionDir)DirectX12Library;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -214,6 +218,7 @@
     <ClInclude Include="DirectX12\DrawObject\DrawController3D.h" />
     <ClInclude Include="DirectX12\DrawObject\DrawObjectController.h" />
     <ClInclude Include="DirectX12\DrawObject\DrawObjectLoader.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxConverter.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxLoader.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModel.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelController.h" />
@@ -223,6 +228,8 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxsdkHaveStruct.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxStructure.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FMDdata.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FMDLoader.h" />
     <ClInclude Include="DirectX12\DrawObject\Image\Image3DController.h" />
     <ClInclude Include="DirectX12\DrawObject\Image\ImageController.h" />
     <ClInclude Include="DirectX12\DrawObject\Image\ImageControllerStructure.h" />
@@ -350,6 +357,7 @@
     <ClCompile Include="DirectX12\DrawObject\DrawController3D.cpp" />
     <ClCompile Include="DirectX12\DrawObject\DrawObjectController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\DrawObjectLoader.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxConverter.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxLoader.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModel.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelController.cpp" />
@@ -358,6 +366,8 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionData.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxStructure.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdatacpp.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\Image3DController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\ImageController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\ImageControllerStructure.cpp" />

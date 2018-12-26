@@ -108,7 +108,7 @@ std::shared_ptr<TextureObject> TextureLoader::CreateSingleColorTexture(const Dir
 		static_cast<unsigned char>(color.y * maxValue),
 		static_cast<unsigned char>(color.z * maxValue),
 		static_cast<unsigned char>(color.w * maxValue) };
-	std::string texName = "ColorTexture";
+	std::string texName = "SingleColorTexture";
 	for (int i = 0; i < colorNum; ++i)
 	{
 		texName += ConvertNumberToString(uc_color[i]);

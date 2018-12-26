@@ -8,6 +8,8 @@
 
 class TextureObject;
 
+struct FMDVertex;
+
 namespace Fbx
 {
 	struct FbxIndexes {
@@ -35,6 +37,7 @@ namespace Fbx
 		std::vector<int> boneIndex;
 		std::vector<float> boneWeight;
 		std::vector<std::string> boneName;
+		FbxVertex operator=(const FMDVertex& v);
 	};
 
 	struct FbxVertexesInfo {
@@ -215,8 +218,8 @@ namespace Fbx
 				this->uv.y == rval.uv.y);
 		}
 		TmpUV() : uv{ 0, 0 }, vertexNo(0){};
-		TmpUV(const DirectX::XMFLOAT2& uv, const std::string uvSet)
-			: uv(uv), uvSetName(uvSet), vertexNo(0){};
+		TmpUV(const DirectX::XMFLOAT2& uv, const std::string uvSet, int vertexNo)
+			: uv(uv), uvSetName(uvSet), vertexNo(vertexNo){};
 	};
 
 	struct TmpNormal

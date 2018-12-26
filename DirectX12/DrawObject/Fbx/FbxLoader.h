@@ -125,6 +125,8 @@ private:
 	DirectX::XMFLOAT4X4 mGeometryOffset;
 
 	std::vector<Fbx::TmpVertex> mTmpVertices;
+	int mNormalMappingMode;
+	int mUVMappingMode;
 	std::vector<int> mTmpIndexes;
 	std::map<std::string,Fbx::TmpBone> mBones;
 	std::vector<Fbx::FbxSkeleton> mSkeletons;

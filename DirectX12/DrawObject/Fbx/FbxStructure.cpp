@@ -162,3 +162,8 @@ void Fbx::FbxMaterial::SetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type, Fbx::Fbx
 		break;
 	}
 }
+
+//Fbx::FbxVertex Fbx::FbxVertex::operator=(const FMDVertex& v)
+//{
+//	pos = v.pos;
+//}

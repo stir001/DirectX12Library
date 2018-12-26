@@ -34,6 +34,8 @@
 
 Dx12Ctrl* Dx12Ctrl::inst = nullptr;
 
+LRESULT(*winProc)(HWND, UINT, WPARAM, LPARAM);
+
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -56,7 +58,7 @@ HRESULT Dx12Ctrl::ReportLiveObject()
 
 void Dx12Ctrl::SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam))
 {
-	mWndProc = proc;
+	winProc = proc;
 }
 
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}
@@ -64,6 +66,7 @@ Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,
 ,result(S_OK),mFenceValue(0), mWndProc(WindowProcedure)
 ,mWindowName("DirectX12")
 {
+	winProc = WindowProcedure;
 	setlocale(LC_ALL, "japanese");
 }
 
@@ -84,6 +87,7 @@ Microsoft::WRL::ComPtr<ID3D12Device>& Dx12Ctrl::GetDev()
 
 bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 {
+	mWinHInstance = winHInstance;
 	InitWindowCreate();
 
 #ifdef _DEBUG
@@ -94,9 +98,7 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 		debug->Release();
 	}
 #endif
-	//
-	mWinHInstance = winHInstance;
-	//
+
 
 	D3D_FEATURE_LEVEL levels[] = {
 		D3D_FEATURE_LEVEL_12_1,
@@ -233,7 +235,7 @@ void Dx12Ctrl::InitWindowCreate()
 	ToWChar(&buff, size, strName.data(), size);
 
 	WNDCLASSEX w = {};
-	w.lpfnWndProc = mWndProc;
+	w.lpfnWndProc = winProc;
 	w.lpszClassName = buff;
 	w.hInstance = mWinHInstance;
 	w.hIcon = LoadIcon(w.hInstance, buff);

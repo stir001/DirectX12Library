@@ -537,6 +537,15 @@
     <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.h">
       <Filter>DirectX12\PipelineState\Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxConverter.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FMDdata.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FMDLoader.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -925,6 +934,15 @@
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.cpp">
       <Filter>DirectX12\PipelineState\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxConverter.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdatacpp.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
