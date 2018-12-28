@@ -12,3 +12,4 @@
 /bullet/Action/TestAction.h
 /DirectX12/Shader/FbxNormalmapShader.hlsl
 /.vs/Dx12MSLib/v15/.suo
+/Shader/InterFacesTest.hlsl
