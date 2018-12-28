@@ -41,9 +41,13 @@ PhysicsSystem::PhysicsSystem()
 	//d—Í‚ðÝ’è‚·‚é
 	mWorld->setGravity(btVector3(0.f, -9.8f, 0.f));	
 
-	mDebugDrawer = std::make_shared<BulletDebugDrawDx>(Dx12Ctrl::Instance().GetDev());
-	mDebugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe);
-	mWorld->setDebugDrawer(mDebugDrawer.get());
+	auto& device = Dx12Ctrl::Instance().GetDev();
+	if (device != nullptr)
+	{
+		mDebugDrawer = std::make_shared<BulletDebugDrawDx>(device);
+		mDebugDrawer->setDebugMode(btIDebugDraw::DebugDrawModes::DBG_DrawWireframe);
+		mWorld->setDebugDrawer(mDebugDrawer.get());
+	}
 
 	mTime = clock();
 }

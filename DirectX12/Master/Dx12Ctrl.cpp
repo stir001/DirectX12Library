@@ -32,7 +32,7 @@
 #include <crtdbg.h>
 #endif
 
-Dx12Ctrl* Dx12Ctrl::inst = nullptr;
+Dx12Ctrl* Dx12Ctrl::mInstance = nullptr;
 
 LRESULT(*winProc)(HWND, UINT, WPARAM, LPARAM);
 
@@ -63,6 +63,7 @@ void Dx12Ctrl::SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPA
 
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}
 ,mCmdAllocator(nullptr),mCmdList(nullptr),mCmdQueue(nullptr),mFactory(nullptr)
+,mDev(nullptr), mCameraHolder(nullptr)
 ,result(S_OK),mFenceValue(0), mWndProc(WindowProcedure)
 ,mWindowName("DirectX12")
 {
