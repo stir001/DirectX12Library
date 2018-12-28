@@ -366,7 +366,7 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionData.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxStructure.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdatacpp.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdata.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\Image3DController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\ImageController.cpp" />

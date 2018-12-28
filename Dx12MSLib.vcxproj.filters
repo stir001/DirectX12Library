@@ -938,10 +938,10 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxConverter.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdatacpp.cpp">
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp">
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdata.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
   </ItemGroup>

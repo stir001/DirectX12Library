@@ -9,6 +9,7 @@
 class TextureObject;
 
 struct FMDVertex;
+struct FMDSkeleton;
 
 namespace Fbx
 {
@@ -159,9 +160,17 @@ namespace Fbx
 
 	struct FbxSkeleton {
 		std::string name;
+		unsigned int parentIndex;
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
+		FbxSkeleton() :name("")
+			, parentIndex(INT_MAX)
+			, pos{ 0,0,0,1 }
+			, rotation{ 0,0,0,1 }
+			, scale{ 1,1,1,1 } 
+		{}
+		Fbx::FbxSkeleton operator=(const FMDSkeleton& skl);
 	};
 
 	struct FbxModelData

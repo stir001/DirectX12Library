@@ -34,6 +34,7 @@ void FbxConverter::ConvertFile()
 {
 	if (mIsConverting == false && mFilePath.size() != 0)
 	{
+		FbxLoader::Instance().ReleaseAllModel();
 		mConvertModel = nullptr;
 		mIsConverting = true;
 		(this->*mConvertFunc)();
@@ -45,11 +46,7 @@ void FbxConverter::ConvertFile()
 void FbxConverter::ConvertFmd()
 {
 	auto fmd = mFmdLoader->LoadFMD(mFilePath);
-	auto fbxmodeldata = std::make_shared<Fbx::FbxModelData>();
-	fbxmodeldata->modelPath = mFilePath;
-	fbxmodeldata->indexes.indexCount = fmd.indexNum;
-	std::copy(fbxmodeldata->indexes.indexes.begin(), fbxmodeldata->indexes.indexes.end(), fmd.indices.begin());
-	fbxmodeldata->vertexesInfo.vertexes;
+	CreateController(fmd);
 }
 
 void FbxConverter::SetLoadFilePath(const std::string& path)
@@ -104,7 +101,7 @@ void FbxConverter::ConvertFbx()
 
 	WriteFMDFile(modelData);
 
-	GetConvertFileName(modelData->modelPath);
+	//GetConvertFileName(modelData->modelPath);
 
 	CreateController(modelData);
 }
@@ -112,6 +109,15 @@ void FbxConverter::ConvertFbx()
 void FbxConverter::CreateController(std::shared_ptr<Fbx::FbxModelData> modelData)
 {
 	auto model = mDataConverter->ConvertToFbxModel(modelData);
+	auto cmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
+	auto device = Dx12Ctrl::Instance().GetDev();
+	mConvertModel = std::make_shared<FbxModelController>(model, device, cmdList, mPipelineState, mRootsignature);
+	mConvertModel->SetLight(mWorldLight);
+}
+
+void FbxConverter::CreateController(FMDFileData & data)
+{
+	auto model = mDataConverter->ConvertToFbxModel(data);
 	auto cmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
 	auto device = Dx12Ctrl::Instance().GetDev();
 	mConvertModel = std::make_shared<FbxModelController>(model, device, cmdList, mPipelineState, mRootsignature);
@@ -242,21 +248,18 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 	stream.write(reinterpret_cast<const char*>(&skeletonNum), sizeof(skeletonNum));
 	FMDSkeleton s;
 	int dataSize = sizeof(s.pos) + sizeof(s.rotation) + sizeof(s.scale) + sizeof(s.parentIndex);
-	auto writeFunc = [&stream, dataSize](FMDSkeleton& s, const Fbx::FbxSkeleton& skl, int parentIndex)
+	auto writeFunc = [&stream, dataSize](FMDSkeleton& s, const Fbx::FbxSkeleton& skl)
 	{
 		s = skl;
-		s.parentIndex = parentIndex;
+		s.parentIndex = skl.parentIndex;
 		stream.write(reinterpret_cast<const char*>(&s), dataSize);
 		s.nameSize = static_cast<int>(s.name.size());
 		stream.write(reinterpret_cast<const char*>(&s.nameSize), sizeof(s.nameSize));
 		stream.write(reinterpret_cast<const char*>(s.name.data()), sizeof(char) * s.nameSize);
 	};
 
-	writeFunc(s, skeletons[0], INT_MAX);
-	writeFunc(s, skeletons[1], 0);
-	for (int i = 2; i < skeletonNum; ++i)
+	for (int i = 0; i < skeletons.size(); ++i)
 	{
-		auto& skl = skeletons[i];
-		writeFunc(s, skl, sklIndices[(i - 2) * 2]);
+		writeFunc(s, skeletons[i]);
 	}
 }

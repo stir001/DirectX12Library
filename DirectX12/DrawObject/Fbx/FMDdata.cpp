@@ -47,27 +47,27 @@ std::string FMDTexture::GetAllData() const
 
 FMDTexture FMDTexture::operator=(const Fbx::FbxMaterial & mat)
 {
-	diffuse = mat.diffuse.textures.size() > 0 ? mat.diffuse.textures[0].textureName : "";
+	diffuse = mat.diffuse.textures.size() > 0 ? mat.diffuse.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::diffuse)] = static_cast<int>(diffuse.size());
-	diffuseFactor = mat.diffuse.textures.size() > 0 ? mat.diffuse.textures[0].textureName : "";
+	diffuseFactor = mat.diffuse.textures.size() > 0 ? mat.diffuse.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::diffuse)] = static_cast<int>(diffuse.size());
-	ambient = mat.ambient.textures.size() > 0 ? mat.ambient.textures[0].textureName : "";
+	ambient = mat.ambient.textures.size() > 0 ? mat.ambient.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::ambient)] = static_cast<int>(ambient.size());
-	ambientFactor = mat.ambientFactor.textures.size() > 0 ? mat.ambientFactor.textures[0].textureName : "";
+	ambientFactor = mat.ambientFactor.textures.size() > 0 ? mat.ambientFactor.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::ambientFactor)] = static_cast<int>(ambientFactor.size());
-	specular = mat.specular.textures.size() > 0 ? mat.specular.textures[0].textureName : "";
+	specular = mat.specular.textures.size() > 0 ? mat.specular.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::specular)] = static_cast<int>(specular.size());
-	specularFactor = mat.specularFactor.textures.size() > 0 ? mat.specularFactor.textures[0].textureName : "";
+	specularFactor = mat.specularFactor.textures.size() > 0 ? mat.specularFactor.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::specularFactor)] = static_cast<int>(specularFactor.size());
-	shininess = mat.shininess.textures.size() > 0 ? mat.shininess.textures[0].textureName : "";
+	shininess = mat.shininess.textures.size() > 0 ? mat.shininess.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::shininess)] = static_cast<int>(shininess.size());
-	emissive = mat.emissive.textures.size() > 0 ? mat.emissive.textures[0].textureName : "";
+	emissive = mat.emissive.textures.size() > 0 ? mat.emissive.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::emissive)] = static_cast<int>(emissive.size());
-	emissiveFactor = mat.emissiveFactor.textures.size() > 0 ? mat.emissiveFactor.textures[0].textureName : "";
+	emissiveFactor = mat.emissiveFactor.textures.size() > 0 ? mat.emissiveFactor.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::emissiveFactor)] = static_cast<int>(emissiveFactor.size());
-	transparentColor = mat.transparentColor.textures.size() > 0 ? mat.transparentColor.textures[0].textureName : "";
+	transparentColor = mat.transparentColor.textures.size() > 0 ? mat.transparentColor.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::transparentColor)] = static_cast<int>(transparentColor.size());
-	transparencyFactor = mat.transparencyFactor.textures.size() > 0 ? mat.transparencyFactor.textures[0].textureName : "";
+	transparencyFactor = mat.transparencyFactor.textures.size() > 0 ? mat.transparencyFactor.textures[0].texturePath : "";
 	pathSizeTable[static_cast<int>(FMDTextureTable::transparencyFactor)] = static_cast<int>(transparencyFactor.size());
 	return *this;
 }

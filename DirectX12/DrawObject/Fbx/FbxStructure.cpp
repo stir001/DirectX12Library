@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FbxStructure.h"
 #include "Texture/TextureLoader.h"
+#include "FMDdata.h"
 
 
 Fbx::FbxMaterial::FbxMaterial()
@@ -163,7 +164,27 @@ void Fbx::FbxMaterial::SetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type, Fbx::Fbx
 	}
 }
 
-//Fbx::FbxVertex Fbx::FbxVertex::operator=(const FMDVertex& v)
-//{
-//	pos = v.pos;
-//}
+Fbx::FbxVertex Fbx::FbxVertex::operator=(const FMDVertex& v)
+{
+	pos = v.pos;
+	normal = v.normal;
+	texCoord = v.texCoord;
+	boneIndex.resize(v.effectBoneNum);
+	boneWeight.resize(v.effectBoneNum);
+	for (int i = 0; i < v.effectBoneNum; ++i)
+	{
+		boneIndex[i] = v.bones[i].boneIndex;
+		boneWeight[i] = v.bones[i].boneWeight;
+	}
+	return *this;
+}
+
+Fbx::FbxSkeleton Fbx::FbxSkeleton::operator=(const FMDSkeleton & skl)
+{
+	this->name = skl.name;
+	this->parentIndex = skl.parentIndex;
+	this->pos = skl.pos;
+	this->rotation = skl.rotation;
+	this->scale = skl.scale;
+	return *this;
+}

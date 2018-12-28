@@ -80,4 +80,6 @@ DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOA
 DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& f44, const float scaler);
 
 bool operator==(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
+
+DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
 #endif

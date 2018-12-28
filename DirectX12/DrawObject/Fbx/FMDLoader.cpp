@@ -17,6 +17,7 @@ FMDFileData FMDLoader::LoadFMD(const std::string& fmdPath)
 	char header[4];
 	fileStream.read(header, sizeof(char) * 4);
 	FMDFileData fmdData;
+	fmdData.filepath = fmdPath;
 	LoadVertices(fileStream, fmdData);
 	LoadIndices(fileStream, fmdData);
 	LoadMaterials(fileStream, fmdData);

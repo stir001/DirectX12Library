@@ -16,6 +16,7 @@ class FbxModelController;
 class FbxMotionData;
 class FbxMotionConverter;
 class LightObject;
+class FMDLoader;
 
 namespace Fbx {
 	struct FbxModelData;
@@ -78,6 +79,7 @@ public:
 		return *mInstance;
 	};
 	std::shared_ptr<FbxModelController>	LoadMesh(const std::string& modelPath);
+	std::shared_ptr<FbxModelController>	LoadFMD(const std::string& modelPath);
 
 	void ReleaseModel(const std::string& modelPath);
 
@@ -116,6 +118,7 @@ private:
 	
 	std::shared_ptr<FbxModelDataConverter> mModelConverter;
 	std::shared_ptr<FbxMotionConverter> mMotionConverter;
+	std::shared_ptr<FMDLoader> mFmdLoader;
 
 	static FbxLoader* mInstance;
 	std::vector<fbxsdk::FbxMesh*> mMeshDatas;
@@ -179,5 +182,7 @@ private:
 	void LoadSkeletons();
 
 	std::vector<fbxsdk::FbxTime> ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId, std::vector<fbxsdk::FbxNode*>& linkNode);
+
+	std::shared_ptr<FbxModelController> CreateController(std::shared_ptr<Fbx::FbxModel>& model);
 };
 

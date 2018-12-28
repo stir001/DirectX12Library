@@ -10,10 +10,11 @@
 #include "Util/XMFloatOperators.h"
 #include "Light/DirectionalLight.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
-#include "d3dx12.h"
 #include "FbxsdkHaveStruct.h"
 #include "PipelineState/FbxPipelineState.h"
 #include "Rootsignature/FbxRootSignature.h"
+#include "FMDLoader.h"
+#include "FMDdata.h"
 
 #include <fbxsdk.h>
 #include <memory>
@@ -23,7 +24,6 @@
 #include <atlstr.h>
 
 FbxLoader* FbxLoader::mInstance = nullptr;
-
 
 void StoreFbxMatrixToXMMatrix(const fbxsdk::FbxAMatrix& fmat, DirectX::XMMATRIX& xmmat);
 
@@ -120,8 +120,7 @@ std::shared_ptr<FbxModelController> FbxLoader::LoadMesh(const std::string& model
 	auto itr = mModelDatas.find(modelPath);
 	if (itr != mModelDatas.end())
 	{
-		rtn = std::make_shared<FbxModelController>(itr->second, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
-		rtn->SetLight(mLight);
+		rtn = CreateController(itr->second);
 		return rtn;
 	}
 
@@ -129,9 +128,23 @@ std::shared_ptr<FbxModelController> FbxLoader::LoadMesh(const std::string& model
 
 	std::shared_ptr<Fbx::FbxModel> model(mModelConverter->ConvertToFbxModel(modeldata));
 	mModelDatas[modelPath] = model;
-	rtn = std::make_shared<FbxModelController>(model, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
-	rtn->SetLight(mLight);
+	rtn = CreateController(model);
 
+	return rtn;
+}
+
+std::shared_ptr<FbxModelController> FbxLoader::LoadFMD(const std::string & modelPath)
+{
+	auto itr = mModelDatas.find(modelPath);
+	if (itr != mModelDatas.end())
+	{
+		auto rtn = CreateController(itr->second);
+		return rtn;
+	}
+	auto data = mFmdLoader->LoadFMD(modelPath);
+	auto model = mModelConverter->ConvertToFbxModel(data);
+	auto rtn = CreateController(model);
+	mModelDatas[modelPath] = model;
 	return rtn;
 }
 
@@ -155,7 +168,7 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 	if (rootNode) {
-		FbxAMatrix dummy;
+		fbxsdk::FbxAMatrix dummy;
 		dummy.SetIdentity();
 		NodeTree rNode;
 		rNode.nodeName = rootNode->GetName();
@@ -179,11 +192,11 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 
 	StackNode(mScene->GetRootNode(), fbxsdk::FbxNodeAttribute::eCamera, cameraArray);
 
-	FbxVector4 t0 = mNodeDatas[0]->GetGeometricTranslation(fbxsdk::FbxNode::eSourcePivot);
-	FbxVector4 r0 = mNodeDatas[0]->GetGeometricRotation(fbxsdk::FbxNode::eSourcePivot);
-	FbxVector4 s0 = mNodeDatas[0]->GetGeometricScaling(fbxsdk::FbxNode::eSourcePivot);
+	fbxsdk::FbxVector4 t0 = mNodeDatas[0]->GetGeometricTranslation(fbxsdk::FbxNode::eSourcePivot);
+	fbxsdk::FbxVector4 r0 = mNodeDatas[0]->GetGeometricRotation(fbxsdk::FbxNode::eSourcePivot);
+	fbxsdk::FbxVector4 s0 = mNodeDatas[0]->GetGeometricScaling(fbxsdk::FbxNode::eSourcePivot);
 	DirectX::XMMATRIX xmMat;
-	StoreFbxMatrixToXMMatrix(FbxAMatrix(t0, r0, s0), xmMat);
+	StoreFbxMatrixToXMMatrix(fbxsdk::FbxAMatrix(t0, r0, s0), xmMat);
 	mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
 
 
@@ -555,7 +568,7 @@ void FbxLoader::LoadVertexUV(fbxsdk::FbxMesh* mesh)
 	//END vertex uv load
 }
 
-void SkeletonStore(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
+void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.name = tree.nodeName;
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
@@ -567,23 +580,22 @@ void CreateskeletonData(const NodeTree& skeletonTree,
 	std::vector<Fbx::FbxSkeleton>& skeletons,
 	unsigned int& skeletonIndex)
 {
-	unsigned int parentIndex = skeletonIndex++;
-	//親ボーンの処理
 	Fbx::FbxSkeleton skl;
-	SkeletonStore(skl, skeletonTree);
-	skeletons[parentIndex] = skl;
+	skl.parentIndex = skeletonIndex;
 
 	//子ボーンの処理とインデックスの作成
-	for (unsigned int j = 0; j < static_cast<unsigned int>(skeletonTree.children.size()); ++j)
+	for (unsigned int i = 0; i < static_cast<unsigned int>(skeletonTree.children.size()); ++i)
 	{
+		StoreSkeleton(skl, skeletonTree.children[i]);
+		skeletons[++skeletonIndex] = skl;
 		//インデックスの作成
-		if (skl.name != "" && skl.name != "root")
+		if (skeletonTree.nodeName != "" && skeletonTree.nodeName != "root")
 		{
-			skeletonIndices.push_back(parentIndex);
+			skeletonIndices.push_back(skl.parentIndex);
 			skeletonIndices.push_back(skeletonIndex);
 		}
 
-		CreateskeletonData(skeletonTree.children[j], skeletonIndices, skeletons, skeletonIndex);
+		CreateskeletonData(skeletonTree.children[i], skeletonIndices, skeletons, skeletonIndex);
 	}
 }
 
@@ -966,12 +978,23 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 			/*auto globalMatrix = childNode->EvaluateLocalTransform().Inverse();
 			t_translation = globalMatrix.MultT(fbxsdk::FbxVector4(t_translation.mData[0], t_translation.mData[1], t_translation.mData[2]));*/
 			childNodeTree.translation = { static_cast<float>(t_translation.mData[0]), static_cast<float>(t_translation.mData[1]) , static_cast<float>(t_translation.mData[2]) };
-			childNodeTree.translation += parentTree.translation;
+			//childNodeTree.translation += parentTree.translation;
 			auto t_rotation = childNode->LclRotation.Get();
 			childNodeTree.rotation = { static_cast<float>(t_rotation.mData[0]), static_cast<float>(t_rotation.mData[1]), static_cast<float>(t_rotation.mData[2]) };
-			childNodeTree.rotation += parentTree.rotation;
+			//childNodeTree.rotation += parentTree.rotation;
 			auto t_scale = childNode->LclScaling.Get();
 			childNodeTree.scale = { static_cast<float>(t_scale.mData[0]), static_cast<float>(t_scale.mData[1]), static_cast<float>(t_scale.mData[2]) };
+
+			fbxsdk::FbxAMatrix mat(t_translation, t_rotation, t_scale);
+			DirectX::XMMATRIX xmat;
+			StoreFbxMatrixToXMMatrix(mat, xmat);
+			DirectX::XMFLOAT4X4 mxf44;
+			DirectX::XMStoreFloat4x4(&mxf44, xmat);
+			//DirectX::XMFLOAT4 parentpos = { parentTree.translation.x, parentTree.translation.y, parentTree.translation.z, 1.0f };
+			DirectX::XMFLOAT4 origin = { 0,0,0,1 };
+			childNodeTree.globalPosition = mxf44 * parentTree.globalPosition;
+			DirectX::XMFLOAT4 childpos = origin * childNodeTree.globalPosition;
+			childNodeTree.translation = { childpos.x, childpos.y, childpos.z };
 
 			parentTree.children.push_back(childNodeTree);
 			hitFunction(childNode);
@@ -1141,7 +1164,7 @@ void FbxLoader::LoadAnimationMain(fbxsdk::FbxScene* scene, unsigned int meshId)
 
 	fbxsdk::FbxMatrix poseMatrix = mPose->GetMatrix(nodeIndex);
 
-	FbxAMatrix poseAMatrix;
+	fbxsdk::FbxAMatrix poseAMatrix;
 	memcpy((double*)poseAMatrix, (double*)poseMatrix, sizeof(poseMatrix.mData));
 	DirectX::XMMATRIX xmMat;
 	StoreFbxMatrixToXMMatrix(poseAMatrix, xmMat);
@@ -1188,10 +1211,10 @@ std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* sc
 	{
 		fbxsdk::FbxAnimStack* pAnimStack = scene->GetMember<fbxsdk::FbxAnimStack>(stack);
 
-		int numAnimLayers = pAnimStack->GetMemberCount<FbxAnimLayer>();
+		int numAnimLayers = pAnimStack->GetMemberCount<fbxsdk::FbxAnimLayer>();
 		for (int layer = 0; layer < numAnimLayers; ++layer)
 		{
-			FbxAnimLayer* pAnimLayer = pAnimStack->GetMember<FbxAnimLayer>(layer);
+			fbxsdk::FbxAnimLayer* pAnimLayer = pAnimStack->GetMember<fbxsdk::FbxAnimLayer>(layer);
 
 			unsigned int defomerCount = mMeshDatas[meshId]->GetDeformerCount(FbxDeformer::eSkin);
 			for (unsigned int deformer = 0; deformer < defomerCount; ++deformer)
@@ -1283,6 +1306,13 @@ std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* sc
 	return times;
 }
 
+std::shared_ptr<FbxModelController> FbxLoader::CreateController(std::shared_ptr<Fbx::FbxModel>& model)
+{
+	auto rtn = std::make_shared<FbxModelController>(model, Dx12Ctrl::Instance().GetDev(), mCmdList, mPipelinestate, mRootsignature);
+	rtn->SetLight(mLight);
+	return rtn;
+}
+
 std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & modelPath)
 {
 	if (!LoaderInitializie(modelPath))
@@ -1294,7 +1324,7 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 
 	if (rootNode) {
-		FbxAMatrix dummy;
+		fbxsdk::FbxAMatrix dummy;
 		dummy.SetIdentity();
 		NodeTree rNode;
 		rNode.nodeName = rootNode->GetName();
@@ -1758,6 +1788,7 @@ void FbxLoader::LoadSkeletons()
 	//START skeleton Load
 	fbxsdk::FbxNode* root = mScene->GetRootNode();
 	NodeTree skeletonTree = {};
+	DirectX::XMStoreFloat4x4(&skeletonTree.globalPosition, DirectX::XMMatrixIdentity());
 	std::vector<fbxsdk::FbxNode*> skeletonNode;
 	StackSearchNode(root, fbxsdk::FbxNodeAttribute::eSkeleton, skeletonTree, [&skeletonNode](fbxsdk::FbxNode* node) {
 		skeletonNode.push_back(node);

@@ -10,6 +10,7 @@
 #include "Util/XMFloatOperators.h"
 #include "Util/Util.h"
 #include "Texture/TextureLoader.h"
+#include "FMDdata.h"
 
 using namespace Fbx;
 
@@ -44,6 +45,121 @@ std::shared_ptr<FbxModel> FbxModelDataConverter::ConvertToFbxModel(std::shared_p
 	ConvertBone(dev);
 	ConvertSkeletons(dev);
 	return model;
+}
+
+std::shared_ptr<Fbx::FbxModel> FbxModelDataConverter::ConvertToFbxModel(FMDFileData & data)
+{
+	auto fbxmodeldata = std::make_shared<Fbx::FbxModelData>();
+	fbxmodeldata->modelPath = data.filepath;
+	fbxmodeldata->indexes.indexCount = data.indexNum;
+	fbxmodeldata->indexes.indexes.resize(data.indexNum);
+	std::copy(data.indices.begin(), data.indices.end(), fbxmodeldata->indexes.indexes.begin());
+	fbxmodeldata->vertexesInfo.vertexes.resize(data.vertexNum);
+	std::copy(data.vertices.begin(), data.vertices.end(), fbxmodeldata->vertexesInfo.vertexes.begin());
+	fbxmodeldata->materials.resize(data.materialNum);
+	//auto relativePath = GetRelativePath(mFilePath);
+	for (int i = 0; i < data.materialNum; ++i)
+	{
+		fbxmodeldata->materials[i].effectIndexNum = data.materials[i].effectIndexNum;
+		fbxmodeldata->materials[i].diffuse.element = data.materials[i].diffuse;
+		if (data.textures[i].diffuse.size() != 0)
+		{
+			fbxmodeldata->materials[i].diffuse.textures.resize(1);
+			fbxmodeldata->materials[i].diffuse.textures[0].textureName = (data.textures[i].diffuse);
+			fbxmodeldata->materials[i].diffuse.textures[0].texturePath = (data.textures[i].diffuse);
+		}
+
+		fbxmodeldata->materials[i].diffuseFactor.element = data.materials[i].diffuseFactor;
+		if (data.textures[i].diffuseFactor.size() != 0)
+		{
+			fbxmodeldata->materials[i].diffuseFactor.textures.resize(1);
+			fbxmodeldata->materials[i].diffuseFactor.textures[0].textureName = (data.textures[i].diffuseFactor);
+			fbxmodeldata->materials[i].diffuseFactor.textures[0].texturePath = (data.textures[i].diffuseFactor);
+		}
+
+		fbxmodeldata->materials[i].ambient.element = data.materials[i].ambient;
+		if (data.textures[i].ambient.size() != 0)
+		{
+			fbxmodeldata->materials[i].ambient.textures.resize(1);
+			fbxmodeldata->materials[i].ambient.textures[0].textureName = (data.textures[i].ambient);
+			fbxmodeldata->materials[i].ambient.textures[0].texturePath = (data.textures[i].ambient);
+		}
+
+		fbxmodeldata->materials[i].ambientFactor.element = data.materials[i].ambientFactor;
+		if (data.textures[i].ambientFactor.size() != 0)
+		{
+			fbxmodeldata->materials[i].ambientFactor.textures.resize(1);
+			fbxmodeldata->materials[i].ambientFactor.textures[0].textureName = (data.textures[i].ambientFactor);
+			fbxmodeldata->materials[i].ambientFactor.textures[0].texturePath = (data.textures[i].ambientFactor);
+		}
+
+		fbxmodeldata->materials[i].specular.element = data.materials[i].specular;
+		if (data.textures[i].specular.size() != 0)
+		{
+			fbxmodeldata->materials[i].specular.textures.resize(1);
+			fbxmodeldata->materials[i].specular.textures[0].textureName = (data.textures[i].specular);
+			fbxmodeldata->materials[i].specular.textures[0].texturePath = (data.textures[i].specular);
+		}
+
+		fbxmodeldata->materials[i].specularFactor.element = data.materials[i].specularFactor;
+		if (data.textures[i].specularFactor.size() != 0)
+		{
+			fbxmodeldata->materials[i].specularFactor.textures.resize(1);
+			fbxmodeldata->materials[i].specularFactor.textures[0].textureName = (data.textures[i].specularFactor);
+			fbxmodeldata->materials[i].specularFactor.textures[0].texturePath = (data.textures[i].specularFactor);
+		}
+
+		fbxmodeldata->materials[i].shininess.element = data.materials[i].shininess;
+		if (data.textures[i].shininess.size() != 0)
+		{
+			fbxmodeldata->materials[i].shininess.textures.resize(1);
+			fbxmodeldata->materials[i].shininess.textures[0].textureName = (data.textures[i].shininess);
+			fbxmodeldata->materials[i].shininess.textures[0].texturePath = (data.textures[i].shininess);
+		}
+
+		fbxmodeldata->materials[i].emissive.element = data.materials[i].emissive;
+		if (data.textures[i].emissive.size() != 0)
+		{
+			fbxmodeldata->materials[i].emissive.textures.resize(1);
+			fbxmodeldata->materials[i].emissive.textures[0].textureName = (data.textures[i].emissive);
+			fbxmodeldata->materials[i].emissive.textures[0].texturePath = (data.textures[i].emissive);
+		}
+
+		fbxmodeldata->materials[i].emissiveFactor.element = data.materials[i].emissiveFactor;
+		if (data.textures[i].emissiveFactor.size() != 0)
+		{
+			fbxmodeldata->materials[i].emissiveFactor.textures.resize(1);
+			fbxmodeldata->materials[i].emissiveFactor.textures[0].textureName = (data.textures[i].emissiveFactor);
+			fbxmodeldata->materials[i].emissiveFactor.textures[0].texturePath = (data.textures[i].emissiveFactor);
+		}
+
+		fbxmodeldata->materials[i].transparentColor.element = data.materials[i].transparentColor;
+		if (data.textures[i].transparentColor.size() != 0)
+		{
+			fbxmodeldata->materials[i].transparentColor.textures.resize(1);
+			fbxmodeldata->materials[i].transparentColor.textures[0].textureName = (data.textures[i].transparentColor);
+			fbxmodeldata->materials[i].transparentColor.textures[0].texturePath = (data.textures[i].transparentColor);
+		}
+
+		fbxmodeldata->materials[i].transparencyFactor.element = data.materials[i].transparencyFactor;
+		if (data.textures[i].transparencyFactor.size() != 0)
+		{
+			fbxmodeldata->materials[i].transparencyFactor.textures.resize(1);
+			fbxmodeldata->materials[i].transparencyFactor.textures[0].textureName = (data.textures[i].transparencyFactor);
+			fbxmodeldata->materials[i].transparencyFactor.textures[0].texturePath = (data.textures[i].transparencyFactor);
+		}
+	}
+	fbxmodeldata->skeletons.resize(data.skeletonNum);
+	fbxmodeldata->skeletonIndices.resize(data.skeletonNum * 2);
+	for (int i = 0; i < data.skeletonNum; ++i)
+	{
+		fbxmodeldata->skeletons[i] = data.skeletons[i];
+		fbxmodeldata->skeletonIndices[i * 2] = data.skeletons[i].parentIndex;
+		fbxmodeldata->skeletonIndices[i * 2 + 1] = i;
+	}
+	fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 4);
+	fbxmodeldata->skeletonIndices.shrink_to_fit();
+	return ConvertToFbxModel(fbxmodeldata);
 }
 
 void FbxModelDataConverter::ConvertIndex(Microsoft::WRL::ComPtr<ID3D12Device>& dev)

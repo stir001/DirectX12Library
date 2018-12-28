@@ -102,6 +102,7 @@ struct FMDSkeleton
 
 struct FMDFileData
 {
+	std::string filepath;
 	int vertexNum;
 	FMDVertices vertices;
 	int indexNum;

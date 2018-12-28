@@ -261,3 +261,8 @@ bool operator==(const DirectX::XMFLOAT4 & lval, const DirectX::XMFLOAT4 & rval)
 	return lval.x == rval.x && lval.y == rval.y && lval.z == rval.z && lval.w == rval.w;
 }
 
+DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 & lval, const DirectX::XMFLOAT4 & rval)
+{
+	return DirectX::XMFLOAT4(lval.x + rval.x, lval.y + rval.y, lval.z + rval.z , 1.0f);
+}
+
