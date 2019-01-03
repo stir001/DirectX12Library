@@ -10,7 +10,6 @@
 #include <memory>
 #include <DirectXMath.h>
 #include <map>
-#include <wrl.h>
 
 class BulletDebugDrawDx;
 class BulletRigidBody;
@@ -25,7 +24,7 @@ class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btGhostPairCallback;
 class btCollisionObject;
-struct ID3D12GraphicsCommandList;
+class Dx12CommandList;
 
 /**
 *	@enum	BulletShapeType
@@ -206,7 +205,7 @@ public:
 	*/
 	int GetAvailableMinID();
 
-	void SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetRenderCommnadList(std::shared_ptr<Dx12CommandList>& cmdList);
 private:
 	/**
 	*	シングルトン用インスタンス

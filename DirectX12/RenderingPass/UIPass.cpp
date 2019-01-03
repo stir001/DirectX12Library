@@ -41,12 +41,12 @@ void UIPass::ResetCommandList()
 	mCmdList->Reset();
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> UIPass::GetCommandList()
+std::shared_ptr<Dx12CommandList> UIPass::GetCommandList()
 {
-	return mCmdList->GetCommandList();
+	return mCmdList;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> UIPass::GetRenderTarget()
+std::shared_ptr<Dx12BufferObject> UIPass::GetRenderTarget()
 {
-	return mRendertarget->GetBuffer();
+	return mRendertarget;
 }

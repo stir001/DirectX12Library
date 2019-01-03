@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FMDLoader.h"
 #include "FMDdata.h"
+#include <Windows.h>
 
 FMDLoader::FMDLoader()
 {
@@ -14,6 +15,11 @@ FMDLoader::~FMDLoader()
 FMDFileData FMDLoader::LoadFMD(const std::string& fmdPath)
 {
 	std::ifstream fileStream(fmdPath, std::ios_base::in  | std::ios_base::binary);
+	if (!fileStream)
+	{
+		MessageBoxA(nullptr, "ƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ", "FMDLoader", MB_OK);
+		return FMDFileData();
+	}
 	char header[4];
 	fileStream.read(header, sizeof(char) * 4);
 	FMDFileData fmdData;

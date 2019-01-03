@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "Rect.h"
-#include "DrawObject/Primitive2D/Primitive2DLine.h"
 #include "DrawObject/Primitive2D/Primitive2DManager.h"
 
 Rect::Rect() :mCenter(0, 0, 0), mWidth(10), mHeight(10), mScale(1.0f)
 {
 #ifdef _DEBUG
-	mLines[0] = Primitive2DManager::Instance().CreatePrimitive2DLine(
+	/*mLines[0] = Primitive2DManager::Instance().CreatePrimitive2DLine(
 		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0),
 		DirectX::XMFLOAT3(GetRight(), GetUp(), 0));
 
@@ -20,14 +19,14 @@ Rect::Rect() :mCenter(0, 0, 0), mWidth(10), mHeight(10), mScale(1.0f)
 
 	mLines[3] = Primitive2DManager::Instance().CreatePrimitive2DLine(
 		DirectX::XMFLOAT3(GetLeft(), GetDown(), 0),
-		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));
+		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));*/
 #endif
 }
 
 Rect::Rect(DirectX::XMFLOAT3& inc, float inw, float inh): mCenter(inc), mWidth(inw), mHeight(inh), mScale(1.0f)
 {
 #ifdef _DEBUG
-	mLines[0] = Primitive2DManager::Instance().CreatePrimitive2DLine(
+	/*mLines[0] = Primitive2DManager::Instance().CreatePrimitive2DLine(
 		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0),
 		DirectX::XMFLOAT3(GetRight(), GetUp(), 0));
 
@@ -41,7 +40,7 @@ Rect::Rect(DirectX::XMFLOAT3& inc, float inw, float inh): mCenter(inc), mWidth(i
 
 	mLines[3] = Primitive2DManager::Instance().CreatePrimitive2DLine(
 		DirectX::XMFLOAT3(GetLeft(), GetDown(), 0),
-		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));
+		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));*/
 #endif
 }
 
@@ -116,30 +115,30 @@ void Rect::SetScale(float scale)
 void Rect::Draw()
 {
 #ifdef _DEBUG
-	for (auto& line : mLines)
-	{
-		line->Draw();
-	}
+	//for (auto& line : mLines)
+	//{
+	//	line->Draw();
+	//}
 #endif
 }
 
 #ifdef _DEBUG
 void Rect::UpdateLines()
 {
-	mLines[0]->SetPoints(
-		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0),
-		DirectX::XMFLOAT3(GetRight(), GetUp(), 0));
+	//mLines[0]->SetPoints(
+	//	DirectX::XMFLOAT3(GetLeft(), GetUp(), 0),
+	//	DirectX::XMFLOAT3(GetRight(), GetUp(), 0));
 
-	mLines[1]->SetPoints(
-		DirectX::XMFLOAT3(GetRight(), GetUp(), 0),
-		DirectX::XMFLOAT3(GetRight(), GetDown(), 0));
+	//mLines[1]->SetPoints(
+	//	DirectX::XMFLOAT3(GetRight(), GetUp(), 0),
+	//	DirectX::XMFLOAT3(GetRight(), GetDown(), 0));
 
-	mLines[2]->SetPoints(
-		DirectX::XMFLOAT3(GetRight(), GetDown(), 0),
-		DirectX::XMFLOAT3(GetLeft(), GetDown(), 0));
+	//mLines[2]->SetPoints(
+	//	DirectX::XMFLOAT3(GetRight(), GetDown(), 0),
+	//	DirectX::XMFLOAT3(GetLeft(), GetDown(), 0));
 
-	mLines[3]->SetPoints(
-		DirectX::XMFLOAT3(GetLeft(), GetDown(), 0),
-		DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));
+	//mLines[3]->SetPoints(
+	//	DirectX::XMFLOAT3(GetLeft(), GetDown(), 0),
+	//	DirectX::XMFLOAT3(GetLeft(), GetUp(), 0));
 }
 #endif

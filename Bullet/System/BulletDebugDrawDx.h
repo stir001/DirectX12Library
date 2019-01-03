@@ -20,6 +20,7 @@ class VertexBufferObject;
 class IndexBufferObject;
 class ConstantBufferObject;
 class Dx12DescriptorHeapObject;
+class Dx12CommandList;
 
 /**
 *	@class BulletDebugDrawDx
@@ -68,7 +69,7 @@ public:
 
 	void DebugDraw();
 
-	void SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetRenderCommnadList(std::shared_ptr<Dx12CommandList>& cmdList);
 private:
 	int mMode;
 	struct DebugDrawVertex
@@ -87,7 +88,7 @@ private:
 	std::shared_ptr<VertexBufferObject> mVertexBuffer;
 	std::shared_ptr<ConstantBufferObject> mCamerasBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDescHeap;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;
+	std::shared_ptr<Dx12CommandList> mCmdList;
 	Microsoft::WRL::ComPtr<ID3D12Device> mDev;
 };
 

@@ -24,8 +24,8 @@ const unsigned int DEFAULT_RESOURCE_NUM = 1;
 
 ImageController::ImageController(std::shared_ptr<ImageObject> img,
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> uicmdList,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> backcmdList,
+	std::shared_ptr<Dx12CommandList> uicmdList,
+	std::shared_ptr<Dx12CommandList> backcmdList,
 	std::shared_ptr<PipelineStateObject>& pipelinestate,
 	std::shared_ptr<RootSignatureObject>& rootsignature)
 	:DrawObjectController(img->GetTextureName() + "Bundle", dev, uicmdList)
@@ -200,14 +200,16 @@ void ImageController::Draw()
 {
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mCmdList);
-	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+	mCmdList->ExecuteBundle(mBundleCmdList);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 void ImageController::BackDraw()
 {
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mBackCmdList);
-	mBackCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+	mBackCmdList->ExecuteBundle(mBundleCmdList);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 bool ImageController::IsTurnU() const
@@ -236,7 +238,7 @@ std::shared_ptr<ImageController> ImageController::Duplicate()
 	return rtn;
 }
 
-void ImageController::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void ImageController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 	mBundleUpdate = &ImageController::UpdateBundle;
@@ -246,11 +248,6 @@ void ImageController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pip
 {
 	mPipelinestate = pipelinestate;
 	mBundleUpdate = &ImageController::UpdateBundle;
-}
-
-void ImageController::SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
-{
-	mCmdList = cmdList;
 }
 
 std::string ImageController::GetImageName() const
@@ -343,14 +340,14 @@ void ImageController::UpdateBuffer()
 void ImageController::UpdateBundle()
 {
 	mBundleCmdList->Reset();
-	const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& bundle = mBundleCmdList->GetCommandList();
+	auto bundle = mBundleCmdList;
 	mDescHeap->SetDescriptorHeap(bundle);
-	bundle->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	bundle->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	bundle->SetPipelineState(mPipelinestate);
+	bundle->SetGraphicsRootSignature(mRootsignature);
 	bundle->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	mVertexBuffer->SetBuffer(bundle);
+	bundle->IASetVertexBuffers({ &mVertexBuffer }, 1);
 
-	mDescHeap->SetGprahicsDescriptorTable(bundle, 0, eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, 0, eROOT_PARAMATER_INDEX_TEXTURE);
 
 	bundle->DrawInstanced(4, 1, 0, 0);
 	bundle->Close();

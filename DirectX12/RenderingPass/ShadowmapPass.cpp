@@ -30,7 +30,7 @@ void ShadowmapPass::FirstUpdate()
 	mCmdList->OMSetRenderTargets(0, cpuHandle, &mShadowDepthDescHeap->GetCPUHeapHandleStart());
 	D3D12_RECT rect = { 0,0, static_cast<LONG>(mBufferSize), static_cast<LONG>(mBufferSize) };
 	mCmdList->ClearDepthView(mShadowDepthDescHeap->GetCPUHeapHandleStart(), 1.0f, &rect, 1);
-	D3D12_VIEWPORT viewport = { 0,0, mBufferSize, mBufferSize, 0.0f, 1.0f };
+	D3D12_VIEWPORT viewport = { 0,0, static_cast<int>(mBufferSize), static_cast<int>(mBufferSize), 0.0f, 1.0f };
 	mCmdList->RSSetViewports(&viewport);
 	mCmdList->RSSetScissorRects(&rect);
 }
@@ -52,9 +52,9 @@ void ShadowmapPass::ResetCommandList()
 	mCmdList->Reset();
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> ShadowmapPass::GetCommandList()
+std::shared_ptr<Dx12CommandList> ShadowmapPass::GetCommandList()
 {
-	return mCmdList->GetCommandList();
+	return mCmdList;
 }
 
 std::shared_ptr<Dx12BufferObject> ShadowmapPass::GetShadowmap()

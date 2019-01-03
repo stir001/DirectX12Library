@@ -81,9 +81,9 @@ D3D12_CPU_DESCRIPTOR_HANDLE SwapChainObject::GetCurrentRTVHeap() const
 	return rtn;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> SwapChainObject::GetCurrentRenderTarget() const
+std::shared_ptr<Dx12BufferObject> SwapChainObject::GetCurrentRenderTarget() const
 {
-	return mRenderTargets[mBbindex]->GetBuffer();
+	return mRenderTargets[mBbindex];
 }
 
 HRESULT SwapChainObject::SwapChainPresent(UINT SyncInterval, UINT flags)

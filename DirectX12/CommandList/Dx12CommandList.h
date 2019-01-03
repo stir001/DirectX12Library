@@ -18,6 +18,10 @@
 class Dx12BufferObject;
 class Dx12DescriptorHeapObject;
 class DrawObjectController;
+class RootSignatureObject;
+class PipelineStateObject;
+class IndexBufferObject;
+class VertexBufferObject;
 
 /**
 *	@ingroup Dx12CommandList
@@ -67,7 +71,7 @@ public:
 	*	@param[in]	descHeap	セットするDescriptorHeapをラップしたもの
 	*	@return	結果
 	*/
-	HRESULT SetDescriptorHeap(const std::shared_ptr<Dx12DescriptorHeapObject>& descHeap) const;
+	HRESULT SetDescriptorHeap(const std::shared_ptr<const Dx12DescriptorHeapObject>& descHeap) const;
 
 	/**
 	*	@brief	CommandListに任意のDescriptorHeapをセットする
@@ -161,7 +165,76 @@ public:
 	*/
 	void Close() const;
 
+	/**
+	*	描画オブジェクトを登録する
+	*/
 	void SetDrawController(std::shared_ptr<DrawObjectController> controller);
+
+	/**
+	*	登録したコントローラーを開放する
+	*/
+	void ClearControllers();
+
+	/**
+	*	バンドルコマンドリストのコマンドを積み込む
+	*/
+	void ExecuteBundle(std::shared_ptr<Dx12CommandList>& bundle);
+
+	/**
+	*	@brief	pipelineStateを設定する
+	*	@param[in]	pipelineState	設定するpipelineState
+	*/
+	void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelineState);
+
+	/**
+	*	@brief	rootSignatureを設定する
+	*	@param[in]	rootSignature	設定するrootSignature
+	*/
+	void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootSignature);
+
+	/**
+	*	@brief	IndexBufferを設定する
+	*	@param[in]	indexBuffer	設定するIndexBuffer
+	*/
+	void IASetIndexBuffer(const std::shared_ptr<IndexBufferObject>& indexBuffer);
+
+	/**
+	*	@brief	VertexBufferを設定する
+	*	@param[in]	vertexBuffers	設定するvertexBufferの配列
+	*	@param[in]	vertexBufferNum	設定するvertexBufferの数
+	*/
+	void IASetVertexBuffers(const std::shared_ptr<VertexBufferObject> vertexBuffers[], unsigned int vertexBufferNum);
+
+	/**
+	*	@brief	primitive topology を設定する
+	*	@param[in]	primitiveTopology	設定するprimitive tpopology
+	*/
+	void IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
+
+	/**
+	*	@brief	lndexを使ってインスタンスを指定個数生成する
+	*	@param[in]	indexNum	インスタンス一つ当たりのインデックスの数
+	*	@param[in]	instanceNum	生成するインスタンスの数
+	*	@param[in]	startIndexLocation	使用するインデックスの開始する場所のオフセット
+	
+	*/
+	void DrawIndexedInstanced(unsigned int indexNum, unsigned int instanceNum
+		, unsigned int startIndexLocation = 0, unsigned int baseVertexLocation = 0, unsigned int startInstanceLocation = 0);
+
+	/**
+	*	@brief	Vertexのみでインスタンスを指定個数生成する
+	*	@param[in]	vertexNum	インスタンス一つ当たりのvertexの数
+	*	@param[in]	instanceNum	生成するインスタンスの数
+	*	@param[in]	startVertexLocation 
+	*/
+	void DrawInstanced(unsigned int vertexNum, unsigned int instanceNum, unsigned int startVertexLocation, unsigned int startInstanceLocation);
+
+	/**
+	*	@brief	buffer(resource)の中身をすべてコピーする
+	*	@param[in]	dst	コピー先
+	*	@param[in]	src	コピー元
+	*/
+	void CopyResource(std::shared_ptr<Dx12BufferObject> dst, std::shared_ptr<Dx12BufferObject> src);
 private:
 	/**
 	*	コマンドリストの名前

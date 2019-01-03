@@ -4,6 +4,7 @@
 #include "SwapChain/SwapChainObject.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "RenderingPass/Base/RenderingPassObject.h"
+#include "CommandList/Dx12CommandList.h"
 
 #include "d3dx12.h"
 #include <algorithm>
@@ -35,11 +36,13 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
 	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
-	mDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mRenderCmdAllocator));
-	mRenderCmdAllocator->SetName(L"RenderingCommandAllocator");
+	mRenderCmdList = std::make_shared<Dx12CommandList>("RenderingCommandList", dev);
 
-	mDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mRenderCmdAllocator.Get(), nullptr, IID_PPV_ARGS(&mRenderCmdList));
-	mRenderCmdList->SetName(L"RenderingCommandList");
+	//mDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mRenderCmdAllocator));
+	//mRenderCmdAllocator->SetName(L"RenderingCommandAllocator");
+
+	//mDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mRenderCmdAllocator.Get(), nullptr, IID_PPV_ARGS(&mRenderCmdList));
+	//mRenderCmdList->SetName(L"RenderingCommandList");
 
 	//mRenderCmdAllocator->Reset();
 	//mRenderCmdList->Reset(mRenderCmdAllocator.Get(), nullptr);
@@ -97,13 +100,12 @@ void RenderingPassManager::Render()
 	rect.right = mWidth;
 	rect.bottom = mHeight;
 
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mSwapChain->GetCurrentRenderTarget().Get(),
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	mRenderCmdList->TransitionBarrier(mSwapChain->GetCurrentRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	mRenderCmdList->ClearRenderTargetView(mSwapChain->GetCurrentRTVHeap(), clearColor, 1, &rect);
+	mRenderCmdList->ClearRenderTargetView(mSwapChain->GetCurrentRTVHeap(), clearColor, &rect, 1);
 
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(mSwapChain->GetCurrentRenderTarget().Get(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	mRenderCmdList->TransitionBarrier(mSwapChain->GetCurrentRenderTarget(),
+		D3D12_RESOURCE_STATE_PRESENT);
 
 	for (auto& pathObj : mRenderingPassObjects)
 	{
@@ -120,31 +122,30 @@ void RenderingPassManager::CopyLastPassRenderTarget()
 	auto& lastPath = mRenderingPassObjects.back();
 	D3D12_RESOURCE_STATES lastPathBeforeState = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	D3D12_RESOURCE_STATES lastPathAfterState = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	Microsoft::WRL::ComPtr<ID3D12Resource> lastPathResrouce = lastPath->GetRenderTarget();
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(lastPathResrouce.Get(), lastPathBeforeState, lastPathAfterState));
+	auto lastPathResrouce = lastPath->GetRenderTarget();
+	mRenderCmdList->TransitionBarrier(lastPathResrouce, lastPathAfterState);
 
 	D3D12_RESOURCE_STATES swapChainBeforeState = D3D12_RESOURCE_STATE_PRESENT;
 	D3D12_RESOURCE_STATES swapChainAfterState = D3D12_RESOURCE_STATE_COPY_DEST;
-	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResrouce = mSwapChain->GetCurrentRenderTarget();
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChainResrouce.Get(), swapChainBeforeState, swapChainAfterState));
+	auto swapChainResrouce = mSwapChain->GetCurrentRenderTarget();
+	mRenderCmdList->TransitionBarrier(swapChainResrouce, swapChainAfterState);
 
-	mRenderCmdList->CopyResource(mSwapChain->GetCurrentRenderTarget().Get(), lastPath->GetRenderTarget().Get());
+	mRenderCmdList->CopyResource(mSwapChain->GetCurrentRenderTarget(), lastPath->GetRenderTarget());
 
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(lastPathResrouce.Get(), lastPathAfterState, lastPathBeforeState));
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChainResrouce.Get(), swapChainAfterState, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	mRenderCmdList->TransitionBarrier(lastPathResrouce, lastPathBeforeState);
+	mRenderCmdList->TransitionBarrier(swapChainResrouce, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	mRenderCmdList->OMSetRenderTargets(1, &mSwapChain->GetCurrentRTVHeap(), false, nullptr);
+	mRenderCmdList->OMSetRenderTargets(1, mSwapChain->GetCurrentRTVHeap());
 
-	mRenderCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(swapChainResrouce.Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, swapChainBeforeState));
+	mRenderCmdList->TransitionBarrier(swapChainResrouce, swapChainBeforeState);
 
 	mRenderCmdList->Close();
 
-	mCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mRenderCmdList.GetAddressOf());
+	mCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mRenderCmdList->GetCommandList().GetAddressOf());
 
 	WaitCmdQueue();
 
-	mRenderCmdAllocator->Reset();
-	mRenderCmdList->Reset(mRenderCmdAllocator.Get(), nullptr);
+	mRenderCmdList->Reset();
 
 }
 
@@ -153,7 +154,7 @@ unsigned int RenderingPassManager::GetNumCuurentPass() const
 	return static_cast<unsigned int>(mRenderingPassObjects.size());
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPassManager::GetRenderingPassCommandList(unsigned int pathIndex) const
+std::shared_ptr<Dx12CommandList> RenderingPassManager::GetRenderingPassCommandList(unsigned int pathIndex) const
 {
 	if (pathIndex < mRenderingPassObjects.size())
 	{
@@ -162,7 +163,7 @@ Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPassManager::GetRende
 	return nullptr;
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> RenderingPassManager::GetRenderingPassCommandList(const std::string& pathName) const
+std::shared_ptr<Dx12CommandList> RenderingPassManager::GetRenderingPassCommandList(const std::string& pathName) const
 {
 	unsigned int index = GetRenderingPassIndex(pathName);
 	if (index != UINT_MAX)
@@ -262,7 +263,7 @@ std::shared_ptr<Dx12DescriptorHeapObject> RenderingPassManager::GetCurrentRTVDes
 	return mSwapChain->GetDescriptorHeap();
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> RenderingPassManager::GetCurrentRenderTarget() const
+std::shared_ptr<Dx12BufferObject> RenderingPassManager::GetCurrentRenderTarget() const
 {
 	return mSwapChain->GetCurrentRenderTarget();
 }

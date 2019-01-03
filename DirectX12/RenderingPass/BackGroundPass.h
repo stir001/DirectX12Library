@@ -35,7 +35,7 @@ public:
 	/**
 	*	コマンドリストを取得する
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList();
+	std::shared_ptr<Dx12CommandList> GetCommandList();
 
 	/**
 	*	Rendertargetクラスを取得する

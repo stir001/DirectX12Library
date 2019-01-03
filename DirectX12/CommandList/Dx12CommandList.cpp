@@ -4,6 +4,10 @@
 #include "Master/Dx12Ctrl.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Util/CharToWChar.h"
+#include "PipelineState/PipelineStateObject.h"
+#include "RootSignature/RootSignatureObject.h"
+#include "Buffer/IndexBufferObject.h"
+#include "Buffer/VertexBufferObject.h"
 
 
 Dx12CommandList::Dx12CommandList(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, D3D12_COMMAND_LIST_TYPE type)
@@ -44,7 +48,7 @@ D3D12_COMMAND_LIST_TYPE Dx12CommandList::GetType() const
 
 HRESULT Dx12CommandList::Reset()
 {
-	mControllers.clear();
+	ClearControllers();
 	mCmdallcator->Reset();
 	return mCmdList->Reset(mCmdallcator.Get(), nullptr);
 }
@@ -55,7 +59,7 @@ HRESULT Dx12CommandList::Reset(Microsoft::WRL::ComPtr<ID3D12PipelineState>& pipe
 	return mCmdList->Reset(mCmdallcator.Get(), pipelineState.Get());
 }
 
-HRESULT Dx12CommandList::SetDescriptorHeap(const std::shared_ptr<Dx12DescriptorHeapObject>& descHeap) const
+HRESULT Dx12CommandList::SetDescriptorHeap(const std::shared_ptr<const Dx12DescriptorHeapObject>& descHeap) const
 {
 	HRESULT rtn = WSAEINVAL;
 	mCmdList->SetDescriptorHeaps(1, descHeap->GetDescriptorHeap().GetAddressOf());
@@ -82,7 +86,7 @@ HRESULT Dx12CommandList::SetGraphicsRootDescriptorTabel(std::shared_ptr<Dx12Desc
 {
 	HRESULT rtn = WSAEINVAL;
 
-	descHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex, rootpramIndex);
+	descHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex, rootpramIndex);
 
 	rtn = GetDeviceRemoveReason();
 	return rtn;
@@ -165,6 +169,61 @@ void Dx12CommandList::Close() const
 void Dx12CommandList::SetDrawController(std::shared_ptr<DrawObjectController> controller)
 {
 	mControllers.push_back(controller);
+}
+
+void Dx12CommandList::ClearControllers()
+{
+	mControllers.clear();
+}
+
+void Dx12CommandList::ExecuteBundle(std::shared_ptr<Dx12CommandList>& bundle)
+{
+	mCmdList->ExecuteBundle(bundle->GetCommandList().Get());
+}
+
+void Dx12CommandList::SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelineState)
+{
+	mCmdList->SetPipelineState(pipelineState->GetPipelineState().Get());
+}
+
+void Dx12CommandList::SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootSignature)
+{
+	mCmdList->SetGraphicsRootSignature(rootSignature->GetRootSignature().Get());
+}
+
+void Dx12CommandList::IASetIndexBuffer(const std::shared_ptr<IndexBufferObject>& indexBuffer)
+{
+	mCmdList->IASetIndexBuffer(&indexBuffer->GetView());
+}
+
+void Dx12CommandList::IASetVertexBuffers(const std::shared_ptr<VertexBufferObject> vertexBuffers[], unsigned int vertexBufferNum)
+{
+	std::vector<D3D12_VERTEX_BUFFER_VIEW> vbViews(vertexBufferNum);
+	for (unsigned int i = 0; i < vertexBufferNum; ++i)
+	{
+		vbViews[i] = vertexBuffers[i]->GetView();
+	}
+	mCmdList->IASetVertexBuffers(0, vertexBufferNum, vbViews.data());
+}
+
+void Dx12CommandList::IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology)
+{
+	mCmdList->IASetPrimitiveTopology(primitiveTopology);
+}
+
+void Dx12CommandList::DrawIndexedInstanced(unsigned int indexNum, unsigned int instanceNum, unsigned int startIndexLocation, unsigned int baseVertexLocation, unsigned int startInstanceLocation)
+{
+	mCmdList->DrawIndexedInstanced(indexNum, instanceNum, startIndexLocation, baseVertexLocation, startInstanceLocation);
+}
+
+void Dx12CommandList::DrawInstanced(unsigned int vertexNum, unsigned int instanceNum, unsigned int startVertexLocation, unsigned int startInstanceLocation)
+{
+	mCmdList->DrawInstanced(vertexNum, instanceNum, startVertexLocation, startInstanceLocation);
+}
+
+void Dx12CommandList::CopyResource(std::shared_ptr<Dx12BufferObject> dst, std::shared_ptr<Dx12BufferObject> src)
+{
+	mCmdList->CopyResource(dst->GetBuffer().Get(), src->GetBuffer().Get());
 }
 
 HRESULT Dx12CommandList::GetDeviceRemoveReason() const

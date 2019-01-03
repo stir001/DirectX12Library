@@ -264,12 +264,6 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h">
       <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.h">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.h">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClInclude>
@@ -672,12 +666,6 @@
       <Filter>DirectX12\DrawObject\PMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.cpp">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.cpp">
       <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.cpp">

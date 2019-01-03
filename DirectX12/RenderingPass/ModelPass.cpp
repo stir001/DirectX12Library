@@ -44,7 +44,7 @@ void ModelPass::ResetCommandList()
 	mCmdList->Reset();
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> ModelPass::GetCommandList()
+std::shared_ptr<Dx12CommandList> ModelPass::GetCommandList()
 {
-	return mCmdList->GetCommandList();
+	return mCmdList;
 }

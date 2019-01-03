@@ -4,6 +4,7 @@
 #include "Buffer/VertexBufferObject.h"
 #include "Texture/TextureLoader.h"
 #include "Texture/TextureObject.h"
+#include "CommandList/Dx12CommandList.h"
 
 
 Model::Model():mTexturecount(0),mIndexBuffer(nullptr),mVertexBuffer(nullptr)
@@ -22,14 +23,14 @@ Model::~Model()
 	mTextureObjects.clear();
 }
 
-void Model::SetIndexBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const
+void Model::SetIndexBuffer(const std::shared_ptr<Dx12CommandList>& cmdList) const
 {
-	mIndexBuffer->SetBuffer(cmdList);
+	cmdList->IASetIndexBuffer(mIndexBuffer);
 }
 
-void Model::SetVertexBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const
+void Model::SetVertexBuffer(const std::shared_ptr<Dx12CommandList>& cmdList) const
 {
-	mVertexBuffer->SetBuffer(cmdList);
+	cmdList->IASetVertexBuffers({ &mVertexBuffer }, 1);
 }
 
 std::shared_ptr<IndexBufferObject> Model::GetIndexBuffer() const

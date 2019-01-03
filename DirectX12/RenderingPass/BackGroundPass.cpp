@@ -42,9 +42,9 @@ void BackGroundPass::ResetCommandList()
 	mCmdList->Reset();
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> BackGroundPass::GetCommandList()
+std::shared_ptr<Dx12CommandList> BackGroundPass::GetCommandList()
 {
-	return mCmdList->GetCommandList();
+	return mCmdList;
 }
 
 std::shared_ptr<RendertargetObject> BackGroundPass::GetRendertargetObject()

@@ -86,17 +86,17 @@ std::shared_ptr<Image3DController> ImageLoader::LoadImage3D(const std::string& p
 	return imgCtrl;
 }
 
-void ImageLoader::SetUIPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void ImageLoader::SetUIPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mCmdList = cmdList;
 }
 
-void ImageLoader::SetBackGroundPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void ImageLoader::SetBackGroundPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mBackCmdList = cmdList;
 }
 
-void ImageLoader::Set3DPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void ImageLoader::Set3DPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mModelCmdList = cmdList;
 }

@@ -8,6 +8,7 @@ struct ID3D12GraphicsCommandList;
 struct ID3D12Resource;
 
 class Dx12CommandList;
+class Dx12BufferObject;
 
 class RenderingPassObject
 {
@@ -39,12 +40,12 @@ public:
 	/**
 	*	コマンドリストを取得する
 	*/
-	virtual Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() = 0;
+	virtual std::shared_ptr<Dx12CommandList> GetCommandList() = 0;
 
 	/**
-	*	最終レンダリング結果を返す関数　一番最後のパスのみ必須それ以外は実装しないでもいい
+	*	最終レンダリング結果を返す関数　一番最後のパスのみ必須それ以外は実装しなくてもいい
 	*/
-	virtual Microsoft::WRL::ComPtr<ID3D12Resource> GetRenderTarget();
+	virtual std::shared_ptr<Dx12BufferObject> GetRenderTarget();
 
 	/**
 	*	このパスを有効にするか無効にするかの設定を行う

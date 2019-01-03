@@ -19,7 +19,7 @@
 #include "Animation/AnimationPlayerManager.h"
 
 PMDController::PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<DirectionalLight>& dlight, const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+	std::shared_ptr<Dx12CommandList>& cmdList)
 	: DrawController3D(name, dev, cmdList), mModel(model)
 	, mDirLight(dlight), mBundleUpdate(&PMDController::UpdateBundle)
 	, mConstantBufferOffset(0U), mTextureNum(0U)
@@ -45,25 +45,27 @@ void PMDController::Draw()
 {
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mCmdList);
-	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+	mCmdList->ExecuteBundle(mBundleCmdList);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 void PMDController::DrawShadowmap()
 {
-	mShadowmapCmdList->SetPipelineState(mShadowmapPipeline->GetPipelineState().Get());
-	mShadowmapCmdList->SetGraphicsRootSignature(mShadowmapRootsignature->GetRootSignature().Get());
+	mShadowmapCmdList->SetPipelineState(mShadowmapPipeline);
+	mShadowmapCmdList->SetGraphicsRootSignature(mShadowmapRootsignature);
 	mModel->SetVertexBuffer(mShadowmapCmdList);
 	mModel->SetIndexBuffer(mShadowmapCmdList);
 	mDescHeap->SetDescriptorHeap(mShadowmapCmdList);
 	SetConstantBuffers(mShadowmapCmdList);
 	mShadowmapCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	mShadowmapCmdList->DrawIndexedInstanced(static_cast<UINT>(mModel->mIndices.size()), 1, 0, 0, 0);
+	mShadowmapCmdList->SetDrawController(shared_from_this());
 }
 
 void PMDController::DrawShadow()
 {
-	mCmdList->SetPipelineState(mShadowToonRenderPipeline->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mShadowToonRenderRootsignature->GetRootSignature().Get());
+	mCmdList->SetPipelineState(mShadowToonRenderPipeline);
+	mCmdList->SetGraphicsRootSignature(mShadowToonRenderRootsignature);
 	mModel->SetVertexBuffer(mCmdList);
 	mModel->SetIndexBuffer(mCmdList);
 	mShadowRenderDescHeap->SetDescriptorHeap(mCmdList);
@@ -73,6 +75,7 @@ void PMDController::DrawShadow()
 	auto basicPair = std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>>(mShadowRenderPipeline, mShadowRenderRootsignature);
 	mCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DrawWhileSetTable(mCmdList, toonPair, basicPair);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 void PMDController::SetMotion(std::shared_ptr<VMDMotion> motion)
@@ -101,10 +104,10 @@ void PMDController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pipel
 	DrawObjectController::SetPipelineState(pipelineState);
 }
 
-void PMDController::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture)
+void PMDController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture)
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
-	DrawObjectController::SetRootSignature(rootsiganture);
+	DrawObjectController::SetGraphicsRootSignature(rootsiganture);
 }
 
 void PMDController::SetToonPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState)
@@ -149,7 +152,7 @@ void PMDController::SetShadowBasicRenderRootSignature(std::shared_ptr<RootSignat
 	mShadowRenderRootsignature = rootsignature;
 }
 
-void PMDController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList)
+void PMDController::SetShadowmapCommandList(std::shared_ptr<Dx12CommandList> cmdList)
 {
 	mShadowmapCmdList = cmdList;
 }
@@ -158,7 +161,7 @@ void PMDController::UpdateDescriptorHeap()
 {
 }
 
-void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
+void PMDController::DrawWhileSetTable(const std::shared_ptr<Dx12CommandList>& cmdList
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair)
 {
@@ -170,20 +173,20 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 	{
 		if (material.toonIndex != 255)
 		{
-			cmdList->SetPipelineState(toonPair.first->GetPipelineState().Get());
-			cmdList->SetGraphicsRootSignature(toonPair.second->GetRootSignature().Get());
-			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
-			mDescHeap->SetGprahicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
-			mShadowRenderDescHeap->SetGprahicsDescriptorTable(cmdList
+			cmdList->SetPipelineState(toonPair.first);
+			cmdList->SetGraphicsRootSignature(toonPair.second);
+			mDescHeap->SetGraphicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+			mDescHeap->SetGraphicsDescriptorTable(cmdList, mTextureNum + material.toonIndex, PMDModel::eROOT_PARAMATER_INDEX_TOON);
+			mShadowRenderDescHeap->SetGraphicsDescriptorTable(cmdList
 				, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
 				, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP);
 		}
 		else
 		{
-			cmdList->SetPipelineState(basicPair.first->GetPipelineState().Get());
-			cmdList->SetGraphicsRootSignature(basicPair.second->GetRootSignature().Get());
-			mDescHeap->SetGprahicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
-			mShadowRenderDescHeap->SetGprahicsDescriptorTable(cmdList
+			cmdList->SetPipelineState(basicPair.first);
+			cmdList->SetGraphicsRootSignature(basicPair.second);
+			mDescHeap->SetGraphicsDescriptorTable(cmdList, material.texid, PMDModel::eROOT_PARAMATER_INDEX_TEXTURE);
+			mShadowRenderDescHeap->SetGraphicsDescriptorTable(cmdList
 				, static_cast<unsigned int>(mModel->GetTextureObjects().size() + mModel->mToonTextures.size())
 				, PMDModel::eROOT_PARAMATER_INDEX_SHADOWMAP - 1);
 		}
@@ -196,9 +199,9 @@ void PMDController::DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12Graphic
 }
 
 
-void PMDController::SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
+void PMDController::SetMaterial(const std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
 {
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex, PMDModel::eROOT_PARAMATER_INDEX_MATERIAL, offsetCount);
+	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex, PMDModel::eROOT_PARAMATER_INDEX_MATERIAL, offsetCount);
 }
 
 void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, const std::string & name)
@@ -226,25 +229,25 @@ void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Devi
 	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void PMDController::SetConstantBuffers(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void PMDController::SetConstantBuffers(const std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	unsigned int resourceIndex = mConstantBufferOffset;
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++
+	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex++
 		, PMDModel::eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++
+	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex++
 		, PMDModel::eROOT_PARAMATER_INDEX_LIGHT);
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++
+	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex++
 		, PMDModel::eROOT_PARAMATER_INDEX_BONE_MATRIX);
-	mDescHeap->SetGprahicsDescriptorTable(cmdList, resourceIndex++
+	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex++
 		, PMDModel::eROOT_PARAMATER_INDEX_MODEL_MATRIX);
 }
 
 void PMDController::UpdateBundle()
 {
 	mBundleCmdList->Reset();
-	const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& bundle = mBundleCmdList->GetCommandList();
-	bundle->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	bundle->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	auto bundle = mBundleCmdList;
+	bundle->SetPipelineState(mPipelinestate);
+	bundle->SetGraphicsRootSignature(mRootsignature);
 
 	mModel->SetIndexBuffer(bundle);
 	mModel->SetVertexBuffer(bundle);

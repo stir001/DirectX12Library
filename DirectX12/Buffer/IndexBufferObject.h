@@ -9,6 +9,8 @@
 */
 #include "Dx12BufferObject.h"
 
+class Dx12CommandList;
+
 /**
 *	@ingroup Dx12Resource
 *	@class IndexBufferObject
@@ -17,8 +19,6 @@
 class IndexBufferObject :
 	public Dx12BufferObject
 {
-private:
-	D3D12_INDEX_BUFFER_VIEW mIndexBufferView;
 public:
 	/**
 	*	@param[in]	name	バッファの名前
@@ -37,9 +37,10 @@ public:
 	~IndexBufferObject();
 
 	/**
-	*	@brief	ID3D12GraphicsCommandListにIndexBufferをセットする
-	*	@param[in]	cmdList	IndexBufferをセットするコマンドリスト
+	*	indexBufferViewを取得する
 	*/
-	void SetBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const;
+	D3D12_INDEX_BUFFER_VIEW GetView() const;
+private:
+	D3D12_INDEX_BUFFER_VIEW mIndexBufferView;
 };
 

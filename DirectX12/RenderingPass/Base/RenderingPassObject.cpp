@@ -25,7 +25,7 @@ const std::string & RenderingPassObject::GetPassName() const
 	return mPassName;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> RenderingPassObject::GetRenderTarget()
+std::shared_ptr<Dx12BufferObject> RenderingPassObject::GetRenderTarget()
 {
 	return nullptr;
 }

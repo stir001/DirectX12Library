@@ -242,8 +242,6 @@
     <ClInclude Include="DirectX12\DrawObject\PMD\PMDModel.h" />
     <ClInclude Include="DirectX12\DrawObject\PMD\PMXLoader.h" />
     <ClInclude Include="DirectX12\DrawObject\PMD\PMXModel.h" />
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.h" />
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.h" />
@@ -379,8 +377,6 @@
     <ClCompile Include="DirectX12\DrawObject\PMD\PMDModel.cpp" />
     <ClCompile Include="DirectX12\DrawObject\PMD\PMXLoader.cpp" />
     <ClCompile Include="DirectX12\DrawObject\PMD\PMXModel.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.cpp" />

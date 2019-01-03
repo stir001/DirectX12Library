@@ -22,7 +22,7 @@ class Dx12CommandList;
 *	@class DrawObjcetController
 *	@brief 描画オブジェクトを操作する基底クラス
 */
-class DrawObjectController
+class DrawObjectController : public std::enable_shared_from_this<DrawObjectController>
 {
 public:
 	/**
@@ -31,14 +31,14 @@ public:
 	*	@param[in]	cmdList	描画命令を積むコマンドリスト
 	*/
 	DrawObjectController(const std::string& bundleName, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+		std::shared_ptr<Dx12CommandList>& cmdList);
 	virtual ~DrawObjectController();
 
 	/**
 	*	@brief	使用するrootsignatureを設定する
 	*	@param[in]	rootsignature	使用するrootsignature
 	*/
-	virtual void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	virtual void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	@brief	使用するpipelinestateを設定する
@@ -50,7 +50,7 @@ public:
 	*	@brief	使用するコマンドリストを設定する
 	*	@param[in]	cmdList	使用するコマンドリスト
 	*/
-	virtual void SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	virtual void SetCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	描画する
@@ -71,7 +71,7 @@ protected:
 	/**
 	*	使用するコマンドリスト パスごとに共通
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;
+	std::shared_ptr<Dx12CommandList> mCmdList;
 
 	/**
 	*	使用するバンドルコマンドリスト コントローラローラー単位で所持

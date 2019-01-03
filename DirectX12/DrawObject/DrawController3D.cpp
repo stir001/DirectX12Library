@@ -10,7 +10,7 @@
 using namespace DirectX;
 
 DrawController3D::DrawController3D(const std::string& modelName, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList): 
+	std::shared_ptr<Dx12CommandList>& cmdList):
 	DrawObjectController(modelName +"Bundle", dev, cmdList)
 	, mScale{ 1.0f, 1.0f, 1.0f }, mPos(0, 0, 0)
 	,mQuaternion{0,0,0,1}, mSkeletonColor(1.0f,1.0f,1.0f,1.0f)
