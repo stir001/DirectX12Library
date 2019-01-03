@@ -12,7 +12,7 @@ ShadowmapPass::ShadowmapPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev) : 
 	auto size = Dx12Ctrl::Instance().GetWindowSize();
 	mBufferSize = size.x > size.y ? size.x : size.y;
 	mCmdList = std::make_shared<Dx12CommandList>("ShadowmapPass", dev);
-	mShadowmapDepth = std::make_shared<DepthBufferObject>("ShadowmapDepthBuffer", dev, mBufferSize, mBufferSize, DXGI_FORMAT_R32_TYPELESS);
+	mShadowmapDepth = std::make_shared<DepthBufferObject>("ShadowmapDepthBuffer", dev, static_cast<int>(mBufferSize), static_cast<int>(mBufferSize), DXGI_FORMAT_R32_TYPELESS);
 	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(1);
 	buffers[0] = mShadowmapDepth;
 	mShadowDepthDescHeap = std::make_shared<Dx12DescriptorHeapObject>("ShadowmapDescHeap"

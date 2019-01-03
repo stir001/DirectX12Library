@@ -36,17 +36,22 @@ public:
 
 	static Dx12Ctrl& Instance()
 	{
-		if (inst == nullptr)
+		if (mInstance == nullptr)
 		{
-			inst = new Dx12Ctrl();
+			mInstance = new Dx12Ctrl();
 		}
 
-		return *inst;
+		return *mInstance;
 	}
 
 	static void Destroy()
 	{
-		delete inst;
+		if (mInstance != nullptr)
+		{
+			mInstance->Release();
+			delete mInstance;
+			mInstance = nullptr;
+		}
 	}
 
 	HRESULT result;
@@ -103,7 +108,7 @@ private:
 	Dx12Ctrl(const Dx12Ctrl&&);
 	Dx12Ctrl& operator=(const Dx12Ctrl&);
 
-	static Dx12Ctrl* inst;
+	static Dx12Ctrl* mInstance;
 
 	LRESULT (*mWndProc)(HWND, UINT, WPARAM, LPARAM);
 	HINSTANCE mWinHInstance;

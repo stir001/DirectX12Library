@@ -77,7 +77,7 @@ public:
 
 
 	/**
-	*
+	*	パスを追加する
 	*/
 	bool AddRenderingPass(const std::shared_ptr<RenderingPassObject>& passObj, unsigned int& out_PassIndex);
 
@@ -98,14 +98,38 @@ public:
 	*/
 	unsigned int GetNumCuurentPass() const;
 
+	/**
+	*	現在のスワップチェインのレンダーターゲットのヒープハンドルを取得する
+	*/
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTVHeapHandle() const;
+
+	/**
+	*	現在のスワップチェインのレンダーターゲットのヒープを取得する
+	*/
 	std::shared_ptr<Dx12DescriptorHeapObject> GetCurrentRTVDescHeap() const;
 
-	std::shared_ptr<Dx12BufferObject> GetCurrentRenderTarget() const;
+	/**
+	*	現在のスワップチェインのレンダーターゲットにを取得する
+	*/
 
+
+	/**
+	*	パスのアクティブ、非アクティブを設定する
+	*	@param[in]	renderingpass	レンダリングパスの番号
+	*	@param[in]	isActive	ture:アクティブ	false:非アクティブ
+	*/
 	void SetIsActiveValue(unsigned int renderingpass, bool isActive);
+
+	/**
+	*	パスのアクティブ、非アクティブを設定する
+	*	@param[in]	passName	レンダリングパスの名前
+	*	@param[in]	isActive	ture:アクティブ	false:非アクティブ
+	*/
 	void SetIsActiveValue(std::string passName, bool isActive);
 
+	/**
+	*	すべてのパスを削除する
+	*/
 	void AllPassClear();
 
 private:

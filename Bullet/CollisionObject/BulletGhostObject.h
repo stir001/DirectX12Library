@@ -10,6 +10,7 @@
 
 #include "Base/ICollisionObject.h"
 #include <memory>
+#include <DirectXMath.h>
 
 class btGhostObject;
 class BulletCollisionShape;
@@ -82,6 +83,10 @@ public:
 	*	@param[in]	pos		ˆÚ“®‚³‚¹‚éêŠ
 	*/
 	void SetOrigin(float x, float y, float z);
+
+	void SetVelocity(float x, float y, float z);
+
+	void SetVelocity(const DirectX::XMFLOAT3& vel);
 private:
 	/**
 	*	¢ŠE‚©‚ç“o˜^‚ğŠO‚·
