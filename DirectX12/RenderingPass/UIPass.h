@@ -47,7 +47,7 @@ public:
 
 private:
 	D3D12_VIEWPORT mViewPort;
-	D3D12_RECT mSciddorRect;
+	D3D12_RECT mScissorRect;
 	std::shared_ptr<Dx12DescriptorHeapObject> mRtvDescHeap;
 	std::shared_ptr<RendertargetObject> mRendertarget;
 };

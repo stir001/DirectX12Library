@@ -22,22 +22,29 @@ void PrimitiveCube::InitCube()
 
 	unsigned int vArrayIndexOffset = 0;
 	unsigned int iArrayIndexOffset = 0;
-	std::shared_ptr<PrimitivePlane> plane1(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y, mPos.z + mLength * 0.5f), mLength, mLength, DirectX::XMFLOAT3(0, 0, 1)));
+	float offset = mLength * 0.5f;
+	//front
+	std::shared_ptr<PrimitivePlane> plane1(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y, mPos.z + offset), mLength, mLength, DirectX::XMFLOAT3(0, 0, 1)));
 	StoreInfo(plane1, vArrayIndexOffset, iArrayIndexOffset);
 	
-	std::shared_ptr<PrimitivePlane> plane2(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y, mPos.z - mLength * 0.5f), mLength, mLength, DirectX::XMFLOAT3(0, 0, -1)));
+	//back
+	std::shared_ptr<PrimitivePlane> plane2(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y, mPos.z - offset), mLength, mLength, DirectX::XMFLOAT3(0, 0, -1)));
 	StoreInfo(plane2, vArrayIndexOffset, iArrayIndexOffset);
 
-	std::shared_ptr<PrimitivePlane> plane3(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x + mLength * 0.5f, mPos.y, mPos.z), mLength, mLength, DirectX::XMFLOAT3(1, 0, 0)));
+	//right
+	std::shared_ptr<PrimitivePlane> plane3(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x + offset, mPos.y, mPos.z), mLength, mLength, DirectX::XMFLOAT3(1, 0, 0)));
 	StoreInfo(plane3, vArrayIndexOffset, iArrayIndexOffset);
 
-	std::shared_ptr<PrimitivePlane> plane4(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x - mLength * 0.5f, mPos.y, mPos.z), mLength, mLength, DirectX::XMFLOAT3(-1, 0, 0)));
+	//left
+	std::shared_ptr<PrimitivePlane> plane4(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x - offset, mPos.y, mPos.z), mLength, mLength, DirectX::XMFLOAT3(-1, 0, 0)));
 	StoreInfo(plane4, vArrayIndexOffset, iArrayIndexOffset);
 	
-	std::shared_ptr<PrimitivePlane> plane5(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y + mLength * 0.5f, mPos.z), mLength, mLength, DirectX::XMFLOAT3(0, 1, 0)));
+	//top
+	std::shared_ptr<PrimitivePlane> plane5(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y + offset, mPos.z), mLength, mLength, DirectX::XMFLOAT3(0, 1, 0)));
 	StoreInfo(plane5, vArrayIndexOffset, iArrayIndexOffset);
 	
-	std::shared_ptr<PrimitivePlane> plane6(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y - mLength * 0.5f, mPos.z), mLength, mLength, DirectX::XMFLOAT3(0, -1, 0)));
+	//bottom
+	std::shared_ptr<PrimitivePlane> plane6(std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(mPos.x, mPos.y - offset, mPos.z), mLength, mLength, DirectX::XMFLOAT3(0, -1, 0)));
 	StoreInfo(plane6, vArrayIndexOffset, iArrayIndexOffset);
 }
 

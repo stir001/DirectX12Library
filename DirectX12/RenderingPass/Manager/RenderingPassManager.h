@@ -109,9 +109,9 @@ public:
 	std::shared_ptr<Dx12DescriptorHeapObject> GetCurrentRTVDescHeap() const;
 
 	/**
-	*	現在のスワップチェインのレンダーターゲットにを取得する
+	*	現在のスワップチェインのレンダーターゲットを取得する
 	*/
-
+	std::shared_ptr<Dx12BufferObject> RenderingPassManager::GetCurrentRenderTarget() const;
 
 	/**
 	*	パスのアクティブ、非アクティブを設定する

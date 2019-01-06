@@ -9,7 +9,7 @@ UIPass::UIPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<RendertargetObject> rendertarget,
 	int wWidth, int wHeight):RenderingPassObject("UIPass")
 	, mRtvDescHeap(rtvHeap), mRendertarget(rendertarget)
-	, mSciddorRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight) }
+	, mScissorRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight) }
 	, mViewPort{ 0.0f, 0.0f, static_cast<FLOAT>(wWidth), static_cast<FLOAT>(wHeight), 0.0f, 1.0f}
 {
 	mCmdList = std::make_shared<Dx12CommandList>("UI", dev);
@@ -23,7 +23,7 @@ void UIPass::FirstUpdate()
 {
 	mCmdList->OMSetRenderTargets(1, mRtvDescHeap->GetCPUHeapHandleStart());
 	mCmdList->RSSetViewports(&mViewPort);
-	mCmdList->RSSetScissorRects(&mSciddorRect);
+	mCmdList->RSSetScissorRects(&mScissorRect);
 }
 
 void UIPass::PreExcuteUpdate()

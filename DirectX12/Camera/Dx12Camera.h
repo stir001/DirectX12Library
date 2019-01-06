@@ -229,6 +229,16 @@ public:
 	*/
 	void SetFar(float cameraFar);
 
+	/**
+	*	@brief	カメラが対応しているviewportのサイズを取得する
+	*/
+	DirectX::XMINT2 GetViewPortSize() const;
+
+	/**
+	*	@brief	fovを取得する
+	*	@return	現在のfov
+	*/
+	float GetFov() const;
 private:
 	/**
 	*	カメラがGPUに投げる要素
@@ -353,5 +363,8 @@ private:
 	*/
 	void NonSetElementToHolder();
 
+	/**
+	*	projection行列を更新する
+	*/
 	void UpdateProjection();
 };

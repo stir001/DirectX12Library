@@ -9,7 +9,7 @@
 ModelPass::ModelPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<Dx12DescriptorHeapObject> depthHeap,
 	std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
-	int wWidth, int wHeight, std::shared_ptr<CameraHolder> holder): RenderingPassObject("FirstPass"),
+	int wWidth, int wHeight, std::shared_ptr<CameraHolder> holder): RenderingPassObject("ModelPass"),
 	mDepthHeap(depthHeap),  mRtvHeap(rtvHeap),
 	mCameraHolder(holder), mWndRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight)}
 {

@@ -540,6 +540,15 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FMDLoader.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\SkyBoxPipelineState.h">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\SkyBoxPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\SkyBox.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -932,6 +941,15 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdata.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\SkyBoxPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\SkyBoxPipelineState.cpp">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\SkyBox.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -974,6 +992,9 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\PMDBasicShader.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\SkyBoxShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
