@@ -179,7 +179,7 @@ namespace Fbx
 		Fbx::FbxIndexes	indexes;
 		Fbx::FbxVertexesInfo vertexesInfo;
 		std::vector<Fbx::FbxMaterial> materials;
-		std::vector<Fbx::FbxBone> bones;
+		//std::vector<Fbx::FbxBone> bones;
 		std::vector<Fbx::FbxSkeleton> skeletons;
 		std::vector<unsigned int> skeletonIndices;
 	};

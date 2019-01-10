@@ -29,7 +29,6 @@ private:
 	void ConvertIndex(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 	void ConvertVertex(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 	void ConvertTexture(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
-	void ConvertBone(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 	void ConvertSkeletons(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 };
 

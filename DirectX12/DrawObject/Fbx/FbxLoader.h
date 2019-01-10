@@ -181,7 +181,7 @@ private:
 
 	void LoadSkeletons();
 
-	std::vector<fbxsdk::FbxTime> ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId, std::vector<fbxsdk::FbxNode*>& linkNode);
+	std::vector<fbxsdk::FbxTime> ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId);
 
 	std::shared_ptr<FbxModelController> CreateController(std::shared_ptr<Fbx::FbxModel>& model);
 };
