@@ -44,6 +44,10 @@ LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);
 		return 0;
 	}
+	if (msg == WM_SIZE)
+	{
+		Dx12Ctrl::Instance().UpdateWindowSize();
+	}
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
@@ -59,6 +63,14 @@ HRESULT Dx12Ctrl::ReportLiveObject()
 void Dx12Ctrl::SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam))
 {
 	winProc = proc;
+}
+
+void Dx12Ctrl::UpdateWindowSize()
+{
+	RECT rect;
+	auto isGet = GetClientRect(mhWnd, &rect);
+	mWndWidth = rect.right;
+	mWndHeight = rect.bottom;
 }
 
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}

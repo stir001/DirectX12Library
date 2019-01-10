@@ -102,6 +102,7 @@ public:
 	HRESULT ReportLiveObject();
 
 	void SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam));
+	void UpdateWindowSize();
 private:
 	Dx12Ctrl();
 	Dx12Ctrl(const Dx12Ctrl&);
