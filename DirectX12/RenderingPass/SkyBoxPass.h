@@ -16,6 +16,10 @@ public:
 		std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
 		std::shared_ptr<RendertargetObject> rendertarget,
 		int width, int height, SkyBoxTextures& textures);
+	SkyBoxPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
+		std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
+		std::shared_ptr<RendertargetObject> rendertarget,
+		int width, int height);
 	~SkyBoxPass();
 
 	/**
@@ -49,6 +53,11 @@ public:
 	 */
 	 virtual std::shared_ptr<Dx12BufferObject> GetRenderTarget();
 
+	 /**
+	 *	@brief	SkyBoxのテクスチャを設定する
+	 *	@param[in]	tex	設定したテクスチャ
+	 */
+	 void SetSkyBoxTextures(SkyBoxTextures& tex);
 private:
 	std::shared_ptr<SkyBox> mSkyBox;
 	std::shared_ptr<RendertargetObject> mRendertarget;

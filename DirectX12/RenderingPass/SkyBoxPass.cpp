@@ -10,7 +10,6 @@
 
 #include <d3d12.h>
 
-
 SkyBoxPass::SkyBoxPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
 	std::shared_ptr<RendertargetObject> rendertarget,
@@ -19,10 +18,24 @@ SkyBoxPass::SkyBoxPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	, mRendertarget(rendertarget)
 	, mRtvDescHeap(rtvHeap)
 	, mHolder(Dx12Ctrl::Instance().GetCameraHolder())
-	, mWndWidth(width), mWndHeight(height)
+	, mWndWidth(width), mWndHeight(height), mSkyBox(nullptr)
 {
 	mCmdList = std::make_shared<Dx12CommandList>("SkyBox", dev);
 	mSkyBox = std::make_shared<SkyBox>(mCmdList, textures, mHolder);
+}
+
+SkyBoxPass::SkyBoxPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
+	std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
+	std::shared_ptr<RendertargetObject> rendertarget, int width, int height)
+	: RenderingPassObject("SkyBoxPass")
+	, mRendertarget(rendertarget)
+	, mRtvDescHeap(rtvHeap)
+	, mHolder(Dx12Ctrl::Instance().GetCameraHolder())
+	, mWndWidth(width), mWndHeight(height)
+{
+	mCmdList = std::make_shared<Dx12CommandList>("SkyBox", dev);
+	mSkyBox = std::make_shared<SkyBox>(mCmdList, mHolder);
+	//SetActive(false);
 }
 
 
@@ -64,4 +77,9 @@ std::shared_ptr<Dx12CommandList> SkyBoxPass::GetCommandList()
 std::shared_ptr<Dx12BufferObject> SkyBoxPass::GetRenderTarget()
 {
 	return mRendertarget;
+}
+
+void SkyBoxPass::SetSkyBoxTextures(SkyBoxTextures & tex)
+{
+	
 }

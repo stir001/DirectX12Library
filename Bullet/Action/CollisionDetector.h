@@ -12,6 +12,7 @@
 #include <memory>
 #include <functional>
 #include <map>
+#include <DirectXMath.h>
 
 enum class BulletShapeType;
 enum class BulletCollisionState;

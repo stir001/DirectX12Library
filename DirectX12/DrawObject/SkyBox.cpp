@@ -26,7 +26,9 @@ SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
 		mSkyBoxTextures.SetTex(static_cast<SkyBoxTextures::TexPathID>(i), skyBoxTextures[i]);
 	}
 
+	LoadTexture();
 	Init();
+	UpdateDescriptorHeap();
 }
 
 SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
@@ -35,6 +37,14 @@ SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
 {
 	mSkyBoxTextures = textures;
 
+	LoadTexture();
+	Init();
+	UpdateDescriptorHeap();
+}
+
+SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList, const std::shared_ptr<CameraHolder>& holder)
+	: mCmdList(cmdList), mCameraHolder(holder)
+{
 	Init();
 }
 
@@ -44,6 +54,10 @@ SkyBox::~SkyBox()
 
 void SkyBox::Draw()
 {
+	if (!mDescHeap)
+	{
+		return;
+	}
 	mCmdList->SetPipelineState(mSkyBoxPipelineState);
 	mCmdList->SetGraphicsRootSignature(mSkyBoxRootSignature);
 	mCmdList->IASetVertexBuffers({ &mVertexBuffer }, 1);
@@ -78,6 +92,13 @@ void SkyBox::UpdateCameraBuffer()
 	mProjectionBuffer->WriteBuffer256Alignment(&mCBufferElement, sizeof(mCBufferElement), 1);
 }
 
+void SkyBox::SetSkyBoxTextures(SkyBoxTextures & textures)
+{
+	mSkyBoxTextures = textures;
+	LoadTexture();
+	UpdateDescriptorHeap();
+}
+
 void SkyBox::Init()
 {
 	SkyBoxVertex v;
@@ -103,18 +124,7 @@ void SkyBox::Init()
 	mCameraBuffer = mCameraHolder.lock()->GetCamerasBuffer();
 	mProjectionBuffer = std::make_shared<ConstantBufferObject>("SkyBoxConstantBuffer"
 		, device, static_cast<unsigned int>(sizeof(mCBufferElement)), 1);
-	unsigned int cBufferNum = 2;
-	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(static_cast<int>(Direction::max) + cBufferNum);
-	buffers[0] = mCameraBuffer;
-	buffers[1] = mProjectionBuffer;
-	mTextures.resize(static_cast<int>(Direction::max));
-	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
-	{
-		mTextures[i] = TextureLoader::Instance().LoadTexture(mSkyBoxTextures.GetTex(static_cast<SkyBoxTextures::TexPathID>(i)));
-		buffers[i + cBufferNum] = mTextures[i]->GetShaderResource();
-	}
 
-	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>("SkyBoxDescHeap", device, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	mSkyBoxRootSignature = std::make_shared<SkyBoxRootSignature>(device);
 	mSkyBoxPipelineState = std::make_shared<SkyBoxPipelineState>(mSkyBoxRootSignature, device);
@@ -172,6 +182,29 @@ void SkyBox::FixUV()
 	{
 		mVertices[vert].uv.x = 1.0f - mVertices[vert].uv.x;
 		mVertices[vert].uv.y = 1.0f - mVertices[vert].uv.y;
+	}
+}
+
+void SkyBox::UpdateDescriptorHeap()
+{
+	unsigned int cBufferNum = 2;
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(static_cast<int>(Direction::max) + cBufferNum);
+	buffers[0] = mCameraBuffer;
+	buffers[1] = mProjectionBuffer;
+	mTextures.resize(static_cast<int>(Direction::max));
+	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
+	{
+		buffers[i + cBufferNum] = mTextures[i]->GetShaderResource();
+	}
+
+	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>("SkyBoxDescHeap", Dx12Ctrl::Instance().GetDev(), buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+}
+
+void SkyBox::LoadTexture()
+{
+	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
+	{
+		mTextures[i] = TextureLoader::Instance().LoadTexture(mSkyBoxTextures.GetTex(static_cast<SkyBoxTextures::TexPathID>(i)));
 	}
 }
 

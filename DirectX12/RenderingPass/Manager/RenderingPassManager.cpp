@@ -11,6 +11,7 @@
 #include "DrawObject/SkyBox.h"
 #include "CommandList/Dx12CommandList.h"
 #include "Master/Dx12Ctrl.h"
+#include "Buffer/RendertargetObject.h"
 
 #include "d3dx12.h"
 #include <algorithm>
@@ -68,15 +69,7 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 
 	auto descheap = std::make_shared<Dx12DescriptorHeapObject>("MainRTVDescHeap", device, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	SkyBoxTextures textures;
-	textures.front = "SkyBox/front.png";
-	textures.back = "SkyBox/back.png";
-	textures.right = "SkyBox/right.png";
-	textures.left = "SkyBox/left.png";
-	textures.top = "SkyBox/up.png";
-	textures.bottom = "SkyBox/down.png";
-
-	auto skyBoxPass = std::make_shared<SkyBoxPass>(device, descheap, rendertarget, wndSize.x, wndSize.y, textures);
+	auto skyBoxPass = std::make_shared<SkyBoxPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
 
 	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
 
@@ -92,7 +85,7 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	passMgr.AddRenderingPass(modelpass, renderingPathIndex);
 	passMgr.AddRenderingPass(uipass, renderingPathIndex);
 
-	skyBoxPass->FirstUpdate();
+	//skyBoxPass->FirstUpdate();
 	backpass->FirstUpdate();
 	modelpass->FirstUpdate();
 	uipass->FirstUpdate();

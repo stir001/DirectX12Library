@@ -72,6 +72,8 @@ public:
 		, const std::string skyBoxTextures[6], const std::shared_ptr<CameraHolder>& holder);
 	SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
 		, const SkyBoxTextures& textures, const std::shared_ptr<CameraHolder>& holder);
+	SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
+		, const std::shared_ptr<CameraHolder>& holder);
 	~SkyBox();
 
 	void Draw();
@@ -79,6 +81,8 @@ public:
 	void SetCommandList(const std::shared_ptr<Dx12CommandList>& cmdList);
 
 	void UpdateCameraBuffer();
+	
+	void SetSkyBoxTextures(SkyBoxTextures& textures);
 private:
 
 	struct SkyBoxCBuffer
@@ -100,6 +104,8 @@ private:
 	void Init();
 	DirectX::XMFLOAT4X4 GetSkyBoxProjection(std::shared_ptr<Dx12Camera> camera);
 	void FixUV();
+	void UpdateDescriptorHeap();
+	void LoadTexture();
 
 	std::shared_ptr<RootSignatureObject> mSkyBoxRootSignature;
 	std::shared_ptr<PipelineStateObject> mSkyBoxPipelineState;

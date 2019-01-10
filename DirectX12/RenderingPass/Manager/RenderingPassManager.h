@@ -78,7 +78,10 @@ public:
 
 
 	/**
-	*	パスを追加する
+	*	@brief	パスを追加する 
+	*	@note	FirstUpdateは呼ばれないので適宜呼ぶこと
+	*	@param[in]	passObj	追加するパス
+	*	@param[out]	out_passIndex	追加したパスのインデックス
 	*/
 	bool AddRenderingPass(const std::shared_ptr<RenderingPassObject>& passObj, unsigned int& out_PassIndex);
 
@@ -92,6 +95,11 @@ public:
 	*	これを実行した後はパスのインデックスが崩れるので注意
 	*/
 	bool DeleteRenderingPass(unsigned int passIndex);
+
+	/**
+	*	指定したレンダリングパスのコマンドリストをパス上から削除する
+	*	これを実行した後はパスのインデックスが崩れるので注意
+	*/
 	bool DeleteRenderingPass(const std::string& passName);
 
 	/**
