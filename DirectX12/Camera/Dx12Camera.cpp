@@ -66,11 +66,12 @@ void Dx12Camera::UpdateElement()
 		, DirectX::XMLoadFloat3(&mUpper)));
 	DirectX::XMStoreFloat4x4(&mElement.view, DirectX::XMLoadFloat4x4(&mCamera));
 	DirectX::XMStoreFloat4x4(&mElement.projection, DirectX::XMLoadFloat4x4(&mProjection));
-	
 }
 
 void Dx12Camera::Init()
 {
+	auto size = Dx12Ctrl::Instance().GetWindowSize();
+	UpdateRatios();
 	UpdateProjection();
 	DirectX::XMStoreFloat4x4(&mElement.world, DirectX::XMMatrixIdentity());
 	mWorldRotation = mElement.world;
@@ -88,6 +89,14 @@ void Dx12Camera::NonSetElementToHolder()
 void Dx12Camera::UpdateProjection()
 {
 	DirectX::XMStoreFloat4x4(&mProjection, DirectX::XMMatrixPerspectiveFovLH(mFov, static_cast<float>(mWidth) / static_cast<float>(mHeight), mNear, mFar));
+}
+
+void Dx12Camera::UpdateRatios()
+{
+	auto size = Dx12Ctrl::Instance().GetWindowSize();
+	mViewPortRatio = { mViewPort.TopLeftX / size.x, mViewPort.TopLeftY / size.y
+		, (mViewPort.TopLeftX + mViewPort.Width) / size.x, (mViewPort.TopLeftY + mViewPort.Height) / size.y };
+	mScissorRectRatio = { mScissorRect.left / size.x, mScissorRect.top / size.y, mScissorRect.right / size.x, mScissorRect.bottom / size.y };
 }
 
 void Dx12Camera::SetPos(const DirectX::XMFLOAT3& pos)
@@ -235,10 +244,29 @@ void Dx12Camera::SetViewPort(float width, float height,
 	mHolder.lock()->SetCameraViewPort(this);
 }
 
+void Dx12Camera::SetViewPortNormalizeValue(float left, float top, float right, float bottom, float minDepth, float maxDepth)
+{
+	auto size = Dx12Ctrl::Instance().GetWindowSize();
+	mViewPort = { left * size.x, top * size.y, (right - left) * size.x, (bottom - top) * size.y, minDepth, maxDepth };
+	mWidth = right * size.x - left * size.x;
+	mHeight = bottom * size.y - top * size.y;
+	UpdateProjection();
+	UpdateElement();
+	(this->*mHolderSetter)();
+	mHolder.lock()->SetCameraViewPort(this);
+}
+
 void Dx12Camera::SetScisorRect(int right, int bottom,
 	int left, int top)
 {
 	mScissorRect = { left, top, right, bottom };
+	mHolder.lock()->SetCameraScissorRect(this);
+}
+
+void Dx12Camera::SetScisorRectNormalizeValue(float left, float top, float right, float bottom)
+{
+	auto size = Dx12Ctrl::Instance().GetWindowSize();
+	mScissorRect = { left * size.x, top * size.y, right * size.x, bottom * size.y };
 	mHolder.lock()->SetCameraScissorRect(this);
 }
 
@@ -354,6 +382,10 @@ void Dx12Camera::SetFar(float cameraFar)
 	UpdateProjection();
 	UpdateElement();
 	(this->*mHolderSetter)();
+}
+
+void Dx12Camera::UpdateViewportScisoorRect()
+{
 }
 
 DirectX::XMINT2 Dx12Camera::GetViewPortSize() const

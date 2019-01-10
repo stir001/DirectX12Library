@@ -153,6 +153,19 @@ public:
 		float minDepth = 0.0f, float maxDepth = 1.0f);
 
 	/**
+	*	@brief	viewporの値を画面比で決定する 左上(0,0) 右下(1,1)
+	*	@param[in]	left		左端x画面座標比
+	*	@param[in]	top			上端y画面座標比
+	*	@param[in]	right		右端x画面座標比
+	*	@param[in]	bottom		下端y画面座標比
+	*	@param[in]	minDepth	最小depth値
+	*	@param[in]	maxDepth	最大depth値
+	*/
+	void SetViewPortNormalizeValue(float left, float top
+		, float right, float bottom
+		, float minDepth = 0.0f, float maxDepth = 1.0f);
+
+	/**
 	*	@brief ScisorRectを設定する ViewPort内の切り抜き矩形(画面座標)
 	*	@param right	切り抜き矩形の右のX座標
 	*	@param bottom	切り抜き矩形の下Y座標
@@ -161,6 +174,17 @@ public:
 	*/
 	void SetScisorRect(int right, int bottom,
 		int left = 0.0f, int top = 0.0f );
+
+	/**
+	*	@brief ScisorRectを画面比で決定する 
+	*		0~横幅 : 0 ~ 1.0, 0~縦幅 : 0~1.0
+	*	@param[in]	left	左端の画面比(0~1.0)
+	*	@param[in]	top		上端の画面比(0~1.0)
+	*	@param[in]	right	右端の画面比(0~1.0)
+	*	@param[in]	bottom	下端の画面比(0~1.0)
+	*/
+	void SetScisorRectNormalizeValue(float left, float top
+		,float right, float bottom);
 
 	/**
 	*	カメラのViewPortを取得する
@@ -230,6 +254,10 @@ public:
 	void SetFar(float cameraFar);
 
 	/**
+	*	画面の大きさに合わせてviewportとscissorRectを更新する(画面比ベース)
+	*/
+	void UpdateViewportScisoorRect();
+	/**
 	*	@brief	カメラが対応しているviewportのサイズを取得する
 	*/
 	DirectX::XMINT2 GetViewPortSize() const;
@@ -240,6 +268,69 @@ public:
 	*/
 	float GetFov() const;
 private:
+
+	/**
+	*	@brief	カメラに回転行列を適応する
+	*	@param[in]	rotaMatrix	回転行列
+	*/
+	void AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix);
+
+	/**
+	*	@brief	ローカル上ベクトルを得る
+	*	@return	ローカル上ベクトル
+	*/
+	DirectX::XMFLOAT3 GetLocalUpper();
+
+	/**
+	*	@brief	視線ベクトルを得る
+	*	@return	視線ベクトル
+	*/
+	DirectX::XMFLOAT3 GetEyeToTargetVec();
+
+	/**
+	*	シェーダーに渡す要素を更新する
+	*/
+	void UpdateElement();
+
+	/**
+	*	初期化処理
+	*/
+	void Init();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定する状態
+	*/
+	void SetElementToHolder();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定しない状態
+	*/
+	void NonSetElementToHolder();
+
+	/**
+	*	プロジェクション行列を更新する
+	*/
+	void UpdateProjection();
+
+	/**
+	*	viewportとsissorRectの値と画面サイズを参考に比率を更新する
+	*/
+	void UpdateRatios();
+
+	/**
+	*	@struct	ViewportやScissorRectの画面比保存用構造体
+	*/
+	struct RectRatio
+	{
+		float left;		//!	左端x画面座標比率
+		float top;		//!	上端y画面座標比率
+		float right;	//!	右端x画面座標比率
+		float bottom;	//!	下端y画面座標比率
+		RectRatio() :left(0.0f), top(0.0f), right(1.0f), bottom(1.0f) {}
+		RectRatio(float left, float top, float right, float bottom)
+			: left(left), top(top), right(right), bottom(bottom) {}
+	};
+
 	/**
 	*	カメラがGPUに投げる要素
 	*/
@@ -291,9 +382,19 @@ private:
 	D3D12_VIEWPORT mViewPort;
 
 	/**
+	*	viewPortの画面比率
+	*/
+	RectRatio mViewPortRatio;
+
+	/**
 	*	描画範囲内の切り抜き矩形
 	*/
 	D3D12_RECT mScissorRect;
+
+	/**
+	*	sciddorRectの画面比率保存用
+	*/
+	RectRatio mScissorRectRatio;
 
 	/**
 	*	自分を保持しているホルダー
@@ -316,7 +417,7 @@ private:
 	float mNear;
 
 	/**
-	*	flarClipping
+	*	farClipping
 	*/
 	float mFar;
 
