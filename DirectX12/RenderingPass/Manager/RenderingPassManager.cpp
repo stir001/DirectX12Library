@@ -62,21 +62,21 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	auto device = d12.GetDev();
 	auto wndSize = d12.GetWindowSize();
 
-	auto rendertarget = std::make_shared<RendertargetObject>("MainRendertarget", device, wndSize.x, wndSize.y);
+	auto rendertarget = std::make_shared<RendertargetObject>("MainRendertarget", device, static_cast<unsigned int>(wndSize.x), static_cast<unsigned int>(wndSize.y));
 
 	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(1);
 	buffers[0] = rendertarget;
 
 	auto descheap = std::make_shared<Dx12DescriptorHeapObject>("MainRTVDescHeap", device, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	auto skyBoxPass = std::make_shared<SkyBoxPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
+	auto skyBoxPass = std::make_shared<SkyBoxPass>(device, descheap, rendertarget, static_cast<unsigned int>(wndSize.x), static_cast<unsigned int>(wndSize.y));
 
-	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
+	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(device, descheap, rendertarget, static_cast<unsigned int>(wndSize.x), static_cast<unsigned int>(wndSize.y));
 
 	std::shared_ptr<ModelPass> modelpass = std::make_shared<ModelPass>(
-		device, d12.GetDepthDescHeap(), descheap, wndSize.x, wndSize.y, d12.GetCameraHolder());
+		device, d12.GetDepthDescHeap(), descheap, static_cast<unsigned int>(wndSize.x), static_cast<unsigned int>(wndSize.y), d12.GetCameraHolder());
 
-	std::shared_ptr<UIPass> uipass = std::make_shared<UIPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
+	std::shared_ptr<UIPass> uipass = std::make_shared<UIPass>(device, descheap, rendertarget, static_cast<unsigned int>(wndSize.x), static_cast<unsigned int>(wndSize.y));
 
 	unsigned int renderingPathIndex;
 	auto& passMgr = RenderingPassManager::Instance();

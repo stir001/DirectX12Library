@@ -248,8 +248,8 @@ void Dx12Camera::SetViewPortNormalizeValue(float left, float top, float right, f
 {
 	auto size = Dx12Ctrl::Instance().GetWindowSize();
 	mViewPort = { left * size.x, top * size.y, (right - left) * size.x, (bottom - top) * size.y, minDepth, maxDepth };
-	mWidth = right * size.x - left * size.x;
-	mHeight = bottom * size.y - top * size.y;
+	mWidth = static_cast<int>(right * size.x - left * size.x);
+	mHeight = static_cast<int>(bottom * size.y - top * size.y);
 	UpdateProjection();
 	UpdateElement();
 	(this->*mHolderSetter)();
