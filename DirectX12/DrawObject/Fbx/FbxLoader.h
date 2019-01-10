@@ -97,7 +97,7 @@ public:
 
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
 
-	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	std::shared_ptr<Fbx::FbxModelData> GetMeshData(const std::string& modelPath);
 private:

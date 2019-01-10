@@ -66,11 +66,6 @@ VertexBufferObject::~VertexBufferObject()
 {
 }
 
-void VertexBufferObject::SetBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const
-{
-	cmdList->IASetVertexBuffers(0, 1, &mVbView);
-}
-
 D3D12_VERTEX_BUFFER_VIEW VertexBufferObject::GetView() const
 {
 	return mVbView;

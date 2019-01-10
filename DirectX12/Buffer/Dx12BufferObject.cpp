@@ -12,10 +12,9 @@
 
 Dx12BufferObject::Dx12BufferObject(const std::string& name) : mBuffer(nullptr),mElementBuffer(nullptr)
 {
-	wchar_t* buf = nullptr;
-	ToWChar(&buf, name);
+	std::wstring buf;
+	ToWChar(buf, name);
 	mName = buf;
-	delete buf;
 }
 
 Dx12BufferObject::Dx12BufferObject(Microsoft::WRL::ComPtr<ID3D12Resource>& rsc, const std::string& name,
@@ -28,11 +27,10 @@ Dx12BufferObject::Dx12BufferObject(Microsoft::WRL::ComPtr<ID3D12Resource>& rsc, 
 	rsc->GetHeapProperties(&mHeapProp, &flag);
 #endif // _DEBUG
 
-	wchar_t* buf = nullptr;
-	ToWChar(&buf, name);
+	std::wstring buf;
+	ToWChar(buf, name);
 	mName = buf;
 	mBuffer->SetName(mName.data());
-	delete buf;
 }
 
 Dx12BufferObject::~Dx12BufferObject()

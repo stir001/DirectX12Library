@@ -39,12 +39,6 @@ public:
 	~VertexBufferObject();
 
 	/**
-	*	@brief	ID3D12GraphicsCommnadListにVertexBufferをセットする
-	*	@param[in]	cmdList	VertexBufferをセットするコマンドリスト
-	*/
-	void SetBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const;
-
-	/**
 	*	@brief	VertexBufferViewを得る
 	*	@return	現在のVertexBufferView
 	*/

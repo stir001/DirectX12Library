@@ -50,19 +50,19 @@ public:
 	*	@brief UIレイヤーのコマンドリストを設定する
 	*	@param[in]	cmdList	設定するコマンドリスト
 	*/
-	void SetUIPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetUIPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	@brief BackGroundレイヤーのコマンドリストを設定する
 	*	@param[in]	cmdList	設定するコマンドリスト
 	*/
-	void SetBackGroundPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetBackGroundPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	@brief Modelレイヤーのコマンドリストを設定する
 	*	@param[in]	cmdList	設定するコマンドリスト
 	*/
-	void Set3DPassCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void Set3DPassCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	@brief	指定されたファイルパスでロードしたオブジェクトの所有権を手放す
@@ -113,12 +113,12 @@ private:
 	/**
 	*	背景レイヤー用のコマンドリスト
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mBackCmdList;
+	std::shared_ptr<Dx12CommandList> mBackCmdList;
 
 	/**
 	*	3D描画レイヤー用のコマンドリスト
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mModelCmdList;
+	std::shared_ptr<Dx12CommandList> mModelCmdList;
 	
 	/**
 	*	2D画像描画に使用するrootsiganture

@@ -38,16 +38,16 @@ public:
 	/**
 	*	コマンドリストを取得する
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList();
+	std::shared_ptr<Dx12CommandList> GetCommandList();
 
 	/**
 	*	最終レンダリング結果を返す関数　一番最後のパスのみ必須それ以外は実装しないでもいい
 	*/
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetRenderTarget();
+	std::shared_ptr<Dx12BufferObject> GetRenderTarget();
 
 private:
 	D3D12_VIEWPORT mViewPort;
-	D3D12_RECT mSciddorRect;
+	D3D12_RECT mScissorRect;
 	std::shared_ptr<Dx12DescriptorHeapObject> mRtvDescHeap;
 	std::shared_ptr<RendertargetObject> mRendertarget;
 };

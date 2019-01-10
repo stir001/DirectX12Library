@@ -10,10 +10,12 @@
 class SwapChainObject;
 class Dx12DescriptorHeapObject;
 class RenderingPassObject;
-
+class Dx12CommandList;
+class Dx12BufferObject;
 
 enum class DefaultPass
 {
+	SkyBox,
 	BackGround,
 	Model,
 	UI,
@@ -59,13 +61,13 @@ public:
 	*	パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
 	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(unsigned int passIndex) const;
+	std::shared_ptr<Dx12CommandList> GetRenderingPassCommandList(unsigned int passIndex) const;
 
 	/**
 	*	パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
 	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetRenderingPassCommandList(const std::string& passName) const;
+	std::shared_ptr<Dx12CommandList> GetRenderingPassCommandList(const std::string& passName) const;
 
 	/**
 	*	パスの名前からそのパスのインデックスを取得する
@@ -108,9 +110,9 @@ public:
 	std::shared_ptr<Dx12DescriptorHeapObject> GetCurrentRTVDescHeap() const;
 
 	/**
-	*	現在のスワップチェインのレンダーターゲットにを取得する
+	*	現在のスワップチェインのレンダーターゲットを取得する
 	*/
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetCurrentRenderTarget() const;
+	std::shared_ptr<Dx12BufferObject> RenderingPassManager::GetCurrentRenderTarget() const;
 
 	/**
 	*	パスのアクティブ、非アクティブを設定する
@@ -143,7 +145,7 @@ private:
 	std::vector<std::shared_ptr<RenderingPassObject>> mRenderingPassObjects;
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mRenderCmdAllocator;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mRenderCmdList;
+	std::shared_ptr<Dx12CommandList> mRenderCmdList;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCmdQueue;
 	Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
 

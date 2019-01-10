@@ -20,6 +20,7 @@ public:
 	std::shared_ptr<Dx12Camera> CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
 		D3D12_VIEWPORT viewport, D3D12_RECT scissorRect);
 	std::shared_ptr<Dx12Camera> GetCamera(unsigned int index) const;
+	int GetCameraNum() const;
 	bool DeleteCamera(unsigned int index);
 	void SetCameraBuffer(DrawController3D* controller);
 	void SetCameraElement(Dx12Camera* camera);

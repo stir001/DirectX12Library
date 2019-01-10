@@ -4,7 +4,7 @@
 
 
 DrawObjectController::DrawObjectController(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+	std::shared_ptr<Dx12CommandList>& cmdList)
 	:mCmdList(cmdList), mDevice(dev)
 {
 	mBundleCmdList = std::make_shared<Dx12CommandList>(name, mDevice, D3D12_COMMAND_LIST_TYPE_BUNDLE);
@@ -13,10 +13,9 @@ DrawObjectController::DrawObjectController(const std::string& name, const Micros
 
 DrawObjectController::~DrawObjectController()
 {
-	mCmdList.Reset();
 }
 
-void DrawObjectController::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void DrawObjectController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 }
@@ -26,7 +25,7 @@ void DrawObjectController::SetPipelineState(std::shared_ptr<PipelineStateObject>
 	mPipelinestate = pipelinestate;
 }
 
-void DrawObjectController::SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdlist)
+void DrawObjectController::SetCommandList(std::shared_ptr<Dx12CommandList>& cmdlist)
 {
 	mCmdList = cmdlist;
 }

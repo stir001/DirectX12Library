@@ -242,8 +242,6 @@
     <ClInclude Include="DirectX12\DrawObject\PMD\PMDModel.h" />
     <ClInclude Include="DirectX12\DrawObject\PMD\PMXLoader.h" />
     <ClInclude Include="DirectX12\DrawObject\PMD\PMXModel.h" />
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.h" />
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.h" />
@@ -251,6 +249,7 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveObject.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitivePlane.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.h" />
+    <ClInclude Include="DirectX12\DrawObject\SkyBox.h" />
     <ClInclude Include="DirectX12\DrawObject\Transform3DCalculator.h" />
     <ClInclude Include="DirectX12\DrawObject\TransformMatrixCalculator.h" />
     <ClInclude Include="DirectX12\Input\DxInput.h" />
@@ -317,6 +316,9 @@
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.h" />
     <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.h" />
+    <ClInclude Include="DirectX12\PipelineState\SkyBoxPipelineState.h" />
+    <ClInclude Include="DirectX12\RenderingPass\SkyBoxPass.h" />
+    <ClInclude Include="DirectX12\Rootsignature\SkyBoxRootSignature.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -379,8 +381,6 @@
     <ClCompile Include="DirectX12\DrawObject\PMD\PMDModel.cpp" />
     <ClCompile Include="DirectX12\DrawObject\PMD\PMXLoader.cpp" />
     <ClCompile Include="DirectX12\DrawObject\PMD\PMXModel.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCreator.cpp" />
@@ -388,6 +388,7 @@
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveObject.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitivePlane.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\SkyBox.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Transform3DCalculator.cpp" />
     <ClCompile Include="DirectX12\DrawObject\TransformMatrixCalculator.cpp" />
     <ClCompile Include="DirectX12\Input\DxInput.cpp" />
@@ -452,6 +453,9 @@
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.cpp" />
     <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\SkyBoxPipelineState.cpp" />
+    <ClCompile Include="DirectX12\RenderingPass\SkyBoxPass.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\SkyBoxRootSignature.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -547,6 +551,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\WireFrameShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\SkyBoxShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

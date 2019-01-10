@@ -38,7 +38,7 @@ public:
 	*	@param[in]	cmdList	このモデルの描画命令を積むコマンドリスト
 	*/
 	PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<DirectionalLight>& dlight, const std::string& name,
-		const Microsoft::WRL::ComPtr<ID3D12Device>& dev,Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+		const Microsoft::WRL::ComPtr<ID3D12Device>& dev, std::shared_ptr<Dx12CommandList>& cmdList);
 	~PMDController();
 
 	/**
@@ -89,7 +89,7 @@ public:
 	*	@brief	描画する際に使用するRootSignatureを設定する
 	*	@param[in]	rootsignature	設定するRootSignature
 	*/
-	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
+	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture);
 
 	/**
 	*	@brief	テクスチャを使って描画する際に使用するPipelineStateを設定する
@@ -136,7 +136,7 @@ public:
 	/**
 	*	shadowmapw作成用のコマンドリスト
 	*/
-	void SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList);
+	void SetShadowmapCommandList(std::shared_ptr<Dx12CommandList> cmdList);
 
 	/**
 	*	descriptorHeapを再構築する 未実装
@@ -221,7 +221,7 @@ private:
 	/**
 	*	shadowmap作成用commandlist
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mShadowmapCmdList;
+	std::shared_ptr<Dx12CommandList> mShadowmapCmdList;
 
 	/**
 	*	このコントローラーで使用するDescriptorHeap
@@ -257,7 +257,7 @@ private:
 	*	@brief	toonを使用する部分と使用しない部分を分けながらCommandListに命令を登録する
 	*	@param[in]	cmdList		命令を登録するコマンドリスト
 	*/
-	void DrawWhileSetTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList
+	void DrawWhileSetTable(const std::shared_ptr<Dx12CommandList>& cmdList
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair);
 
@@ -267,7 +267,7 @@ private:
 	*	@param[in]	resourceIndex	何番目のマテリアルかのインデックス
 	*	@param[in]	offsetCount		DescriptorHeapのオフセット番号
 	*/
-	void SetMaterial(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount);
+	void SetMaterial(const std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount);
 
 	/**
 	*	@brief	現在の情報を使ってDescriptorHeapを作成する
@@ -280,7 +280,7 @@ private:
 	*	@brief	このモデルのConstantBufferをCmdListに設定する
 	*	@param[in]	cmdList		ConstantBufferを設定するCommandList
 	*/
-	void SetConstantBuffers(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetConstantBuffers(const std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	BundelCommadnListを更新する

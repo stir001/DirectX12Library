@@ -17,13 +17,14 @@
 struct ID3D12DescriptorHeap;
 struct ID3D12Device;
 class Dx12BufferObject;
+class Dx12CommandList;
 
 /**
 *	@ingroup Dx12DescriptorHeap
 *	@class Dx12DescriptorHeapObject
 *	@brief ID3D12DescriptorHeapを保持する
 */
-class Dx12DescriptorHeapObject
+class Dx12DescriptorHeapObject : public std::enable_shared_from_this<Dx12DescriptorHeapObject>
 {
 public:
 	/**
@@ -61,9 +62,26 @@ public:
 	virtual void SetDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const;
 
 	/**
-	*	@brief	コマンドリストにDescriptorHeapTableを設定する
+	*	@brief	DescriptorHeapをコマンドリストにセットする
+	*	@param[in]	cmdList	DescriptorHeapをセットするコマンドリスト
 	*/
-	virtual void SetGprahicsDescriptorTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
+	virtual void SetDescriptorHeap(const std::shared_ptr<Dx12CommandList>& cmdList) const;
+
+	/**
+	*	@brief	コマンドリストにDescriptorHeapTableを設定する
+	*	@param[in]	resourceHandleIndex	DescriptorTableに格納しているリソースハンドルのインデックス
+	*	@param[in]	rootParamaterIndex	リソースをバインドするrootParamaterIndex
+	*	@param[in]	handleOffsetCount	resourceHandleのオフセット(何個目を使用するか)
+	*/
+	virtual void SetGraphicsDescriptorTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
+
+	/**
+	*	@brief	コマンドリストにDescriptorHeapTableを設定する
+	*	@param[in]	resourceHandleIndex	DescriptorTableに格納しているリソースハンドルのインデックス
+	*	@param[in]	rootParamaterIndex	リソースをバインドするrootParamaterIndex
+	*	@param[in]	handleOffsetCount	resourceHandleのオフセット(何個目を使用するか)
+	*/
+	virtual void SetGraphicsDescriptorTable(const std::shared_ptr<Dx12CommandList> cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
 protected:
 	/**
 	*	保持しているDescriptorHeap

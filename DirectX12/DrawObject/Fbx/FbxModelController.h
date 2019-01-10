@@ -17,6 +17,7 @@ class FbxMotionPlayer;
 class FbxMotionData;
 class Dx12DescriptorHeapObject;
 class Dx12Camera;
+class Dx12CommandList;
 
 namespace Fbx
 {
@@ -30,7 +31,7 @@ class FbxModelController :
 public:
 	FbxModelController(std::shared_ptr<Fbx::FbxModel>& model, 
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList,
+		std::shared_ptr<Dx12CommandList>& cmdList,
 		std::shared_ptr<PipelineStateObject>& pipelinestate,
 		std::shared_ptr<RootSignatureObject>& rootsignature);
 	~FbxModelController();
@@ -39,9 +40,8 @@ public:
 	void DrawSkeleton();
 	void SetLight(std::shared_ptr<LightObject> dirlight);
 
-	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
-	void SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 	void SetMotion(std::shared_ptr<FbxMotionData>& motion, bool isLoop = true);
 	void StopMotion() const;
 	void RestartMotion() const;

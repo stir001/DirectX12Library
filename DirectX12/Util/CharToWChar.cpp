@@ -5,26 +5,6 @@
 #include <locale.h>
 #include <stdlib.h>
 
-size_t ToWChar(wchar_t** ppBuf, size_t charWordLen, const char* pCharWord, size_t ppBufMaxCount)
-{
-	size_t rtn = 0;
-	unsigned int size = static_cast<unsigned int>(charWordLen);
-	*ppBuf = new wchar_t[size + 10];
-	mbstowcs_s(&rtn, *ppBuf, charWordLen, pCharWord, _TRUNCATE);
-
-	return rtn;
-}
-
-size_t ToWChar(wchar_t** ppBuf, std::string cstr)
-{
-	size_t rtn = 0;
-	cstr.push_back('\0');
-	*ppBuf = new wchar_t[cstr.size()];
-	mbstowcs_s(&rtn, *ppBuf, cstr.size(), cstr.data(), _TRUNCATE);
-
-	return rtn;
-}
-
 size_t ToWChar(std::wstring& wstr, std::string cstr)
 {
 	size_t rtn = 0;
@@ -34,16 +14,18 @@ size_t ToWChar(std::wstring& wstr, std::string cstr)
 	mbstowcs_s(&rtn, buf, cstr.size(), cstr.data(), _TRUNCATE);
 	wstr.resize(rtn);
 	wstr = buf;
-
+	delete buf;
 	return rtn;
 }
 
-size_t ToChar(char** ppBuf, size_t ppBufSizeInByte, const wchar_t* wcStr, size_t convertWordNum)
-{
+size_t ToChar(std::string& cstr, std::wstring wstr)
+{	
 	size_t rtn = 0;
-	unsigned int size = static_cast<unsigned int>(convertWordNum);
-	*ppBuf = new char[size];
-	wcstombs_s(&rtn, *ppBuf, ppBufSizeInByte, wcStr, _TRUNCATE);
-
+	wstr.push_back('\0');
+	char* buf = new char[wstr.size()];
+	wcstombs_s(&rtn, buf, wstr.size(), wstr.data(), _TRUNCATE);
+	cstr.resize(rtn);
+	cstr = buf;
+	delete buf;
 	return rtn;
 }

@@ -257,6 +257,16 @@ public:
 	*	画面の大きさに合わせてviewportとscissorRectを更新する(画面比ベース)
 	*/
 	void UpdateViewportScisoorRect();
+	/**
+	*	@brief	カメラが対応しているviewportのサイズを取得する
+	*/
+	DirectX::XMINT2 GetViewPortSize() const;
+
+	/**
+	*	@brief	fovを取得する
+	*	@return	現在のfov
+	*/
+	float GetFov() const;
 private:
 
 	/**
@@ -415,4 +425,47 @@ private:
 	*	更新をCameraHolderに通知するステート用
 	*/
 	void (Dx12Camera::*mHolderSetter)();
+
+	/**
+	*	@brief	カメラに回転行列を適応する
+	*	@param[in]	rotaMatrix	回転行列
+	*/
+	void AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix);
+
+	/**
+	*	@brief	ローカル上ベクトルを得る
+	*	@return	ローカル上ベクトル
+	*/
+	DirectX::XMFLOAT3 GetLocalUpper();
+
+	/**
+	*	@brief	視線ベクトルを得る
+	*	@return	視線ベクトル
+	*/
+	DirectX::XMFLOAT3 GetEyeToTargetVec();
+
+	/**
+	*	シェーダーに渡す要素を更新する
+	*/
+	void UpdateElement();
+
+	/**
+	*	初期化処理
+	*/
+	void Init();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定する状態
+	*/
+	void SetElementToHolder();
+
+	/**
+	*	holderにカメラ情報変更後の値を設定しない状態
+	*/
+	void NonSetElementToHolder();
+
+	/**
+	*	projection行列を更新する
+	*/
+	void UpdateProjection();
 };

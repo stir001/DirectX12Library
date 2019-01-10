@@ -260,7 +260,7 @@ int PhysicsSystem::GetAvailableMinID()
 	return id;
 }
 
-void PhysicsSystem::SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void PhysicsSystem::SetRenderCommnadList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mDebugDrawer->SetRenderCommnadList(cmdList);
 }

@@ -15,7 +15,7 @@ public:
 	~SwapChainObject();
 	Microsoft::WRL::ComPtr<IDXGISwapChain3> GetSwapChain() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTVHeap() const;
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetCurrentRenderTarget() const;
+	std::shared_ptr<Dx12BufferObject> GetCurrentRenderTarget() const;
 	std::shared_ptr<Dx12DescriptorHeapObject> GetDescriptorHeap() const;
 	HRESULT SwapChainPresent(UINT SyncInterval, UINT flags);
 	void Release();

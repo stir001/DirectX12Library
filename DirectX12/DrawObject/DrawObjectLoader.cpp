@@ -21,7 +21,7 @@ void DrawObjectLoader::GetRelativePath(const std::string& path)
 	std::copy(path.begin(), path.begin() + length, mRelativePath.begin());
 }
 
-void DrawObjectLoader::SetRenderingCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void DrawObjectLoader::SetRenderingCommnadList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mCmdList = cmdList;
 }

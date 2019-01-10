@@ -50,7 +50,7 @@ void FbxLoader::SetPipelineState(std::shared_ptr<PipelineStateObject>& Pipelines
 	mPipelinestate = Pipelinestate;
 }
 
-void FbxLoader::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void FbxLoader::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 }

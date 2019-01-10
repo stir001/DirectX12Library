@@ -20,6 +20,7 @@ class LightObject;
 class Dx12Camera;
 class TextureObject;
 class Dx12BufferObject;
+class Dx12CommandList;
 
 /**
 *	@ingroup primitive
@@ -36,8 +37,8 @@ public:
 	*	@param[in]	cmdList		使用するコマンドリスト
 	*/
 	PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
-		,Microsoft::WRL::ComPtr<ID3D12Device>& dev
-		, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+		, Microsoft::WRL::ComPtr<ID3D12Device>& dev
+		, std::shared_ptr<Dx12CommandList>& cmdList);
 	~PrimitiveController();
 
 	/**
@@ -149,7 +150,7 @@ public:
 
 	void DrawShadow();
 
-	void SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetShadowmapCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 
 protected:
 	void UpdateInstanceVertexBuffer();
@@ -185,6 +186,6 @@ protected:
 	std::shared_ptr<RootSignatureObject> mShadowmapRootSignature;
 	std::shared_ptr<RootSignatureObject> mShadowRenderRootSignature;
 	std::shared_ptr<Dx12BufferObject> mShadowmapTexture;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mShadowmapCmdList;
+	std::shared_ptr<Dx12CommandList> mShadowmapCmdList;
 };
 

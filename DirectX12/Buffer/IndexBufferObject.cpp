@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "IndexBufferObject.h"
 #include "Util/Dx12Getter.h"
+#include "CommandList/Dx12CommandList.h"
 
 #include "d3dx12.h"
 
@@ -65,8 +66,7 @@ IndexBufferObject::~IndexBufferObject()
 {
 }
 
-void IndexBufferObject::SetBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const
+D3D12_INDEX_BUFFER_VIEW IndexBufferObject::GetView() const
 {
-	cmdList->IASetIndexBuffer(&mIndexBufferView);
-	//cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	return mIndexBufferView;
 }

@@ -13,11 +13,12 @@
 #include "Rootsignature/RootSignatureObject.h"
 #include "Light/LightObject.h"
 #include "Master/Dx12Ctrl.h"
+#include "CommandList/Dx12CommandList.h"
 
 
 PrimitiveController::PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
 	, Microsoft::WRL::ComPtr<ID3D12Device>& dev
-	, Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+	, std::shared_ptr<Dx12CommandList>& cmdList)
 	: DrawController3D(primitive->GetName(),dev, cmdList)
 	, mPrimitive(primitive)
 	, mInstanceUpdate(&PrimitiveController::UpdateInstanceVertexBuffer)
@@ -94,19 +95,20 @@ void PrimitiveController::Draw()
 	(this->*mInstanceUpdate)();
 	(this->*mDescHeapUpdate)();
 
-	mCmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	mCmdList->SetPipelineState(mPipelinestate);
+	mCmdList->SetGraphicsRootSignature(mRootsignature);
 	mCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	const D3D12_VERTEX_BUFFER_VIEW vbViews[] = { mVertexBuffer->GetView(), mInstanceVertexBuffer->GetView() };
-	mCmdList->IASetVertexBuffers(0, 2, vbViews);
-	mIndexBuffer->SetBuffer(mCmdList);
+	std::shared_ptr<VertexBufferObject> vertexBuffers[] = { mVertexBuffer, mInstanceVertexBuffer };
+	mCmdList->IASetVertexBuffers(vertexBuffers, 2);
+	mCmdList->IASetIndexBuffer(mIndexBuffer);
 	mDescHeap->SetDescriptorHeap(mCmdList);
 	unsigned int resourceIndex = 0;
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
 
 	mCmdList->DrawIndexedInstanced(static_cast<UINT>(mPrimitive->GetIndices().size()), static_cast<UINT>(mInstanceDatas.size()), 0, 0, 0);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 void PrimitiveController::SetPosition(const DirectX::XMFLOAT3 & pos)
@@ -198,41 +200,43 @@ void PrimitiveController::CreateShadowmapDescHeap()
 void PrimitiveController::DrawShadowmap()
 {
 	UpdateInstanceVertexBuffer();
-	mShadowmapCmdList->SetPipelineState(mShadowmapPipeline->GetPipelineState().Get());
-	mShadowmapCmdList->SetGraphicsRootSignature(mShadowmapRootSignature->GetRootSignature().Get());
+	mShadowmapCmdList->SetPipelineState(mShadowmapPipeline);
+	mShadowmapCmdList->SetGraphicsRootSignature(mShadowmapRootSignature);
 	mDescHeap->SetDescriptorHeap(mShadowmapCmdList);
-	const D3D12_VERTEX_BUFFER_VIEW vbViews[] = { mVertexBuffer->GetView(), mInstanceVertexBuffer->GetView() };
-	mShadowmapCmdList->IASetVertexBuffers(0, 2, vbViews);
-	mIndexBuffer->SetBuffer(mShadowmapCmdList);
+	std::shared_ptr<VertexBufferObject> vertexBuffers[] = { mVertexBuffer, mInstanceVertexBuffer };
+	mShadowmapCmdList->IASetVertexBuffers(vertexBuffers, 2);
+	mShadowmapCmdList->IASetIndexBuffer(mIndexBuffer);
 	mShadowmapCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	unsigned int resourceIndex = 0;
-	mDescHeap->SetGprahicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
-	mDescHeap->SetGprahicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
+	mDescHeap->SetGraphicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGraphicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
+	mDescHeap->SetGraphicsDescriptorTable(mShadowmapCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
 
 	mShadowmapCmdList->DrawIndexedInstanced(static_cast<UINT>(mPrimitive->GetIndices().size()), static_cast<UINT>(mInstanceDatas.size()), 0, 0, 0);
+	mShadowmapCmdList->SetDrawController(shared_from_this());
 }
 
 void PrimitiveController::DrawShadow()
 {
 	UpdateInstanceVertexBuffer();
-	mCmdList->SetPipelineState(mShadowRenderPipeline->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mShadowRenderRootSignature->GetRootSignature().Get());
+	mCmdList->SetPipelineState(mShadowRenderPipeline);
+	mCmdList->SetGraphicsRootSignature(mShadowRenderRootSignature);
 	mDescHeap->SetDescriptorHeap(mCmdList);
-	const D3D12_VERTEX_BUFFER_VIEW vbViews[] = { mVertexBuffer->GetView(), mInstanceVertexBuffer->GetView() };
-	mCmdList->IASetVertexBuffers(0, 2, vbViews);
-	mIndexBuffer->SetBuffer(mCmdList);
+	std::shared_ptr<VertexBufferObject> vertexBuffers[] = { mVertexBuffer, mInstanceVertexBuffer };
+	mCmdList->IASetVertexBuffers(vertexBuffers, 2);
+	mCmdList->IASetIndexBuffer(mIndexBuffer);
 	mCmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	unsigned int resourceIndex = 0;
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_SHADOWMAP);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_CAMERA);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_LIGHT);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex++, eROOT_PARAMATER_INDEX_SHADOWMAP);
 
 	mCmdList->DrawIndexedInstanced(static_cast<UINT>(mPrimitive->GetIndices().size()), static_cast<UINT>(mInstanceDatas.size()), 0, 0, 0);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
-void PrimitiveController::SetShadowmapCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void PrimitiveController::SetShadowmapCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mShadowmapCmdList = cmdList;
 }

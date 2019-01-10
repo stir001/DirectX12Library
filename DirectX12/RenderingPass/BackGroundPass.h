@@ -9,7 +9,10 @@ class BackGroundPass :
 	public RenderingPassObject
 {
 public:
-	BackGroundPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev, int wWidth, int wHeight);
+	BackGroundPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
+		std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
+		std::shared_ptr<RendertargetObject> rendertarget,
+		int wWidth, int wHeight);
 	~BackGroundPass();
 
 	/**
@@ -35,7 +38,7 @@ public:
 	/**
 	*	コマンドリストを取得する
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList();
+	std::shared_ptr<Dx12CommandList> GetCommandList();
 
 	/**
 	*	Rendertargetクラスを取得する

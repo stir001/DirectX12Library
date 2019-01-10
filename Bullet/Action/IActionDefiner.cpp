@@ -55,3 +55,8 @@ std::shared_ptr<BulletGhostObject> IActionDefiner::GetGhost() const
 {
 	return mDetector->GetPtr();
 }
+
+void IActionDefiner::SetVelocity(const DirectX::XMFLOAT3 & vel)
+{
+	mDetector->SetVelocity(vel);
+}

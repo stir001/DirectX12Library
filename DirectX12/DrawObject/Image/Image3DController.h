@@ -37,7 +37,7 @@ public:
 	*/
 	Image3DController(std::shared_ptr<ImageObject> img,
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList,
+		std::shared_ptr<Dx12CommandList>& cmdList,
 		std::shared_ptr<PipelineStateObject>& pipelinestate,
 		std::shared_ptr<RootSignatureObject>& rootsignature);
 
@@ -162,7 +162,7 @@ public:
 	*	@brief	使用するrootsignatureを設定する
 	*	@param[in]	rootsignature	使用するrootsiganture
 	*/
-	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	@brief	使用するpipelinestateを設定する

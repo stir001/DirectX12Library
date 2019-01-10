@@ -50,7 +50,7 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCube(float length, 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCubeNormalMap(float length, const std::string & texPath)
 {
 	auto rtn = CreateCube(length, texPath);
-	rtn->SetRootSignature(mNormalMapRootsignature);
+	rtn->SetGraphicsRootSignature(mNormalMapRootsignature);
 	rtn->SetPipelineState(mNormalMapPipelineState);
 	return rtn;
 }
@@ -65,7 +65,7 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateSphere(float radius
 
 void PrimitiveCreator::SetParamaters(std::shared_ptr<PrimitiveController>& ctrl)
 {
-	ctrl->SetRootSignature(mRootsiganture);
+	ctrl->SetGraphicsRootSignature(mRootsiganture);
 	ctrl->SetPipelineState(mPipelineState);
 	ctrl->SetLightBuffer(mLight);
 }
@@ -94,7 +94,7 @@ void PrimitiveCreator::SetLightObject(std::shared_ptr<LightObject> inlight)
 	mLight = inlight;
 }
 
-void PrimitiveCreator::SetRenderingCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void PrimitiveCreator::SetRenderingCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mCommnadList = cmdList;
 }

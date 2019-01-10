@@ -32,7 +32,10 @@ public:
 		mInstance = nullptr;
 	}
 
-	std::shared_ptr<Primitive2DLine> CreatePrimitive2DLine(const DirectX::XMFLOAT3& point1, const DirectX::XMFLOAT3& point2);
+	/**
+	*	–¢ŽÀ‘•
+	*/
+	//std::shared_ptr<Primitive2DLine> CreatePrimitive2DLine(const DirectX::XMFLOAT3& point1, const DirectX::XMFLOAT3& point2);
 private:
 	Primitive2DManager();
 	Primitive2DManager(const Primitive2DManager&);

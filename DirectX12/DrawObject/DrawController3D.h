@@ -30,7 +30,7 @@ public:
 	*	@param[in]	cmdList	描画のコマンドを積むコマンドリスト
 	*/
 	DrawController3D(const std::string& modelName, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+		std::shared_ptr<Dx12CommandList>& cmdList);
 	virtual ~DrawController3D();
 
 	/**

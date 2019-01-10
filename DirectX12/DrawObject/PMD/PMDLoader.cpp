@@ -376,7 +376,7 @@ std::shared_ptr<PMDController> PMDLoader::CreateController(std::shared_ptr<PMDMo
 	std::shared_ptr<PMDController> controller = std::make_shared<PMDController>(model, mLight, GetModelName(path),
 		Dx12Ctrl::Instance().GetDev(), mCmdList);
 	controller->SetLight(mLight);
-	controller->SetRootSignature(mRootsignature);
+	controller->SetGraphicsRootSignature(mRootsignature);
 	controller->SetPipelineState(mPipelinestate);
 	controller->SetToonPipelineState(mToonPipelineState);
 	controller->SetToonRootSignature(mToonRootsiganture);

@@ -388,6 +388,16 @@ void Dx12Camera::UpdateViewportScisoorRect()
 {
 }
 
+DirectX::XMINT2 Dx12Camera::GetViewPortSize() const
+{
+	return DirectX::XMINT2(mWidth, mHeight);
+}
+
+float Dx12Camera::GetFov() const
+{
+	return mFov;
+}
+
 void Dx12Camera::AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix)
 {
 	DirectX::XMStoreFloat4x4(&mWorldRotation, /*DirectX::XMLoadFloat4x4(&mWorldRotation) **/ rotaMatrix);

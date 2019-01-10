@@ -17,6 +17,7 @@ class ImageObject;
 class Rect;
 class VertexBufferObject;
 class Dx12DescriptorHeapObject;
+class Dx12CommandList;
 
 /**
 *	@ingroup DrawObjectController
@@ -35,8 +36,8 @@ public:
 	*/
 	ImageController(std::shared_ptr<ImageObject> img,
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> uicmdList,
-		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> backcmdList,
+		std::shared_ptr<Dx12CommandList> uicmdList,
+		std::shared_ptr<Dx12CommandList> backcmdList,
 		std::shared_ptr<PipelineStateObject>& pipelinestate,
 		std::shared_ptr<RootSignatureObject>& rootsignature);
 
@@ -184,19 +185,13 @@ public:
 	*	@brief	使用するRootsigantureを設定する
 	*	@param[in]	rootsignature	使用するrootsignatureを設定する
 	*/
-	void SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	@brief	使用するRootsigantureを設定する
 	*	@param[in]	pipelinestate	使用するpipelinestateを設定する
 	*/
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
-
-	/**
-	*	@brief	使用するコマンドリストを設定する
-	*	@param[in]	cmdList		使用するコマンドリスト
-	*/
-	void SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 
 	/**
 	*	@brief	画像の名前を取得する
@@ -286,7 +281,7 @@ private:
 	/**
 	*	背景描画用のコマンドリスト
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mBackCmdList;
+	std::shared_ptr<Dx12CommandList> mBackCmdList;
 
 	/**
 	*	バンドルの更新情報をもつステート変数

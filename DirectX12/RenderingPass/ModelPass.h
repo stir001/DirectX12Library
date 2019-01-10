@@ -39,7 +39,7 @@ public:
 	/**
 	*	コマンドリストを取得する
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList();
+	std::shared_ptr<Dx12CommandList> GetCommandList();
 
 private:
 	D3D12_RECT mWndRect;

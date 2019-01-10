@@ -264,12 +264,6 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h">
       <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.h">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.h">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClInclude>
@@ -546,6 +540,18 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FMDLoader.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\SkyBoxPipelineState.h">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\RenderingPass\SkyBoxPass.h">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\SkyBox.h">
+      <Filter>DirectX12\DrawObject</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\SkyBoxRootSignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -672,12 +678,6 @@
       <Filter>DirectX12\DrawObject\PMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\IPrimitive2D.cpp">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DLine.cpp">
       <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.cpp">
@@ -944,6 +944,18 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdata.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\RenderingPass\SkyBoxPass.cpp">
+      <Filter>DirectX12\RenderingPass</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\SkyBoxPipelineState.cpp">
+      <Filter>DirectX12\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\SkyBox.cpp">
+      <Filter>DirectX12\DrawObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\SkyBoxRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -986,6 +998,9 @@
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\PMDBasicShader.hlsl">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\SkyBoxShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
   </ItemGroup>

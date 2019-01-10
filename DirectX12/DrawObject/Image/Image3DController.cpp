@@ -20,7 +20,7 @@ const float UNIT_POSITION_PER_PIXEL = 0.05f;
 
 Image3DController::Image3DController(std::shared_ptr<ImageObject> img, 
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList,
+	std::shared_ptr<Dx12CommandList>& cmdList,
 	std::shared_ptr<PipelineStateObject>& pipelinestate,
 	std::shared_ptr<RootSignatureObject>& rootsignature)
 	:DrawController3D(img->GetTextureName() + "Bundle",dev, cmdList),
@@ -188,7 +188,8 @@ void Image3DController::Draw()
 {
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mCmdList);
-	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+	mCmdList->ExecuteBundle(mBundleCmdList);
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 DirectX::XMFLOAT2 Image3DController::GetImageSize()
@@ -202,7 +203,7 @@ std::shared_ptr<Image3DController> Image3DController::GetNewCopy()
 	return rtn;
 }
 
-void Image3DController::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void Image3DController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 	mBundleUpdate = &Image3DController::UpdateBundle;
@@ -212,11 +213,6 @@ void Image3DController::SetPipelineState(std::shared_ptr<PipelineStateObject>& p
 {
 	mPipelinestate = pipelinestate;
 	mBundleUpdate = &Image3DController::UpdateBundle;
-}
-
-void Image3DController::SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
-{
-	mCmdList = cmdList;
 }
 
 std::string Image3DController::GetImageName() const
@@ -299,19 +295,19 @@ void Image3DController::UpdateBuffer()
 void Image3DController::UpdateBundle()
 {
 	mBundleCmdList->Reset();
-	const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& bundle = mBundleCmdList->GetCommandList();
+	auto bundle = mBundleCmdList;
 
-	bundle->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	bundle->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	bundle->SetPipelineState(mPipelinestate);
+	bundle->SetGraphicsRootSignature(mRootsignature);
 	bundle->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	mVertexBuffer->SetBuffer(bundle);
+	bundle->IASetVertexBuffers({ &mVertexBuffer }, 1);
 	mDescHeap->SetDescriptorHeap(bundle);
 
 	unsigned int resourceIndex = 0;
 
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_MATRIX);
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_TEXTURE);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_CAMERA);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_MATRIX);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, Image3DController::eROOT_PARAMATER_INDEX_TEXTURE);
 	bundle->DrawInstanced(4, 1, 0, 0);
 
 	bundle->Close();

@@ -9,6 +9,7 @@
 #include "Camera/CameraHolder.h"
 #include "Buffer/VertexBufferObject.h"
 #include "Buffer/ConstantBufferObject.h"
+#include "CommandList/Dx12CommandList.h"
 
 #include <btBulletDynamicsCommon.h>
 
@@ -72,17 +73,18 @@ void BulletDebugDrawDx::DebugDraw()
 	mVertexBuffer = std::make_shared<VertexBufferObject>("btDebugVertexBuffer",mDev, dataSize, dataNum);
 	mVertexBuffer->WriteBuffer(mVertices.data(), dataSize * dataNum);
 
-	mCmdList->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	mCmdList->SetPipelineState(mPipelinestate);
+	mCmdList->SetGraphicsRootSignature(mRootsignature);
 	mCmdList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_LINELIST);
-	mVertexBuffer->SetBuffer(mCmdList);
+	
+	mCmdList->IASetVertexBuffers({&mVertexBuffer}, 1);
 	mDescHeap->SetDescriptorHeap(mCmdList);
-	mDescHeap->SetGprahicsDescriptorTable(mCmdList, 0, 0);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, 0, 0);
 	mCmdList->DrawInstanced(static_cast<unsigned int>(mVertices.size()), 1, 0, 0);
 	mVertices.clear();
 }
 
-void BulletDebugDrawDx::SetRenderCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
+void BulletDebugDrawDx::SetRenderCommnadList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mCmdList = cmdList;
 }

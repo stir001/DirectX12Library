@@ -19,6 +19,7 @@ class File;
 class ShaderCompiler;
 class PipelineStateObject;
 class RootSignatureObject;
+class Dx12CommandList;
 struct ShaderDatas;
 
 
@@ -37,7 +38,7 @@ public:
 	*	@brief	ローダーでロードしたすべてのオブジェクトに渡すコマンドリストを設定する
 	*	@param[in]	cmdList		オブジェクトに渡すコマンドリスト
 	*/
-	void SetRenderingCommnadList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
+	void SetRenderingCommnadList(std::shared_ptr<Dx12CommandList>& cmdList);
 protected:
 	/**
 	*	ロードするときに使用するファイル
@@ -67,7 +68,7 @@ protected:
 	/**
 	*	ロードしたオブジェクトに渡すcommandlist
 	*/
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;
+	std::shared_ptr<Dx12CommandList> mCmdList;
 
 	/**
 	*	@brief	渡されたファイルパスの相対パスをmReletivePath変数に保存する

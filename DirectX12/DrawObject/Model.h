@@ -17,8 +17,7 @@ class IndexBufferObject;
 class VertexBufferObject;
 class TextureObject;
 class ConstantBufferObject;
-struct ID3D12DescriptorHeap;
-struct ID3D12GraphicsCommandList;
+class Dx12CommandList;
 class DrawObjectLoader;
 
 /**
@@ -50,13 +49,13 @@ public:
 	*	@brief	IndexBuffer‚ğGraphicsCommandList‚Éİ’è‚·‚é
 	*	@param[in]	cmdList	IndexBuffer‚ğİ’è‚·‚éGraphicsCommandList
 	*/
-	void SetIndexBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const;
+	void SetIndexBuffer(const std::shared_ptr<Dx12CommandList>& cmdList) const;
 
 	/**
 	*	@brief	VertexBuffer‚ğGraphicsCommandList‚Éİ’è‚·‚é
 	*	@param[in]	cmdList	VertexBuffer‚ğİ’è‚·‚éGraphicsCommnadList
 	*/
-	void SetVertexBuffer(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList) const;
+	void SetVertexBuffer(const std::shared_ptr<Dx12CommandList>& cmdList) const;
 
 	/**
 	*	@brief	IndexBuffer‚ğæ“¾‚·‚é

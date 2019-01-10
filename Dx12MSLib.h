@@ -57,8 +57,6 @@
 #include "DirectX12/DrawObject/PMD/PMDModel.h"
 #include "DirectX12/DrawObject/PMD/PMXLoader.h"
 #include "DirectX12/DrawObject/PMD/PMXModel.h"
-#include "DirectX12/DrawObject/Primitive2D/IPrimitive2D.h"
-#include "DirectX12/DrawObject/Primitive2D/Primitive2DLine.h"
 #include "DirectX12/DrawObject/Primitive2D/Primitive2DManager.h"
 #include "DirectX12/DrawObject/Primitive3D/PrimitiveController.h"
 #include "DirectX12/DrawObject/Primitive3D/PrimitiveCreator.h"

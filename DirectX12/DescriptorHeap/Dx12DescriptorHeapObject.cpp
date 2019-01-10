@@ -3,8 +3,10 @@
 #include "Buffer/Dx12BufferObject.h"
 #include "ViewDesc/Dx12BufferViewDesc.h"
 #include "Util/CharToWChar.h"
+#include "CommandList/Dx12CommandList.h"
 
 #include <d3d12.h>
+#include <cassert>
 
 D3D12_GPU_DESCRIPTOR_HANDLE operator +(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const unsigned int ptrVal)
 {
@@ -44,10 +46,9 @@ Dx12DescriptorHeapObject::Dx12DescriptorHeapObject(const std::string& name, cons
 	result = dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mDescHeap));
 
 	{
-		wchar_t* buf = nullptr;
-		ToWChar(&buf, name);
-		mDescHeap->SetName(buf);
-		delete buf;
+		std::wstring buf;
+		ToWChar(buf, name);
+		mDescHeap->SetName(buf.data());
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = mDescHeap->GetCPUDescriptorHandleForHeapStart();
@@ -92,7 +93,17 @@ void Dx12DescriptorHeapObject::SetDescriptorHeap(const Microsoft::WRL::ComPtr<ID
 	cmdList->SetDescriptorHeaps(1, mDescHeap.GetAddressOf());
 }
 
-void Dx12DescriptorHeapObject::SetGprahicsDescriptorTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount) const
+void Dx12DescriptorHeapObject::SetDescriptorHeap(const std::shared_ptr<Dx12CommandList>& cmdList) const
 {
-	cmdList->SetGraphicsRootDescriptorTable(rootParamaterIndex, mResourceBinds[resourceIndex].gpuHandle + (handleOffsetCount * mHeapIncrementSize));
+	cmdList->SetDescriptorHeap(shared_from_this());
+}
+
+void Dx12DescriptorHeapObject::SetGraphicsDescriptorTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount) const
+{
+	cmdList->SetGraphicsRootDescriptorTable(rootParamaterIndex, mResourceBinds[resourceHandleIndex].gpuHandle + (handleOffsetCount * mHeapIncrementSize));
+}
+
+void Dx12DescriptorHeapObject::SetGraphicsDescriptorTable(const std::shared_ptr<Dx12CommandList> cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount) const
+{
+	assert(SUCCEEDED(cmdList->SetGraphicsRootDescriptorTable(rootParamaterIndex, mResourceBinds[resourceHandleIndex].gpuHandle + (handleOffsetCount * mHeapIncrementSize))));
 }

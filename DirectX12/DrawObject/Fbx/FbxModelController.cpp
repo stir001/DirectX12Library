@@ -23,7 +23,7 @@ using namespace DirectX;
 
 FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 	const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList,
+	std::shared_ptr<Dx12CommandList>& cmdList,
 	std::shared_ptr<PipelineStateObject>& pipelinestate,
 	std::shared_ptr<RootSignatureObject>& rootsignature)
 	:DrawController3D(model->GetModelName() ,dev, cmdList) 
@@ -96,13 +96,14 @@ void FbxModelController::Draw()
 {
 	UpdateVertex();
 	(this->*mBundleUpdate)();
-	mCmdList->SetDescriptorHeaps(1, mDescHeap->GetDescriptorHeap().GetAddressOf());
-	mCmdList->ExecuteBundle(mBundleCmdList->GetCommandList().Get());
+	mCmdList->SetDescriptorHeap(mDescHeap);
+	mCmdList->ExecuteBundle(mBundleCmdList);
 	
 	for (auto& buffer : mAddConstantBuffers)
 	{
 		buffer->UpdateBuffer();
 	}
+	mCmdList->SetDrawController(shared_from_this());
 }
 
 void FbxModelController::DrawSkeleton()
@@ -117,7 +118,7 @@ void FbxModelController::SetLight(std::shared_ptr<LightObject> dirlight)
 	mBundleUpdate = &FbxModelController::UpdateBundle;
 }
 
-void FbxModelController::SetRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void FbxModelController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = (rootsignature);
 	mBundleUpdate = &FbxModelController::UpdateBundle;
@@ -127,11 +128,6 @@ void FbxModelController::SetPipelineState(std::shared_ptr<PipelineStateObject>& 
 {
 	mPipelinestate = (pipelinestate);
 	mBundleUpdate = &FbxModelController::UpdateBundle;
-}
-
-void FbxModelController::SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList)
-{
-	mCmdList = cmdList;
 }
 
 void FbxModelController::SetMotion(std::shared_ptr<FbxMotionData>& motion,bool isLoop)
@@ -179,24 +175,24 @@ void FbxModelController::UpdateVertex()
 void FbxModelController::UpdateBundle()
 {
 	mBundleCmdList->Reset();
-	const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& bundle = mBundleCmdList->GetCommandList();
-	bundle->SetDescriptorHeaps(1, mDescHeap->GetDescriptorHeap().GetAddressOf());
-	bundle->SetPipelineState(mPipelinestate->GetPipelineState().Get());
-	bundle->SetGraphicsRootSignature(mRootsignature->GetRootSignature().Get());
+	auto bundle = mBundleCmdList;
+	bundle->SetDescriptorHeap(mDescHeap);
+	bundle->SetPipelineState(mPipelinestate);
+	bundle->SetGraphicsRootSignature(mRootsignature);
 	mModel->SetIndexBuffer(bundle);
-	mCtrlVertexBuffer->SetBuffer(bundle);
+	bundle->IASetVertexBuffers({ &mCtrlVertexBuffer }, 1);
 
 	bundle->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	unsigned int resourceIndex = 0;
 
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_CAMERA);
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_LIGHT);
-	mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_MATRIX);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_CAMERA);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_LIGHT);
+	mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_MATRIX);
 	unsigned int offsetIndex = 0;
 	for (auto& buffer : mAddConstantBuffers)
 	{
-		mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_MAX + offsetIndex++);
+		mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, FbxModel::eROOT_PARAMATER_INDEX_MAX + offsetIndex++);
 	}
 
 	unsigned int indexOffset = 0;
@@ -204,7 +200,7 @@ void FbxModelController::UpdateBundle()
 	{
 		for (unsigned int i = 0; i < Fbx::FbxModel::eROOT_PARAMATER_INDEX_TRANSPARENCY_FACTOR + 1; ++i)
 		{
-			mDescHeap->SetGprahicsDescriptorTable(bundle, resourceIndex++, static_cast<Fbx::FbxModel::eROOT_PARAMATER_INDEX>(i));
+			mDescHeap->SetGraphicsDescriptorTable(bundle, resourceIndex++, static_cast<Fbx::FbxModel::eROOT_PARAMATER_INDEX>(i));
 		}
 		bundle->DrawIndexedInstanced(static_cast<UINT>(mat.drawIndexNum), 1, indexOffset, 0, 0);
 		indexOffset += mat.drawIndexNum;
@@ -251,17 +247,20 @@ void FbxModelController::NonDrawSkeleton()
 
 void FbxModelController::DrawColorSkeleton()
 {
-	mCmdList->SetPipelineState(mSkeletonPipelineState->GetPipelineState().Get());
-	mCmdList->SetGraphicsRootSignature(mSkeletonRootsignature->GetRootSignature().Get());
-	mSkeletonIndexBuffer->SetBuffer(mCmdList);
-	mSkeletonVertexBuffer->SetBuffer(mCmdList);
+	mCmdList->SetPipelineState(mSkeletonPipelineState);
+	mCmdList->SetGraphicsRootSignature(mSkeletonRootsignature);
+	//mSkeletonIndexBuffer->SetBuffer(mCmdList);
+	//mSkeletonVertexBuffer->SetBuffer(mCmdList);
+	mCmdList->IASetIndexBuffer(mSkeletonIndexBuffer);
+	mCmdList->IASetVertexBuffers({ &mSkeletonVertexBuffer }, 1);
 
 	mSkeletonHeap->SetDescriptorHeap(mCmdList);
-	mSkeletonHeap->SetGprahicsDescriptorTable(mCmdList, 0, 0);
-	mSkeletonHeap->SetGprahicsDescriptorTable(mCmdList, 1, 1);
-	mSkeletonHeap->SetGprahicsDescriptorTable(mCmdList, 2, 2);
+	mSkeletonHeap->SetGraphicsDescriptorTable(mCmdList, 0, 0);
+	mSkeletonHeap->SetGraphicsDescriptorTable(mCmdList, 1, 1);
+	mSkeletonHeap->SetGraphicsDescriptorTable(mCmdList, 2, 2);
 
 	mCmdList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	mCmdList->DrawIndexedInstanced(static_cast<unsigned int>(mModel->mSkeletonIndices.size()), 1, 0, 0, 0);
+	mCmdList->SetDrawController(shared_from_this());
 }

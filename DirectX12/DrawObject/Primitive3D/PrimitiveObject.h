@@ -8,7 +8,6 @@ struct ID3D12GraphicsCommandList;
 class VertexBufferObject;
 class PipelineStateObject;
 class RootSignatureObject;
-class Dx12CommnadList;
 
 const DirectX::XMFLOAT4 INIT_COLOR = { 1.0f,1.0f,1.0f,1.0f };
 

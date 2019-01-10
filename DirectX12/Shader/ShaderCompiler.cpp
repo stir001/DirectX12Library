@@ -65,8 +65,8 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	std::string rpath = GetRelativePath(shaderPath);
 	hlslinculde.SetRelativePath(rpath);
 
-	wchar_t* path = nullptr;
-	ToWChar(&path, shaderPath);
+	std::wstring path;
+	ToWChar(path, shaderPath);
 
 	HRESULT result;
 
@@ -80,7 +80,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	{
 		ID3DBlob* vertex = nullptr;
 		std::string vsModel = "vs_" + mShaderModel;
-		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
+		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
 			vsName.data(), vsModel.data(), compileflag, 0, &vertex, &err);
 		outErr(err);
 		data.vertexShader.Swap(vertex);
@@ -100,7 +100,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	{
 		ID3DBlob* pixcel = nullptr;
 		std::string psModel = "ps_" + mShaderModel;
-		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
+		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
 			psName.data(), psModel.data(), compileflag, 0, &pixcel, &err);
 		outErr(err);
 		data.pixelShader.Swap(pixcel);
@@ -111,7 +111,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	{
 		ID3DBlob* geometry = nullptr;
 		std::string gsModel = "gs_" + mShaderModel;
-		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
+		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
 			gsName.data(), gsModel.data(), compileflag, 0, &geometry, &err);
 		outErr(err);
 		data.geometryShader.Swap(geometry);
@@ -122,7 +122,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	{
 		ID3DBlob* hull = nullptr;
 		std::string hsModel = "hs_" + mShaderModel;
-		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
+		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
 			hsName.data(), hsModel.data(), compileflag, 0, &hull, &err);
 		outErr(err);
 		data.hullShader.Swap(hull);
@@ -133,7 +133,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	{
 		ID3DBlob* domain = nullptr;
 		std::string dsModel = "ds_" + mShaderModel;
-		result = D3DCompileFromFile(path, mMacros.data(), &hlslinculde,
+		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
 			dsName.data(), dsModel.data(), compileflag, 0, &domain, &err);
 		outErr(err);
 		data.domainShader.Swap(domain);
