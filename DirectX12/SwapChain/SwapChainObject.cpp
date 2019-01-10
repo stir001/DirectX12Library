@@ -51,7 +51,7 @@ SwapChainObject::SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device
 		
 		std::string name = "SwapChainRenderTarget";
 		name += i + '0';
-		mRenderTargets[i].reset(new RendertargetObject(name, tmpResource));
+		mRenderTargets[i] = std::make_shared<RendertargetObject>(name, tmpResource, D3D12_RESOURCE_STATE_PRESENT);
 		/*device->CreateRenderTargetView(mRenderTargets[i].Get(), &rtdesc, cpuhandle);
 		cpuhandle.ptr += (mHeapIncrementsize);*/
 	}

@@ -13,21 +13,29 @@
 #include "Util/XMFloatOperators.h"
 #include "Texture/TextureLoader.h"
 #include "Texture/TextureObject.h"
+#include "PipelineState/SkyBoxPipelineState.h"
+#include "Rootsignature/SkyBoxRootSignature.h"
 #include <algorithm>
 
-SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList, const std::string skyBoxTextures[6])
-	: mCmdList(cmdList), mCameraHolder(Dx12Ctrl::Instance().GetCameraHolder())
+SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
+	, const std::string skyBoxTextures[6], const std::shared_ptr<CameraHolder>& holder)
+	: mCmdList(cmdList), mCameraHolder(holder)
 {
 	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
 	{
 		mSkyBoxTextures.SetTex(static_cast<SkyBoxTextures::TexPathID>(i), skyBoxTextures[i]);
 	}
+
+	Init();
 }
 
-SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList, const SkyBoxTextures& textures)
-	: mCmdList(cmdList)
+SkyBox::SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
+	, const SkyBoxTextures& textures, const std::shared_ptr<CameraHolder>& holder)
+	: mCmdList(cmdList), mCameraHolder(holder)
 {
 	mSkyBoxTextures = textures;
+
+	Init();
 }
 
 SkyBox::~SkyBox()
@@ -36,18 +44,19 @@ SkyBox::~SkyBox()
 
 void SkyBox::Draw()
 {
-	UpdateCameraBuffer();
 	mCmdList->SetPipelineState(mSkyBoxPipelineState);
 	mCmdList->SetGraphicsRootSignature(mSkyBoxRootSignature);
 	mCmdList->IASetVertexBuffers({ &mVertexBuffer }, 1);
 	mCmdList->IASetIndexBuffer(mIndexBuffer);
 	mCmdList->SetDescriptorHeap(mDescHeap);
-	
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, 0, 0);
+	mDescHeap->SetGraphicsDescriptorTable(mCmdList, 1, 1);
 	unsigned int planeIndexNum = 6;
-	unsigned int textureRootParamater = 1;
-	for (int i = 1; i < static_cast<int>(Direction::max) + 1; ++i)
+	unsigned int textureRootParamater = 2;
+	mCmdList->IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
 	{
-		mDescHeap->SetGraphicsDescriptorTable(mCmdList, i, textureRootParamater);
+		mDescHeap->SetGraphicsDescriptorTable(mCmdList, i + 2, textureRootParamater);
 		mCmdList->DrawIndexedInstanced(planeIndexNum, 1, planeIndexNum * i);
 	}
 }
@@ -77,50 +86,101 @@ void SkyBox::Init()
 	mIndices = cube->GetIndices();
 	mVertices.resize(vertices.size());
 	std::copy(vertices.begin(), vertices.end(), mVertices.begin());
+	FixUV();
 
 	auto& device = Dx12Ctrl::Instance().GetDev();
 
-	mVertexBuffer = std::make_shared<VertexBufferObject>("SkyBoxVertexBuffer", device, static_cast<unsigned int>(sizeof(mVertices[0])), static_cast<unsigned int>(mVertices.size()));
-	mIndexBuffer = std::make_shared<IndexBufferObject>("SkyBoxIndexBuffer", device, static_cast<unsigned int>(sizeof(mIndices[0])), static_cast<unsigned int>(mIndices.size()));
+	unsigned int vertexSize = static_cast<unsigned int>(sizeof(mVertices[0]));
+	unsigned int vertexNum = static_cast<unsigned int>(mVertices.size());
+	mVertexBuffer = std::make_shared<VertexBufferObject>("SkyBoxVertexBuffer", device, vertexSize, vertexNum);
+	mVertexBuffer->WriteBuffer(mVertices.data(), vertexSize * vertexNum);
+
+	unsigned int indexSize = static_cast<unsigned int>(sizeof(mIndices[0]));
+	unsigned int indexNum = static_cast<unsigned int>(mIndices.size());
+	mIndexBuffer = std::make_shared<IndexBufferObject>("SkyBoxIndexBuffer", device, indexSize, indexNum);
+	mIndexBuffer->WriteBuffer(mIndices.data(), indexSize * indexNum);
 	
 	mCameraBuffer = mCameraHolder.lock()->GetCamerasBuffer();
-
-	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(static_cast<int>(Direction::max) + 1);
+	mProjectionBuffer = std::make_shared<ConstantBufferObject>("SkyBoxConstantBuffer"
+		, device, static_cast<unsigned int>(sizeof(mCBufferElement)), 1);
+	unsigned int cBufferNum = 2;
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(static_cast<int>(Direction::max) + cBufferNum);
 	buffers[0] = mCameraBuffer;
-	for (int i = 1; i < static_cast<int>(Direction::max) + 1; ++i)
+	buffers[1] = mProjectionBuffer;
+	mTextures.resize(static_cast<int>(Direction::max));
+	for (int i = 0; i < static_cast<int>(Direction::max); ++i)
 	{
 		mTextures[i] = TextureLoader::Instance().LoadTexture(mSkyBoxTextures.GetTex(static_cast<SkyBoxTextures::TexPathID>(i)));
-		buffers[i] = mTextures[i]->GetShaderResource();
+		buffers[i + cBufferNum] = mTextures[i]->GetShaderResource();
 	}
 
 	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>("SkyBoxDescHeap", device, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	mProjectionBuffer = std::make_shared<ConstantBufferObject>("SkyBoxConstantBuffer"
-		, device, static_cast<unsigned int>(sizeof(mCBufferElement)), 1);
+	mSkyBoxRootSignature = std::make_shared<SkyBoxRootSignature>(device);
+	mSkyBoxPipelineState = std::make_shared<SkyBoxPipelineState>(mSkyBoxRootSignature, device);
 }
 
 DirectX::XMFLOAT4X4 SkyBox::GetSkyBoxProjection(std::shared_ptr<Dx12Camera> camera)
 {
 	float fov = camera->GetFov();
 	auto size = camera->GetViewPortSize();
-	auto projection = DirectX::XMMatrixPerspectiveFovLH(fov, static_cast<float>(size.x) / static_cast<float>(size.y), mSkyBoxRange * 0.95f, mSkyBoxRange * 1.5f);
+	auto projection = DirectX::XMMatrixPerspectiveFovLH(fov, static_cast<float>(size.x) / static_cast<float>(size.y), mSkyBoxRange * 0.6f * 0.5f, mSkyBoxRange * 1.8f * 0.5f);
 	DirectX::XMFLOAT4X4 rtn = ConvertXMMATRIXToXMFloat4x4(projection);
 	return rtn;
 }
 
-SkyBoxVertex SkyBoxVertex::operator=(const PrimitiveVertex & v)
+void SkyBox::FixUV()
 {
-	this->pos = v.pos;
-	this->uv = {(1 - v.uv.x), uv.y };
-	return *this;
+	//front
+	unsigned int planeVertexNum = 4;
+	unsigned int vert = 0;
+	for (unsigned int i = 0; i < planeVertexNum; ++i, ++vert)
+	{
+		mVertices[vert].uv.x = 1.0f - mVertices[vert].uv.x;
+		mVertices[vert].uv.y = 1.0f - mVertices[vert].uv.y;
+	}
+	//vert += planeVertexNum;
+
+	//back
+	vert += planeVertexNum;
+
+	//right
+	for (unsigned int i = 0; i < planeVertexNum; ++i, ++vert)
+	{
+		float uvx = mVertices[vert].uv.x;
+		mVertices[vert].uv.x = 1.0f - mVertices[vert].uv.y;
+		mVertices[vert].uv.y = uvx;
+	}
+
+	//left
+	for (unsigned int i = 0; i < planeVertexNum; ++i, ++vert)
+	{
+		float uvx = mVertices[vert].uv.x;
+		mVertices[vert].uv.x = mVertices[vert].uv.y;
+		mVertices[vert].uv.y = 1.0f - uvx;
+	}
+
+	//top
+	for (unsigned int i = 0; i < planeVertexNum; ++i, ++vert)
+	{
+		mVertices[vert].uv.x = 1.0f - mVertices[vert].uv.x;
+		mVertices[vert].uv.y = 1.0f - mVertices[vert].uv.y;
+	}
+
+	//bottom
+	for (unsigned int i = 0; i < planeVertexNum; ++i, ++vert)
+	{
+		mVertices[vert].uv.x = 1.0f - mVertices[vert].uv.x;
+		mVertices[vert].uv.y = 1.0f - mVertices[vert].uv.y;
+	}
 }
 
-//SkyBoxVertex SkyBoxVertex::operator=(const PrimitiveVertex v)
-//{
-//	this->pos = v.pos;
-//	this->uv = { (1 - v.uv.x), uv.y };
-//	return *this;
-//}
+SkyBoxVertex SkyBoxVertex::operator=(const PrimitiveVertex& v)
+{
+	this->pos = v.pos;
+	this->uv = {v.uv.x, v.uv.y };
+	return *this;
+}
 
 std::string SkyBoxTextures::GetTex(TexPathID id) const
 {

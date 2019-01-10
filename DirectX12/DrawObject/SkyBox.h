@@ -20,10 +20,9 @@ struct SkyBoxVertex
 {
 	DirectX::XMFLOAT4 pos;
 	DirectX::XMFLOAT2 uv;
-	int texID;
-	SkyBoxVertex() : pos{ 0,0,0,1 }, uv{ 0,0 }, texID(0){}
+	//int texID;
+	SkyBoxVertex() : pos{ 0,0,0,1 }, uv{ 0,0 }/*, texID(0)*/{}
 	SkyBoxVertex operator=(const PrimitiveVertex& v);
-	//SkyBoxVertex operator=(const PrimitiveVertex v);
 };
 
 struct SkyBoxTextures
@@ -70,9 +69,9 @@ class SkyBox
 {
 public:
 	SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
-		, const std::string skyBoxTextures[6]);
+		, const std::string skyBoxTextures[6], const std::shared_ptr<CameraHolder>& holder);
 	SkyBox(const std::shared_ptr<Dx12CommandList>& cmdList
-		, const SkyBoxTextures& textures);
+		, const SkyBoxTextures& textures, const std::shared_ptr<CameraHolder>& holder);
 	~SkyBox();
 
 	void Draw();
@@ -100,6 +99,7 @@ private:
 
 	void Init();
 	DirectX::XMFLOAT4X4 GetSkyBoxProjection(std::shared_ptr<Dx12Camera> camera);
+	void FixUV();
 
 	std::shared_ptr<RootSignatureObject> mSkyBoxRootSignature;
 	std::shared_ptr<PipelineStateObject> mSkyBoxPipelineState;

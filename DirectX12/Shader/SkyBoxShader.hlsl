@@ -1,5 +1,6 @@
-#define PRM3DRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
+#define SKYRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
 	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
+	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
     ", DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)" \
 
 	
@@ -16,41 +17,40 @@ SamplerState smp : register(s0);
 
 MULTI_CAMERA(b0)
 
-struct PriVSInput
+struct SkyBoxVSInput
 {
     float4 pos : POSITION;
     float2 uv : TEXCOORD;
 };
 
-struct PriVSOutput
+struct SkyBoxVSOutput
 {
     float4 pos : POSITION;
     float2 uv : TEXCOORD;
 };
 
-struct PriGSOut
+struct SkyBoxGSOut
 {
     float4 svpos : SV_POSITION;
     float2 uv : TEXCOORD;
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-
-cbuffer SkyBoxCameraProjection
+cbuffer SkyBoxCameraProjection : register(b1)
 {
     matrix projections[MAX_CAMERA_NUM];
 }
 
-[RootSignature(PRM3DRS SMP)]
-PriVSOutput PrimitiveVS(PriVSInput vsInput)
+[RootSignature(SKYRS SMP)]
+SkyBoxVSOutput SkyBoxVS(SkyBoxVSInput vsInput)
 {
-    PriVSOutput po;
+    SkyBoxVSOutput po;
     po.pos = vsInput.pos;
     po.uv = vsInput.uv;
     return po;
 }
 
-float4 PrimitivePS(PriGSOut data) : SV_Target
+float4 SkyBoxPS(SkyBoxGSOut data) : SV_Target
 {
    
     return tex.Sample(smp, data.uv);
@@ -59,18 +59,18 @@ float4 PrimitivePS(PriGSOut data) : SV_Target
 #define VERTEX_NUM (3U)
 
 [maxvertexcount(MAX_CAMERA_NUM * VERTEX_NUM)]
-void PrimitiveGS(in triangle PriVSOutput vertices[VERTEX_NUM], inout TriangleStream<PriGSOut> gsOut)
+void SkyBoxGS(in triangle SkyBoxVSOutput vertices[VERTEX_NUM], inout TriangleStream<SkyBoxGSOut> gsOut)
 {
     uint i = 0;
     uint j = 0;
 
     float4x4 pvw = identity();
-    PriGSOut gsVert;
-    PriVSOutput vsout;
+    SkyBoxGSOut gsVert;
+    SkyBoxVSOutput vsout;
 	[unroll(MAX_CAMERA_NUM)]
     for (i = 0; i < cameraNum; ++i)
     {
-        pvw = mul(cameras[i].c_projection, mul(cameras[i].c_view, cameras[i].c_world));
+        pvw = mul(projections[i], mul(ExcludeTranslation(cameras[i].c_view), cameras[i].c_world));
 		[unroll(VERTEX_NUM)]
         for (j = 0; j < VERTEX_NUM; ++j)
         {

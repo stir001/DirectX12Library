@@ -1,10 +1,21 @@
 #pragma once
 #include "Base/RenderingPassObject.h"
+
+class SkyBox;
+class Dx12DescriptorHeapObject;
+class RendertargetObject;
+class CameraHolder;
+struct ID3D12Device;
+struct SkyBoxTextures;
+
 class SkyBoxPass :
 	public RenderingPassObject
 {
 public:
-	SkyBoxPass();
+	SkyBoxPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
+		std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
+		std::shared_ptr<RendertargetObject> rendertarget,
+		int width, int height, SkyBoxTextures& textures);
 	~SkyBoxPass();
 
 	/**
@@ -32,5 +43,18 @@ public:
 	*	コマンドリストを取得する
 	*/
 	 std::shared_ptr<Dx12CommandList> GetCommandList();
+
+	 /**
+	 *	最終レンダリング結果を返す関数　一番最後のパスのみ必須それ以外は実装しなくてもいい
+	 */
+	 virtual std::shared_ptr<Dx12BufferObject> GetRenderTarget();
+
+private:
+	std::shared_ptr<SkyBox> mSkyBox;
+	std::shared_ptr<RendertargetObject> mRendertarget;
+	std::shared_ptr<CameraHolder> mHolder;
+	std::shared_ptr<Dx12DescriptorHeapObject> mRtvDescHeap;
+	int mWndWidth;
+	int mWndHeight;
 };
 

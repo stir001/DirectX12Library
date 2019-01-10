@@ -3,13 +3,11 @@
 #include "d3dx12.h"
 #include "Texture/TextureLoader.h"
 #include "Buffer/DepthBufferObject.h"
+#include "Buffer/RendertargetObject.h"
 #include "Camera/Dx12Camera.h"
 #include "Camera/CameraHolder.h"
 #include "Util/CharToWChar.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
-#include "RenderingPass/ModelPass.h"
-#include "RenderingPass/BackGroundPass.h"
-#include "RenderingPass/UIPass.h"
 #include "CommandList/Dx12CommandList.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "DrawObject/Image/Loader/ImageLoader.h"
@@ -18,6 +16,7 @@
 #include "DrawObject/Fbx/FbxLoader.h"
 #include "DrawObject/Primitive3D/PrimitiveCreator.h"
 #include "Bullet/System/PhysicsSystem.h"
+
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
@@ -197,30 +196,14 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), viewport, sissorRect);
 
 	//RendringManagerÉNÉâÉXÇÃèâä˙âªèàóù
-	InitFirstPath();
+	InitRenderPath();
 
 	return true;
 }
 
-void Dx12Ctrl::InitFirstPath()
+void Dx12Ctrl::InitRenderPath()
 {
 	RenderingPassManager::Instance().Init(mDev, mFactory, mhWnd);
-
-	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(mDev, mWndWidth, mWndHeight);
-
-	std::shared_ptr<ModelPass> modelpass = std::make_shared<ModelPass>(
-		mDev, mDepthDescHeap, backpass->GetRtvDescHeapObject() ,mWndWidth, mWndHeight, mCameraHolder);
-
-	std::shared_ptr<UIPass> uipass = std::make_shared<UIPass>(mDev, backpass->GetRtvDescHeapObject(), backpass->GetRendertargetObject(), mWndWidth, mWndHeight);
-
-	unsigned int renderingPathIndex;
-	RenderingPassManager::Instance().AddRenderingPass(backpass, renderingPathIndex);
-	RenderingPassManager::Instance().AddRenderingPass(modelpass, renderingPathIndex);
-	RenderingPassManager::Instance().AddRenderingPass(uipass, renderingPathIndex);
-
-	backpass->FirstUpdate();
-	modelpass->FirstUpdate();
-	uipass->FirstUpdate();
 }
 
 void Dx12Ctrl::InitWindowCreate()
@@ -232,20 +215,20 @@ void Dx12Ctrl::InitWindowCreate()
 	std::string strName = mWindowName;
 	strName.push_back('\0');
 	size_t size = strName.size();
-	wchar_t* buff = nullptr;
-	ToWChar(&buff, size, strName.data(), size);
+	std::wstring buff;
+	ToWChar(buff,strName);
 
 	WNDCLASSEX w = {};
 	w.lpfnWndProc = winProc;
-	w.lpszClassName = buff;
+	w.lpszClassName = buff.data();
 	w.hInstance = mWinHInstance;
-	w.hIcon = LoadIcon(w.hInstance, buff);
+	w.hIcon = LoadIcon(w.hInstance, buff.data());
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.hCursor = LoadCursor(NULL, IDC_ARROW);
 	RegisterClassEx(&w);
 
 	HWND hwnd = CreateWindow(w.lpszClassName,
-		buff,
+		buff.data(),
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
@@ -257,8 +240,6 @@ void Dx12Ctrl::InitWindowCreate()
 		nullptr);
 
 	mhWnd = hwnd;
-
-	delete buff;
 
 	ShowWindow(hwnd, SW_SHOW);
 }
@@ -373,6 +354,11 @@ const HWND& Dx12Ctrl::GetWndHandle() const
 std::shared_ptr<DepthBufferObject> Dx12Ctrl::GetDepthBuffer() const
 {
 	return mDepthBuffer;
+}
+
+std::shared_ptr<Dx12DescriptorHeapObject> Dx12Ctrl::GetDepthDescHeap() const
+{
+	return mDepthDescHeap;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Ctrl::GetDepthCpuHandle() const

@@ -49,10 +49,10 @@ RendertargetObject::RendertargetObject(const std::string& name,const Microsoft::
 	CreateRenderTargetViewDesc();
 }
 
-RendertargetObject::RendertargetObject(const std::string& name, Microsoft::WRL::ComPtr<ID3D12Resource>& rsc)
+RendertargetObject::RendertargetObject(const std::string& name, Microsoft::WRL::ComPtr<ID3D12Resource>& rsc, D3D12_RESOURCE_STATES state)
 	:Dx12BufferObject(rsc, name, dx12_getter::GetDxgiFormatByteSize(rsc->GetDesc().Format), static_cast<unsigned int>( rsc->GetDesc().Width * rsc->GetDesc().Height))
 {
-	mDeafultState = mCurrentState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	mDeafultState = mCurrentState = state;
 	CreateRenderTargetViewDesc();
 }
 

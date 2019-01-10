@@ -45,16 +45,6 @@ struct GSOutput
     uint viewIndex : SV_ViewportArrayIndex;
 };
 
-matrix ExcludeRotation(matrix mat)
-{
-    matrix rtn = identity();
-    rtn._14_24_34 = mat._14_24_34;
-    rtn._11 = sqrt(dot((mat._11_12_13), (mat._11_12_13)));
-    rtn._22 = sqrt(dot((mat._21_22_23), (mat._21_22_23)));
-    rtn._33 = sqrt(dot((mat._31_32_33), (mat._31_32_33)));
-    return rtn;
-}
-
 [RootSignature(BILLBOARDRS)]
 VSOutput BillboardVS(VSInput vInput)
 {

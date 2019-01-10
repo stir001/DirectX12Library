@@ -4,7 +4,13 @@
 #include "SwapChain/SwapChainObject.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "RenderingPass/Base/RenderingPassObject.h"
+#include "RenderingPass/SkyBoxPass.h"
+#include "RenderingPass/ModelPass.h"
+#include "RenderingPass/BackGroundPass.h"
+#include "RenderingPass/UIPass.h"
+#include "DrawObject/SkyBox.h"
 #include "CommandList/Dx12CommandList.h"
+#include "Master/Dx12Ctrl.h"
 
 #include "d3dx12.h"
 #include <algorithm>
@@ -16,7 +22,6 @@ RenderingPassManager::RenderingPassManager()
 {
 }
 
-
 RenderingPassManager::~RenderingPassManager()
 {
 	mRenderingPassObjects.clear();
@@ -26,6 +31,8 @@ RenderingPassManager::~RenderingPassManager()
 
 void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, HWND hwnd)
 {
+	auto& d12 = Dx12Ctrl::Instance();
+
 	mRenderingPassObjects.clear();
 	mCmdQueue.Reset();
 
@@ -37,15 +44,6 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
 	mRenderCmdList = std::make_shared<Dx12CommandList>("RenderingCommandList", dev);
-
-	//mDevice->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mRenderCmdAllocator));
-	//mRenderCmdAllocator->SetName(L"RenderingCommandAllocator");
-
-	//mDevice->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mRenderCmdAllocator.Get(), nullptr, IID_PPV_ARGS(&mRenderCmdList));
-	//mRenderCmdList->SetName(L"RenderingCommandList");
-
-	//mRenderCmdAllocator->Reset();
-	//mRenderCmdList->Reset(mRenderCmdAllocator.Get(), nullptr);
 
 	mDevice->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&mCmdQueue));
 	mCmdQueue->SetName(L"RenderingCommandQueue");
@@ -60,18 +58,44 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	mDevice->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
 	mFence->SetName(L"RenderingManagerFence");
 
-	//InitFunctionObject_t nonFunc = [](CmdListsArg_t, RTResourcesArg_t, RTDescHeapArg_t) {};
-	//LastFunctionObject_t nonlastFunc = [](CmdListsArg_t, RTResourcesArg_t) {};
+	auto device = d12.GetDev();
+	auto wndSize = d12.GetWindowSize();
 
-	//Microsoft::WRL::ComPtr<ID3D12Resource> resoruce;//シェーダーリソースビューとして作成してから渡す
-	//CreateDummyRenderTarget(resoruce);
+	auto rendertarget = std::make_shared<RendertargetObject>("MainRendertarget", device, wndSize.x, wndSize.y);
 
-	//std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> firstTarget;
-	//firstTarget.push_back(resoruce);
+	std::vector<std::shared_ptr<Dx12BufferObject>> buffers(1);
+	buffers[0] = rendertarget;
 
-	//unsigned int index = AddRenderingPathObject("FirstPath", firstTarget);
+	auto descheap = std::make_shared<Dx12DescriptorHeapObject>("MainRTVDescHeap", device, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	//mRenderingPathObjects[index].isActive = true;
+	SkyBoxTextures textures;
+	textures.front = "SkyBox/front.png";
+	textures.back = "SkyBox/back.png";
+	textures.right = "SkyBox/right.png";
+	textures.left = "SkyBox/left.png";
+	textures.top = "SkyBox/up.png";
+	textures.bottom = "SkyBox/down.png";
+
+	auto skyBoxPass = std::make_shared<SkyBoxPass>(device, descheap, rendertarget, wndSize.x, wndSize.y, textures);
+
+	std::shared_ptr<BackGroundPass> backpass = std::make_shared<BackGroundPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
+
+	std::shared_ptr<ModelPass> modelpass = std::make_shared<ModelPass>(
+		device, d12.GetDepthDescHeap(), descheap, wndSize.x, wndSize.y, d12.GetCameraHolder());
+
+	std::shared_ptr<UIPass> uipass = std::make_shared<UIPass>(device, descheap, rendertarget, wndSize.x, wndSize.y);
+
+	unsigned int renderingPathIndex;
+	auto& passMgr = RenderingPassManager::Instance();
+	passMgr.AddRenderingPass(skyBoxPass, renderingPathIndex);
+	passMgr.AddRenderingPass(backpass, renderingPathIndex);
+	passMgr.AddRenderingPass(modelpass, renderingPathIndex);
+	passMgr.AddRenderingPass(uipass, renderingPathIndex);
+
+	skyBoxPass->FirstUpdate();
+	backpass->FirstUpdate();
+	modelpass->FirstUpdate();
+	uipass->FirstUpdate();
 }
 
 void RenderingPassManager::Render()
@@ -120,24 +144,20 @@ void RenderingPassManager::Render()
 void RenderingPassManager::CopyLastPassRenderTarget()
 {
 	auto& lastPath = mRenderingPassObjects.back();
-	D3D12_RESOURCE_STATES lastPathBeforeState = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	D3D12_RESOURCE_STATES lastPathAfterState = D3D12_RESOURCE_STATE_COPY_SOURCE;
 	auto lastPathResrouce = lastPath->GetRenderTarget();
-	mRenderCmdList->TransitionBarrier(lastPathResrouce, lastPathAfterState);
+	mRenderCmdList->TransitionBarrier(lastPathResrouce, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
-	D3D12_RESOURCE_STATES swapChainBeforeState = D3D12_RESOURCE_STATE_PRESENT;
-	D3D12_RESOURCE_STATES swapChainAfterState = D3D12_RESOURCE_STATE_COPY_DEST;
 	auto swapChainResrouce = mSwapChain->GetCurrentRenderTarget();
-	mRenderCmdList->TransitionBarrier(swapChainResrouce, swapChainAfterState);
+	mRenderCmdList->TransitionBarrier(swapChainResrouce, D3D12_RESOURCE_STATE_COPY_DEST);
 
 	mRenderCmdList->CopyResource(mSwapChain->GetCurrentRenderTarget(), lastPath->GetRenderTarget());
 
-	mRenderCmdList->TransitionBarrier(lastPathResrouce, lastPathBeforeState);
+	mRenderCmdList->TransitionBarrier(lastPathResrouce, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	mRenderCmdList->TransitionBarrier(swapChainResrouce, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	mRenderCmdList->OMSetRenderTargets(1, mSwapChain->GetCurrentRTVHeap());
 
-	mRenderCmdList->TransitionBarrier(swapChainResrouce, swapChainBeforeState);
+	mRenderCmdList->TransitionBarrier(swapChainResrouce, D3D12_RESOURCE_STATE_PRESENT);
 
 	mRenderCmdList->Close();
 

@@ -13,8 +13,8 @@
 Dx12CommandList::Dx12CommandList(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, D3D12_COMMAND_LIST_TYPE type)
 	:mType(type)
 {
-	wchar_t* buf = nullptr;
-	ToWChar(&buf, name);
+	std::wstring buf;
+	ToWChar(buf, name);
 	std::wstring comName = buf;
 	comName += L"Allocator";
 	dev->CreateCommandAllocator(type, IID_PPV_ARGS(&mCmdallcator));
@@ -24,8 +24,6 @@ Dx12CommandList::Dx12CommandList(const std::string& name, const Microsoft::WRL::
 	comName += L"CommandList";
 	dev->CreateCommandList(0, mType ,mCmdallcator.Get(),nullptr,IID_PPV_ARGS(&mCmdList));
 	mCmdList->SetName(comName.data());
-
-	delete buf;
 
 	mName = name;
 }

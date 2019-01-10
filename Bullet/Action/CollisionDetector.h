@@ -111,6 +111,12 @@ public:
 	*	@return	保持しているタグ2
 	*/
 	int GetTag2() const;
+
+	/**
+	*	@brief	速度を設定する
+	*	@param[in]	vel	設定する速度
+	*/
+	void SetVelocity(const DirectX::XMFLOAT3& vel);
 private:
 	/**
 	*	@brief	ペアが当たっているかどうかを判定する

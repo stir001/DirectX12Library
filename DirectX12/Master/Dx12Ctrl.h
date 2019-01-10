@@ -67,6 +67,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& GetCmdList();
 	Microsoft::WRL::ComPtr<IDXGIFactory4> GetFactory();
 	std::shared_ptr<DepthBufferObject> GetDepthBuffer() const;
+	std::shared_ptr<Dx12DescriptorHeapObject> GetDepthDescHeap() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthCpuHandle() const;
 
 	void CmdQueueSignal();
@@ -129,5 +130,5 @@ private:
 	float mClrcolor[4];
 
 	void InitWindowCreate();
-	void InitFirstPath();
+	void InitRenderPath();
 };

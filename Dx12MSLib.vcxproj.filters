@@ -547,7 +547,10 @@
       <Filter>DirectX12\RenderingPass</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\SkyBox.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12\DrawObject</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\SkyBoxRootSignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -948,7 +951,10 @@
       <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\SkyBox.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>DirectX12\DrawObject</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\SkyBoxRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -140,6 +140,11 @@ int CollisionDetector::GetTag2() const
 	return mGhost->GetTag2();
 }
 
+void CollisionDetector::SetVelocity(const DirectX::XMFLOAT3 & vel)
+{
+	mGhost->SetVelocity(vel);
+}
+
 bool CollisionDetector::IsCollide(btBroadphasePair* pair)
 {
 	bool rtn = false;

@@ -46,10 +46,9 @@ Dx12DescriptorHeapObject::Dx12DescriptorHeapObject(const std::string& name, cons
 	result = dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&mDescHeap));
 
 	{
-		wchar_t* buf = nullptr;
-		ToWChar(&buf, name);
-		mDescHeap->SetName(buf);
-		delete buf;
+		std::wstring buf;
+		ToWChar(buf, name);
+		mDescHeap->SetName(buf.data());
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = mDescHeap->GetCPUDescriptorHandleForHeapStart();

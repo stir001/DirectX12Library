@@ -43,7 +43,7 @@ std::shared_ptr<Dx12Camera> CameraHolder::GetCamera(unsigned int index) const
 
 int CameraHolder::GetCameraNum() const
 {
-	return mCameras.size();
+	return static_cast<int>(mCameras.size());
 }
 
 bool CameraHolder::DeleteCamera(unsigned int index)

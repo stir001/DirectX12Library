@@ -12,7 +12,7 @@ UIPass::UIPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	, mScissorRect{ 0, 0, static_cast<LONG>(wWidth), static_cast<LONG>(wHeight) }
 	, mViewPort{ 0.0f, 0.0f, static_cast<FLOAT>(wWidth), static_cast<FLOAT>(wHeight), 0.0f, 1.0f}
 {
-	mCmdList = std::make_shared<Dx12CommandList>("UI", dev);
+	mCmdList = std::make_shared<Dx12CommandList>("UIPass", dev);
 }
 
 UIPass::~UIPass()

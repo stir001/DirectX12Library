@@ -89,6 +89,12 @@ public:
 	*	@return	判定用ghost
 	*/
 	std::shared_ptr<BulletGhostObject> GetGhost() const;
+
+	/**
+	*	@brief	速度を設定する
+	*	@param[in]	vel	設定する速度
+	*/
+	void SetVelocity(const DirectX::XMFLOAT3& vel);
 private:
 	/**
 	*	衝突検知用オブジェクト

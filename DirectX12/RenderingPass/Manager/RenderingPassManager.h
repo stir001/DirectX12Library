@@ -15,6 +15,7 @@ class Dx12BufferObject;
 
 enum class DefaultPass
 {
+	SkyBox,
 	BackGround,
 	Model,
 	UI,

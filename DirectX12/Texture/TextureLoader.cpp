@@ -32,11 +32,9 @@ void TextureLoader::Release(const std::string & filePath)
 
 std::shared_ptr<TextureObject> TextureLoader::LoadTexture(const std::string& filepath)
 {
-	wchar_t* buf = nullptr;
 	std::wstring wstrPath;
-	ToWChar(&buf, filepath);
-	wstrPath = buf;
-	delete buf;
+	ToWChar(wstrPath, filepath);
+
 
 	auto tex = mTextures.find(filepath);
 	if (tex != mTextures.end())
@@ -354,13 +352,8 @@ std::string TextureLoader::GetTextureName(const std::wstring& filePath)
 	
 	std::wstring wstrbuff(filePath.begin() + size, filePath.end());
 
-	char* charbuf = nullptr;
-
-	ToChar(&charbuf, sizeof(char) * wstrbuff.size() + 1, wstrbuff.data(), wstrbuff.size() + 1);
-
-	std::string rtn = charbuf;
-
-	delete charbuf;
+	std::string rtn;
+	ToChar(rtn, wstrbuff);
 
 	return rtn;
 }

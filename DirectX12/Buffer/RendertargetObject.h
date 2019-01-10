@@ -30,8 +30,10 @@ public:
 	/**
 	*	@param[in]	name	バッファの名前
 	*	@param[in]	rsc		すでに作成しているRenderTarget
+	*	@param[in]	state	デフォルトのリソースステート
 	*/
-	RendertargetObject(const std::string& name, Microsoft::WRL::ComPtr<ID3D12Resource>& rsc);
+	RendertargetObject(const std::string& name, Microsoft::WRL::ComPtr<ID3D12Resource>& rsc
+	 , D3D12_RESOURCE_STATES state = D3D12_RESOURCE_STATE_RENDER_TARGET);
 	~RendertargetObject();
 
 	/**
