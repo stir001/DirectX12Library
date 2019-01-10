@@ -266,7 +266,7 @@ void Dx12Camera::SetScisorRect(int right, int bottom,
 void Dx12Camera::SetScisorRectNormalizeValue(float left, float top, float right, float bottom)
 {
 	auto size = Dx12Ctrl::Instance().GetWindowSize();
-	mScissorRect = { left * size.x, top * size.y, right * size.x, bottom * size.y };
+	mScissorRect = { static_cast<LONG>(left * size.x), static_cast<LONG>(top * size.y), static_cast<LONG>(right * size.x), static_cast<LONG>(bottom * size.y) };
 	mHolder.lock()->SetCameraScissorRect(this);
 }
 

@@ -268,55 +268,6 @@ public:
 	*/
 	float GetFov() const;
 private:
-
-	/**
-	*	@brief	カメラに回転行列を適応する
-	*	@param[in]	rotaMatrix	回転行列
-	*/
-	void AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix);
-
-	/**
-	*	@brief	ローカル上ベクトルを得る
-	*	@return	ローカル上ベクトル
-	*/
-	DirectX::XMFLOAT3 GetLocalUpper();
-
-	/**
-	*	@brief	視線ベクトルを得る
-	*	@return	視線ベクトル
-	*/
-	DirectX::XMFLOAT3 GetEyeToTargetVec();
-
-	/**
-	*	シェーダーに渡す要素を更新する
-	*/
-	void UpdateElement();
-
-	/**
-	*	初期化処理
-	*/
-	void Init();
-
-	/**
-	*	holderにカメラ情報変更後の値を設定する状態
-	*/
-	void SetElementToHolder();
-
-	/**
-	*	holderにカメラ情報変更後の値を設定しない状態
-	*/
-	void NonSetElementToHolder();
-
-	/**
-	*	プロジェクション行列を更新する
-	*/
-	void UpdateProjection();
-
-	/**
-	*	viewportとsissorRectの値と画面サイズを参考に比率を更新する
-	*/
-	void UpdateRatios();
-
 	/**
 	*	@struct	ViewportやScissorRectの画面比保存用構造体
 	*/
@@ -468,4 +419,9 @@ private:
 	*	projection行列を更新する
 	*/
 	void UpdateProjection();
+
+	/**
+	*	viewportとsissorRectの値と画面サイズを参考に比率を更新する
+	*/
+	void UpdateRatios();
 };
