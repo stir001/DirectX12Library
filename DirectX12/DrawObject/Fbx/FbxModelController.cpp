@@ -50,7 +50,7 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		, static_cast<unsigned int>(sizeof(mVertexElements[0])),static_cast<unsigned int>(mVertexElements.size())));
 	UpdateVertex();
 
-	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mBones, mModel->mVertexes, mVertexElements);
+	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes, mVertexElements);
 
 	UpdateMatrix();
 
