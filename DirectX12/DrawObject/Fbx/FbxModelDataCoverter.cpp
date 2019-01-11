@@ -156,7 +156,7 @@ std::shared_ptr<Fbx::FbxModel> FbxModelDataConverter::ConvertToFbxModel(FMDFileD
 		fbxmodeldata->skeletonIndices[i * 2] = data.skeletons[i].parentIndex;
 		fbxmodeldata->skeletonIndices[i * 2 + 1] = i;
 	}
-	fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 4);
+	//fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 4);
 	fbxmodeldata->skeletonIndices.shrink_to_fit();
 	return ConvertToFbxModel(fbxmodeldata);
 }
