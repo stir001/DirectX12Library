@@ -42,7 +42,6 @@ namespace Fbx {
 
 		std::vector<unsigned int> mIndexes;
 		std::vector<FbxVertex> mVertexes;
-		std::vector<Fbx::FbxBone> mBones;
 		std::vector<Fbx::FbxSkeleton> mSkeleton;
 		std::vector<DirectX::XMFLOAT4> mSkeletonPos;
 		std::vector<unsigned int> mSkeletonIndices;

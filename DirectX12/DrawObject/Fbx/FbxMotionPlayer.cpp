@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxBone>& bones, const std::vector<Fbx::FbxVertex>& vertices, std::vector<Fbx::FbxVertexElement>& vertexElements)
+FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std::vector<Fbx::FbxVertex>& vertices, std::vector<Fbx::FbxVertexElement>& vertexElements)
 	:mModelBones(bones), mData{}, mFrame(0), mVertices(vertices), mVertexElements(vertexElements)
 {
 	mCalMatrix.resize(mModelBones.size());
@@ -108,7 +108,7 @@ void FbxMotionPlayer::UpdateVertexElementMatrix()
 			int boneIndex = mVertices[i].boneIndex[j];
 			float boneweight = mVertices[i].boneWeight[j];
 			vertexMatrix += mCalMatrix[boneIndex] * boneweight;
-			initVertexMatrix += mModelBones[boneIndex].initMatrix * boneweight;
+			//initVertexMatrix += mModelBones[boneIndex].initMatrix * boneweight;
 		}
 		multiMatrix = initVertexMatrix * vertexMatrix;
 		mVertexElements[i].pos = mVertices[i].pos * multiMatrix;
@@ -125,7 +125,7 @@ void FbxMotionPlayer::ApplyMotionData()
 	{
 		for (unsigned int j = i; j < mData.mAnimData.size(); ++j)
 		{
-			if (mModelBones[i].boneName == mData.mAnimData[j].boneName)
+			if (mModelBones[i].name == mData.mAnimData[j].boneName)
 			{
 				Fbx::BoneMatrixData tmp = {};
 				tmp = mData.mAnimData[j];
