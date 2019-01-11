@@ -87,7 +87,7 @@ public:
 	*	@param[in]	rootparamIndex	セットするテーブルのインデックス
 	*	@return	結果
 	*/
-	HRESULT SetGraphicsRootDescriptorTabel(std::shared_ptr<Dx12DescriptorHeapObject>& descHeap, int resourceIndex, int rootparamIndex) const;
+	HRESULT SetGraphicsRootDescriptorTable(std::shared_ptr<Dx12DescriptorHeapObject>& descHeap, int resourceIndex, int rootparamIndex);
 
 	/**
 	*	@brief	DescriptorHeapのgpuHandleの場所をテーブルにセットする
@@ -95,7 +95,7 @@ public:
 	*	@param[in]	gpuHandle			DescriptorHeapのセットしたい場所のgpuHandle
 	*	@return	結果
 	*/
-	HRESULT SetGraphicsRootDescriptorTable(int rootparamaterIndex, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle) const;
+	HRESULT SetGraphicsRootDescriptorTable(int rootparamaterIndex, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 	/**
 	*	@brief	TransitionBarrierをはる

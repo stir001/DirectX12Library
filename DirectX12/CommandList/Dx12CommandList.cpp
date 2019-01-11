@@ -80,17 +80,17 @@ HRESULT Dx12CommandList::SetDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12De
 	return rtn;
 }
 
-HRESULT Dx12CommandList::SetGraphicsRootDescriptorTabel(std::shared_ptr<Dx12DescriptorHeapObject>& descHeap, int resourceIndex, int rootpramIndex) const
+HRESULT Dx12CommandList::SetGraphicsRootDescriptorTable(std::shared_ptr<Dx12DescriptorHeapObject>& descHeap, int resourceIndex, int rootpramIndex)
 {
 	HRESULT rtn = WSAEINVAL;
 
-	descHeap->SetGraphicsDescriptorTable(mCmdList, resourceIndex, rootpramIndex);
+	SetGraphicsRootDescriptorTable(rootpramIndex, descHeap->GetResourceGPUHandle(resourceIndex));
 
 	rtn = GetDeviceRemoveReason();
 	return rtn;
 }
 
-HRESULT Dx12CommandList::SetGraphicsRootDescriptorTable(int rootparamaterIndex, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle) const
+HRESULT Dx12CommandList::SetGraphicsRootDescriptorTable(int rootparamaterIndex, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
 {
 	mCmdList->SetGraphicsRootDescriptorTable(rootparamaterIndex, gpuHandle);
 	return GetDeviceRemoveReason();
