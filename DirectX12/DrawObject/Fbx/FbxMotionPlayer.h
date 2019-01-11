@@ -10,7 +10,7 @@ class FbxMotionData;
 class FbxMotionPlayer : public AnimationPlayer
 {
 public:
-	FbxMotionPlayer(std::vector<Fbx::FbxBone>& boneData, const std::vector<Fbx::FbxVertex>& vertices, std::vector<Fbx::FbxVertexElement>& vertexElements);
+	FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& boneData, const std::vector<Fbx::FbxVertex>& vertices, std::vector<Fbx::FbxVertexElement>& vertexElements);
 	~FbxMotionPlayer();
 
 	void SetMotion(std::shared_ptr<FbxMotionData>& data, bool isLoop = true);
@@ -20,7 +20,7 @@ public:
 private:
 	int mFrame;
 	FbxMotionData mData;
-	const std::vector<Fbx::FbxBone>& mModelBones;
+	const std::vector<Fbx::FbxSkeleton>& mModelBones;
 	std::vector<DirectX::XMFLOAT4X4> mCalMatrix;
 	const std::vector<Fbx::FbxVertex>& mVertices;
 	std::vector<Fbx::FbxVertexElement>& mVertexElements;

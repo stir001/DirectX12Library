@@ -73,15 +73,14 @@ public:
 	*	@param[in]	rootParamaterIndex	リソースをバインドするrootParamaterIndex
 	*	@param[in]	handleOffsetCount	resourceHandleのオフセット(何個目を使用するか)
 	*/
-	virtual void SetGraphicsDescriptorTable(const Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
+	virtual void SetGraphicsDescriptorTable(std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
 
 	/**
-	*	@brief	コマンドリストにDescriptorHeapTableを設定する
-	*	@param[in]	resourceHandleIndex	DescriptorTableに格納しているリソースハンドルのインデックス
-	*	@param[in]	rootParamaterIndex	リソースをバインドするrootParamaterIndex
-	*	@param[in]	handleOffsetCount	resourceHandleのオフセット(何個目を使用するか)
+	*	@brief	バインドされているリソースのGpuDescriptorHandleを取得する
+	*	@param[in]	resourceHandleIndex	バインドされているリソースの番号
+	*	@param[in]	handleOffset		リソースハンドルのオフセット回数
 	*/
-	virtual void SetGraphicsDescriptorTable(const std::shared_ptr<Dx12CommandList> cmdList, unsigned int resourceHandleIndex, unsigned int rootParamaterIndex, unsigned int handleOffsetCount = 0) const;
+	virtual D3D12_GPU_DESCRIPTOR_HANDLE GetResourceGPUHandle(unsigned int resourceHandleIndex, unsigned int handleOffsetCount = 0U) const;
 protected:
 	/**
 	*	保持しているDescriptorHeap
