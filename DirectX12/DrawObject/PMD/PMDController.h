@@ -257,7 +257,7 @@ private:
 	*	@brief	toonを使用する部分と使用しない部分を分けながらCommandListに命令を登録する
 	*	@param[in]	cmdList		命令を登録するコマンドリスト
 	*/
-	void DrawWhileSetTable(const std::shared_ptr<Dx12CommandList>& cmdList
+	void DrawWhileSetTable(std::shared_ptr<Dx12CommandList>& cmdList
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair);
 
@@ -267,7 +267,7 @@ private:
 	*	@param[in]	resourceIndex	何番目のマテリアルかのインデックス
 	*	@param[in]	offsetCount		DescriptorHeapのオフセット番号
 	*/
-	void SetMaterial(const std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount);
+	void SetMaterial(std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount);
 
 	/**
 	*	@brief	現在の情報を使ってDescriptorHeapを作成する
@@ -280,7 +280,7 @@ private:
 	*	@brief	このモデルのConstantBufferをCmdListに設定する
 	*	@param[in]	cmdList		ConstantBufferを設定するCommandList
 	*/
-	void SetConstantBuffers(const std::shared_ptr<Dx12CommandList>& cmdList);
+	void SetConstantBuffers(std::shared_ptr<Dx12CommandList>& cmdList);
 
 	/**
 	*	BundelCommadnListを更新する

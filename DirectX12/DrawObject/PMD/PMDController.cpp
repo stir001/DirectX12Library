@@ -161,7 +161,7 @@ void PMDController::UpdateDescriptorHeap()
 {
 }
 
-void PMDController::DrawWhileSetTable(const std::shared_ptr<Dx12CommandList>& cmdList
+void PMDController::DrawWhileSetTable(std::shared_ptr<Dx12CommandList>& cmdList
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> toonPair
 	, std::pair<std::shared_ptr<PipelineStateObject>, std::shared_ptr<RootSignatureObject>> basicPair)
 {
@@ -199,7 +199,7 @@ void PMDController::DrawWhileSetTable(const std::shared_ptr<Dx12CommandList>& cm
 }
 
 
-void PMDController::SetMaterial(const std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
+void PMDController::SetMaterial(std::shared_ptr<Dx12CommandList>& cmdList, unsigned int resourceIndex, unsigned int offsetCount)
 {
 	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex, PMDModel::eROOT_PARAMATER_INDEX_MATERIAL, offsetCount);
 }
@@ -229,7 +229,7 @@ void PMDController::CreateDescriptorHeap(const Microsoft::WRL::ComPtr<ID3D12Devi
 	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(descName, dev, buffers, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void PMDController::SetConstantBuffers(const std::shared_ptr<Dx12CommandList>& cmdList)
+void PMDController::SetConstantBuffers(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	unsigned int resourceIndex = mConstantBufferOffset;
 	mDescHeap->SetGraphicsDescriptorTable(cmdList, resourceIndex++
