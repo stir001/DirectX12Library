@@ -551,6 +551,7 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
+	skl.initMatrix = tree.globalPosition;
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
@@ -1088,7 +1089,6 @@ void FbxLoader::ClearTmpInfo()
 	mSkeletonMatrix.shrink_to_fit();
 	DirectX::XMFLOAT4X4 identity;
 	identity = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity());
-	mNodeTree.globalOffsetPosition = identity;
 	mNodeTree.globalPosition = identity;
 	mNodeTree.nodeName.clear();
 	mNodeTree.nodeName.shrink_to_fit();

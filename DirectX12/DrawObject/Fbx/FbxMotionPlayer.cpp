@@ -11,6 +11,17 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 	:mModelBones(bones), mData{}, mFrame(0), mVertices(vertices), mVertexElements(vertexElements)
 {
 	mCalMatrix.resize(mModelBones.size());
+	mVertexInitMatrix.resize(mVertices.size());
+	DirectX::XMVECTOR dummy;
+	for (unsigned int i = 0; i < mVertices.size(); ++i)
+	{
+		for (unsigned int j = 0; j < mVertices[i].boneIndex.size(); ++j)
+		{
+			int boneIndex = mVertices[i].boneIndex[j];
+			float boneweight = mVertices[i].boneWeight[j];
+			mVertexInitMatrix[i] += ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixInverse(&dummy, ConvertXMFloat4x4ToXMMatrix(mModelBones[boneIndex].initMatrix * boneweight)));
+		}
+	}
 }
 
 FbxMotionPlayer::~FbxMotionPlayer()
@@ -102,20 +113,17 @@ void FbxMotionPlayer::UpdateVertexElementMatrix()
 	for (unsigned int i = 0; i < mVertices.size();++i)
 	{
 		vertexMatrix = {};
-		initVertexMatrix = {};
-		for (unsigned int j = 0; j < mVertices[i].boneIndex.size(); ++j)
+		auto& vert = mVertices[i];
+		for (unsigned int j = 0; j < vert.boneIndex.size(); ++j)
 		{
-			int boneIndex = mVertices[i].boneIndex[j];
-			float boneweight = mVertices[i].boneWeight[j];
-			vertexMatrix += mCalMatrix[boneIndex] * boneweight;
-			//initVertexMatrix += mModelBones[boneIndex].initMatrix * boneweight;
+			vertexMatrix += mCalMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
 		}
-		multiMatrix = initVertexMatrix * vertexMatrix;
-		mVertexElements[i].pos = mVertices[i].pos * multiMatrix;
+		multiMatrix = vertexMatrix;
+		mVertexElements[i].pos = vert.pos * mVertexInitMatrix[i] * multiMatrix;
 		multiMatrix._41 = 0;
 		multiMatrix._42 = 0;
 		multiMatrix._43 = 0;
-		mVertexElements[i].normal = mVertices[i].normal * multiMatrix;
+		mVertexElements[i].normal = vert.normal * multiMatrix;
 	}
 }
 

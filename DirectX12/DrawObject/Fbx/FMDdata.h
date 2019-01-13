@@ -94,6 +94,7 @@ struct FMDSkeleton
 	DirectX::XMFLOAT4 pos;
 	DirectX::XMFLOAT4 rotation;
 	DirectX::XMFLOAT4 scale;
+	DirectX::XMFLOAT4X4 initMatrix;
 	int	parentIndex;
 	int nameSize;//ï∂éöêî
 	std::string name;

@@ -23,6 +23,7 @@ private:
 	const std::vector<Fbx::FbxSkeleton>& mModelBones;
 	std::vector<DirectX::XMFLOAT4X4> mCalMatrix;
 	const std::vector<Fbx::FbxVertex>& mVertices;
+	std::vector<DirectX::XMFLOAT4X4> mVertexInitMatrix;
 	std::vector<Fbx::FbxVertexElement>& mVertexElements;
 
 	void UpdateCalMatrix();

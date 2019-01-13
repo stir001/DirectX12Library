@@ -132,7 +132,7 @@ void FMDLoader::LoadSkeletons(std::ifstream& stream, FMDFileData& modelData)
 	int dataSize = 0;
 	{
 		FMDSkeleton skl;
-		dataSize = sizeof(skl.pos) + sizeof(skl.rotation) + sizeof(skl.scale) + sizeof(skl.parentIndex) + sizeof(skl.nameSize);
+		dataSize = sizeof(skl.pos) + sizeof(skl.rotation) + sizeof(skl.scale) + sizeof(skl.initMatrix) + sizeof(skl.parentIndex) + sizeof(skl.nameSize);
 	}
 	for (auto& s : modelData.skeletons)
 	{
