@@ -557,24 +557,25 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 void CreateskeletonData(const NodeTree& skeletonTree,
 	std::vector<unsigned int>& skeletonIndices,
 	std::vector<Fbx::FbxSkeleton>& skeletons,
-	unsigned int& skeletonIndex)
+	unsigned int& skeletonIndex, unsigned int parentIndex)
 {
 	Fbx::FbxSkeleton skl;
-	skl.parentIndex = skeletonIndex;
+	skl.parentIndex = parentIndex;
 
 	//子ボーンの処理とインデックスの作成
 	for (unsigned int i = 0; i < static_cast<unsigned int>(skeletonTree.children.size()); ++i)
 	{
 		StoreSkeleton(skl, skeletonTree.children[i]);
-		skeletons[++skeletonIndex] = skl;
+		unsigned int myidx = skeletonIndex++;
+		skeletons[myidx] = skl;
 		//インデックスの作成
 		if (skeletonTree.nodeName != "" && skeletonTree.nodeName != "root")
 		{
 			skeletonIndices.push_back(skl.parentIndex);
-			skeletonIndices.push_back(skeletonIndex);
+			skeletonIndices.push_back(myidx);
 		}
 
-		CreateskeletonData(skeletonTree.children[i], skeletonIndices, skeletons, skeletonIndex);
+		CreateskeletonData(skeletonTree.children[i], skeletonIndices, skeletons, skeletonIndex, myidx);
 	}
 }
 
@@ -655,7 +656,7 @@ void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, i
 void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, int tmpvertexNormalId, int tmpvertexUVId)
 {
 	mv.pos = { tv.pos.x,tv.pos.y,tv.pos.z,1 };
-	mv.normal = { tv.normal[tmpvertexNormalId].normal.x,tv.normal[tmpvertexNormalId].normal.y,tv.normal[tmpvertexNormalId].normal.z,1 };
+	mv.normal = { tv.normal[tmpvertexNormalId].normal.x, tv.normal[tmpvertexNormalId].normal.y, tv.normal[tmpvertexNormalId].normal.z, 1 };
 	mv.texCoord = tv.uv[tmpvertexUVId].uv;
 	mv.boneIndex.resize(tv.weights.size());
 	mv.boneWeight.resize(tv.weights.size());
@@ -1722,15 +1723,21 @@ void FbxLoader::LoadSkeletons()
 		skeletonNode.push_back(node);
 	});
 
-	//ルートボーン用に一つ余分に確保
-	mSkeletons.resize(skeletonNode.size() + 1);
+	mSkeletons.resize(skeletonNode.size());
 	//基本的には2倍で足りると思う
 	mSkeletonIndices.reserve(skeletonNode.size() * 2);
 
 	unsigned int skeletonNum = static_cast<unsigned int>(skeletonNode.size());
 	unsigned int skeletonIndex = 0;
+	Fbx::FbxSkeleton skl;
+	skl.parentIndex = UINT_MAX;
 
-	CreateskeletonData(skeletonTree, mSkeletonIndices, mSkeletons, skeletonIndex);
+	for (int i = 0; i < skeletonTree.children.size(); ++i)
+	{
+		StoreSkeleton(skl, skeletonTree.children[i]);
+		mSkeletons[skeletonIndex++] = skl;
+		CreateskeletonData(skeletonTree.children[i], mSkeletonIndices, mSkeletons, skeletonIndex, 0);
+	}
 	mSkeletonIndices.shrink_to_fit();
 
 	if (skeletonNum <= 0U)

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "BulletlibLink.h"
 #include "BulletGhostObject.h"
 #include "bullet/Shape/BulletCollisionShape.h"
 #include "bullet/System/PhysicsSystem.h"
