@@ -81,7 +81,7 @@ void CameraHolder::SetCameraElement(Dx12Camera* camera)
 void CameraHolder::SetCameraViewPort(Dx12Camera * camera)
 {
 	int index = camera->GetHoldIndex();
-	if (index > mViewPorts.size()) return;
+	if (index > static_cast<int>(mViewPorts.size())) return;
 	mViewPorts[index] = camera->GetViewPort();
 }
 

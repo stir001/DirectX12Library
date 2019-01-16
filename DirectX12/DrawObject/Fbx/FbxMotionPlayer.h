@@ -10,7 +10,8 @@ class FbxMotionData;
 class FbxMotionPlayer : public AnimationPlayer
 {
 public:
-	FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& boneData, const std::vector<Fbx::FbxVertex>& vertices, std::vector<Fbx::FbxVertexElement>& vertexElements);
+	FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& boneData, const std::vector<Fbx::FbxVertex>& vertices
+		, std::vector<Fbx::FbxVertexElement>& vertexElements, std::vector<unsigned int>& skeletonIndices);
 	~FbxMotionPlayer();
 
 	void SetMotion(std::shared_ptr<FbxMotionData>& data, bool isLoop = true);
@@ -24,9 +25,15 @@ private:
 	std::vector<DirectX::XMFLOAT4X4> mCalMatrix;
 	const std::vector<Fbx::FbxVertex>& mVertices;
 	std::vector<Fbx::FbxVertexElement>& mVertexElements;
+	std::vector<std::vector<unsigned int>> mSkeletonTree;
+	std::vector<DirectX::XMFLOAT4X4> mPoseMatrix;
+	std::vector<DirectX::XMFLOAT4> mCalSkeletonPos;
 
 	void UpdateCalMatrix();
 	void UpdateVertexElementMatrix();
 	void ApplyMotionData();
+	void CreateSkeletonTree(std::vector<unsigned int>& skeletonIndices);
+	void ApplyParentMatrixRecursive(std::vector<DirectX::XMFLOAT4X4>& matrix, std::vector<std::vector<unsigned int>>& tree, unsigned int parentIndex);
+	void CalSkeletonPos(std::vector<DirectX::XMFLOAT4>& pos, std::vector<DirectX::XMFLOAT4X4>& calMat);
 };
 

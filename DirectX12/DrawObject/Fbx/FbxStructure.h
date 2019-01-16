@@ -164,6 +164,7 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
+		DirectX::XMFLOAT4X4 initMatrix;
 		FbxSkeleton() :name("")
 			, parentIndex(INT_MAX)
 			, pos{ 0,0,0,1 }
