@@ -36,7 +36,7 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 			,{ { 0.0f,0.0f , 0.0f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
 			,{ { img->GetImageSize().x, 0.0f, 0.f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
 	, mScaleX(1.0f), mScaleY(1.0f), mRota(0.0f), mPivot{ 0.f,0.f,0.f }, mCenterOffset(0,0,0)
-	, mRect(std::make_shared<Rect>(mPivot, img->GetImageSize().x, img->GetImageSize().y))
+	, mRect(std::make_shared<Rect>(DirectX::XMFLOAT3(img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0), img->GetImageSize().x, img->GetImageSize().y))
 	, mTurnSign(1,1), mBundleUpdate(&ImageController::UpdateBundle)
 {
 	mPipelinestate = pipelinestate;
@@ -230,10 +230,10 @@ DirectX::XMFLOAT2 ImageController::GetImageSize()
 std::shared_ptr<ImageController> ImageController::Duplicate()
 {
 	std::shared_ptr<ImageController> rtn  = std::make_shared<ImageController>(mImgObj, mDevice, mCmdList, mBackCmdList, mPipelinestate, mRootsignature);
+	rtn->SetRect(mRect->GetCenter(), mRect->GetWidth(), mRect->GetHeight());
 	rtn->SetCenterOffset(mCenterOffset);
 	rtn->SetPos(mPivot);
-	rtn->SetRect(mRect->GetCenter(), mRect->GetWidth(), mRect->GetHeight());
-	rtn->SetRota(mRota);
+	rtn->SetRota(DirectX::XMConvertToDegrees(mRota));
 	rtn->SetScale(DirectX::XMFLOAT2(mScaleX, mScaleY));
 	return rtn;
 }
