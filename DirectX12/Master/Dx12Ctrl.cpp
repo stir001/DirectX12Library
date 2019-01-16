@@ -231,7 +231,7 @@ void Dx12Ctrl::InitWindowCreate()
 	ToWChar(buff,strName);
 
 	WNDCLASSEX w = {};
-	w.lpfnWndProc = winProc;
+	w.lpfnWndProc = (WNDPROC)winProc;
 	w.lpszClassName = buff.data();
 	w.hInstance = mWinHInstance;
 	w.hIcon = LoadIcon(w.hInstance, buff.data());

@@ -257,7 +257,7 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 		stream.write(reinterpret_cast<const char*>(s.name.data()), sizeof(char) * s.nameSize);
 	};
 
-	for (int i = 0; i < skeletons.size(); ++i)
+	for (int i = 0; i < static_cast<int>(skeletons.size()); ++i)
 	{
 		writeFunc(s, skeletons[i]);
 	}

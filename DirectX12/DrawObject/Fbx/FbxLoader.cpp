@@ -1732,7 +1732,7 @@ void FbxLoader::LoadSkeletons()
 	Fbx::FbxSkeleton skl;
 	skl.parentIndex = UINT_MAX;
 
-	for (int i = 0; i < skeletonTree.children.size(); ++i)
+	for (int i = 0; i < static_cast<int>(skeletonTree.children.size()); ++i)
 	{
 		StoreSkeleton(skl, skeletonTree.children[i]);
 		mSkeletons[skeletonIndex++] = skl;
