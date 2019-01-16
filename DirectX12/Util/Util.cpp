@@ -22,7 +22,7 @@ std::string ConvertNumToString(T num, const unsigned int maxDigit)
 	{
 		T currentDigit = num % extractDigit;
 		rtn[maxDigit - 1 - i] = currentDigit + '0';
-		num /= 10;
+		num /= extractDigit;
 	}
 	return rtn;
 }
@@ -37,4 +37,19 @@ std::string ConvertNumberToString(unsigned char num)
 {
 	const unsigned int MAX_DIGIT = 3;
 	return ConvertNumToString(num,MAX_DIGIT);
+}
+
+unsigned int ConvertStringToUINT(std::string num)
+{
+	const unsigned int digit = static_cast<unsigned int>(num.size());
+
+	unsigned int rtn = 0;
+
+	unsigned int extractDigit = 10;
+	for (unsigned int i = 0; i < digit; ++i)
+	{
+		rtn += (num[i - digit - 1] - '0') * static_cast<unsigned int>(powf(static_cast<float>(extractDigit), static_cast<float>(i)));
+	}
+
+	return rtn;
 }
