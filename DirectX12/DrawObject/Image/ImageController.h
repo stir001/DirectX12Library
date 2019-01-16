@@ -44,7 +44,7 @@ public:
 	~ImageController();
 
 	/**
-	*	@brief	画像を平行移動させる
+	*	@brief	画像を平行移動させる 画面中央原点 +x右 +y上
 	*	@param[in]	x	xの平行移動成分
 	*	@param[in]	y	yの平行移動成分
 	*	@param[in]	z	zの平行移動成分
@@ -52,7 +52,7 @@ public:
 	void AddPos(const float x, const float y, const float z);
 
 	/**
-	*	@brief	画像を平行移動させる
+	*	@brief	画像を平行移動させる 画面中央原点 +x右 +y上
 	*	@param[in]	offset	平行移動線分
 	*/
 	void AddPos(const DirectX::XMFLOAT3& offset);
@@ -64,7 +64,7 @@ public:
 	void AddScale(const float scale);
 
 	/**
-	*	@brief	画像を回転させる
+	*	@brief	画像を回転させる 正の値で反時計回り
 	*	@param[in]	deg		回転量(degree,度数法)
 	*/
 	void AddRota(const float deg);
@@ -116,7 +116,7 @@ public:
 	void SetScale(const DirectX::XMFLOAT2& scale);
 
 	/**
-	*	@brief	画像の回転を設定する
+	*	@brief	画像の回転を設定する  正の値で反時計回り
 	*	@param[in]	deg		設定したい回転角度(degree,度数法)
 	*/
 	void SetRota(const float deg);
