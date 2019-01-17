@@ -936,22 +936,17 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 		{
 			//http://help.autodesk.com/view/FBX/2019/ENU/?guid=FBX_Developer_Help_nodes_and_scene_graph_fbx_nodes_transformation_data_html
 			auto t_translation = childNode->LclTranslation.Get();
-			/*auto globalMatrix = childNode->EvaluateLocalTransform().Inverse();
-			t_translation = globalMatrix.MultT(fbxsdk::FbxVector4(t_translation.mData[0], t_translation.mData[1], t_translation.mData[2]));*/
 			childNodeTree.translation = { static_cast<float>(t_translation.mData[0]), static_cast<float>(t_translation.mData[1]) , static_cast<float>(t_translation.mData[2]) };
-			//childNodeTree.translation += parentTree.translation;
 			auto t_rotation = childNode->LclRotation.Get();
 			childNodeTree.rotation = { static_cast<float>(t_rotation.mData[0]), static_cast<float>(t_rotation.mData[1]), static_cast<float>(t_rotation.mData[2]) };
-			//childNodeTree.rotation += parentTree.rotation;
 			auto t_scale = childNode->LclScaling.Get();
 			childNodeTree.scale = { static_cast<float>(t_scale.mData[0]), static_cast<float>(t_scale.mData[1]), static_cast<float>(t_scale.mData[2]) };
 
-			fbxsdk::FbxAMatrix mat(t_translation, t_rotation, t_scale);
+			fbxsdk::FbxAMatrix mat = childNode->EvaluateLocalTransform();
 			DirectX::XMMATRIX xmat;
 			StoreFbxMatrixToXMMatrix(mat, xmat);
 			DirectX::XMFLOAT4X4 mxf44;
 			DirectX::XMStoreFloat4x4(&mxf44, xmat);
-			//DirectX::XMFLOAT4 parentpos = { parentTree.translation.x, parentTree.translation.y, parentTree.translation.z, 1.0f };
 			DirectX::XMFLOAT4 origin = { 0,0,0,1 };
 			childNodeTree.offsetMatrix = mxf44;
 			childNodeTree.globalPosition = mxf44 * parentTree.globalPosition;

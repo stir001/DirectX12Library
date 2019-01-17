@@ -51,8 +51,6 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		, static_cast<unsigned int>(sizeof(mVertexElements[0])),static_cast<unsigned int>(mVertexElements.size())));
 	UpdateVertex();
 
-	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes, mVertexElements, mModel->mSkeletonIndices);
-
 	UpdateMatrix();
 
 	//骨用のバッファ、ヒープの処理
@@ -87,6 +85,9 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		mSkeletonDraw = &FbxModelController::NonDrawSkeleton;
 	}
 	//骨用の処理終了
+
+	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes,
+		mVertexElements, mModel->mSkeletonIndices, mSkeletonVertexBuffer);
 }
 
 FbxModelController::~FbxModelController()
@@ -254,8 +255,6 @@ void FbxModelController::DrawColorSkeleton()
 {
 	mCmdList->SetPipelineState(mSkeletonPipelineState);
 	mCmdList->SetGraphicsRootSignature(mSkeletonRootsignature);
-	//mSkeletonIndexBuffer->SetBuffer(mCmdList);
-	//mSkeletonVertexBuffer->SetBuffer(mCmdList);
 	mCmdList->IASetIndexBuffer(mSkeletonIndexBuffer);
 	mCmdList->IASetVertexBuffers({ &mSkeletonVertexBuffer }, 1);
 

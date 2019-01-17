@@ -4,12 +4,16 @@
 #include "Util/XMFloatOperators.h"
 #include "Animation/AnimationPlayerManager.h"
 #include "Util/XMFloatOperators.h"
+#include "Buffer/VertexBufferObject.h"
 
 #include <algorithm>
 
 FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std::vector<Fbx::FbxVertex>& vertices
-	, std::vector<Fbx::FbxVertexElement>& vertexElements, std::vector<unsigned int>& skeletonIndices)
-	:mModelBones(bones), mData{}, mFrame(0), mVertices(vertices), mVertexElements(vertexElements)
+	, std::vector<Fbx::FbxVertexElement>& vertexElements, std::vector<unsigned int>& skeletonIndices
+	, std::shared_ptr<VertexBufferObject> skeletonPosBuffer)
+	: mModelBones(bones), mData{}, mFrame(0)
+	, mVertices(vertices), mVertexElements(vertexElements)
+	, mSkeletonPosBuffer(skeletonPosBuffer)
 {
 	unsigned int boneNum = static_cast<unsigned int>(mModelBones.size());
 	mCalMatrix.resize(boneNum);
@@ -51,6 +55,7 @@ void FbxMotionPlayer::Update()
 	}
 	UpdateCalMatrix();
 	UpdateVertexElementMatrix();
+	//UpdateSkeletonPos();
 }
 
 void FbxMotionPlayer::UpdateCalMatrix()
@@ -108,7 +113,7 @@ void FbxMotionPlayer::UpdateVertexElementMatrix()
 			vertexMatrix += mCalMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
 		}
 		multiMatrix = vertexMatrix;
-		mVertexElements[i].pos = vert.pos/* * mVertexInitMatrix[i]*/ * multiMatrix;
+		mVertexElements[i].pos = vert.pos * multiMatrix;
 		multiMatrix._41 = 0;
 		multiMatrix._42 = 0;
 		multiMatrix._43 = 0;
@@ -148,10 +153,20 @@ void FbxMotionPlayer::ApplyParentMatrixRecursive(std::vector<DirectX::XMFLOAT4X4
 	for (unsigned int i = 0; i < tree[parentIndex].size(); ++i)
 	{
 		unsigned int childIndex = tree[parentIndex][i];
-		ApplyParentMatrixRecursive(matrix, tree, childIndex);
 		matrix[childIndex] = matrix[childIndex] * matrix[parentIndex];
+		ApplyParentMatrixRecursive(matrix, tree, childIndex);
 		//matrix[childIndex] = matrix[parentIndex] * matrix[childIndex];
 	}
+}
+
+void FbxMotionPlayer::UpdateSkeletonPos()
+{
+	std::vector<DirectX::XMFLOAT4> pos(mModelBones.size());
+	for (int i = 0; i < mModelBones.size(); ++i)
+	{
+		pos[i] = DirectX::XMFLOAT4(0, 0, 0, 1) * mCalMatrix[i];
+	}
+	mSkeletonPosBuffer->WriteBuffer(pos.data(), sizeof(DirectX::XMFLOAT4) * mModelBones.size());
 }
 
 void FbxMotionPlayer::StopMotion() const
