@@ -51,6 +51,7 @@ struct NodeTree
 {
 	std::string nodeName;
 	DirectX::XMFLOAT4X4 globalPosition;
+	DirectX::XMFLOAT4X4 offsetMatrix;
 	unsigned int attributeType;
 	DirectX::XMFLOAT3 translation;
 	DirectX::XMFLOAT3 rotation;

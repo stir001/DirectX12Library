@@ -551,7 +551,7 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
-	skl.initMatrix = tree.globalPosition;
+	skl.initMatrix = tree.offsetMatrix;
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
@@ -953,6 +953,7 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 			DirectX::XMStoreFloat4x4(&mxf44, xmat);
 			//DirectX::XMFLOAT4 parentpos = { parentTree.translation.x, parentTree.translation.y, parentTree.translation.z, 1.0f };
 			DirectX::XMFLOAT4 origin = { 0,0,0,1 };
+			childNodeTree.offsetMatrix = mxf44;
 			childNodeTree.globalPosition = mxf44 * parentTree.globalPosition;
 			DirectX::XMFLOAT4 childpos = origin * childNodeTree.globalPosition;
 			childNodeTree.translation = { childpos.x, childpos.y, childpos.z };
@@ -1120,7 +1121,7 @@ void FbxLoader::LoadAnimationMain(fbxsdk::FbxScene* scene, unsigned int meshId)
 		{
 			DirectX::XMMATRIX t_mat;
 			StoreFbxMatrixToXMMatrix(skeletonNode[i]->EvaluateLocalTransform(times[j]), t_mat);
-			mSkeletonMatrix[i].animMatrix[j].matrix = t_mat;
+			mSkeletonMatrix[i].animMatrix[j].matrix = ConvertXMMATRIXToXMFloat4x4(t_mat);
 			mSkeletonMatrix[i].animMatrix[j].frame = static_cast<int>(times[j].Get() / oneFrameValue);
 		}
 	}

@@ -13,8 +13,11 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 {
 	unsigned int boneNum = static_cast<unsigned int>(mModelBones.size());
 	mCalMatrix.resize(boneNum);
-	mCalSkeletonPos.resize(boneNum);
-	mPoseMatrix.resize(boneNum);
+	mInitMatrix.resize(boneNum);
+	for (unsigned int i = 0; i < boneNum; ++i)
+	{
+		mInitMatrix[i] = InverseXMFloat4x4(mModelBones[i].initMatrix);
+	}
 	CreateSkeletonTree(skeletonIndices);
 }
 
@@ -65,19 +68,15 @@ void FbxMotionPlayer::UpdateCalMatrix()
 	{
 		auto& anim = mData.mAnimData[i];
 		auto& currentAnim = anim.frameData[anim.currentDataIndex];
-		DirectX::XMStoreFloat4x4(&mCalMatrix[i], DirectX::XMMatrixIdentity());
+		mCalMatrix[i] = IdentityXMFloat4x4();
 		if (currentAnim.frame == (anim.frameData.back().frame))
 		{
-			DirectX::XMStoreFloat4x4(&mCalMatrix[i], currentAnim.matrix);
+			mCalMatrix[i] = mInitMatrix[i] * currentAnim.matrix;
 		}
 		else
 		{
-			float t = (static_cast<float>(mFrame) - static_cast<float>(currentAnim.frame)) / (static_cast<float>(anim.frameData[anim.currentDataIndex + 1].frame - currentAnim.frame));
-			DirectX::XMFLOAT4X4 rMatrix;
-			DirectX::XMFLOAT4X4 baseMatrix;
-			rMatrix = ConvertXMMATRIXToXMFloat4x4(currentAnim.matrix);
-			baseMatrix = ConvertXMMATRIXToXMFloat4x4(anim.frameData[anim.currentDataIndex + 1].matrix);
-			mCalMatrix[i] = rMatrix * (1.0f - t) + baseMatrix * t;
+			float t = (static_cast<float>(mFrame) - static_cast<float>(currentAnim.frame)) / (static_cast<float>(anim.frameData[anim.currentDataIndex + 1].frame - currentAnim.frame));			
+			mCalMatrix[i] = mInitMatrix[i] * (currentAnim.matrix * (1.0f - t) + anim.frameData[anim.currentDataIndex + 1].matrix * t);
 			if (mFrame == anim.frameData[anim.currentDataIndex + 1].frame)
 			{
 				++anim.currentDataIndex;
@@ -86,7 +85,6 @@ void FbxMotionPlayer::UpdateCalMatrix()
 	}
 
 	ApplyParentMatrixRecursive(mCalMatrix, mSkeletonTree, 0);
-	CalSkeletonPos(mCalSkeletonPos, mCalMatrix);
 
 	++mFrame;
 	if (mFrame == mData.mMaxFrame)
@@ -153,16 +151,6 @@ void FbxMotionPlayer::ApplyParentMatrixRecursive(std::vector<DirectX::XMFLOAT4X4
 		ApplyParentMatrixRecursive(matrix, tree, childIndex);
 		matrix[childIndex] = matrix[childIndex] * matrix[parentIndex];
 		//matrix[childIndex] = matrix[parentIndex] * matrix[childIndex];
-	}
-}
-
-void FbxMotionPlayer::CalSkeletonPos(std::vector<DirectX::XMFLOAT4>& skeletonPos, std::vector<DirectX::XMFLOAT4X4>& calMat)
-{
-	DirectX::XMFLOAT4 origin(0, 0, 0, 1);
-	unsigned int size = static_cast<unsigned int>(skeletonPos.size());
-	for (unsigned int i = 0; i < size; ++i)
-	{
-		skeletonPos[i] = origin * calMat[i];
 	}
 }
 

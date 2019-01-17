@@ -188,7 +188,7 @@ namespace Fbx
 	struct BoneFrameData
 	{
 		int frame;
-		DirectX::XMMATRIX matrix;
+		DirectX::XMFLOAT4X4 matrix;
 	};
 
 	struct BoneMatrixData

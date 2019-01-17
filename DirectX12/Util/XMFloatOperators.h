@@ -82,4 +82,8 @@ DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& f44, const float scaler);
 bool operator==(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
 
 DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
+
+DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4& matrix);
+
+DirectX::XMFLOAT4X4 IdentityXMFloat4x4();
 #endif
