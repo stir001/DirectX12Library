@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "BulletlibLink.h"
+
 #include "BulletDebugDrawDx.h"
 #include "Rootsignature/WireFrameRootSignature.h"
 #include "PipelineState//WireFramePipelineState.h"

@@ -156,21 +156,11 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 		return nullptr;
 	}
 
-	const int poseCount = mScene->GetPoseCount();
-	if (poseCount != 1)
-	{
-		return nullptr;
-	}
-	else
-	{
-		mPose = mScene->GetPose(0);
-	}
-
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 	if (rootNode) {
 		fbxsdk::FbxAMatrix dummy;
 		dummy.SetIdentity();
-		NodeTree rNode;
+		NodeTree rNode = {};
 		rNode.nodeName = rootNode->GetName();
 		fbxsdk::FbxTime t = 0;
 		mNodeTree = rNode;
@@ -187,18 +177,6 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 	fbxsdk::FbxArray<fbxsdk::FbxString*> mAnimStacknameArray;
 
 	mScene->FillAnimStackNameArray(mAnimStacknameArray);
-
-	std::vector<fbxsdk::FbxNode*> cameraArray;
-
-	StackNode(mScene->GetRootNode(), fbxsdk::FbxNodeAttribute::eCamera, cameraArray);
-
-	fbxsdk::FbxVector4 t0 = mNodeDatas[0]->GetGeometricTranslation(fbxsdk::FbxNode::eSourcePivot);
-	fbxsdk::FbxVector4 r0 = mNodeDatas[0]->GetGeometricRotation(fbxsdk::FbxNode::eSourcePivot);
-	fbxsdk::FbxVector4 s0 = mNodeDatas[0]->GetGeometricScaling(fbxsdk::FbxNode::eSourcePivot);
-	DirectX::XMMATRIX xmMat;
-	StoreFbxMatrixToXMMatrix(fbxsdk::FbxAMatrix(t0, r0, s0), xmMat);
-	mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
-
 
 	LoadAnimationMain(mScene, 0);
 
@@ -573,29 +551,31 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
+	skl.initMatrix = tree.globalPosition;
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
 	std::vector<unsigned int>& skeletonIndices,
 	std::vector<Fbx::FbxSkeleton>& skeletons,
-	unsigned int& skeletonIndex)
+	unsigned int& skeletonIndex, unsigned int parentIndex)
 {
 	Fbx::FbxSkeleton skl;
-	skl.parentIndex = skeletonIndex;
+	skl.parentIndex = parentIndex;
 
 	//子ボーンの処理とインデックスの作成
 	for (unsigned int i = 0; i < static_cast<unsigned int>(skeletonTree.children.size()); ++i)
 	{
 		StoreSkeleton(skl, skeletonTree.children[i]);
-		skeletons[++skeletonIndex] = skl;
+		unsigned int myidx = skeletonIndex++;
+		skeletons[myidx] = skl;
 		//インデックスの作成
 		if (skeletonTree.nodeName != "" && skeletonTree.nodeName != "root")
 		{
 			skeletonIndices.push_back(skl.parentIndex);
-			skeletonIndices.push_back(skeletonIndex);
+			skeletonIndices.push_back(myidx);
 		}
 
-		CreateskeletonData(skeletonTree.children[i], skeletonIndices, skeletons, skeletonIndex);
+		CreateskeletonData(skeletonTree.children[i], skeletonIndices, skeletons, skeletonIndex, myidx);
 	}
 }
 
@@ -676,7 +656,7 @@ void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, i
 void StoreTmpVertexToModelVertex(Fbx::FbxVertex& mv, const Fbx::TmpVertex& tv, int tmpvertexNormalId, int tmpvertexUVId)
 {
 	mv.pos = { tv.pos.x,tv.pos.y,tv.pos.z,1 };
-	mv.normal = { tv.normal[tmpvertexNormalId].normal.x,tv.normal[tmpvertexNormalId].normal.y,tv.normal[tmpvertexNormalId].normal.z,1 };
+	mv.normal = { tv.normal[tmpvertexNormalId].normal.x, tv.normal[tmpvertexNormalId].normal.y, tv.normal[tmpvertexNormalId].normal.z, 1 };
 	mv.texCoord = tv.uv[tmpvertexUVId].uv;
 	mv.boneIndex.resize(tv.weights.size());
 	mv.boneWeight.resize(tv.weights.size());
@@ -931,25 +911,6 @@ void FbxLoader::FixVertexInfo(std::shared_ptr<Fbx::FbxModelData> model, fbxsdk::
 
 	model->vertexesInfo.vertexes.erase(beginitr + vindex, enditr);
 	model->vertexesInfo.vertexes.shrink_to_fit();
-	//END store vertex data
-
-	//START store bone data
-
-	unsigned int size = static_cast<unsigned int>(mBones.size());
-	model->bones.resize(size);
-
-	int iCounter = 0;
-	auto boneItr = mBones.begin();
-	for (unsigned int i = 0; i < size; i++, ++boneItr)
-	{
-		model->bones[i].boneName = boneItr->second.skeletonName;
-		model->bones[i].index = i;
-		model->bones[i].initMatrix = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity());
-	}
-
-	mBones.clear();
-
-	//END store bone data
 }
 
 void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype, NodeTree& parentTree, std::function<void(fbxsdk::FbxNode*)> hitFunction)
@@ -1084,20 +1045,6 @@ void ConnectSTLVectorIndices(std::vector<T>& resultIndices, const std::vector<T>
 	}
 }
 
-void ConnectClusters(std::vector<Fbx::FbxBone>& resultBone, const std::vector<Fbx::FbxBone>& connectBone)
-{
-	const unsigned int connectBoneOffset = static_cast<unsigned int>(resultBone.size());
-	resultBone.reserve(resultBone.size() + connectBone.size());
-	for (auto& cBone : connectBone)
-	{
-		auto itr = std::find_if(resultBone.begin(), resultBone.end(), [&cBone](const Fbx::FbxBone& bone) { return bone.boneName == cBone.boneName; });
-		if (itr != resultBone.end()) continue;
-		resultBone.push_back(cBone);
-		resultBone.back().index = static_cast<int>(resultBone.size());
-	}
-	resultBone.shrink_to_fit();
-}
-
 std::shared_ptr<Fbx::FbxModelData> FbxLoader::ConnectMeshes(std::vector<std::shared_ptr<Fbx::FbxModelData>>& datas)
 {
 	std::shared_ptr<Fbx::FbxModelData> rtn = std::make_shared<Fbx::FbxModelData>();
@@ -1114,8 +1061,6 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::ConnectMeshes(std::vector<std::sha
 		ConnectSTLVectorData(rtn->vertexesInfo.vertexes, datas[i]->vertexesInfo.vertexes);
 
 		ConnectSTLVectorData(rtn->materials, datas[i]->materials);
-
-		ConnectClusters(rtn->bones, datas[i]->bones);
 	}
 
 	rtn->skeletons = std::move(mSkeletons);
@@ -1145,7 +1090,6 @@ void FbxLoader::ClearTmpInfo()
 	mSkeletonMatrix.shrink_to_fit();
 	DirectX::XMFLOAT4X4 identity;
 	identity = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity());
-	mNodeTree.globalOffsetPosition = identity;
 	mNodeTree.globalPosition = identity;
 	mNodeTree.nodeName.clear();
 	mNodeTree.nodeName.shrink_to_fit();
@@ -1157,33 +1101,26 @@ void FbxLoader::ClearTmpInfo()
 
 void FbxLoader::LoadAnimationMain(fbxsdk::FbxScene* scene, unsigned int meshId)
 {
-	std::vector<fbxsdk::FbxNode*> linkNode;
-	std::vector<fbxsdk::FbxTime> times = ExtractingKeyFrames(scene, meshId, linkNode);
+	std::vector<fbxsdk::FbxTime> times = ExtractingKeyFrames(scene, meshId);
 
-	int nodeIndex = mPose->Find(mNodeDatas[0]);
+	NodeTree nodeTree;
+	std::vector<FbxNode*> skeletonNode;
+	StackSearchNode(scene->GetRootNode(), fbxsdk::FbxNodeAttribute::eSkeleton, nodeTree
+		, [&skeletonNode](fbxsdk::FbxNode* node) {
+		skeletonNode.push_back(node);
+	});
 
-	fbxsdk::FbxMatrix poseMatrix = mPose->GetMatrix(nodeIndex);
-
-	fbxsdk::FbxAMatrix poseAMatrix;
-	memcpy((double*)poseAMatrix, (double*)poseMatrix, sizeof(poseMatrix.mData));
-	DirectX::XMMATRIX xmMat;
-	StoreFbxMatrixToXMMatrix(poseAMatrix, xmMat);
-
-	DirectX::XMMATRIX globalOffsetPosition = xmMat * ConvertXMFloat4x4ToXMMatrix(mGeometryOffset);
 	fbxsdk::FbxLongLong oneFrameValue = fbxsdk::FbxTime::GetOneFrameValue(fbxsdk::FbxTime::eFrames60);
-
-	for (int i = 0; i < static_cast<int>(linkNode.size()); ++i)
+	mSkeletonMatrix.resize(skeletonNode.size());
+	for (int i = 0; i < static_cast<int>(skeletonNode.size()); ++i)
 	{
-		int nodeIndex = mPose->Find(linkNode[i]);
 		mSkeletonMatrix[i].animMatrix.resize(times.size());
+		mSkeletonMatrix[i].skeletonName = skeletonNode[i]->GetName();
 		for (int j = 0; j < static_cast<int>(times.size()); ++j)
 		{
-			//FbxAMatrix globalPosition = mNodeDatas[meshId]->EvaluateGlobalTransform(times[j]);
 			DirectX::XMMATRIX t_mat;
-			StoreFbxMatrixToXMMatrix(linkNode[i]->EvaluateGlobalTransform(times[j]), t_mat);
-			DirectX::XMVECTOR dst;
-			globalOffsetPosition = DirectX::XMMatrixInverse(&dst, globalOffsetPosition) * t_mat;
-			mSkeletonMatrix[i].animMatrix[j].matrix = globalOffsetPosition;
+			StoreFbxMatrixToXMMatrix(skeletonNode[i]->EvaluateLocalTransform(times[j]), t_mat);
+			mSkeletonMatrix[i].animMatrix[j].matrix = t_mat;
 			mSkeletonMatrix[i].animMatrix[j].frame = static_cast<int>(times[j].Get() / oneFrameValue);
 		}
 	}
@@ -1201,11 +1138,12 @@ void StackAnimationTime(const std::vector<Fbx::AnimKeyData>& data, std::vector<f
 	}
 }
 
-std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId, std::vector<fbxsdk::FbxNode*>& linkNode)
+std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* scene, unsigned int meshId)
 {
 	int animStack = scene->GetSrcObjectCount<fbxsdk::FbxAnimStack>();
 
 	std::vector<fbxsdk::FbxCluster*> clusters;
+	std::vector<fbxsdk::FbxNode*> linkNode;
 
 	for (int stack = 0; stack < animStack; ++stack)
 	{
@@ -1279,10 +1217,9 @@ std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* sc
 
 	std::vector<fbxsdk::FbxTime> times;
 
-	mSkeletonMatrix.resize(mAnimCurves.size());
-	unsigned int size = static_cast<int>(mSkeletonMatrix.size());
-
 	int iCounter = 0;
+
+	unsigned int size = static_cast<unsigned int>(mAnimCurves.size());
 
 	for (unsigned int i = 0; i < size; ++i)
 	{
@@ -1297,8 +1234,6 @@ std::vector<fbxsdk::FbxTime> FbxLoader::ExtractingKeyFrames(fbxsdk::FbxScene* sc
 		StackAnimationTime(mAnimCurves[i].scaleX.keys, times);
 		StackAnimationTime(mAnimCurves[i].scaleY.keys, times);
 		StackAnimationTime(mAnimCurves[i].scaleZ.keys, times);
-
-		mSkeletonMatrix[i].skeletonName = mAnimCurves[i].skeletonName;
 	}
 
 	std::sort(times.begin(), times.end(), [](fbxsdk::FbxTime lval, fbxsdk::FbxTime rval) {return lval.Get() < rval.Get(); });
@@ -1350,12 +1285,6 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
 	{
 		DirectX::XMMATRIX xmMat;
-		//FbxVector4 t0 = mNodeDatas[i]->GetGeometricTranslation(fbxsdk::FbxNode::eSourcePivot);
-		//FbxVector4 r0 = mNodeDatas[i]->GetGeometricRotation(fbxsdk::FbxNode::eSourcePivot);
-		//FbxVector4 s0 = mNodeDatas[i]->GetGeometricScaling(fbxsdk::FbxNode::eSourcePivot);
-		//StoreFbxMatrixToXMMatrix(FbxAMatrix(t0, r0, s0), xmMat);
-		//mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
-		//StoreFbxMatrixToXMMatrix(mNodeDatas[i]->EvaluateGlobalTransform(), xmMat);
 		auto translate = mNodeDatas[i]->EvaluateLocalTranslation();
 		float scale = 1.0f;
 		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[0] * scale), static_cast<float>(translate[1] * scale), static_cast<float>(translate[2] * scale));
@@ -1794,15 +1723,21 @@ void FbxLoader::LoadSkeletons()
 		skeletonNode.push_back(node);
 	});
 
-	//ルートボーン用に一つ余分に確保
-	mSkeletons.resize(skeletonNode.size() + 1);
+	mSkeletons.resize(skeletonNode.size());
 	//基本的には2倍で足りると思う
 	mSkeletonIndices.reserve(skeletonNode.size() * 2);
 
 	unsigned int skeletonNum = static_cast<unsigned int>(skeletonNode.size());
 	unsigned int skeletonIndex = 0;
+	Fbx::FbxSkeleton skl;
+	skl.parentIndex = UINT_MAX;
 
-	CreateskeletonData(skeletonTree, mSkeletonIndices, mSkeletons, skeletonIndex);
+	for (int i = 0; i < static_cast<int>(skeletonTree.children.size()); ++i)
+	{
+		StoreSkeleton(skl, skeletonTree.children[i]);
+		mSkeletons[skeletonIndex++] = skl;
+		CreateskeletonData(skeletonTree.children[i], mSkeletonIndices, mSkeletons, skeletonIndex, 0);
+	}
 	mSkeletonIndices.shrink_to_fit();
 
 	if (skeletonNum <= 0U)

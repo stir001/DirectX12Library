@@ -78,5 +78,7 @@ FMDSkeleton FMDSkeleton::operator=(const Fbx::FbxSkeleton & skl)
 	rotation = skl.rotation;
 	scale = skl.scale;
 	name = skl.name;
+	initMatrix = skl.initMatrix;
+	parentIndex = skl.parentIndex;
 	return FMDSkeleton();
 }

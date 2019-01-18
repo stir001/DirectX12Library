@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "BulletlibLink.h"
+
 #include "SphereCollisionShape.h"
 #include <btBulletDynamicsCommon.h>
 

@@ -17,6 +17,7 @@
 #include "Buffer/ShaderResourceObject.h"
 #include "CommandList/Dx12CommandList.h"
 #include "ViewDesc/Dx12BufferViewDesc.h"
+#include "Animation/AnimationPlayerManager.h"
 
 using namespace Fbx;
 using namespace DirectX;
@@ -50,7 +51,7 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		, static_cast<unsigned int>(sizeof(mVertexElements[0])),static_cast<unsigned int>(mVertexElements.size())));
 	UpdateVertex();
 
-	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mBones, mModel->mVertexes, mVertexElements);
+	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes, mVertexElements, mModel->mSkeletonIndices);
 
 	UpdateMatrix();
 
@@ -90,6 +91,10 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 
 FbxModelController::~FbxModelController()
 {
+	if (mMotionPlayer->GetID() != -1)
+	{
+		AnimationPlayerManager::Instance().WaitSafeFree();
+	}
 }
 
 void FbxModelController::Draw()

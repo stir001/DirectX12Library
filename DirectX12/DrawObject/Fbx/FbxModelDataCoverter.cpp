@@ -42,7 +42,6 @@ std::shared_ptr<FbxModel> FbxModelDataConverter::ConvertToFbxModel(std::shared_p
 	ConvertIndex(dev);
 	ConvertVertex(dev);
 	ConvertTexture(dev);
-	ConvertBone(dev);
 	ConvertSkeletons(dev);
 	return model;
 }
@@ -157,7 +156,7 @@ std::shared_ptr<Fbx::FbxModel> FbxModelDataConverter::ConvertToFbxModel(FMDFileD
 		fbxmodeldata->skeletonIndices[i * 2] = data.skeletons[i].parentIndex;
 		fbxmodeldata->skeletonIndices[i * 2 + 1] = i;
 	}
-	fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 4);
+	//fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 4);
 	fbxmodeldata->skeletonIndices.shrink_to_fit();
 	return ConvertToFbxModel(fbxmodeldata);
 }
@@ -207,23 +206,6 @@ void FbxModelDataConverter::ConvertTexture(Microsoft::WRL::ComPtr<ID3D12Device>&
 			}
 			mModel.lock()->mMaterials[i].drawIndexNum = mConvertData.lock()->materials[i].effectIndexNum;
 		}
-	}
-}
-
-void FbxModelDataConverter::ConvertBone(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
-{
-	mModel.lock()->mBones.resize(mConvertData.lock()->bones.size());
-	
-	for (unsigned int i = 0; i < static_cast<unsigned int>(mModel.lock()->mBones.size()); ++i)
-	{
-		mModel.lock()->mBones[i] = mConvertData.lock()->bones[i];
-	}
-
-	if (static_cast<unsigned int>(mModel.lock()->mBones.size()) == 0)
-	{
-		Fbx::FbxBone bone;
-		DirectX::XMStoreFloat4x4(&bone.initMatrix, DirectX::XMMatrixIdentity());
-		mModel.lock()->mBones.push_back(bone);
 	}
 }
 

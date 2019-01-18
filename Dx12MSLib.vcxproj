@@ -105,7 +105,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\debug;$(FBXSDK_DIR)lib\vs2015\x64\debug;$(BULLET_DIR)\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib;BulletCollision_vs2010_x64_debug.lib;BulletDynamics_vs2010_x64_debug.lib;LinearMath_vs2010_x64_debug.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -126,7 +126,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(BULLET_DIR)\x86\debug;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\debug;$(FBXSDK_DIR)lib\vs2015\x86\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib;BulletCollision_vs2010_debug.lib;BulletDynamics_vs2010_debug.lib;LinearMath_vs2010_debug.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,7 +151,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(BULLET_DIR)\x86\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\Win32\release;$(FBXSDK_DIR)lib\vs2015\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib;BulletCollision_vs2010.lib;BulletDynamics_vs2010.lib;LinearMath_vs2010.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -176,7 +176,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(BULLET_DIR)\x64\release;$(DIRECTXTEX_DIR)\Bin\Desktop_2017_Win10\x64\release;$(FBXSDK_DIR)lib\vs2015\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;DirectXTex.lib;d3dcompiler.lib;d3d12.lib;dxgi.lib;BulletCollision_vs2010_x64_release.lib;BulletDynamics_vs2010_x64_release.lib;LinearMath_vs2010_x64_release.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
