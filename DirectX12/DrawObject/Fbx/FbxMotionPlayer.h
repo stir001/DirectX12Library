@@ -28,7 +28,7 @@ private:
 	const std::vector<Fbx::FbxVertex>& mVertices;
 	std::vector<Fbx::FbxVertexElement>& mVertexElements;
 	std::vector<std::vector<unsigned int>> mSkeletonTree;
-	std::vector<DirectX::XMFLOAT4X4> mInitMatrix;
+	std::vector<DirectX::XMFLOAT4X4> mInverseMatrix;
 	std::vector<DirectX::XMFLOAT4X4> mQuoternionMatrix;
 	std::shared_ptr<VertexBufferObject> mSkeletonPosBuffer;
 

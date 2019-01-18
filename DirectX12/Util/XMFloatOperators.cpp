@@ -268,8 +268,7 @@ DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 & lval, const DirectX::XMFLO
 
 DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4 & matrix)
 {
-	DirectX::XMVECTOR dummy;
-	return ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixInverse(&dummy, ConvertXMFloat4x4ToXMMatrix(matrix)));
+	return ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixInverse(nullptr, ConvertXMFloat4x4ToXMMatrix(matrix)));
 }
 
 DirectX::XMFLOAT4X4 IdentityXMFloat4x4()

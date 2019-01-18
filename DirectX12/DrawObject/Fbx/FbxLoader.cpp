@@ -551,7 +551,7 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
-	skl.initMatrix = tree.offsetMatrix;
+	skl.initMatrix = tree.globalPosition;
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
@@ -613,13 +613,22 @@ void FbxLoader::LoadCluster(fbxsdk::FbxMesh* mesh)
 			{
 				t_bone = itr->second;
 			}
+			int boneIndex = 0;
+			for (auto& skeleton : mSkeletons)
+			{
+				if (skeleton.name == t_bone.skeletonName)
+				{
+					break;
+				}
+				++boneIndex;
+			}
 
 			std::vector<int> t_vertexIndicesArray;
 			t_vertexIndicesArray.reserve(ctrlPointIndicesCount);
 			for (int k = 0; k < ctrlPointIndicesCount; ++k)
 			{
 				t_weight.weight = static_cast<float>(ctrlPointWeightArray[k]);
-				t_weight.boneNo = offset;
+				t_weight.boneNo = boneIndex;
 				mTmpVertices[ctrlPointIndicesArray[k]].weights.push_back(t_weight);
 				mTmpVertices[ctrlPointIndicesArray[k]].boneName.push_back(t_bone.skeletonName);
 				t_vertexIndicesArray.push_back(ctrlPointIndicesArray[k]);
@@ -1278,6 +1287,8 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 
 	std::vector<std::shared_ptr<Fbx::FbxModelData>> models(mMeshDatas.size());
 
+	LoadSkeletons();
+
 	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
 	{
 		DirectX::XMMATRIX xmMat;
@@ -1289,8 +1300,6 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 		models[i] = MainLoad(mMeshDatas[i], modelPath);
 		models[i]->modelPath = modelPath;
 	}
-
-	LoadSkeletons();
 
 	auto rtn = ConnectMeshes(models);
 
