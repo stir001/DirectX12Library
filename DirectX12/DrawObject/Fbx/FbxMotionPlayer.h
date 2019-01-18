@@ -29,6 +29,7 @@ private:
 	std::vector<Fbx::FbxVertexElement>& mVertexElements;
 	std::vector<std::vector<unsigned int>> mSkeletonTree;
 	std::vector<DirectX::XMFLOAT4X4> mInitMatrix;
+	std::vector<DirectX::XMFLOAT4X4> mQuoternionMatrix;
 	std::shared_ptr<VertexBufferObject> mSkeletonPosBuffer;
 
 
@@ -38,6 +39,8 @@ private:
 	void CreateSkeletonTree(std::vector<unsigned int>& skeletonIndices);
 	void ApplyParentMatrixRecursive(std::vector<DirectX::XMFLOAT4X4>& matrix, std::vector<std::vector<unsigned int>>& tree, unsigned int parentIndex);
 	void UpdateSkeletonPos();
+	void UpdateQuoternionMatrix();
+	void ApplyInverseMatrix();
 
 };
 

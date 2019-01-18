@@ -144,20 +144,6 @@ namespace Fbx
 		void SetTexture(eELEMENT_TYPE type, FbxTexturesSet& texSet);
 	};
 
-	struct FbxBoneInfo {
-		DirectX::XMMATRIX initMatrix;
-		int	index;
-		std::string	boneName;
-		std::vector<float>	affectedVertexWeight;
-		std::vector<int> affectedVertexIndex;
-	};
-
-	struct FbxBone {
-		std::string	boneName;
-		int	index;
-		DirectX::XMFLOAT4X4 initMatrix;
-	};
-
 	struct FbxSkeleton {
 		std::string name;
 		unsigned int parentIndex;
@@ -180,7 +166,6 @@ namespace Fbx
 		Fbx::FbxIndexes	indexes;
 		Fbx::FbxVertexesInfo vertexesInfo;
 		std::vector<Fbx::FbxMaterial> materials;
-		//std::vector<Fbx::FbxBone> bones;
 		std::vector<Fbx::FbxSkeleton> skeletons;
 		std::vector<unsigned int> skeletonIndices;
 	};
@@ -188,7 +173,7 @@ namespace Fbx
 	struct BoneFrameData
 	{
 		int frame;
-		DirectX::XMFLOAT4X4 matrix;
+		DirectX::XMFLOAT4X4 matrix;//!親ボーンからの相対位置を表す行列
 	};
 
 	struct BoneMatrixData
