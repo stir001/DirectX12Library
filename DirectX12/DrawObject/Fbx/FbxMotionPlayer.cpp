@@ -22,7 +22,7 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 	for (unsigned int i = 0; i < boneNum; ++i)
 	{
 		//mInverseMatrix[i] = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(-mModelBones[i].pos.x, -mModelBones[i].pos.y, -mModelBones[i].pos.z));
-		mInverseMatrix[i] = InverseXMFloat4x4(mModelBones[i].initMatrix);
+		mInverseMatrix[i] = InverseXMFloat4x4(mModelBones[i].localMatrix);
 		//mInverseMatrix[i] = mModelBones[i].initMatrix * InverseXMFloat4x4(mModelBones[i].initMatrix);
 	}
 	CreateSkeletonTree(skeletonIndices);
