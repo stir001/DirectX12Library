@@ -52,7 +52,7 @@ void SkyBoxPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(mHolder->GetScissorRects().data(), static_cast<unsigned int>(mHolder->GetScissorRects().size()));
 }
 
-void SkyBoxPass::PreExcuteUpdate()
+void SkyBoxPass::PreExecuteUpdate()
 {
 	mSkyBox->UpdateCameraBuffer();
 	mSkyBox->Draw();

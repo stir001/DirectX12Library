@@ -26,7 +26,7 @@ void UIPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(&mScissorRect);
 }
 
-void UIPass::PreExcuteUpdate()
+void UIPass::PreExecuteUpdate()
 {
 	mCmdList->Close();
 }

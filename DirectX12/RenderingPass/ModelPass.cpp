@@ -29,7 +29,7 @@ void ModelPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(mCameraHolder->GetScissorRects().data(), static_cast<unsigned int>(mCameraHolder->GetViewPorts().size()));
 }
 
-void ModelPass::PreExcuteUpdate()
+void ModelPass::PreExecuteUpdate()
 {
 	mCmdList->Close();
 }

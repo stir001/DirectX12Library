@@ -29,7 +29,7 @@ void BackGroundPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(&mScissorRect);
 }
 
-void BackGroundPass::PreExcuteUpdate()
+void BackGroundPass::PreExecuteUpdate()
 {
 	mCmdList->Close();
 }

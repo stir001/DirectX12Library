@@ -35,7 +35,7 @@ void ShadowmapPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(&rect);
 }
 
-void ShadowmapPass::PreExcuteUpdate()
+void ShadowmapPass::PreExecuteUpdate()
 {
 	mCmdList->TransitionBarrier(mShadowmapDepth, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	mCmdList->Close();

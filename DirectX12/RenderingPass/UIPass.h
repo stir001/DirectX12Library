@@ -21,9 +21,9 @@ public:
 	void FirstUpdate();
 
 	/**
-	*	このパスのExcutePathが呼ばれる直前に実行される
+	*	このパスのExecutePathが呼ばれる直前に実行される
 	*/
-	void PreExcuteUpdate();
+	void PreExecuteUpdate();
 
 	/**
 	*	コマンドリストの実行をする。GPU待ちの責任は負わない
@@ -31,7 +31,7 @@ public:
 	void ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue);
 
 	/**
-	*	ExcutePathの実行後に実行される。CommnadListのリセットをする
+	*	ExecutePathの実行後に実行される。CommnadListのリセットをする
 	*/
 	void ResetCommandList();
 
