@@ -59,7 +59,7 @@ void SkyBoxPass::PreExcuteUpdate()
 	mCmdList->Close();
 }
 
-void SkyBoxPass::ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void SkyBoxPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
 {
 	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)(mCmdList->GetCommandList().GetAddressOf()));
 }

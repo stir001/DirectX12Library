@@ -41,7 +41,7 @@ void ShadowmapPass::PreExcuteUpdate()
 	mCmdList->Close();
 }
 
-void ShadowmapPass::ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void ShadowmapPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
 {
 	ID3D12CommandList* cmdList = mCmdList->GetCommandList().Get();
 	cmdQueue->ExecuteCommandLists(1, &cmdList);

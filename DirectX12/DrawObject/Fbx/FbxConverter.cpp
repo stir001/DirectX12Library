@@ -13,7 +13,7 @@ FbxConverter::FbxConverter()
 	, mConvertModel(nullptr)
 	, mDataConverter(std::make_shared<FbxModelDataConverter>())
 	, mWriteFilePath("FMD/")
-	, mFmdLoader(std::make_shared<FMDLoader>())
+	, mFmdLoader(std::make_shared<Fmd::FMDLoader>())
 {
 }
 
@@ -115,7 +115,7 @@ void FbxConverter::CreateController(std::shared_ptr<Fbx::FbxModelData> modelData
 	mConvertModel->SetLight(mWorldLight);
 }
 
-void FbxConverter::CreateController(FMDFileData & data)
+void FbxConverter::CreateController(Fmd::FMDFileData & data)
 {
 	auto model = mDataConverter->ConvertToFbxModel(data);
 	auto cmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
@@ -194,7 +194,7 @@ void FbxConverter::WriteVertices(std::ofstream & stream, const std::shared_ptr<F
 
 	for (int i = 0; i < vertexNum; ++i)
 	{
-		FMDVertexEffectBone bone;
+		Fmd::FMDVertexEffectBone bone;
 		stream.write(reinterpret_cast<const char*>(&vertices[i]), vertexPNTsize);
 		int boneNum = static_cast<int>(vertices[i].boneIndex.size());
 		stream.write(reinterpret_cast<const char*>(&boneNum), sizeof(boneNum));
@@ -220,8 +220,8 @@ void FbxConverter::WriteMaterials(std::ofstream & stream, const std::shared_ptr<
 	int materialNum = static_cast<int>(materials.size());
 	stream.write(reinterpret_cast<const char*>(&materialNum), sizeof(materialNum));
 
-	FMDMaterials mats(materialNum);
-	FMDTextures tex(materialNum);
+	Fmd::FMDMaterials mats(materialNum);
+	Fmd::FMDTextures tex(materialNum);
 	for (int i = 0; i < materialNum; ++i)
 	{
 		mats[i] = materials[i];
@@ -234,7 +234,7 @@ void FbxConverter::WriteMaterials(std::ofstream & stream, const std::shared_ptr<
 	{
 		auto& t = tex[i];
 		stream.write(reinterpret_cast<const char*>(t.pathSizeTable)
-			, sizeof(t.pathSizeTable[0]) * static_cast<int>(FMDTexture::FMDTextureTable::tableMax));
+			, sizeof(t.pathSizeTable[0]) * static_cast<int>(Fmd::FMDTexture::FMDTextureTable::tableMax));
 		auto alldata = t.GetAllData();
 		stream.write(reinterpret_cast<const char*>(alldata.data()), sizeof(char) * alldata.size());
 	}
@@ -246,9 +246,9 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 	auto& sklIndices = modelData->skeletonIndices;
 	int skeletonNum = static_cast<int>(skeletons.size());
 	stream.write(reinterpret_cast<const char*>(&skeletonNum), sizeof(skeletonNum));
-	FMDSkeleton s;
-	int dataSize = sizeof(s.pos) + sizeof(s.rotation) + sizeof(s.scale) + sizeof(s.initMatrix) +sizeof(s.parentIndex);
-	auto writeFunc = [&stream, dataSize](FMDSkeleton& s, const Fbx::FbxSkeleton& skl)
+	Fmd::FMDSkeleton s;
+	int dataSize = sizeof(s.pos) + sizeof(s.rotation) + sizeof(s.scale) + sizeof(s.globalMatrix) + sizeof(s.localMatrix) + sizeof(s.parentIndex);
+	auto writeFunc = [&stream, dataSize](Fmd::FMDSkeleton& s, const Fbx::FbxSkeleton& skl)
 	{
 		s = skl;
 		stream.write(reinterpret_cast<const char*>(&s), dataSize);

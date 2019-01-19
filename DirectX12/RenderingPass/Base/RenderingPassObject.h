@@ -30,7 +30,7 @@ public:
 	/**
 	*	コマンドリストの実行をする。GPU待ちの責任は負わない
 	*/
-	virtual void ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue) = 0;
+	virtual void ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue) = 0;
 
 	/**
 	*	ExcutePathの実行後に実行される。CommnadListのリセットをする

@@ -3,6 +3,8 @@
 #include "FMDdata.h"
 #include <Windows.h>
 
+using namespace Fmd;
+
 FMDLoader::FMDLoader()
 {
 }
@@ -132,7 +134,7 @@ void FMDLoader::LoadSkeletons(std::ifstream& stream, FMDFileData& modelData)
 	int dataSize = 0;
 	{
 		FMDSkeleton skl;
-		dataSize = sizeof(skl.pos) + sizeof(skl.rotation) + sizeof(skl.scale) + sizeof(skl.initMatrix) + sizeof(skl.parentIndex) + sizeof(skl.nameSize);
+		dataSize = sizeof(skl.pos) + sizeof(skl.rotation) + sizeof(skl.scale) + sizeof(skl.globalMatrix) + sizeof(skl.localMatrix) + sizeof(skl.parentIndex) + sizeof(skl.nameSize);
 	}
 	for (auto& s : modelData.skeletons)
 	{

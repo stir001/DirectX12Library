@@ -21,8 +21,8 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 	mQuoternionMatrix.resize(boneNum);
 	for (unsigned int i = 0; i < boneNum; ++i)
 	{
-		mInverseMatrix[i] = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(-mModelBones[i].pos.x, -mModelBones[i].pos.y, -mModelBones[i].pos.z));
-		//mInverseMatrix[i] = InverseXMFloat4x4(mModelBones[i].initMatrix);
+		//mInverseMatrix[i] = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(-mModelBones[i].pos.x, -mModelBones[i].pos.y, -mModelBones[i].pos.z));
+		mInverseMatrix[i] = InverseXMFloat4x4(mModelBones[i].initMatrix);
 		//mInverseMatrix[i] = mModelBones[i].initMatrix * InverseXMFloat4x4(mModelBones[i].initMatrix);
 	}
 	CreateSkeletonTree(skeletonIndices);
@@ -92,10 +92,10 @@ void FbxMotionPlayer::UpdateCalMatrix()
 		}
 	}
 
-	ApplyParentMatrixRecursive(mCalMatrix, mSkeletonTree, 0);
-	//UpdateQuoternionMatrix();
-	//ApplyParentMatrixRecursive(mQuoternionMatrix, mSkeletonTree, 0);
-	ApplyInverseMatrix();
+	UpdateQuoternionMatrix();
+	//ApplyParentMatrixRecursive(mCalMatrix, mSkeletonTree, 0);
+	ApplyParentMatrixRecursive(mQuoternionMatrix, mSkeletonTree, 0);
+	//ApplyInverseMatrix();
 	UpdateSkeletonPos();
 
 	++mFrame;
@@ -116,8 +116,8 @@ void FbxMotionPlayer::UpdateVertexElementMatrix()
 		auto& vert = mVertices[i];
 		for (unsigned int j = 0; j < vert.boneIndex.size(); ++j)
 		{
-			vertexMatrix += mCalMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
-			//vertexMatrix += mQuoternionMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
+			//vertexMatrix += mCalMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
+			vertexMatrix += mQuoternionMatrix[vert.boneIndex[j]] * vert.boneWeight[j];
 		}
 		multiMatrix = vertexMatrix;
 		mVertexElements[i].pos = vert.pos * multiMatrix;
@@ -174,7 +174,8 @@ void FbxMotionPlayer::UpdateSkeletonPos()
 	for (int i = 0; i < mModelBones.size(); ++i)
 	{
 		//calpos[i] = DirectX::XMFLOAT4(0, 0, 0, 1) * mCalMatrix[i];
-		calpos[i] = mModelBones[i].pos * mCalMatrix[i];
+		/*calpos[i] = mModelBones[i].pos * mCalMatrix[i];*/
+		calpos[i] = mModelBones[i].pos * mQuoternionMatrix[i];
 	}
 	mSkeletonPosBuffer->WriteBuffer(calpos.data(), static_cast<unsigned int>(sizeof(DirectX::XMFLOAT4) * mModelBones.size()));
 }
@@ -188,7 +189,7 @@ void FbxMotionPlayer::UpdateQuoternionMatrix()
 	{
 		calpos[i] = DirectX::XMFLOAT4(0, 0, 0, 1) * mCalMatrix[i];
 		DirectX::XMFLOAT3 cPos = NormalizeXMFloat3({ calpos[i].x, calpos[i].y, calpos[i].z });
-		initpos[i] = DirectX::XMFLOAT4(0, 0, 0, 1) * mModelBones[i].initMatrix;
+		initpos[i] = DirectX::XMFLOAT4(0, 0, 0, 1) * mModelBones[i].localMatrix;
 		DirectX::XMFLOAT3 iPos = NormalizeXMFloat3({ initpos[i].x, initpos[i].y, initpos[i].z });
 
 		float cos = DotXMFloat3(iPos, cPos);

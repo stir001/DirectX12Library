@@ -16,7 +16,11 @@ class FbxModelController;
 class FbxMotionData;
 class FbxMotionConverter;
 class LightObject;
-class FMDLoader;
+
+namespace Fmd
+{
+	class FMDLoader;
+}
 
 namespace Fbx {
 	struct FbxModelData;
@@ -118,7 +122,7 @@ private:
 	
 	std::shared_ptr<FbxModelDataConverter> mModelConverter;
 	std::shared_ptr<FbxMotionConverter> mMotionConverter;
-	std::shared_ptr<FMDLoader> mFmdLoader;
+	std::shared_ptr<Fmd::FMDLoader> mFmdLoader;
 
 	static FbxLoader* mInstance;
 	std::vector<fbxsdk::FbxMesh*> mMeshDatas;

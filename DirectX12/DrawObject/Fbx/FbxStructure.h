@@ -8,8 +8,10 @@
 
 class TextureObject;
 
-struct FMDVertex;
-struct FMDSkeleton;
+namespace Fmd {
+	struct FMDVertex;
+	struct FMDSkeleton;
+}
 
 namespace Fbx
 {
@@ -38,7 +40,7 @@ namespace Fbx
 		std::vector<int> boneIndex;
 		std::vector<float> boneWeight;
 		std::vector<std::string> boneName;
-		FbxVertex operator=(const FMDVertex& v);
+		FbxVertex operator=(const Fmd::FMDVertex& v);
 	};
 
 	struct FbxVertexesInfo {
@@ -150,14 +152,15 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
-		DirectX::XMFLOAT4X4 initMatrix;
+		DirectX::XMFLOAT4X4 localMatrix;
+		DirectX::XMFLOAT4X4 globalMatrix;
 		FbxSkeleton() :name("")
 			, parentIndex(INT_MAX)
 			, pos{ 0,0,0,1 }
 			, rotation{ 0,0,0,1 }
 			, scale{ 1,1,1,1 } 
 		{}
-		Fbx::FbxSkeleton operator=(const FMDSkeleton& skl);
+		Fbx::FbxSkeleton operator=(const Fmd::FMDSkeleton& skl);
 	};
 
 	struct FbxModelData

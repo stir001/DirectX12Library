@@ -100,7 +100,7 @@ void RenderingPassManager::Render()
 			continue;
 		}
 		pathObj->PreExcuteUpdate();
-		pathObj->ExcutePath(mCmdQueue);
+		pathObj->ExecutePath(mCmdQueue);
 
 		WaitCmdQueue();
 

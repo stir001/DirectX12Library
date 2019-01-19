@@ -551,7 +551,8 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
-	skl.initMatrix = tree.globalPosition;
+	skl.globalMatrix = tree.globalPosition;
+	skl.localMatrix = tree.offsetMatrix;
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
