@@ -60,6 +60,7 @@ struct NodeTree
 	DirectX::XMFLOAT3 translation;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scale;
+	DirectX::XMFLOAT4 dir;
 	std::vector<NodeTree> children;
 };
 

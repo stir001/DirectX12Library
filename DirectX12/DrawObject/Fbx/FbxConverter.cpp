@@ -247,7 +247,7 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 	int skeletonNum = static_cast<int>(skeletons.size());
 	stream.write(reinterpret_cast<const char*>(&skeletonNum), sizeof(skeletonNum));
 	Fmd::FMDSkeleton s;
-	int dataSize = sizeof(s.pos) + sizeof(s.rotation) + sizeof(s.scale) + sizeof(s.globalMatrix) + sizeof(s.localMatrix) + sizeof(s.parentIndex);
+	int dataSize = Fmd::SKELETON_CONSTANT_DATA_SIZE;
 	auto writeFunc = [&stream, dataSize](Fmd::FMDSkeleton& s, const Fbx::FbxSkeleton& skl)
 	{
 		s = skl;

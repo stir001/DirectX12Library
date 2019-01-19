@@ -553,6 +553,8 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
 	skl.globalMatrix = tree.globalPosition;
 	skl.localMatrix = tree.offsetMatrix;
+	skl.dir = tree.dir;
+	
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
@@ -962,6 +964,13 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 			childNodeTree.globalPosition = mxf44 * parentTree.globalPosition;
 			DirectX::XMFLOAT4 childpos = origin * childNodeTree.globalPosition;
 			childNodeTree.translation = { childpos.x, childpos.y, childpos.z };
+
+			auto childMat = childNodeTree.globalPosition;
+			childMat._41 = childMat._42 = childMat._43 = 0;
+			DirectX::XMFLOAT4 dir = {0.0f, 1.0f, 0.0f, 1.0f};
+			dir = dir * childMat;
+			auto mxf3dir = (DirectX::XMFLOAT3(dir.x, dir.y, dir.z));
+			childNodeTree.dir = DirectX::XMFLOAT4(mxf3dir.x, mxf3dir.y, mxf3dir.z, 1.0f);
 
 			parentTree.children.push_back(childNodeTree);
 			hitFunction(childNode);

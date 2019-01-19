@@ -44,7 +44,6 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		mVertexElements[i].pos = mModel->mVertexes[i].pos;
 		mVertexElements[i].normal = mModel->mVertexes[i].normal;
 		mVertexElements[i].texCoord = mModel->mVertexes[i].texCoord;
-		DirectX::XMStoreFloat4x4(&mVertexElements[i].vertexMatrix, DirectX::XMMatrixIdentity());
 	}
 
 	mCtrlVertexBuffer = (std::make_shared<VertexBufferObject>(cbufferName + "VertexBuffer", dev

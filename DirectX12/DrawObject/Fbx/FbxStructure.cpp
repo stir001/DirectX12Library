@@ -181,10 +181,11 @@ Fbx::FbxVertex Fbx::FbxVertex::operator=(const Fmd::FMDVertex& v)
 
 Fbx::FbxSkeleton Fbx::FbxSkeleton::operator=(const Fmd::FMDSkeleton & skl)
 {
-	this->name = skl.name;
-	this->parentIndex = skl.parentIndex;
-	this->pos = skl.pos;
-	this->rotation = skl.rotation;
-	this->scale = skl.scale;
+	name = skl.name;
+	parentIndex = skl.parentIndex;
+	pos = skl.pos;
+	rotation = skl.rotation;
+	scale = skl.scale;
+	dir = skl.dir;
 	return *this;
 }

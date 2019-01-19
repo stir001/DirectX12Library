@@ -30,7 +30,7 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 normal;
 		DirectX::XMFLOAT2 texCoord;
-		DirectX::XMFLOAT4X4 vertexMatrix;
+		//DirectX::XMFLOAT4X4 vertexMatrix;
 	};
 
 	struct FbxVertex {
@@ -152,13 +152,15 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
+		DirectX::XMFLOAT4 dir;
 		DirectX::XMFLOAT4X4 localMatrix;
 		DirectX::XMFLOAT4X4 globalMatrix;
-		FbxSkeleton() :name("")
+		FbxSkeleton() : name("")
 			, parentIndex(INT_MAX)
 			, pos{ 0,0,0,1 }
 			, rotation{ 0,0,0,1 }
 			, scale{ 1,1,1,1 } 
+			, dir{ 0,1,0,1 }
 		{}
 		Fbx::FbxSkeleton operator=(const Fmd::FMDSkeleton& skl);
 	};

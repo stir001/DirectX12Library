@@ -90,11 +90,14 @@ namespace Fmd {
 		FMDTexture operator=(const Fbx::FbxMaterial& mat);
 	};
 
+	static const unsigned int SKELETON_CONSTANT_DATA_SIZE = sizeof(DirectX::XMFLOAT4) * 4 + sizeof(DirectX::XMFLOAT4X4) * 2 + sizeof(unsigned int) * 2;
+
 	struct FMDSkeleton
 	{
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
+		DirectX::XMFLOAT4 dir;
 		DirectX::XMFLOAT4X4 globalMatrix;
 		DirectX::XMFLOAT4X4 localMatrix;
 		int	parentIndex;

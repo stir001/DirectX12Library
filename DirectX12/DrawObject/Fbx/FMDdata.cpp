@@ -6,16 +6,16 @@ namespace Fmd {
 
 	FMDVertex FMDVertex::operator=(const Fbx::FbxVertex & v)
 	{
-		this->pos = v.pos;
-		this->normal = v.normal;
-		this->texCoord = v.texCoord;
+		pos = v.pos;
+		normal = v.normal;
+		texCoord = v.texCoord;
 		effectBoneNum = static_cast<int>(v.boneIndex.size());
-		this->bones.resize(effectBoneNum);
+		bones.resize(effectBoneNum);
 
 		for (int i = 0; i < effectBoneNum; ++i)
 		{
-			this->bones[i].boneIndex = v.boneIndex[i];
-			this->bones[i].boneWeight = v.boneWeight[i];
+			bones[i].boneIndex = v.boneIndex[i];
+			bones[i].boneWeight = v.boneWeight[i];
 		}
 
 		return *this;
@@ -83,6 +83,7 @@ namespace Fmd {
 		globalMatrix = skl.globalMatrix;
 		localMatrix = skl.localMatrix;
 		parentIndex = skl.parentIndex;
+		dir = skl.dir;
 		return FMDSkeleton();
 	}
 
