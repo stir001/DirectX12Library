@@ -76,6 +76,9 @@ public:
 	*/
 	unsigned int GetRenderingPassIndex(const std::string& passName) const;
 
+	std::shared_ptr<RenderingPassObject> GetRenderingPassObject(unsigned int passIndex) const;
+
+	std::shared_ptr<RenderingPassObject> GetRenderingPassObject(const std::string& passName) const;
 
 	/**
 	*	@brief	ƒpƒX‚ð’Ç‰Á‚·‚é 

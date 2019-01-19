@@ -228,6 +228,25 @@ unsigned int RenderingPassManager::GetRenderingPassIndex(const std::string& path
 	return UINT_MAX;
 }
 
+std::shared_ptr<RenderingPassObject> RenderingPassManager::GetRenderingPassObject(unsigned int passIndex) const
+{
+	if (passIndex >= mRenderingPassObjects.size())
+	{
+		return nullptr;
+	}
+	return mRenderingPassObjects[passIndex];
+}
+
+std::shared_ptr<RenderingPassObject> RenderingPassManager::GetRenderingPassObject(const std::string & passName) const
+{
+	unsigned int index = GetRenderingPassIndex(passName);
+	if (index == UINT_MAX)
+	{
+		return nullptr;
+	}
+	return mRenderingPassObjects[index];
+}
+
 bool RenderingPassManager::DeleteRenderingPass(unsigned int pathIndex)
 {
 	if (mRenderingPassObjects.size() > pathIndex)
