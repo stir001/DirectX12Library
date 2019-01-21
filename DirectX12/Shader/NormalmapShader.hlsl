@@ -101,7 +101,7 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
 
     matrix tMat = inverse(tangentSpace);
     matrix localMat = inverse(vertices[0].aMatrix);
-    float4 localLight = mul(localMat, dir);
+    float4 localLight = mul(localMat, tailPos);
     float4 tangentLight = float4(normalize(mul(localLight, tMat).xyz), 1.0f);
 
     matrix pvw = mul(c_projection, mul(c_view, c_world));

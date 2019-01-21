@@ -241,6 +241,11 @@ DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOA
 	return DirectX::XMFLOAT4(xmf4.x - xmf3.x, xmf4.y - xmf3.y, xmf4.z - xmf3.z, 1.0f);
 }
 
+DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4 & lval, const DirectX::XMFLOAT4 & rval)
+{
+	return DirectX::XMFLOAT4(lval.x - rval.x, lval.y - rval.y, lval.z - rval.z, 1.0f);
+}
+
 DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4& xmf4)
 {
 	return DirectX::XMFLOAT3(xmf3.x + xmf4.x, xmf3.y + xmf4.y, xmf3.z + xmf4.z);
@@ -249,6 +254,36 @@ DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOA
 DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& xmf4, const DirectX::XMFLOAT3& xmf3)
 {
 	return DirectX::XMFLOAT4(xmf4.x + xmf3.x, xmf4.y + xmf3.y, xmf4.z + xmf3.z, 1.0f);
+}
+
+DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4 & xmf4, const float val)
+{
+	return DirectX::XMFLOAT4(xmf4.x / val, xmf4.y / val, xmf4.z / val, 1.0f);
+}
+
+DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4 & xmf4, const float val)
+{
+	return DirectX::XMFLOAT4(xmf4.x * val, xmf4.y * val, xmf4.z * val, 1.0f);
+}
+
+DirectX::XMFLOAT4 operator*(const float val, const DirectX::XMFLOAT4 & xmf4)
+{
+	return xmf4 * val;
+}
+
+DirectX::XMFLOAT4 operator*=(const float val, DirectX::XMFLOAT4 & xmf4)
+{
+	return xmf4 = xmf4 * val;
+}
+
+DirectX::XMFLOAT4 operator*=(DirectX::XMFLOAT4 & xmf4, const float val)
+{
+	return xmf4 = xmf4 * val;
+}
+
+DirectX::XMFLOAT4 operator/=(DirectX::XMFLOAT4 & xmf4, const float val)
+{
+	return xmf4 = xmf4 / val;
 }
 
 DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4 & f44, const float scaler)

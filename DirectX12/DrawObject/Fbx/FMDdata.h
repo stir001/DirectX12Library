@@ -97,7 +97,7 @@ namespace Fmd {
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
-		DirectX::XMFLOAT4 dir;
+		DirectX::XMFLOAT4 tailPos;
 		DirectX::XMFLOAT4X4 globalMatrix;
 		DirectX::XMFLOAT4X4 localMatrix;
 		int	parentIndex;

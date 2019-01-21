@@ -31,7 +31,8 @@ private:
 	std::vector<DirectX::XMFLOAT4X4> mInverseMatrix;
 	std::vector<DirectX::XMFLOAT4X4> mQuoternionMatrix;
 	std::shared_ptr<VertexBufferObject> mSkeletonPosBuffer;
-
+	std::vector<DirectX::XMFLOAT4> mSkeletonTailPos;
+	std::vector<DirectX::XMFLOAT4> mSkeletonHeadPos;
 
 	void UpdateCalMatrix();
 	void UpdateVertexElementMatrix();
@@ -41,6 +42,7 @@ private:
 	void UpdateSkeletonPos();
 	void UpdateQuoternionMatrix();
 	void ApplyInverseMatrix();
+	void CalTailPos();
 
 };
 

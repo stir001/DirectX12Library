@@ -83,7 +83,7 @@ namespace Fmd {
 		globalMatrix = skl.globalMatrix;
 		localMatrix = skl.localMatrix;
 		parentIndex = skl.parentIndex;
-		dir = skl.dir;
+		tailPos = skl.tailPos;
 		return FMDSkeleton();
 	}
 

@@ -152,7 +152,7 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
-		DirectX::XMFLOAT4 dir;
+		DirectX::XMFLOAT4 tailPos;
 		DirectX::XMFLOAT4X4 localMatrix;
 		DirectX::XMFLOAT4X4 globalMatrix;
 		FbxSkeleton() : name("")
@@ -160,7 +160,7 @@ namespace Fbx
 			, pos{ 0,0,0,1 }
 			, rotation{ 0,0,0,1 }
 			, scale{ 1,1,1,1 } 
-			, dir{ 0,1,0,1 }
+			, tailPos{ 0, 0, 0, 1 }
 		{}
 		Fbx::FbxSkeleton operator=(const Fmd::FMDSkeleton& skl);
 	};

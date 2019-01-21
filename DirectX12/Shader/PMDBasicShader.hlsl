@@ -94,11 +94,11 @@ VSOutput BasicVS(VSInput vInput)
 float4 BasicPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
-    float4 light = dir;
+    float4 light = tailPos;
     float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
-    return saturate(color * dot(data.normal.xyz, -dir.xyz) + color * ambient + specular * spec);
+    return saturate(color * dot(data.normal.xyz, -tailPos.xyz) + color * ambient + specular * spec);
 }
 
 #define VERTEX_NUM (3U)
@@ -162,7 +162,7 @@ VSOutput BasicShadowVS(VSInput vInput)
 float4 BasicShadowPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
-    float4 light = dir;
+    float4 light = tailPos;
     float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
@@ -171,5 +171,5 @@ float4 BasicShadowPS(GSOutput data) : SV_Target
     shadowpos.xy = (shadowpos.xy + 1.0f) * 0.5f;
     float shadow = shadowmap.Sample(smp, shadowpos.xy) < shadowpos.z ? 0.5f : 1.0f;
 
-    return saturate(color * dot(data.normal.xyz, -dir.xyz) + color * ambient + specular * spec) * shadow;
+    return saturate(color * dot(data.normal.xyz, -tailPos.xyz) + color * ambient + specular * spec) * shadow;
 }

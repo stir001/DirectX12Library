@@ -186,6 +186,6 @@ Fbx::FbxSkeleton Fbx::FbxSkeleton::operator=(const Fmd::FMDSkeleton & skl)
 	pos = skl.pos;
 	rotation = skl.rotation;
 	scale = skl.scale;
-	dir = skl.dir;
+	tailPos = skl.tailPos;
 	return *this;
 }
