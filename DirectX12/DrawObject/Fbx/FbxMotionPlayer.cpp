@@ -185,13 +185,13 @@ void FbxMotionPlayer::UpdateSkeletonPos()
 void FbxMotionPlayer::UpdateQuoternionMatrix()
 {
 	unsigned int boneNum = static_cast<unsigned int>(mModelBones.size());
-	std::vector<DirectX::XMFLOAT4> initlPos(boneNum);
+	std::vector<DirectX::XMFLOAT4> initPos(boneNum);
 	std::vector<DirectX::XMFLOAT4> calPos(boneNum);
 	for (int i = 0; i < mModelBones.size(); ++i)
 	{
-		initlPos[i] = mModelBones[i].tailPos - mModelBones[i].pos;
-		DirectX::XMFLOAT3 iPos = NormalizeXMFloat3({ initlPos[i].x, initlPos[i].y, initlPos[i].z });
-		calPos[i] = mSkeletonTailPos[i] - DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) * mCalMatrix[i];
+		initPos[i] = mModelBones[i].tailPos - mModelBones[i].pos;
+		DirectX::XMFLOAT3 iPos = NormalizeXMFloat3({ initPos[i].x, initPos[i].y, initPos[i].z });
+		calPos[i] = mSkeletonTailPos[i] - mSkeletonHeadPos[i];
 		DirectX::XMFLOAT3 cPos = NormalizeXMFloat3({ calPos[i].x, calPos[i].y, calPos[i].z });
 		/*initlPos[i] = mModelBones[i].tailPos - mModelBones[i].pos;
 		DirectX::XMFLOAT3 iPos = NormalizeXMFloat3({ initlPos[i].x, initlPos[i].y, initlPos[i].z });
