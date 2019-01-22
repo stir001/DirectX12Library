@@ -41,8 +41,6 @@ private:
 	void ApplyParentMatrixRecursive(std::vector<DirectX::XMFLOAT4X4>& matrix, std::vector<std::vector<unsigned int>>& tree, unsigned int parentIndex);
 	void UpdateSkeletonPos();
 	void UpdateQuoternionMatrix();
-	void ApplyInverseMatrix();
 	void CalTailPos();
-
 };
 
