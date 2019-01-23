@@ -1302,7 +1302,7 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 		auto translate = mNodeDatas[i]->EvaluateLocalTransform();
 		//auto translate = mNodeDatas[i]->EvaluateGlobalTransform();
 		float scale = 1.0f;
-		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[3][0] * scale), static_cast<float>(translate[3][1] * scale), static_cast<float>(translate[3][2] * scale));
+		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[3][0]), static_cast<float>(translate[3][1]), static_cast<float>(translate[3][2]));
 		//StoreFbxMatrixToXMMatrix(translate, xmMat);
 		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
 		//auto mat = DirectX::XMMatrixTranslation(10, 20, -30);
@@ -1736,6 +1736,8 @@ void FbxLoader::LoadSkeletons()
 	std::vector<fbxsdk::FbxNode*> skeletonNode;
 	StackSearchNode(root, fbxsdk::FbxNodeAttribute::eSkeleton, skeletonTree, [&skeletonNode](fbxsdk::FbxNode* node) {
 		skeletonNode.push_back(node);
+		auto skeleton = (fbxsdk::FbxSkeleton*)node->GetNodeAttribute();
+		auto type = skeleton->GetSkeletonType();
 	});
 
 	mSkeletons.resize(skeletonNode.size());
