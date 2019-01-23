@@ -552,6 +552,9 @@
     <ClInclude Include="DirectX12\Rootsignature\SkyBoxRootSignature.h">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet\Action\PositionSyncAction.h">
+      <Filter>Bullet\Action</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -955,6 +958,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\SkyBoxRootSignature.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet\Action\PositionSyncAction.cpp">
+      <Filter>Bullet\Action</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

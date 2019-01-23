@@ -80,13 +80,17 @@ public:
 
 	/**
 	*	@brief	位置を指定の場所へ移動させる
-	*	@param[in]	pos		移動させる場所
+	*	@param[in]	x		移動させるx座標
+	*	@param[in]	y		移動させるy座標
+	*	@param[in]	z		移動させるz座標
 	*/
 	void SetOrigin(float x, float y, float z);
 
-	void SetVelocity(float x, float y, float z);
-
-	void SetVelocity(const DirectX::XMFLOAT3& vel);
+	/**
+	*	@brief	位置を指定の場所へ移動させる
+	*	@param[in]	origin	移動させる座標
+	*/
+	void SetOrigin(DirectX::XMFLOAT3 origin);
 private:
 	/**
 	*	世界から登録を外す

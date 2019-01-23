@@ -66,14 +66,9 @@ void BulletGhostObject::SetOrigin(float x, float y, float z)
 	mGhost->setWorldTransform(trans);
 }
 
-void BulletGhostObject::SetVelocity(float x, float y, float z)
+void BulletGhostObject::SetOrigin(DirectX::XMFLOAT3 origin)
 {
-	mGhost->setInterpolationLinearVelocity(btVector3(x, y, z));
-}
-
-void BulletGhostObject::SetVelocity(const DirectX::XMFLOAT3 & vel)
-{
-	SetVelocity(vel.x, vel.y, vel.z);
+	SetOrigin(origin.x, origin.y, origin.z);
 }
 
 void BulletGhostObject::RemoveWorld()
