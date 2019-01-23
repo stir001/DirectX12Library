@@ -157,7 +157,7 @@ std::shared_ptr<Fbx::FbxModel> FbxModelDataConverter::ConvertToFbxModel(Fmd::FMD
 		fbxmodeldata->skeletonIndices[i * 2 + 1] = i;
 	}
 	unsigned int max = UINT_MAX;
-	if (fbxmodeldata->skeletonIndices[0] == max)
+	if (fbxmodeldata->skeletonIndices.size() && fbxmodeldata->skeletonIndices[0] == max)
 	{
 		fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 1);
 	}
