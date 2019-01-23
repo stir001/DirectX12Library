@@ -1274,11 +1274,8 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 
 	if (rootNode) {
-		fbxsdk::FbxAMatrix dummy;
-		dummy.SetIdentity();
 		NodeTree rNode;
 		rNode.nodeName = rootNode->GetName();
-		fbxsdk::FbxTime t = 0;
 		mNodeTree = rNode;
 		StackSearchNode(rootNode, fbxsdk::FbxNodeAttribute::EType::eMesh, mNodeTree, [&](fbxsdk::FbxNode* node) {
 			mNodeDatas.push_back(node);
@@ -1302,9 +1299,11 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
 	{
 		DirectX::XMMATRIX xmMat;
-		auto translate = mNodeDatas[i]->EvaluateLocalTranslation();
+		auto translate = mNodeDatas[i]->EvaluateLocalTransform();
+		//auto translate = mNodeDatas[i]->EvaluateGlobalTransform();
 		float scale = 1.0f;
-		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[0] * scale), static_cast<float>(translate[1] * scale), static_cast<float>(translate[2] * scale));
+		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[3][0] * scale), static_cast<float>(translate[3][1] * scale), static_cast<float>(translate[3][2] * scale));
+		//StoreFbxMatrixToXMMatrix(translate, xmMat);
 		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
 		//auto mat = DirectX::XMMatrixTranslation(10, 20, -30);
 		models[i] = MainLoad(mMeshDatas[i], modelPath);
@@ -1731,7 +1730,8 @@ void FbxLoader::LoadSkeletons()
 {
 	//START skeleton Load
 	fbxsdk::FbxNode* root = mScene->GetRootNode();
-	NodeTree skeletonTree = {};
+	NodeTree skeletonTree;
+	skeletonTree.nodeName = root->GetName();
 	DirectX::XMStoreFloat4x4(&skeletonTree.globalPosition, DirectX::XMMatrixIdentity());
 	std::vector<fbxsdk::FbxNode*> skeletonNode;
 	StackSearchNode(root, fbxsdk::FbxNodeAttribute::eSkeleton, skeletonTree, [&skeletonNode](fbxsdk::FbxNode* node) {

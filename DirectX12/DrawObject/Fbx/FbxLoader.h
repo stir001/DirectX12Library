@@ -62,7 +62,17 @@ struct NodeTree
 	DirectX::XMFLOAT3 scale;
 	DirectX::XMFLOAT3 tailPos;
 	std::vector<NodeTree> children;
-	NodeTree() : translation{ 0.0f, 0.0f, 0.0f }, rotation{ 0.0f, 0.0f, 0.0f }, scale{ 1.0f, 1.0f, 1.0f }, tailPos{ 0.0f, 0.0f, 0.0f } {}
+	NodeTree() : 
+		globalPosition{ 1.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 1.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 1.0f},
+		offsetMatrix{ 1.0f, 0.0f, 0.0f, 0.0f,
+					  0.0f, 1.0f, 0.0f, 0.0f,
+					  0.0f, 0.0f, 1.0f, 0.0f,
+					  0.0f, 0.0f, 0.0f, 1.0f},
+		attributeType(0),
+		translation{ 0.0f, 0.0f, 0.0f }, rotation{ 0.0f, 0.0f, 0.0f }, scale{ 1.0f, 1.0f, 1.0f }, tailPos{ 0.0f, 0.0f, 0.0f } {}
 };
 
 
