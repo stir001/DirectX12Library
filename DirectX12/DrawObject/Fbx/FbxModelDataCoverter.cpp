@@ -156,10 +156,9 @@ std::shared_ptr<Fbx::FbxModel> FbxModelDataConverter::ConvertToFbxModel(Fmd::FMD
 		fbxmodeldata->skeletonIndices[i * 2] = data.skeletons[i].parentIndex;
 		fbxmodeldata->skeletonIndices[i * 2 + 1] = i;
 	}
-	unsigned int max = UINT_MAX;
-	if (fbxmodeldata->skeletonIndices.size() && fbxmodeldata->skeletonIndices[0] == max)
+	if (fbxmodeldata->skeletonIndices.size() > 0)
 	{
-		fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 1);
+		fbxmodeldata->skeletonIndices.erase(fbxmodeldata->skeletonIndices.begin(), fbxmodeldata->skeletonIndices.begin() + 2);
 	}
 	fbxmodeldata->skeletonIndices.shrink_to_fit();
 	return ConvertToFbxModel(fbxmodeldata);
