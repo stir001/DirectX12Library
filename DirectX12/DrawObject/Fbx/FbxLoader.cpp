@@ -551,7 +551,10 @@ void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
 	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
 	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
-	skl.initMatrix = tree.globalPosition;
+	skl.globalMatrix = tree.globalPosition;
+	skl.localMatrix = tree.offsetMatrix;
+	skl.tailPos = ConvertXMFloat3ToXMFloat4(tree.tailPos);
+	
 };
 
 void CreateskeletonData(const NodeTree& skeletonTree,
@@ -613,13 +616,22 @@ void FbxLoader::LoadCluster(fbxsdk::FbxMesh* mesh)
 			{
 				t_bone = itr->second;
 			}
+			int boneIndex = 0;
+			for (auto& skeleton : mSkeletons)
+			{
+				if (skeleton.name == t_bone.skeletonName)
+				{
+					break;
+				}
+				++boneIndex;
+			}
 
 			std::vector<int> t_vertexIndicesArray;
 			t_vertexIndicesArray.reserve(ctrlPointIndicesCount);
 			for (int k = 0; k < ctrlPointIndicesCount; ++k)
 			{
 				t_weight.weight = static_cast<float>(ctrlPointWeightArray[k]);
-				t_weight.boneNo = offset;
+				t_weight.boneNo = boneIndex;
 				mTmpVertices[ctrlPointIndicesArray[k]].weights.push_back(t_weight);
 				mTmpVertices[ctrlPointIndicesArray[k]].boneName.push_back(t_bone.skeletonName);
 				t_vertexIndicesArray.push_back(ctrlPointIndicesArray[k]);
@@ -936,23 +948,19 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 		{
 			//http://help.autodesk.com/view/FBX/2019/ENU/?guid=FBX_Developer_Help_nodes_and_scene_graph_fbx_nodes_transformation_data_html
 			auto t_translation = childNode->LclTranslation.Get();
-			/*auto globalMatrix = childNode->EvaluateLocalTransform().Inverse();
-			t_translation = globalMatrix.MultT(fbxsdk::FbxVector4(t_translation.mData[0], t_translation.mData[1], t_translation.mData[2]));*/
 			childNodeTree.translation = { static_cast<float>(t_translation.mData[0]), static_cast<float>(t_translation.mData[1]) , static_cast<float>(t_translation.mData[2]) };
-			//childNodeTree.translation += parentTree.translation;
 			auto t_rotation = childNode->LclRotation.Get();
 			childNodeTree.rotation = { static_cast<float>(t_rotation.mData[0]), static_cast<float>(t_rotation.mData[1]), static_cast<float>(t_rotation.mData[2]) };
-			//childNodeTree.rotation += parentTree.rotation;
 			auto t_scale = childNode->LclScaling.Get();
 			childNodeTree.scale = { static_cast<float>(t_scale.mData[0]), static_cast<float>(t_scale.mData[1]), static_cast<float>(t_scale.mData[2]) };
 
-			fbxsdk::FbxAMatrix mat(t_translation, t_rotation, t_scale);
+			fbxsdk::FbxAMatrix mat = childNode->EvaluateLocalTransform();
 			DirectX::XMMATRIX xmat;
 			StoreFbxMatrixToXMMatrix(mat, xmat);
 			DirectX::XMFLOAT4X4 mxf44;
 			DirectX::XMStoreFloat4x4(&mxf44, xmat);
-			//DirectX::XMFLOAT4 parentpos = { parentTree.translation.x, parentTree.translation.y, parentTree.translation.z, 1.0f };
 			DirectX::XMFLOAT4 origin = { 0,0,0,1 };
+			childNodeTree.offsetMatrix = mxf44;
 			childNodeTree.globalPosition = mxf44 * parentTree.globalPosition;
 			DirectX::XMFLOAT4 childpos = origin * childNodeTree.globalPosition;
 			childNodeTree.translation = { childpos.x, childpos.y, childpos.z };
@@ -966,6 +974,13 @@ void FbxLoader::StackSearchNode(fbxsdk::FbxNode* parent, unsigned int searchtype
 			++skipCount;
 			StackSearchNode(childNode, searchtype, parentTree, hitFunction);
 		}
+	}
+
+	unsigned int stackChikdNum = static_cast<unsigned int>(parentTree.children.size());
+
+	for (unsigned int i = 0; i < stackChikdNum; ++i)
+	{
+		parentTree.tailPos += parentTree.children[i].translation / static_cast<float>(stackChikdNum);
 	}
 }
 
@@ -1120,7 +1135,7 @@ void FbxLoader::LoadAnimationMain(fbxsdk::FbxScene* scene, unsigned int meshId)
 		{
 			DirectX::XMMATRIX t_mat;
 			StoreFbxMatrixToXMMatrix(skeletonNode[i]->EvaluateLocalTransform(times[j]), t_mat);
-			mSkeletonMatrix[i].animMatrix[j].matrix = t_mat;
+			mSkeletonMatrix[i].animMatrix[j].matrix = ConvertXMMATRIXToXMFloat4x4(t_mat);
 			mSkeletonMatrix[i].animMatrix[j].frame = static_cast<int>(times[j].Get() / oneFrameValue);
 		}
 	}
@@ -1259,11 +1274,8 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 	fbxsdk::FbxNode* rootNode = mScene->GetRootNode();
 
 	if (rootNode) {
-		fbxsdk::FbxAMatrix dummy;
-		dummy.SetIdentity();
 		NodeTree rNode;
 		rNode.nodeName = rootNode->GetName();
-		fbxsdk::FbxTime t = 0;
 		mNodeTree = rNode;
 		StackSearchNode(rootNode, fbxsdk::FbxNodeAttribute::EType::eMesh, mNodeTree, [&](fbxsdk::FbxNode* node) {
 			mNodeDatas.push_back(node);
@@ -1282,19 +1294,21 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 
 	std::vector<std::shared_ptr<Fbx::FbxModelData>> models(mMeshDatas.size());
 
+	LoadSkeletons();
+
 	for (int i = 0; i < static_cast<int>(mMeshDatas.size()); i++)
 	{
 		DirectX::XMMATRIX xmMat;
-		auto translate = mNodeDatas[i]->EvaluateLocalTranslation();
+		auto translate = mNodeDatas[i]->EvaluateLocalTransform();
+		//auto translate = mNodeDatas[i]->EvaluateGlobalTransform();
 		float scale = 1.0f;
-		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[0] * scale), static_cast<float>(translate[1] * scale), static_cast<float>(translate[2] * scale));
+		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[3][0]), static_cast<float>(translate[3][1]), static_cast<float>(translate[3][2]));
+		//StoreFbxMatrixToXMMatrix(translate, xmMat);
 		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
 		//auto mat = DirectX::XMMatrixTranslation(10, 20, -30);
 		models[i] = MainLoad(mMeshDatas[i], modelPath);
 		models[i]->modelPath = modelPath;
 	}
-
-	LoadSkeletons();
 
 	auto rtn = ConnectMeshes(models);
 
@@ -1716,11 +1730,14 @@ void FbxLoader::LoadSkeletons()
 {
 	//START skeleton Load
 	fbxsdk::FbxNode* root = mScene->GetRootNode();
-	NodeTree skeletonTree = {};
+	NodeTree skeletonTree;
+	skeletonTree.nodeName = root->GetName();
 	DirectX::XMStoreFloat4x4(&skeletonTree.globalPosition, DirectX::XMMatrixIdentity());
 	std::vector<fbxsdk::FbxNode*> skeletonNode;
 	StackSearchNode(root, fbxsdk::FbxNodeAttribute::eSkeleton, skeletonTree, [&skeletonNode](fbxsdk::FbxNode* node) {
 		skeletonNode.push_back(node);
+		auto skeleton = (fbxsdk::FbxSkeleton*)node->GetNodeAttribute();
+		auto type = skeleton->GetSkeletonType();
 	});
 
 	mSkeletons.resize(skeletonNode.size());

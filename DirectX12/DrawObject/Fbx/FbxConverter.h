@@ -8,8 +8,11 @@ class FbxModelDataConverter;
 class LightObject;
 class PipelineStateObject;
 class RootSignatureObject;
-class FMDLoader;
-struct FMDFileData;
+
+namespace Fmd {
+	class FMDLoader;
+	struct FMDFileData;
+}
 
 namespace Fbx
 {
@@ -52,7 +55,7 @@ private:
 	void ConvertFbx();
 	void ConvertFmd();
 	void CreateController(std::shared_ptr<Fbx::FbxModelData> modelData);
-	void CreateController(FMDFileData& data);
+	void CreateController(Fmd::FMDFileData& data);
 	std::string GetConvertFileName(const std::string& modelPath) const;
 	void WriteFMDFile(const std::shared_ptr<Fbx::FbxModelData>& modelData);
 	std::string CreateWriteFilePath(const std::string& modelPath) const;
@@ -71,7 +74,7 @@ private:
 	std::string mFilePath;
 	bool mIsConverting;
 	std::string mWriteFilePath;
-	std::shared_ptr<FMDLoader> mFmdLoader;
+	std::shared_ptr<Fmd::FMDLoader> mFmdLoader;
 	void (FbxConverter::*mConvertFunc)();
 };
 

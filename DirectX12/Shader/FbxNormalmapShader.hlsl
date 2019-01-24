@@ -158,7 +158,7 @@ void FbxGS(in triangle VSOutput vertices[VERTEX_NUM], inout TriangleStream<GSOut
 
     matrix tMat = transpose(tangentSpace);
     matrix localMat = inverse(modelMatrix);
-    float4 localLight = mul(localMat, dir);
+    float4 localLight = mul(localMat, tailPos);
     float4 tangentLight = float4(normalize(mul(localLight, tMat).xyz), 1.0f);
 
 

@@ -44,14 +44,11 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		mVertexElements[i].pos = mModel->mVertexes[i].pos;
 		mVertexElements[i].normal = mModel->mVertexes[i].normal;
 		mVertexElements[i].texCoord = mModel->mVertexes[i].texCoord;
-		DirectX::XMStoreFloat4x4(&mVertexElements[i].vertexMatrix, DirectX::XMMatrixIdentity());
 	}
 
 	mCtrlVertexBuffer = (std::make_shared<VertexBufferObject>(cbufferName + "VertexBuffer", dev
 		, static_cast<unsigned int>(sizeof(mVertexElements[0])),static_cast<unsigned int>(mVertexElements.size())));
 	UpdateVertex();
-
-	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes, mVertexElements, mModel->mSkeletonIndices);
 
 	UpdateMatrix();
 
@@ -87,6 +84,9 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 		mSkeletonDraw = &FbxModelController::NonDrawSkeleton;
 	}
 	//çúópÇÃèàóùèIóπ
+
+	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes,
+		mVertexElements, mModel->mSkeletonIndices, mSkeletonVertexBuffer);
 }
 
 FbxModelController::~FbxModelController()
@@ -254,8 +254,6 @@ void FbxModelController::DrawColorSkeleton()
 {
 	mCmdList->SetPipelineState(mSkeletonPipelineState);
 	mCmdList->SetGraphicsRootSignature(mSkeletonRootsignature);
-	//mSkeletonIndexBuffer->SetBuffer(mCmdList);
-	//mSkeletonVertexBuffer->SetBuffer(mCmdList);
 	mCmdList->IASetIndexBuffer(mSkeletonIndexBuffer);
 	mCmdList->IASetVertexBuffers({ &mSkeletonVertexBuffer }, 1);
 

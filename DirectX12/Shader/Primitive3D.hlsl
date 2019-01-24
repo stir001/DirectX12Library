@@ -68,7 +68,7 @@ PriVSOutput PrimitiveVS(PriVSInput vsInput)
 float4 PrimitivePS(PriGSOut data) : SV_Target
 {
     float4 color = (tex.Sample(smp, data.uv)) * 0.5f + data.color * 0.5f;
-    return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) + color * 0.2f + data.color * 0.2f));
+    return saturate(float4(color * dot(data.normal, float4(-tailPos.xyz, 1)) + color * 0.2f + data.color * 0.2f));
 }
 
 #define VERTEX_NUM (3U)
@@ -131,5 +131,5 @@ float4 PrimitiveShadowPS(PriGSOut data) : SV_Target
     shadowpos.y = 1 - shadowpos.y;
     float shadow = shadowmap.Sample(smp, saturate(shadowpos.xy)) + 0.001f < shadowpos.z ? 0.5f : 1.0f;
 
-    return saturate(float4(color * dot(data.normal, float4(-dir.xyz, 1)) * shadow + color * 0.2f + data.color * 0.2f));
+    return saturate(float4(color * dot(data.normal, float4(-tailPos.xyz, 1)) * shadow + color * 0.2f + data.color * 0.2f));
 }

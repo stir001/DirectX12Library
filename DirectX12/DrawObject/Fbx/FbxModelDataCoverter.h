@@ -10,7 +10,11 @@ namespace Fbx
 }
 
 class FbxModelController;
-struct FMDFileData;
+
+namespace Fmd
+{
+	struct FMDFileData;
+}
 
 class FbxModelDataConverter
 {
@@ -19,7 +23,7 @@ public:
 	~FbxModelDataConverter();
 
 	std::shared_ptr<Fbx::FbxModel> ConvertToFbxModel(std::shared_ptr<Fbx::FbxModelData> data);
-	std::shared_ptr<Fbx::FbxModel> ConvertToFbxModel(FMDFileData& data);
+	std::shared_ptr<Fbx::FbxModel> ConvertToFbxModel(Fmd::FMDFileData& data);
 
 private:
 	std::weak_ptr<Fbx::FbxModel> mModel;

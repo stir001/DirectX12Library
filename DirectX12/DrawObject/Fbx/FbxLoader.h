@@ -16,7 +16,11 @@ class FbxModelController;
 class FbxMotionData;
 class FbxMotionConverter;
 class LightObject;
-class FMDLoader;
+
+namespace Fmd
+{
+	class FMDLoader;
+}
 
 namespace Fbx {
 	struct FbxModelData;
@@ -51,11 +55,24 @@ struct NodeTree
 {
 	std::string nodeName;
 	DirectX::XMFLOAT4X4 globalPosition;
+	DirectX::XMFLOAT4X4 offsetMatrix;
 	unsigned int attributeType;
 	DirectX::XMFLOAT3 translation;
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 scale;
+	DirectX::XMFLOAT3 tailPos;
 	std::vector<NodeTree> children;
+	NodeTree() : 
+		globalPosition{ 1.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 1.0f, 0.0f,
+						0.0f, 0.0f, 0.0f, 1.0f},
+		offsetMatrix{ 1.0f, 0.0f, 0.0f, 0.0f,
+					  0.0f, 1.0f, 0.0f, 0.0f,
+					  0.0f, 0.0f, 1.0f, 0.0f,
+					  0.0f, 0.0f, 0.0f, 1.0f},
+		attributeType(0),
+		translation{ 0.0f, 0.0f, 0.0f }, rotation{ 0.0f, 0.0f, 0.0f }, scale{ 1.0f, 1.0f, 1.0f }, tailPos{ 0.0f, 0.0f, 0.0f } {}
 };
 
 
@@ -117,7 +134,7 @@ private:
 	
 	std::shared_ptr<FbxModelDataConverter> mModelConverter;
 	std::shared_ptr<FbxMotionConverter> mMotionConverter;
-	std::shared_ptr<FMDLoader> mFmdLoader;
+	std::shared_ptr<Fmd::FMDLoader> mFmdLoader;
 
 	static FbxLoader* mInstance;
 	std::vector<fbxsdk::FbxMesh*> mMeshDatas;

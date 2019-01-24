@@ -22,18 +22,18 @@ public:
 	virtual void FirstUpdate() = 0;	
 
 	/**
-	*	このパスのExcutePathが呼ばれる直前に実行される
+	*	このパスのExecutePathが呼ばれる直前に実行される
 	*	基本的にここでコマンドリストはcloseを呼ぶ
 	*/
-	virtual void PreExcuteUpdate() = 0;
+	virtual void PreExecuteUpdate() = 0;
 
 	/**
 	*	コマンドリストの実行をする。GPU待ちの責任は負わない
 	*/
-	virtual void ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue) = 0;
+	virtual void ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue) = 0;
 
 	/**
-	*	ExcutePathの実行後に実行される。CommnadListのリセットをする
+	*	ExecutePathの実行後に実行される。CommnadListのリセットをする
 	*/
 	virtual void ResetCommandList() = 0;
 

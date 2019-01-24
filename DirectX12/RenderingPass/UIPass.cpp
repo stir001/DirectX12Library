@@ -26,12 +26,12 @@ void UIPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(&mScissorRect);
 }
 
-void UIPass::PreExcuteUpdate()
+void UIPass::PreExecuteUpdate()
 {
 	mCmdList->Close();
 }
 
-void UIPass::ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void UIPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
 {
 	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mCmdList->GetCommandList().GetAddressOf());
 }

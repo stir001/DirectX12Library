@@ -99,8 +99,8 @@ VSOutput PmdToonVS(VSInput vInput)
 float4 PmdToonPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
-    float4 light = dir;
-    float lambert = abs(dot(data.normal.xyz, -dir.xyz));
+    float4 light = tailPos;
+    float lambert = abs(dot(data.normal.xyz, -tailPos.xyz));
     float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));
@@ -168,8 +168,8 @@ VSOutput PmdToonShadowVS(VSInput vInput)
 float4 PmdToonShadowPS(GSOutput data) : SV_Target
 {
     float4 color = tex.Sample(smp, data.uv);
-    float4 light = dir;
-    float lambert = abs(dot(data.normal.xyz, -dir.xyz));
+    float4 light = tailPos;
+    float lambert = abs(dot(data.normal.xyz, -tailPos.xyz));
     float4 vray = float4(data.pos.xyz - cameras[data.viewIndex].eye.xyz, 1);
     vray = float4(normalize(vray.xyz), 1);
     float spec = saturate(pow(max(0.0f, dot(normalize(reflect(-light.xyz, data.normal.xyz)), -vray.xyz)), specularity));

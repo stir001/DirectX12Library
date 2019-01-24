@@ -35,13 +35,13 @@ void ShadowmapPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(&rect);
 }
 
-void ShadowmapPass::PreExcuteUpdate()
+void ShadowmapPass::PreExecuteUpdate()
 {
 	mCmdList->TransitionBarrier(mShadowmapDepth, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 	mCmdList->Close();
 }
 
-void ShadowmapPass::ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void ShadowmapPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
 {
 	ID3D12CommandList* cmdList = mCmdList->GetCommandList().Get();
 	cmdQueue->ExecuteCommandLists(1, &cmdList);

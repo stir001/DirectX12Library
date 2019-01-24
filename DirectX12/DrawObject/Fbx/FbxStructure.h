@@ -8,8 +8,10 @@
 
 class TextureObject;
 
-struct FMDVertex;
-struct FMDSkeleton;
+namespace Fmd {
+	struct FMDVertex;
+	struct FMDSkeleton;
+}
 
 namespace Fbx
 {
@@ -28,7 +30,7 @@ namespace Fbx
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 normal;
 		DirectX::XMFLOAT2 texCoord;
-		DirectX::XMFLOAT4X4 vertexMatrix;
+		//DirectX::XMFLOAT4X4 vertexMatrix;
 	};
 
 	struct FbxVertex {
@@ -38,7 +40,7 @@ namespace Fbx
 		std::vector<int> boneIndex;
 		std::vector<float> boneWeight;
 		std::vector<std::string> boneName;
-		FbxVertex operator=(const FMDVertex& v);
+		FbxVertex operator=(const Fmd::FMDVertex& v);
 	};
 
 	struct FbxVertexesInfo {
@@ -144,34 +146,23 @@ namespace Fbx
 		void SetTexture(eELEMENT_TYPE type, FbxTexturesSet& texSet);
 	};
 
-	struct FbxBoneInfo {
-		DirectX::XMMATRIX initMatrix;
-		int	index;
-		std::string	boneName;
-		std::vector<float>	affectedVertexWeight;
-		std::vector<int> affectedVertexIndex;
-	};
-
-	struct FbxBone {
-		std::string	boneName;
-		int	index;
-		DirectX::XMFLOAT4X4 initMatrix;
-	};
-
 	struct FbxSkeleton {
 		std::string name;
 		unsigned int parentIndex;
 		DirectX::XMFLOAT4 pos;
 		DirectX::XMFLOAT4 rotation;
 		DirectX::XMFLOAT4 scale;
-		DirectX::XMFLOAT4X4 initMatrix;
-		FbxSkeleton() :name("")
+		DirectX::XMFLOAT4 tailPos;
+		DirectX::XMFLOAT4X4 localMatrix;
+		DirectX::XMFLOAT4X4 globalMatrix;
+		FbxSkeleton() : name("")
 			, parentIndex(INT_MAX)
 			, pos{ 0,0,0,1 }
 			, rotation{ 0,0,0,1 }
 			, scale{ 1,1,1,1 } 
+			, tailPos{ 0, 0, 0, 1 }
 		{}
-		Fbx::FbxSkeleton operator=(const FMDSkeleton& skl);
+		Fbx::FbxSkeleton operator=(const Fmd::FMDSkeleton& skl);
 	};
 
 	struct FbxModelData
@@ -180,7 +171,6 @@ namespace Fbx
 		Fbx::FbxIndexes	indexes;
 		Fbx::FbxVertexesInfo vertexesInfo;
 		std::vector<Fbx::FbxMaterial> materials;
-		//std::vector<Fbx::FbxBone> bones;
 		std::vector<Fbx::FbxSkeleton> skeletons;
 		std::vector<unsigned int> skeletonIndices;
 	};
@@ -188,7 +178,7 @@ namespace Fbx
 	struct BoneFrameData
 	{
 		int frame;
-		DirectX::XMMATRIX matrix;
+		DirectX::XMFLOAT4X4 matrix;//!親ボーンからの相対位置を表す行列
 	};
 
 	struct BoneMatrixData

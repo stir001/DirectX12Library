@@ -164,7 +164,7 @@ void Fbx::FbxMaterial::SetTexture(Fbx::FbxMaterial::eELEMENT_TYPE type, Fbx::Fbx
 	}
 }
 
-Fbx::FbxVertex Fbx::FbxVertex::operator=(const FMDVertex& v)
+Fbx::FbxVertex Fbx::FbxVertex::operator=(const Fmd::FMDVertex& v)
 {
 	pos = v.pos;
 	normal = v.normal;
@@ -179,12 +179,13 @@ Fbx::FbxVertex Fbx::FbxVertex::operator=(const FMDVertex& v)
 	return *this;
 }
 
-Fbx::FbxSkeleton Fbx::FbxSkeleton::operator=(const FMDSkeleton & skl)
+Fbx::FbxSkeleton Fbx::FbxSkeleton::operator=(const Fmd::FMDSkeleton & skl)
 {
-	this->name = skl.name;
-	this->parentIndex = skl.parentIndex;
-	this->pos = skl.pos;
-	this->rotation = skl.rotation;
-	this->scale = skl.scale;
+	name = skl.name;
+	parentIndex = skl.parentIndex;
+	pos = skl.pos;
+	rotation = skl.rotation;
+	scale = skl.scale;
+	tailPos = skl.tailPos;
 	return *this;
 }

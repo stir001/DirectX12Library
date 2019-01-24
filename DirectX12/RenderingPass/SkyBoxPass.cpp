@@ -52,14 +52,14 @@ void SkyBoxPass::FirstUpdate()
 	mCmdList->RSSetScissorRects(mHolder->GetScissorRects().data(), static_cast<unsigned int>(mHolder->GetScissorRects().size()));
 }
 
-void SkyBoxPass::PreExcuteUpdate()
+void SkyBoxPass::PreExecuteUpdate()
 {
 	mSkyBox->UpdateCameraBuffer();
 	mSkyBox->Draw();
 	mCmdList->Close();
 }
 
-void SkyBoxPass::ExcutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void SkyBoxPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
 {
 	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)(mCmdList->GetCommandList().GetAddressOf()));
 }

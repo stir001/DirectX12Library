@@ -26,6 +26,6 @@ struct CameraElement
 
 #define LIGHT_CBUFFER(bnum) cbuffer directionalLight : register(bnum)\
 {	\
-    float4 dir;	\
+    float4 tailPos;	\
     float4x4 lightviewProj;	\
 }	

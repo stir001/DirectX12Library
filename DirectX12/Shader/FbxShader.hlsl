@@ -74,16 +74,16 @@ VSOutput FbxVS(VSInput input)
 
 float4 FbxPS(GSOutput output) : SV_Target
 {
-    float bright = dot(output.normal.xyz, -dir.xyz);
+    float bright = dot(output.normal.xyz, -tailPos.xyz);
     float4 diffuse = (diffuseMap.Sample(smp, output.uv)) * diffuseFactorMap.Sample(smp, output.uv);
     float4 color = saturate(diffuse * bright);
-    float4 ambient = diffuse * ambientMap.Sample(smp, output.uv) * ambinetFactorMap.Sample(smp, output.uv);
+    float4 ambient = diffuse * 0.3f; //ambientMap.Sample(smp, output.uv) * ambinetFactorMap.Sample(smp, output.uv);
     color = saturate(color - ambient) + ambient;
     float4 specular = specularMap.Sample(smp, output.uv) 
 		*	pow(
 				max(0.0f, 
 					dot(normalize
-						(reflect(-dir, output.normal)), -normalize((output.pos - cameras[output.viewIndex].eye))
+						(reflect(-tailPos, output.normal)), -normalize((output.pos - cameras[output.viewIndex].eye))
 						)
 					), shininessMap.Sample(smp, output.uv)
 				) 
