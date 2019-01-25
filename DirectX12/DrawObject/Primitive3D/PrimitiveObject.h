@@ -43,7 +43,7 @@ class PrimitiveObject
 {
 public:
 	PrimitiveObject(const std::string& name);
-	~PrimitiveObject();
+	virtual ~PrimitiveObject();
 
 	virtual const std::string& GetName() const;
 	virtual const std::vector<PrimitiveVertex>& GetVertices() const;
