@@ -31,6 +31,10 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 
 FbxMotionPlayer::~FbxMotionPlayer()
 {
+	if (mAnimationId != -1)
+	{
+		mAnimationId = AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);
+	}
 }
 
 void FbxMotionPlayer::SetMotion(std::shared_ptr<FbxMotionData>& data, bool isLoop)
