@@ -14,6 +14,7 @@ FbxMotionPlayer::FbxMotionPlayer(std::vector<Fbx::FbxSkeleton>& bones, const std
 	: mModelBones(bones), mData{}, mFrame(0)
 	, mVertices(vertices), mVertexElements(vertexElements)
 	, mSkeletonPosBuffer(skeletonPosBuffer)
+	, mNextData(nullptr)
 {
 	unsigned int boneNum = static_cast<unsigned int>(mModelBones.size());
 	mCalMatrix.resize(boneNum);
@@ -38,16 +39,10 @@ void FbxMotionPlayer::SetMotion(std::shared_ptr<FbxMotionData>& data, bool isLoo
 	{
 		return;
 	}
-	mData = *data;
+	mNextData = data;
 	mIsLoop = isLoop;
-	for (auto& itr : mData.mAnimData)
-	{
-		itr.currentDataIndex = 0;
-	}
-	mFrame = 0;
 	mAnimationId = AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);
 	mAnimationId = AnimationPlayerManager::Instance().SetAnimation(this);
-	ApplyMotionData();
 }
 
 void FbxMotionPlayer::Update()
@@ -55,6 +50,10 @@ void FbxMotionPlayer::Update()
 	if (mIsEnd && !mIsLoop)
 	{
 		return;
+	}
+	if (mNextData)
+	{
+		ChangeNextMotionData();
 	}
 	UpdateCalMatrix();
 	ApplyParentMatrixRecursive(mCalMatrix, mSkeletonTree, 0);
@@ -216,6 +215,18 @@ void FbxMotionPlayer::CalTailPos()
 			mSkeletonTailPos[i] += mSkeletonHeadPos[child] / static_cast<float>(mSkeletonTree[i].size());
 		}
 	}
+}
+
+void FbxMotionPlayer::ChangeNextMotionData()
+{
+	mData = *mNextData;
+	mNextData = nullptr;
+	for (auto& itr : mData.mAnimData)
+	{
+		itr.currentDataIndex = 0;
+	}
+	mFrame = 0;
+	ApplyMotionData();
 }
 
 void FbxMotionPlayer::StopMotion() const

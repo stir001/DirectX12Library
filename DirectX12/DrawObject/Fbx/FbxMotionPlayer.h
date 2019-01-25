@@ -33,6 +33,7 @@ private:
 	std::shared_ptr<VertexBufferObject> mSkeletonPosBuffer;
 	std::vector<DirectX::XMFLOAT4> mSkeletonTailPos;
 	std::vector<DirectX::XMFLOAT4> mSkeletonHeadPos;
+	std::shared_ptr<FbxMotionData> mNextData;
 
 	void UpdateCalMatrix();
 	void UpdateVertexElementMatrix();
@@ -42,5 +43,6 @@ private:
 	void UpdateSkeletonPos();
 	void UpdateQuoternionMatrix();
 	void CalTailPos();
+	void ChangeNextMotionData();
 };
 
