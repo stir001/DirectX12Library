@@ -100,7 +100,7 @@ namespace Fmd {
 		DirectX::XMFLOAT4 tailPos;
 		DirectX::XMFLOAT4X4 globalMatrix;
 		DirectX::XMFLOAT4X4 localMatrix;
-		int	parentIndex;
+		unsigned int parentIndex;
 		int nameSize;//ï∂éöêî
 		std::string name;
 		FMDSkeleton operator=(const Fbx::FbxSkeleton& skl);

@@ -261,9 +261,6 @@
     <ClInclude Include="DirectX12\DrawObject\PMD\PMDController.h">
       <Filter>DirectX12\DrawObject\PMD</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClInclude>
@@ -555,6 +552,12 @@
     <ClInclude Include="Bullet\Action\PositionSyncAction.h">
       <Filter>Bullet\Action</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.h">
+      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCapsule.h">
+      <Filter>DirectX12\DrawObject\Primitive3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -679,9 +682,6 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\PMD\PMDController.cpp">
       <Filter>DirectX12\DrawObject\PMD</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp">
-      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCube.cpp">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
@@ -961,6 +961,12 @@
     </ClCompile>
     <ClCompile Include="Bullet\Action\PositionSyncAction.cpp">
       <Filter>Bullet\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Primitive2D\Primitive2DManager.cpp">
+      <Filter>DirectX12\DrawObject\Primitive2D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCapsule.cpp">
+      <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
