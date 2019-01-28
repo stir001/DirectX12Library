@@ -4,6 +4,7 @@
 #include "PrimitiveController.h"
 #include "PrimitiveCube.h"
 #include "PrimitiveSphere.h"
+#include "PrimitiveCapsule.h"
 #include "Master/Dx12Ctrl.h"
 #include "d3dx12.h"
 #include "Camera/Dx12Camera.h"
@@ -60,6 +61,13 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateSphere(float radius
 	auto sph = std::make_shared<PrimitiveSphere>(radius, div);
 	auto rtn = CreateController(sph);
 	SetTexture(rtn, texPath);
+	return rtn;
+}
+
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radius, float length, const std::string & texPath)
+{
+	auto cap = std::make_shared<PrimitiveCapsule>(radius, length);
+	auto rtn = CreateController(cap);
 	return rtn;
 }
 

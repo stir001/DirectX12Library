@@ -40,6 +40,7 @@ public:
 	std::shared_ptr<PrimitiveController> CreateCube(float length, const std::string& texPath = "");
 	std::shared_ptr<PrimitiveController> CreateCubeNormalMap(float length, const std::string& texPath);
 	std::shared_ptr<PrimitiveController> CreateSphere(float radius, unsigned int div, const std::string& texPath = "");
+	std::shared_ptr<PrimitiveController> CreateCapsule(float radius, float length, const std::string& texPath = "");
 	void SetParamaters(std::shared_ptr<PrimitiveController>& ctrl);
 	void SetRenderingCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 private:
