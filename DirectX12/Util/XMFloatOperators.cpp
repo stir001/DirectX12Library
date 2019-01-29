@@ -314,3 +314,11 @@ DirectX::XMFLOAT4X4 IdentityXMFloat4x4()
 							   0.0f, 0.0f, 0.0f, 1.0f);
 }
 
+DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 mat)
+{
+	auto xmf4 = DirectX::XMFLOAT4(xmf3.x, xmf3.y, xmf3.z, 1.0f);
+	xmf4 *= mat;
+	xmf3 = { xmf4.x, xmf4.y, xmf4.z };
+	return xmf3;
+}
+

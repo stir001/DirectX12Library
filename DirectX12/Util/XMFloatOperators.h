@@ -100,4 +100,6 @@ DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOA
 DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4& matrix);
 
 DirectX::XMFLOAT4X4 IdentityXMFloat4x4();
+
+DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 mat);
 #endif
