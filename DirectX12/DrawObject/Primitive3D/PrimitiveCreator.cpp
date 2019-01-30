@@ -5,6 +5,7 @@
 #include "PrimitiveCube.h"
 #include "PrimitiveSphere.h"
 #include "PrimitiveCapsule.h"
+#include "PrimitiveCone.h"
 #include "Master/Dx12Ctrl.h"
 #include "d3dx12.h"
 #include "Camera/Dx12Camera.h"
@@ -68,6 +69,13 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radiu
 {
 	auto cap = std::make_shared<PrimitiveCapsule>(radius, length);
 	auto rtn = CreateController(cap);
+	return rtn;
+}
+
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone()
+{
+	auto cone = std::make_shared<PrimitiveCone>();
+	auto rtn = CreateController(cone);
 	return rtn;
 }
 
