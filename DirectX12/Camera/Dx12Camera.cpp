@@ -282,51 +282,52 @@ D3D12_RECT Dx12Camera::GetScissorRect() const
 
 void Dx12Camera::DefaultMove(const DxInput& input)
 {
+	float vel = 1.0f;
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_W))
 	{
-		MoveFront(1.0f);
+		MoveFront(vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_A))
 	{
-		MoveSide(1.0f);
+		MoveSide(vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_D))
 	{
-		MoveSide(-1.0f);
+		MoveSide(-vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_S))
 	{
-		MoveFront(-1.0f);
+		MoveFront(-vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_SPACE))
 	{
-		MoveUp(1.0f);
+		MoveUp(vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_LSHIFT))
 	{
-		MoveUp(-1.0f);
+		MoveUp(-vel);
 	}
 
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_UP))
 	{
-		TurnUpDown(1.0f);
+		TurnUpDown(vel);
 	}
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_DOWN))
 	{
-		TurnUpDown(-1.0f);
+		TurnUpDown(-vel);
 	}
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_RIGHT))
 	{
-		TurnRightLeft(1.0f);
+		TurnRightLeft(vel);
 	}
 	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_LEFT))
 	{
-		TurnRightLeft(-1.0f);
+		TurnRightLeft(-vel);
 	}
 }
 
