@@ -2,9 +2,8 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <memory>
-#include <wrl.h>
+#include <string>
 
-struct ID3D12GraphicsCommandList;
 class VertexBufferObject;
 class PipelineStateObject;
 class RootSignatureObject;

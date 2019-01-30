@@ -558,6 +558,9 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCapsule.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveTriangle.h">
+      <Filter>DirectX12\DrawObject\Primitive3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -966,6 +969,9 @@
       <Filter>DirectX12\DrawObject\Primitive2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCapsule.cpp">
+      <Filter>DirectX12\DrawObject\Primitive3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveTriangle.cpp">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClCompile>
   </ItemGroup>
