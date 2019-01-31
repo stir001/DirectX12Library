@@ -31,7 +31,7 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 
 		auto projVec = unitPosVec * projRatio;
 
-		auto normalVec = NormalizeXMFloat3(upVec - projVec);
+		auto normalVec = NormalizeXMFloat3(projVec - upVec);
 		normals[i] = ConvertXMFloat3ToXMFloat4(normalVec);
 	}
 
