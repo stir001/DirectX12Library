@@ -42,6 +42,8 @@ class PrimitiveObject
 {
 public:
 	PrimitiveObject(const std::string& name);
+	PrimitiveObject(const std::string& name, std::vector<PrimitiveVertex>& vertices,
+		std::vector<unsigned int>& indices);
 	virtual ~PrimitiveObject();
 
 	virtual const std::string& GetName() const;

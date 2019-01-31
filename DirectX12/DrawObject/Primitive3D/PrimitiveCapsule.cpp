@@ -4,14 +4,14 @@
 #include "Util/XMFloatOperators.h"
 
 
-PrimitiveCapsule::PrimitiveCapsule(float radius, float length) : PrimitiveObject("PrimitiveCapsule")
+PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div) 
+	: PrimitiveObject("PrimitiveCapsule")
 {
 	PrimitiveVertex vert;
 	vert.pos = { 0.f,radius, 0.f, 1.f };
 	vert.normal = { 0.f, 1.0f, 0.0f, 1.0f };
 	const DirectX::XMFLOAT3 center = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 vertPos = { vert.pos.x, vert.pos.y,vert.pos.z };
-	unsigned int div = 100;
 	mVertices.reserve(div * (div + 2));
 
 	const float unitYDiv = DirectX::XM_PI / div;

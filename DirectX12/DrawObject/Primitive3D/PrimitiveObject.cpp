@@ -6,6 +6,12 @@ PrimitiveObject::PrimitiveObject(const std::string& name): mName(name), mColor(I
 {
 }
 
+PrimitiveObject::PrimitiveObject(const std::string & name
+	, std::vector<PrimitiveVertex>& vertices, std::vector<unsigned int>& indices)
+	: mVertices(vertices), mIndices(indices), mName(name), mColor(INIT_COLOR)
+{
+}
+
 PrimitiveObject::~PrimitiveObject()
 {
 }

@@ -65,16 +65,16 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateSphere(float radius
 	return rtn;
 }
 
-std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radius, float length, const std::string & texPath)
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radius, float length, unsigned int div, const std::string & texPath)
 {
-	auto cap = std::make_shared<PrimitiveCapsule>(radius, length);
+	auto cap = std::make_shared<PrimitiveCapsule>(radius, length, div);
 	auto rtn = CreateController(cap);
 	return rtn;
 }
 
-std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone()
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone(float radius, float height, unsigned int dev)
 {
-	auto cone = std::make_shared<PrimitiveCone>();
+	auto cone = std::make_shared<PrimitiveCone>(radius, height, dev);
 	auto rtn = CreateController(cone);
 	return rtn;
 }

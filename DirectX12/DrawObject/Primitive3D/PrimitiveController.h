@@ -21,6 +21,7 @@ class Dx12Camera;
 class TextureObject;
 class Dx12BufferObject;
 class Dx12CommandList;
+struct PrimitiveVertex;
 
 /**
 *	@ingroup primitive
@@ -39,6 +40,11 @@ public:
 	PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
 		, Microsoft::WRL::ComPtr<ID3D12Device>& dev
 		, std::shared_ptr<Dx12CommandList>& cmdList);
+
+	PrimitiveController(std::vector<PrimitiveVertex>& vertices, std::vector<unsigned int> indices
+		, Microsoft::WRL::ComPtr<ID3D12Device>& dev
+		, std::shared_ptr<Dx12CommandList>& cmdList);
+
 	~PrimitiveController();
 
 	/**
@@ -155,6 +161,7 @@ public:
 protected:
 	void UpdateInstanceVertexBuffer();
 	void NonUpdate();
+	void Initialize(Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 
 	enum eROOT_PARAMATER_INDEX
 	{

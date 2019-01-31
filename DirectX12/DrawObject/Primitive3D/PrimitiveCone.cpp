@@ -1,61 +1,111 @@
 #include "stdafx.h"
 #include "PrimitiveCone.h"
+#include "Util/XMFloatOperators.h"
 
 
-PrimitiveCone::PrimitiveCone()
+PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 	: PrimitiveObject("PrimitiveCone")
 {
-	float radius = 50.0f;
-	float height = 40.0f;
-	unsigned int div = 10;
 
 	PrimitiveVertex vert;
 
 	float unitHeight = height / static_cast<float>(div);
 	float unitCircleDiv = 3.14159265f * 2.0f / static_cast<float>(div);
-	float unitRadius = 10.0f / static_cast<float>(div);
+	float unitRadius = radius / static_cast<float>(div);
 
+	//法線作成
+	std::vector<DirectX::XMFLOAT4> normals(div + 1);
+	for (unsigned int i = 0; i < div + 1; ++i)
+	{
+		float currentRadius = radius;
+		DirectX::XMFLOAT4 pos;
+		pos.x = sinf(unitCircleDiv * i) * currentRadius;
+		pos.z = cosf(unitCircleDiv * i) * currentRadius;
+		pos.y = height;
 
+		auto unitPosVec = NormalizeXMFloat3({ pos.x, pos.y, pos.z });
+
+		DirectX::XMFLOAT3 upVec = { 0.0f, 1.0f, 0.0f };
+
+		auto projRatio = DotXMFloat3(unitPosVec, upVec);
+
+		auto projVec = unitPosVec * projRatio;
+
+		auto normalVec = NormalizeXMFloat3(upVec - projVec);
+		normals[i] = ConvertXMFloat3ToXMFloat4(normalVec);
+	}
+
+	//コーン上部作成
 	const unsigned int roopCount = div + 1;
 	for (unsigned int yDiv = 0; yDiv < roopCount; ++yDiv)
 	{
 		for (unsigned int circleDiv = 0; circleDiv < roopCount; ++circleDiv)
 		{
 			float currentRadius = unitRadius * yDiv;
-			vert.pos.x = sinf(unitRadius * circleDiv) * currentRadius;
-			vert.pos.z = cosf(unitRadius * circleDiv) * currentRadius;
+			vert.pos.x = sinf(unitCircleDiv * circleDiv) * currentRadius;
+			vert.pos.z = cosf(unitCircleDiv * circleDiv) * currentRadius;
 			vert.pos.y = unitHeight * yDiv;
+
+			vert.normal = normals[circleDiv];
+
 			mVertices.push_back(vert);
 		}
 	}
 
+	//コーンの底作成
+	for (unsigned int circleDiv = 0; circleDiv < roopCount; ++circleDiv)
+	{
+		float currentRadius = radius;
+		vert.pos.x = sinf(unitCircleDiv * circleDiv) * currentRadius;
+		vert.pos.z = cosf(unitCircleDiv * circleDiv) * currentRadius;
+		vert.pos.y = height;
+
+		vert.normal = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+		mVertices.push_back(vert);
+	}
+
 	//インデックス作成
-	mIndices.resize(roopCount * 6 * (div - 1) + 3 * roopCount);
+	mIndices.resize(roopCount * 6 * (div - 1) + 3 * (roopCount - 1) + (div - 1) * 3);
 
 	//一番上
 	unsigned int idx = 0;
 	for (unsigned int i = 0; i < roopCount - 1; ++i)
 	{
 		mIndices[idx++] = i;
-		mIndices[idx++] = i + roopCount;
 		mIndices[idx++] = i + 1 + roopCount;
+		mIndices[idx++] = i + roopCount;
 	}
 
-	////一番上以外
-	//for (int i = 1, idx = roopCount; i < div - 1; ++i)
-	//{
-	//	for (int j = 0; j < roopCount; ++j)
-	//	{
-	//		int offset = i * roopCount;
-	//		mIndices[idx++] = j + offset;
-	//		mIndices[idx++] = j + roopCount + offset;
-	//		mIndices[idx++] = j + 1 + roopCount + offset;
+	//一番上以外
+	for (unsigned int i = 1; i < div; ++i)
+	{
+		for (unsigned int j = 0; j < div; ++j)
+		{
+			int offset = i * roopCount;
+			mIndices[idx++] = j + offset;
+			mIndices[idx++] = j + 1 + roopCount + offset;
+			mIndices[idx++] = j + roopCount + offset;
 
-	//		mIndices[idx++] = j + roopCount + offset;
-	//		mIndices[idx++] = j + 1 + offset;
-	//		mIndices[idx++] = j + 1 + roopCount + offset;
-	//	}
-	//}
+			mIndices[idx++] = j + offset;
+			mIndices[idx++] = j + 1 + offset;
+			mIndices[idx++] = j + 1 + roopCount + offset;
+		}
+	}
+
+	//蓋
+	unsigned int pivotVertxNum =static_cast<unsigned int>(mVertices.size() - roopCount);
+	unsigned int secondVertexNum = pivotVertxNum + 1;
+	unsigned int thirdVertexNum = pivotVertxNum + 2;
+	for (unsigned int i = 0; i < div - 1; ++i)
+	{
+		mIndices[idx++] = pivotVertxNum;
+		mIndices[idx++] = secondVertexNum;
+		mIndices[idx++] = thirdVertexNum;
+		
+		secondVertexNum = thirdVertexNum;
+		++thirdVertexNum;
+	}
 
 }
 

@@ -4,7 +4,7 @@
 class PrimitiveCone : public PrimitiveObject
 {
 public:
-	PrimitiveCone();
+	PrimitiveCone(float radius, float height, unsigned int div);
 	~PrimitiveCone();
 };
 

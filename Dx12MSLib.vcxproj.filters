@@ -303,9 +303,6 @@
     <ClInclude Include="DirectX12\Rootsignature\RootSignatureObject.h">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.h">
-      <Filter>DirectX12\Rootsignature</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Shader\ShaderCompiler.h">
       <Filter>DirectX12\Shader</Filter>
     </ClInclude>
@@ -564,6 +561,9 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCone.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.h">
+      <Filter>DirectX12\Rootsignature\Primitive</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -724,9 +724,6 @@
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\Image2DPipelineState.cpp">
       <Filter>DirectX12\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.cpp">
-      <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\RootSignatureObject.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
@@ -979,6 +976,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCone.cpp">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

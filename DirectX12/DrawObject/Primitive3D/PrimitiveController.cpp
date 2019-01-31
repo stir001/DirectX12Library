@@ -19,29 +19,19 @@
 PrimitiveController::PrimitiveController(std::shared_ptr<PrimitiveObject> primitive
 	, Microsoft::WRL::ComPtr<ID3D12Device>& dev
 	, std::shared_ptr<Dx12CommandList>& cmdList)
-	: DrawController3D(primitive->GetName(),dev, cmdList)
+	: DrawController3D(primitive->GetName(), dev, cmdList)
 	, mPrimitive(primitive)
 	, mInstanceUpdate(&PrimitiveController::UpdateInstanceVertexBuffer)
 {
-	const auto& indices = primitive->GetIndices();
-	mIndexBuffer = std::make_shared<IndexBufferObject>(primitive->GetName() + "IndexBuffer", dev, static_cast<unsigned int>(sizeof(indices[0])), static_cast<unsigned int>(indices.size()));
-	mIndexBuffer->WriteBuffer(primitive->GetIndices().data(), static_cast<unsigned int>(sizeof(indices[0]) * indices.size()));
+	Initialize(dev);
+}
 
-	const auto& vertices = primitive->GetVertices();
-	mVertexBuffer = std::make_shared<VertexBufferObject>(primitive->GetName() + "VertexBuffer", dev, static_cast<unsigned int>(sizeof(vertices[0])), static_cast<unsigned int>(vertices.size()));
-	mVertexBuffer->WriteBuffer(vertices.data(),static_cast<unsigned int>(sizeof(vertices[0]) * vertices.size()));
-
-	InstanceDatas data;
-	DirectX::XMStoreFloat4x4(&data.aMatrix, DirectX::XMMatrixIdentity());
-	data.offset = DirectX::XMFLOAT4(0, 0, 0, 1);
-	data.color = primitive->GetColor();
-	mInstanceDatas.push_back(data);
-	mInstanceVertexBuffer = std::make_shared<VertexBufferObject>(primitive->GetName() + "InstanceVertexBuffer", dev, static_cast<unsigned int>(sizeof(mInstanceDatas[0])), 1U);
-
-	mTexObj = TextureLoader::Instance().CreateSingleColorTexture(0.0f);
-
-	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
-	mDescHeapUpdate = &PrimitiveController::UpdateDescriptorHeap;
+PrimitiveController::PrimitiveController(std::vector<PrimitiveVertex>& vertices, std::vector<unsigned int> indices
+	, Microsoft::WRL::ComPtr<ID3D12Device>& dev, std::shared_ptr<Dx12CommandList>& cmdList)
+	: DrawController3D("CustumPrimitive", dev, cmdList)
+{
+	mPrimitive = std::make_shared<PrimitiveObject>("CustumPrimitive", vertices, indices);
+	Initialize(dev);
 }
 
 
@@ -249,6 +239,29 @@ void PrimitiveController::UpdateInstanceVertexBuffer()
 
 void PrimitiveController::NonUpdate()
 {
+}
+
+void PrimitiveController::Initialize(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+{
+	const auto& indices = mPrimitive->GetIndices();
+	mIndexBuffer = std::make_shared<IndexBufferObject>(mPrimitive->GetName() + "IndexBuffer", dev, static_cast<unsigned int>(sizeof(indices[0])), static_cast<unsigned int>(indices.size()));
+	mIndexBuffer->WriteBuffer(mPrimitive->GetIndices().data(), static_cast<unsigned int>(sizeof(indices[0]) * indices.size()));
+
+	const auto& vertices = mPrimitive->GetVertices();
+	mVertexBuffer = std::make_shared<VertexBufferObject>(mPrimitive->GetName() + "VertexBuffer", dev, static_cast<unsigned int>(sizeof(vertices[0])), static_cast<unsigned int>(vertices.size()));
+	mVertexBuffer->WriteBuffer(vertices.data(), static_cast<unsigned int>(sizeof(vertices[0]) * vertices.size()));
+
+	InstanceDatas data;
+	DirectX::XMStoreFloat4x4(&data.aMatrix, DirectX::XMMatrixIdentity());
+	data.offset = DirectX::XMFLOAT4(0, 0, 0, 1);
+	data.color = mPrimitive->GetColor();
+	mInstanceDatas.push_back(data);
+	mInstanceVertexBuffer = std::make_shared<VertexBufferObject>(mPrimitive->GetName() + "InstanceVertexBuffer", dev, static_cast<unsigned int>(sizeof(mInstanceDatas[0])), 1U);
+
+	mTexObj = TextureLoader::Instance().CreateSingleColorTexture(0.0f);
+
+	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
+	mDescHeapUpdate = &PrimitiveController::UpdateDescriptorHeap;
 }
 
 void PrimitiveController::SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion)
