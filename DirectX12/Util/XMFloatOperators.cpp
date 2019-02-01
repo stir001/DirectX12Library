@@ -211,6 +211,11 @@ DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3& val)
 	return DirectX::XMFLOAT4(val.x, val.y, val.z, 1);
 }
 
+DirectX::XMFLOAT3 ConvertXMFloat4ToXMFloat3(const DirectX::XMFLOAT4 & val)
+{
+	return DirectX::XMFLOAT3(val.x, val.y, val.z);
+}
+
 DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val)
 {
 	DirectX::XMFLOAT4X4 rtn;
@@ -320,5 +325,21 @@ DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 
 	xmf4 *= mat;
 	xmf3 = { xmf4.x, xmf4.y, xmf4.z };
 	return xmf3;
+}
+
+DirectX::XMFLOAT2 NormalizeXMFloat2(const DirectX::XMFLOAT2 & val)
+{
+	float length = GetLengthXMFloat2(val);
+	return DirectX::XMFLOAT2(val.x / length, val.y /length);
+}
+
+float GetLengthXMFloat2(const DirectX::XMFLOAT2 & val)
+{
+	return sqrt(val.x * val.x + val.y * val.y);
+}
+
+float DotXMFloat2(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 rval)
+{
+	return lval.x * rval.x + lval.y * rval.y;
 }
 

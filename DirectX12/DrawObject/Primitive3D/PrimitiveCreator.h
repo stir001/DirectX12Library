@@ -42,7 +42,7 @@ public:
 	std::shared_ptr<PrimitiveController> CreateSphere(float radius, unsigned int div, const std::string& texPath = "");
 	std::shared_ptr<PrimitiveController> CreateCapsule(float radius, float length, unsigned int div, const std::string& texPath = "");
 	std::shared_ptr<PrimitiveController> CreateCone(float radius, float height, unsigned int dev);
-	std::shared_ptr<PrimitiveController> CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive);
+	std::shared_ptr<PrimitiveController> CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive, const std::string& texPath = "");
 	void SetParamaters(std::shared_ptr<PrimitiveController>& ctrl);
 	void SetRenderingCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
 private:

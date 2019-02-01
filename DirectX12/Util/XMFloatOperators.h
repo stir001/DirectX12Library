@@ -65,6 +65,8 @@ float GetLengthXMFloat3(const DirectX::XMFLOAT3& val);
 
 DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3& val);
 
+DirectX::XMFLOAT3 ConvertXMFloat4ToXMFloat3(const DirectX::XMFLOAT4& val);
+
 DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val);
 
 DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4& val);
@@ -102,4 +104,10 @@ DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4& matrix);
 DirectX::XMFLOAT4X4 IdentityXMFloat4x4();
 
 DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 mat);
+
+DirectX::XMFLOAT2 NormalizeXMFloat2(const DirectX::XMFLOAT2& val);
+
+float GetLengthXMFloat2(const DirectX::XMFLOAT2& val);
+
+float DotXMFloat2(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2 rval);
 #endif

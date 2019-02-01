@@ -79,6 +79,13 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone(float radius, 
 	return rtn;
 }
 
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive, const std::string& texPath)
+{
+	auto rtn = CreateController(primitive);
+	SetTexture(rtn, texPath);
+	return rtn;
+}
+
 void PrimitiveCreator::SetParamaters(std::shared_ptr<PrimitiveController>& ctrl)
 {
 	ctrl->SetGraphicsRootSignature(mRootsiganture);
