@@ -38,13 +38,15 @@ void FbxConverter::ConvertFile()
 		mConvertModel = nullptr;
 		mIsConverting = true;
 		(this->*mConvertFunc)();
-		mIsConverting = false;
+		//mIsConverting = false;
 	}
 }
 
 void FbxConverter::ConvertAnimation()
 {
+	if (mFilePath.size() == 0) return;
 	auto data = FbxLoader::Instance().LoadAnimation(mFilePath);
+	if (data == nullptr) return;
 	WriteFADFile(data);
 }
 
@@ -56,10 +58,7 @@ void FbxConverter::ConvertFmd()
 
 void FbxConverter::SetLoadFilePath(const std::string& path)
 {
-	if (mIsConverting == true)
-	{
-		return;
-	}
+	mIsConverting = false;
 	mFilePath.clear();
 	auto little =  path.rfind(".fbx");
 	auto big = path.rfind(".FBX");
@@ -290,7 +289,7 @@ void FbxConverter::WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData
 
 	for (auto& data : motionData->mAnimData)
 	{
-		unsigned int boneNameLength = data.boneName.size();
+		unsigned int boneNameLength =static_cast<unsigned int>(data.boneName.size());
 		filestream.write(reinterpret_cast<const char*>(&boneNameLength), sizeof(boneNameLength));
 		filestream.write(reinterpret_cast<const char*>(data.boneName.data()), sizeof(data.boneName[0]) * boneNameLength);
 		unsigned int frameDataNum = static_cast<unsigned int>(data.frameData.size());

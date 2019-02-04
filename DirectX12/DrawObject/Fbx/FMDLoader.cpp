@@ -2,6 +2,7 @@
 #include "FMDLoader.h"
 #include "FMDdata.h"
 #include <Windows.h>
+#include <fstream>
 
 using namespace Fmd;
 

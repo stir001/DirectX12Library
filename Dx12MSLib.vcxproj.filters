@@ -564,6 +564,9 @@
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.h">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FADLoader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Motion.cpp">
@@ -979,6 +982,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FADLoader.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

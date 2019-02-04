@@ -4,12 +4,14 @@
 class FbxMotionConverter;
 class FbxMotionPlayer;
 class FbxConverter;
+class FADLoader;
 
 class FbxMotionData
 {
 	friend FbxMotionConverter;
 	friend FbxMotionPlayer;
 	friend FbxConverter;
+	friend FADLoader;
 public:
 	FbxMotionData();
 	~FbxMotionData();
