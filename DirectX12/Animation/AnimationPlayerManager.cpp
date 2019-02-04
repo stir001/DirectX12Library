@@ -152,7 +152,7 @@ void AnimationPlayerManager::CommonUpdate()
 	mIsThreadRun = true;
 }
 
-void AnimationPlayerManager::WaitSafeFree()
+void AnimationPlayerManager::WaitAnimation()
 {
 	if (mIsThreadRun)
 	{

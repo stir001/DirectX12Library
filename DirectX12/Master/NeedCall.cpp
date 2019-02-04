@@ -17,7 +17,7 @@ unsigned int Roundup2Multiplier(unsigned int size)
 
 void CallEveryFrame()
 {
-	AnimationPlayerManager::Instance().WaitSafeFree();
+	AnimationPlayerManager::Instance().WaitAnimation();
 	RenderingPassManager::Instance().Render();
 	AnimationPlayerManager::Instance().UpdateAnimations();
 }

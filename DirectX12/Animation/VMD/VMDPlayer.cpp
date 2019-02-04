@@ -21,7 +21,7 @@ VMDPlayer::~VMDPlayer()
 {
 	if (mAnimationId != -1)
 	{
-		AnimationPlayerManager::Instance().WaitSafeFree();
+		AnimationPlayerManager::Instance().WaitAnimation();
 	}
 }
 

@@ -43,6 +43,7 @@ void FbxMotionPlayer::SetMotion(std::shared_ptr<FbxMotionData>& data, bool isLoo
 	{
 		return;
 	}
+	AnimationPlayerManager::Instance().WaitAnimation();
 	mNextData = data;
 	mIsLoop = isLoop;
 	mAnimationId = AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);

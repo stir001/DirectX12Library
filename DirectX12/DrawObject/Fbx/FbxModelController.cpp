@@ -93,7 +93,7 @@ FbxModelController::~FbxModelController()
 {
 	if (mMotionPlayer->GetID() != -1)
 	{
-		AnimationPlayerManager::Instance().WaitSafeFree();
+		AnimationPlayerManager::Instance().WaitAnimation();
 	}
 }
 

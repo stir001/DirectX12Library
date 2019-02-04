@@ -37,7 +37,7 @@ PMDController::~PMDController()
 {
 	if (mVmdPlayer->GetID() != -1)
 	{
-		AnimationPlayerManager::Instance().WaitSafeFree();
+		AnimationPlayerManager::Instance().WaitAnimation();
 	}
 }
 

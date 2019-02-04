@@ -64,7 +64,7 @@ public:
 	/**
 	*	アニメーションの計算が終了するまで待機する
 	*/
-	void WaitSafeFree();
+	void WaitAnimation();
 
 	/**
 	*	すべてのアニメーションの計算を停止する
