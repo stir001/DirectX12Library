@@ -3,11 +3,13 @@
 
 class FbxMotionConverter;
 class FbxMotionPlayer;
+class FbxConverter;
 
 class FbxMotionData
 {
 	friend FbxMotionConverter;
 	friend FbxMotionPlayer;
+	friend FbxConverter;
 public:
 	FbxMotionData();
 	~FbxMotionData();

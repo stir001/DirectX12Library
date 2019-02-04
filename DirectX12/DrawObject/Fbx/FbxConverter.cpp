@@ -268,5 +268,33 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 
 void FbxConverter::WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData)
 {
-	//auto fileName = GetFileName();
+	auto path = CreateWriteFilePath(mFilePath);
+	auto dotPoint = path.rfind('.');
+	path.erase(path.begin() + dotPoint, path.end());
+	path += ".fad";
+
+	std::ofstream filestream(path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+	if (!filestream)
+	{
+		filestream.close();//デストラクタで呼ばれるから呼ばなくてもいいっぽい
+		return; //ファイルオープン失敗
+	}
+
+	char FAD_FILE_HEADER[4] = "FAD";
+
+	filestream.write(FAD_FILE_HEADER, 4);
+
+	filestream.write(reinterpret_cast<const char*>(&motionData->mMaxFrame), sizeof(motionData->mMaxFrame));
+	unsigned int dataNum = static_cast<unsigned int>(motionData->mAnimData.size());
+	filestream.write(reinterpret_cast<const char*>(&dataNum), sizeof(dataNum));
+
+	for (auto& data : motionData->mAnimData)
+	{
+		unsigned int boneNameLength = data.boneName.size();
+		filestream.write(reinterpret_cast<const char*>(&boneNameLength), sizeof(boneNameLength));
+		filestream.write(reinterpret_cast<const char*>(data.boneName.data()), sizeof(data.boneName[0]) * boneNameLength);
+		unsigned int frameDataNum = static_cast<unsigned int>(data.frameData.size());
+		filestream.write(reinterpret_cast<const char*>(&frameDataNum), sizeof(frameDataNum));
+		filestream.write(reinterpret_cast<const char*>(data.frameData.data()), sizeof(data.frameData[0]) * frameDataNum);
+	}
 }
