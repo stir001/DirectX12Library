@@ -81,6 +81,11 @@ int AnimationPlayerManager::RemoveAnimation(int id)
 	{
 		return -1;
 	}
+	if (mIsThreadRun)
+	{
+		mThreadObject.join();
+		mIsThreadRun = false;
+	}
 	auto itr = FindAnimItr(id);
 	if (itr != mAnimations.end())
 	{

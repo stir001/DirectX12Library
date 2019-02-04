@@ -39,8 +39,13 @@ void FbxConverter::ConvertFile()
 		mIsConverting = true;
 		(this->*mConvertFunc)();
 		mIsConverting = false;
-		mFilePath.clear();
 	}
+}
+
+void FbxConverter::ConvertAnimation()
+{
+	auto data = FbxLoader::Instance().LoadAnimation(mFilePath);
+	WriteFADFile(data);
 }
 
 void FbxConverter::ConvertFmd()
@@ -95,7 +100,6 @@ void FbxConverter::ConvertFbx()
 	if (modelData == nullptr)
 	{
 		mIsConverting = false;
-		mFilePath.clear();
 		return;
 	}
 
@@ -260,4 +264,9 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 	{
 		writeFunc(s, skeletons[i]);
 	}
+}
+
+void FbxConverter::WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData)
+{
+	//auto fileName = GetFileName();
 }
