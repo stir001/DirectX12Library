@@ -27,10 +27,13 @@ FbxLoader* FbxLoader::mInstance = nullptr;
 
 void StoreFbxMatrixToXMMatrix(const fbxsdk::FbxAMatrix& fmat, DirectX::XMMATRIX& xmmat);
 
-FbxLoader::FbxLoader() :mModelConverter(std::make_shared<FbxModelDataConverter>()), mMotionConverter(std::make_shared<FbxMotionConverter>()), mLight(std::make_shared<DirectionalLight>(1.0f, -1.0f, 1.0f))
+FbxLoader::FbxLoader() 
+	:mModelConverter(std::make_shared<FbxModelDataConverter>())
+	, mMotionConverter(std::make_shared<FbxMotionConverter>())
+	, mLight(std::make_shared<DirectionalLight>(1.0f, -1.0f, 1.0f))
 {
 	DX12CTRL_INSTANCE
-		CreateRootsignature(d12.GetDev());
+	CreateRootsignature(d12.GetDev());
 	CreatePipelineState(d12.GetDev());
 	mCmdList = RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model));
 }
