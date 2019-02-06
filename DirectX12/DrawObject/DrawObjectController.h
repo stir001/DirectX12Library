@@ -38,13 +38,13 @@ public:
 	*	@brief	使用するrootsignatureを設定する
 	*	@param[in]	rootsignature	使用するrootsignature
 	*/
-	virtual void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	virtual void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	@brief	使用するpipelinestateを設定する
 	*	@param[in]	pipelinestate	使用するpipelinestate
 	*/
-	virtual void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+	virtual void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate);
 
 	/**
 	*	@brief	使用するコマンドリストを設定する

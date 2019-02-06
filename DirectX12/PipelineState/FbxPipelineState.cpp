@@ -3,7 +3,7 @@
 #include "Rootsignature/RootSignatureObject.h"
 #include "d3dx12.h"
 
-FbxPipelineState::FbxPipelineState(std::shared_ptr<RootSignatureObject>& rootsignature,const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+FbxPipelineState::FbxPipelineState(const std::shared_ptr<RootSignatureObject>& rootsignature,const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	CD3DX12_RASTERIZER_DESC rastarizer = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	rastarizer.CullMode = D3D12_CULL_MODE_BACK;

@@ -15,12 +15,12 @@ DrawObjectController::~DrawObjectController()
 {
 }
 
-void DrawObjectController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void DrawObjectController::SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 }
 
-void DrawObjectController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
+void DrawObjectController::SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate)
 {
 	mPipelinestate = pipelinestate;
 }

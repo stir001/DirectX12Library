@@ -38,7 +38,7 @@ PrimitivePipelineState::PrimitivePipelineState(std::shared_ptr<RootSignatureObje
 	gpsDesc.SampleMask = 0xffffff;
 	gpsDesc.NodeMask = 0;
 
-	ShaderDatas& data = rootsignature->GetShaderDatas();
+	auto& data = rootsignature->GetShaderDatas();
 	
 	SetShaders(gpsDesc, rootsignature->GetShaderDatas());
 

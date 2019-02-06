@@ -324,6 +324,7 @@
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveTriangle.h" />
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveCone.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FADLoader.h" />
+    <ClInclude Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -466,6 +467,7 @@
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveTriangle.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCone.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FADLoader.cpp" />
+    <ClCompile Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

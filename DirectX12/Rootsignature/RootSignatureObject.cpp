@@ -22,12 +22,12 @@ void RootSignatureObject::SetShaderData(const ShaderDatas& shader)
 	mShader = shader;
 }
 
-ShaderDatas& RootSignatureObject::GetShaderDatas()
+const ShaderDatas& RootSignatureObject::GetShaderDatas() const
 {
 	return mShader;
 }
 
-Microsoft::WRL::ComPtr<ID3D12RootSignature>& RootSignatureObject::GetRootSignature()
+const Microsoft::WRL::ComPtr<ID3D12RootSignature>& RootSignatureObject::GetRootSignature() const
 {
 	return mRootSignature;
 }

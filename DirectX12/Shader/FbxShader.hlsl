@@ -94,6 +94,27 @@ float4 FbxPS(GSOutput output) : SV_Target
     return saturate(color);
 }
 
+float4 FbxNonShadePS(GSOutput output) : SV_Target
+{
+    float4 diffuse = (diffuseMap.Sample(smp, output.uv)) * diffuseFactorMap.Sample(smp, output.uv);
+    float4 color = saturate(diffuse);
+    //float4 ambient = diffuse * 0.5f; //* ambientMap.Sample(smp, output.uv) * ambinetFactorMap.Sample(smp, output.uv);
+    //color = saturate(color - ambient) + ambient;
+    float4 specular = specularMap.Sample(smp, output.uv)
+		* pow(
+				max(0.0f,
+					dot(normalize
+						(reflect(-tailPos, output.normal)), -normalize((output.pos - cameras[output.viewIndex].eye))
+						)
+					), shininessMap.Sample(smp, output.uv)
+				)
+		* specularFactorMap.Sample(smp, output.uv);
+    color += saturate(specular);
+    color += diffuse * emissiveMap.Sample(smp, output.uv) * emissiveFactorMap.Sample(smp, output.uv);
+    color.a *= transparencyFactorMap.Sample(smp, output.uv).r * transparencyFactorMap.Sample(smp, output.uv);
+    return saturate(color);
+}
+
 float2 PackingNormal(float2 viewNorm)
 {
     return float2(0.5 * (viewNorm.xy + 1.0f));

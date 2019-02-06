@@ -564,8 +564,11 @@
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.h">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.h">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Fbx\FADLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -983,8 +986,11 @@
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveNormalMapRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.cpp">
+      <Filter>DirectX12\Rootsignature</Filter>
+    </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Fbx\FADLoader.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

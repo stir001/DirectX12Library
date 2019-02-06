@@ -43,13 +43,13 @@ public:
 	*	@brief	使用しているシェーダーを取得する
 	*	@return	使用しているシェーダー
 	*/
-	ShaderDatas& GetShaderDatas();
+	const ShaderDatas& GetShaderDatas() const;
 
 	/**
 	*	@brief	ID3D12RootSignatureを取得する
 	*	@return	作成したrootsignature
 	*/
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>& GetRootSignature();
+	const Microsoft::WRL::ComPtr<ID3D12RootSignature>& GetRootSignature() const;
 protected:
 	RootSignatureObject();
 
