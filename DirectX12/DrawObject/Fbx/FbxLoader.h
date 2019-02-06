@@ -106,6 +106,8 @@ public:
 
 	std::shared_ptr<FbxMotionData> LoadAnimation(const std::string& animationPath);
 
+	std::shared_ptr<FbxMotionData> LoadFAD(const std::string& animationPath);
+
 	void ReleaseAnimation(const std::string& animationPath);
 
 	void ReleaseNonRefAnimation();

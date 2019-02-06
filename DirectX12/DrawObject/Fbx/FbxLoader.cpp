@@ -15,6 +15,7 @@
 #include "Rootsignature/FbxRootSignature.h"
 #include "FMDLoader.h"
 #include "FMDdata.h"
+#include "FADLoader.h"
 
 #include <fbxsdk.h>
 #include <memory>
@@ -31,6 +32,8 @@ FbxLoader::FbxLoader()
 	:mModelConverter(std::make_shared<FbxModelDataConverter>())
 	, mMotionConverter(std::make_shared<FbxMotionConverter>())
 	, mLight(std::make_shared<DirectionalLight>(1.0f, -1.0f, 1.0f))
+	, mFmdLoader(std::make_shared<Fmd::FMDLoader>())
+	, mFadLoader(std::make_shared<FADLoader>())
 {
 	DX12CTRL_INSTANCE
 	CreateRootsignature(d12.GetDev());
@@ -198,6 +201,11 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 	ClearTmpInfo();
 
 	return motion;
+}
+
+std::shared_ptr<FbxMotionData> FbxLoader::LoadFAD(const std::string& animationPath)
+{
+	return mFadLoader->LoadFAD(animationPath);
 }
 
 void FbxLoader::ReleaseModel(const std::string& modelPath)
