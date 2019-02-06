@@ -25,5 +25,5 @@ std::shared_ptr<FbxMotionData> FADLoader::LoadFAD(const std::string & filePath)
 		return nullptr;
 	}
 
-	return ;
+	return nullptr;
 }
