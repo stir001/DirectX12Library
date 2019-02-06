@@ -112,11 +112,20 @@ std::list<AnimationPlayerManager::AnimatiomInfo>::iterator AnimationPlayerManage
 int AnimationPlayerManager::FindMostSmallId()
 {
 	unsigned int id = 0;
-	for (auto player : mAnimations)
+	while(id < mAnimations.size())
 	{
-		if (player.id <= id)
+		unsigned int preID = id;
+		for (auto& player : mAnimations)
 		{
-			id = static_cast<int>(player.id) + 1;
+			if (player.id <= id)
+			{
+				id = player.id + 1;
+				break;
+			}
+		}
+		if (preID == id)
+		{
+			break;
 		}
 	}
 	return id;
