@@ -7,7 +7,7 @@
 *
 *	@par 最終更新日	2018/9/10
 */
-#include <list>
+#include <map>
 #include <thread>
 #include <future>
 
@@ -109,7 +109,7 @@ private:
 	/**
 	*	アニメーション情報を保持する
 	*/
-	std::list<AnimatiomInfo> mAnimations;
+	std::map<int,AnimatiomInfo> mAnimations;
 
 	/**
 	*	登録されているアニメーションを計算するステートを保持する
@@ -121,7 +121,7 @@ private:
 	*	@param[in]	id	探すアニメーションID
 	*	@return		対象のアニメーションイテレータ	ない場合はend()を返す
 	*/
-	std::list<AnimatiomInfo>::iterator FindAnimItr(int id);
+	std::map<int,AnimatiomInfo>::iterator FindAnimItr(int id);
 
 	/**
 	*	@brief	未登録で最も値の小さいIDを取得する

@@ -3,15 +3,16 @@
 #include "AnimationPlayer.h"
 
 #include <Windows.h>
+#include <list>
 
 AnimationPlayerManager::AnimationPlayerManager() :mAnimations(), mIsThreadRun(true), mUpdate(&AnimationPlayerManager::CommonUpdate)
 {
-	mThreadObject = ((std::thread([](std::list<AnimatiomInfo>& animInfo) {
+	mThreadObject = ((std::thread([](std::map<int,AnimatiomInfo>& animInfo) {
 		for (auto& anim : animInfo)
 		{
-			if (anim.isPaly && (!anim.mAnimPlayer->mIsEnd || !anim.mAnimPlayer->mIsLoop))
+			if (anim.second.isPaly && (!anim.second.mAnimPlayer->mIsEnd || !anim.second.mAnimPlayer->mIsLoop))
 			{
-					anim.mAnimPlayer->Update();
+					anim.second.mAnimPlayer->Update();
 			}
 		}
 	}, mAnimations)));
@@ -41,7 +42,7 @@ int AnimationPlayerManager::SetAnimation(AnimationPlayer* anim)
 	animInfo.id = FindMostSmallId();
 	animInfo.mAnimPlayer = anim;
 	animInfo.isPaly = true;
-	mAnimations.push_back(animInfo);
+	mAnimations[animInfo.id] = animInfo;
 	return animInfo.id;
 }
 
@@ -52,7 +53,7 @@ void AnimationPlayerManager::StopAnimation(int id)
 		return;
 	}
 	auto itr = FindAnimItr(id);
-	itr->isPaly = false;
+	itr->second.isPaly = false;
 }
 
 void AnimationPlayerManager::ReStartAnimation(int id)
@@ -62,7 +63,7 @@ void AnimationPlayerManager::ReStartAnimation(int id)
 		return;
 	}
 	auto itr = FindAnimItr(id);
-	itr->isPaly = true;
+	itr->second.isPaly = true;
 }
 
 void AnimationPlayerManager::UpdateAnimations()
@@ -94,38 +95,37 @@ int AnimationPlayerManager::RemoveAnimation(int id)
 	return -1;
 }
 
-std::list<AnimationPlayerManager::AnimatiomInfo>::iterator AnimationPlayerManager::FindAnimItr(int id)
+std::map<int,AnimationPlayerManager::AnimatiomInfo>::iterator AnimationPlayerManager::FindAnimItr(int id)
 {
 	if (id != -1)
 	{
-		for (auto itr = mAnimations.begin(); itr != mAnimations.end(); ++itr)
-		{
-			if (itr->id == id)
-			{
-				return itr;
-			}
-		}
+		return mAnimations.find(id);
 	}
 	return mAnimations.end();
 }
 
 int AnimationPlayerManager::FindMostSmallId()
 {
-	unsigned int id = 0;
-	while(id < mAnimations.size())
+	int id = 0;
+	bool isFind = false;
+	while(id < mAnimations.size() && !isFind)
 	{
-		unsigned int preID = id;
+		isFind = true;
 		for (auto& player : mAnimations)
 		{
-			if (player.id <= id)
+			if (player.first <= id)
 			{
-				id = player.id + 1;
+				++id;
+				for (auto& p : mAnimations)
+				{
+					if (p.first == id)
+					{
+						isFind = false;
+						break;
+					}
+				}
 				break;
 			}
-		}
-		if (preID == id)
-		{
-			break;
 		}
 	}
 	return id;
@@ -141,15 +141,15 @@ void AnimationPlayerManager::CommonUpdate()
 	{
 		return;
 	}
-	mThreadObject = ((std::thread([](std::list<AnimatiomInfo>& animInfo) {
+	mThreadObject = ((std::thread([](std::map<int,AnimatiomInfo>& animInfo) {
 		std::list<std::thread> threadObject;
 		for (auto& anim : animInfo)
 		{
-			if (anim.isPaly && (!anim.mAnimPlayer->mIsEnd || anim.mAnimPlayer->mIsLoop))
+			if (anim.second.isPaly && (!anim.second.mAnimPlayer->mIsEnd || anim.second.mAnimPlayer->mIsLoop))
 			{
 				threadObject.push_back(std::thread([](AnimationPlayer* animPlayer) {
 					animPlayer->Update();
-				}, anim.mAnimPlayer));
+				}, anim.second.mAnimPlayer));
 			}
 		}
 
