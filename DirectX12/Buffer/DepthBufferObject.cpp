@@ -18,7 +18,7 @@ DepthBufferObject::DepthBufferObject(const std::string& name, const Microsoft::W
 	rscDesc.Format = format;
 	rscDesc.SampleDesc.Count = 1;
 	rscDesc.SampleDesc.Quality = 0;
-	rscDesc.MipLevels = 0;
+	rscDesc.MipLevels = 1;
 	rscDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 	rscDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 	rscDesc.Alignment = 0;
