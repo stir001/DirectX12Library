@@ -13,8 +13,8 @@
 
 class FbxModelDataConverter;
 class FbxModelController;
-class FbxMotionData;
-class FbxMotionConverter;
+class FbxAnimationData;
+class FbxAnimationConverter;
 class LightObject;
 class FADLoader;
 
@@ -104,9 +104,9 @@ public:
 
 	void ReleaseAllModel();
 
-	std::shared_ptr<FbxMotionData> LoadAnimation(const std::string& animationPath);
+	std::shared_ptr<FbxAnimationData> LoadAnimation(const std::string& animationPath);
 
-	std::shared_ptr<FbxMotionData> LoadFAD(const std::string& animationPath);
+	std::shared_ptr<FbxAnimationData> LoadFAD(const std::string& animationPath);
 
 	void ReleaseAnimation(const std::string& animationPath);
 
@@ -132,11 +132,11 @@ private:
 	fbxsdk::FbxPose* mPose;
 
 	std::map<std::string, std::shared_ptr<Fbx::FbxModel>> mModelDatas;
-	std::map<std::string, std::shared_ptr<FbxMotionData>> mAnimationDatas;
+	std::map<std::string, std::shared_ptr<FbxAnimationData>> mAnimationDatas;
 	NodeTree mNodeTree;
 	
 	std::shared_ptr<FbxModelDataConverter> mModelConverter;
-	std::shared_ptr<FbxMotionConverter> mMotionConverter;
+	std::shared_ptr<FbxAnimationConverter> mAnimationConverter;
 	std::shared_ptr<Fmd::FMDLoader> mFmdLoader;
 	std::shared_ptr<FADLoader> mFadLoader;
 

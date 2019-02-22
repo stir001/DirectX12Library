@@ -198,9 +198,8 @@
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h" />
-    <ClInclude Include="DirectX12\Animation\Motion.h" />
     <ClInclude Include="DirectX12\Animation\VMD\VMDLoader.h" />
-    <ClInclude Include="DirectX12\Animation\VMD\VMDMotion.h" />
+    <ClInclude Include="DirectX12\Animation\VMD\VMDAnimation.h" />
     <ClInclude Include="DirectX12\Animation\VMD\VMDPlayer.h" />
     <ClInclude Include="DirectX12\Buffer\AdditionalConstatntBuffer.h" />
     <ClInclude Include="DirectX12\Buffer\ConstantBufferObject.h" />
@@ -223,9 +222,9 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModel.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelController.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.h" />
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.h" />
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionData.h" />
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationConverter.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationData.h" />
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationPlayer.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxsdkHaveStruct.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxStructure.h" />
     <ClInclude Include="DirectX12\DrawObject\Fbx\FMDdata.h" />
@@ -346,9 +345,8 @@
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp" />
-    <ClCompile Include="DirectX12\Animation\Motion.cpp" />
     <ClCompile Include="DirectX12\Animation\VMD\VMDLoader.cpp" />
-    <ClCompile Include="DirectX12\Animation\VMD\VMDMotion.cpp" />
+    <ClCompile Include="DirectX12\Animation\VMD\VMDAnimation.cpp" />
     <ClCompile Include="DirectX12\Animation\VMD\VMDPlayer.cpp" />
     <ClCompile Include="DirectX12\Buffer\AdditionalConstatntBuffer.cpp" />
     <ClCompile Include="DirectX12\Buffer\ConstantBufferObject.cpp" />
@@ -370,9 +368,9 @@
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModel.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelController.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionData.cpp" />
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationConverter.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationData.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationPlayer.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxStructure.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FMDdata.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FMDLoader.cpp" />

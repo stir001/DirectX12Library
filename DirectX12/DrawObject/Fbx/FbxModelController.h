@@ -13,8 +13,8 @@ class LightObject;
 class FbxModelDataConverter;
 class RootSignatureObject;
 class PipelineStateObject;
-class FbxMotionPlayer;
-class FbxMotionData;
+class FbxAnimationPlayer;
+class FbxAnimationData;
 class Dx12DescriptorHeapObject;
 class Dx12Camera;
 class Dx12CommandList;
@@ -42,17 +42,17 @@ public:
 
 	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
-	void SetMotion(std::shared_ptr<FbxMotionData>& motion, bool isLoop = true);
-	void StopMotion() const;
-	void RestartMotion() const;
-	bool IsMotionEnd() const;
+	void SetAnimation(std::shared_ptr<FbxAnimationData>& animation, bool isLoop = true);
+	void StopAnimation() const;
+	void RestartAnimation() const;
+	bool IsAnimationEnd() const;
 	void AddConstantBuffer(std::shared_ptr<ConstantBufferObject>& buffer);
 	std::string GetModelName() const;
 	std::string GetModelPath() const;
 
 	void UpdateDescriptorHeap();
 private:
-	std::shared_ptr<FbxMotionPlayer> mMotionPlayer;
+	std::shared_ptr<FbxAnimationPlayer> mAnimationPlayer;
 
 	std::vector<Fbx::FbxVertexElement> mVertexElements;
 	std::shared_ptr<VertexBufferObject> mCtrlVertexBuffer;

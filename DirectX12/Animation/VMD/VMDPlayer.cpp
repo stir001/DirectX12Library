@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "VMDPlayer.h"
-#include "VMDMotion.h"
+#include "VMDAnimation.h"
 #include "DrawObject/PMD/PMDModel.h"
 #include "Buffer/ConstantBufferObject.h"
 #include "Animation/AnimationPlayerManager.h"
@@ -30,7 +30,7 @@ void VMDPlayer::Update()
 	(this->*mUpdate)();
 }
 
-void VMDPlayer::SetVMD(std::shared_ptr<VMDMotion>& vmd)
+void VMDPlayer::SetVMD(std::shared_ptr<VMDAnimation>& vmd)
 {
 	mPoses = &vmd->mPoses;
 	mMaxFrame = 0;

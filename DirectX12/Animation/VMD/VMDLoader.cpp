@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "VMDLoader.h"
-#include "VMDMotion.h"
+#include "VMDAnimation.h"
 #include "Util/File.h"
 
 #include <algorithm>
@@ -16,12 +16,12 @@ VMDLoader::~VMDLoader()
 		mFp->Close();
 		mFp = nullptr;
 	}
-	mLoadingMotion = nullptr;
+	mLoadingAnimation = nullptr;
 }
 
-std::shared_ptr<VMDMotion> VMDLoader::LoadMotion(const std::string& path)
+std::shared_ptr<VMDAnimation> VMDLoader::LoadAnimation(const std::string& path)
 {
-	if (mMotions.find(path) != mMotions.end()) return mMotions[path];
+	if (mAnimations.find(path) != mAnimations.end()) return mAnimations[path];
 	if (mFp == nullptr)
 	{
 		mFp = std::make_shared<File>(path);
@@ -30,51 +30,51 @@ std::shared_ptr<VMDMotion> VMDLoader::LoadMotion(const std::string& path)
 	{
 		mFp->SetFile(path);
 	}
-	mLoadingMotion = std::make_shared<VMDMotion>();
+	mLoadingAnimation = std::make_shared<VMDAnimation>();
 
 	LoadHeader();
-	LoadMotionDatas();
+	LoadAnimationDatas();
 
 	mFp->Close();
 
 	CreatePoses();
-	mMotions[path] = mLoadingMotion;
-	return mLoadingMotion;
+	mAnimations[path] = mLoadingAnimation;
+	return mLoadingAnimation;
 }
 
 void VMDLoader::LoadHeader()
 {
-	mFp->LoadFile(&mLoadingMotion->mHeader.header[0], sizeof(mLoadingMotion->mHeader.header));
-	mFp->LoadFile(&mLoadingMotion->mHeader.modelName[0], sizeof(mLoadingMotion->mHeader.modelName));
-	mFp->LoadFile(&mLoadingMotion->mHeader.count);
+	mFp->LoadFile(&mLoadingAnimation->mHeader.header[0], sizeof(mLoadingAnimation->mHeader.header));
+	mFp->LoadFile(&mLoadingAnimation->mHeader.modelName[0], sizeof(mLoadingAnimation->mHeader.modelName));
+	mFp->LoadFile(&mLoadingAnimation->mHeader.count);
 }
 
-void VMDLoader::LoadMotionDatas()
+void VMDLoader::LoadAnimationDatas()
 {
-	mLoadingMotion->mMotions.resize(mLoadingMotion->mHeader.count);
-	for (unsigned int i = 0; i < mLoadingMotion->mHeader.count; i++)
+	mLoadingAnimation->mAnimations.resize(mLoadingAnimation->mHeader.count);
+	for (unsigned int i = 0; i < mLoadingAnimation->mHeader.count; i++)
 	{
-		mFp->LoadFile(&mLoadingMotion->mMotions[i].boneName[0],sizeof(mLoadingMotion->mMotions[i].boneName));
-		mFp->LoadFile(&mLoadingMotion->mMotions[i].frameNo);
-		mFp->LoadFile(&mLoadingMotion->mMotions[i].location);
-		mFp->LoadFile(&mLoadingMotion->mMotions[i].quoternion);
-		mFp->LoadFile(&mLoadingMotion->mMotions[i].interpolation[0],sizeof(mLoadingMotion->mMotions[i].interpolation));
+		mFp->LoadFile(&mLoadingAnimation->mAnimations[i].boneName[0],sizeof(mLoadingAnimation->mAnimations[i].boneName));
+		mFp->LoadFile(&mLoadingAnimation->mAnimations[i].frameNo);
+		mFp->LoadFile(&mLoadingAnimation->mAnimations[i].location);
+		mFp->LoadFile(&mLoadingAnimation->mAnimations[i].quoternion);
+		mFp->LoadFile(&mLoadingAnimation->mAnimations[i].interpolation[0],sizeof(mLoadingAnimation->mAnimations[i].interpolation));
 	}
 }
 
 void VMDLoader::CreatePoses()
 {
-	for (auto& m : mLoadingMotion->mMotions)
+	for (auto& m : mLoadingAnimation->mAnimations)
 	{
 		std::string boneName = m.boneName;
 		VMDPose p;
 		p.frameNo = m.frameNo;
 		p.quoternion = m.quoternion;
 		p.location = m.location;
-		mLoadingMotion->mPoses[boneName].push_back(p);
+		mLoadingAnimation->mPoses[boneName].push_back(p);
 	}
 
-	for (auto& p : mLoadingMotion->mPoses)
+	for (auto& p : mLoadingAnimation->mPoses)
 	{
 		std::sort(p.second.begin(), p.second.end(), [&](const VMDPose& lval, const VMDPose& rval) {return lval.frameNo < rval.frameNo; });
 	}

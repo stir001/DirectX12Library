@@ -3,8 +3,8 @@
 #include "FbxModel.h"
 #include "FbxModelController.h"
 #include "FbxModelDataCoverter.h"
-#include "FbxMotionConverter.h"
-#include "FbxMotionData.h"
+#include "FbxAnimationConverter.h"
+#include "FbxAnimationData.h"
 #include "Shader/ShaderCompiler.h"
 #include "Master/Dx12Ctrl.h"
 #include "Util/XMFloatOperators.h"
@@ -30,7 +30,7 @@ void StoreFbxMatrixToXMMatrix(const fbxsdk::FbxAMatrix& fmat, DirectX::XMMATRIX&
 
 FbxLoader::FbxLoader() 
 	:mModelConverter(std::make_shared<FbxModelDataConverter>())
-	, mMotionConverter(std::make_shared<FbxMotionConverter>())
+	, mAnimationConverter(std::make_shared<FbxAnimationConverter>())
 	, mLight(std::make_shared<DirectionalLight>(1.0f, -1.0f, 1.0f))
 	, mFmdLoader(std::make_shared<Fmd::FMDLoader>())
 	, mFadLoader(std::make_shared<FADLoader>())
@@ -64,7 +64,7 @@ void FbxLoader::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& r
 FbxLoader::~FbxLoader()
 {
 	mModelConverter = nullptr;
-	mMotionConverter = nullptr;
+	mAnimationConverter = nullptr;
 	mModelDatas.clear();
 	mModelDatas.clear();
 }
@@ -154,7 +154,7 @@ std::shared_ptr<FbxModelController> FbxLoader::LoadFMD(const std::string & model
 	return rtn;
 }
 
-std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& animationPath)
+std::shared_ptr<FbxAnimationData> FbxLoader::LoadAnimation(const std::string& animationPath)
 {
 
 	if (!LoaderInitializie(animationPath))
@@ -192,18 +192,18 @@ std::shared_ptr<FbxMotionData> FbxLoader::LoadAnimation(const std::string& anima
 
 	fbxsdk::FbxLongLong max = (stop - start) / fbxsdk::FbxTime::GetOneFrameValue(fbxsdk::FbxTime::eFrames60);
 
-	std::shared_ptr<FbxMotionData> motion(mMotionConverter->ConvertMotionData(mSkeletonMatrix, max, animationPath));
+	std::shared_ptr<FbxAnimationData> animation(mAnimationConverter->ConvertAnimationData(mSkeletonMatrix, max, animationPath));
 
-	mAnimationDatas[animationPath] = motion;
+	mAnimationDatas[animationPath] = animation;
 
 	DestroyScence(mScene);
 	mManager->Destroy();
 	ClearTmpInfo();
 
-	return motion;
+	return animation;
 }
 
-std::shared_ptr<FbxMotionData> FbxLoader::LoadFAD(const std::string& animationPath)
+std::shared_ptr<FbxAnimationData> FbxLoader::LoadFAD(const std::string& animationPath)
 {
 	return mFadLoader->LoadFAD(animationPath);
 }

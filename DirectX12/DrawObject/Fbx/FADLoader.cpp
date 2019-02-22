@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "FADLoader.h"
-#include "FbxMotionData.h"
+#include "FbxAnimationData.h"
 
 #include <fstream>
 #include <Windows.h>
@@ -14,9 +14,9 @@ FADLoader::~FADLoader()
 {
 }
 
-std::shared_ptr<FbxMotionData> FADLoader::LoadFAD(const std::string & filePath)
+std::shared_ptr<FbxAnimationData> FADLoader::LoadFAD(const std::string & filePath)
 {
-	auto data = std::make_shared<FbxMotionData>();
+	auto data = std::make_shared<FbxAnimationData>();
 
 	std::ifstream fileStream(filePath, std::ios_base::in | std::ios_base::binary);
 	if (!fileStream)

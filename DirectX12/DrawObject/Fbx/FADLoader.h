@@ -2,13 +2,13 @@
 #include <memory>
 #include <string>
 
-class FbxMotionData;
+class FbxAnimationData;
 
 class FADLoader
 {
 public:
 	FADLoader();
 	~FADLoader();
-	std::shared_ptr<FbxMotionData> LoadFAD(const std::string& filePath);
+	std::shared_ptr<FbxAnimationData> LoadFAD(const std::string& filePath);
 };
 

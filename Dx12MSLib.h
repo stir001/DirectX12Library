@@ -7,7 +7,7 @@
 #include "DirectX12/Animation/AnimationPlayer.h"
 #include "DirectX12/Animation/AnimationPlayerManager.h"
 #include "DirectX12/Animation/VMD/VMDLoader.h"
-#include "DirectX12/Animation/VMD/VMDMotion.h"
+#include "DirectX12/Animation/VMD/VMDAnimation.h"
 #include "DirectX12/Animation/VMD/VMDPlayer.h"
 
 /**
@@ -42,9 +42,9 @@
 #include "DirectX12/DrawObject/Fbx/FbxModel.h"
 #include "DirectX12/DrawObject/Fbx/FbxModelController.h"
 #include "DirectX12/DrawObject/Fbx/FbxModelDataCoverter.h"
-#include "DirectX12/DrawObject/Fbx/FbxMotionConverter.h"
-#include "DirectX12/DrawObject/Fbx/FbxMotionData.h"
-#include "DirectX12/DrawObject/Fbx/FbxMotionPlayer.h"
+#include "DirectX12/DrawObject/Fbx/FbxAnimationConverter.h"
+#include "DirectX12/DrawObject/Fbx/FbxAnimationData.h"
+#include "DirectX12/DrawObject/Fbx/FbxAnimationPlayer.h"
 #include "DirectX12/DrawObject/Fbx/FbxStructure.h"
 #include "DirectX12/DrawObject/Image/Image3DController.h"
 #include "DirectX12/DrawObject/Image/ImageController.h"

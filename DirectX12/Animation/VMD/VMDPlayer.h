@@ -17,7 +17,7 @@
 #include <string>
 #include <list>
 
-class VMDMotion;
+class VMDAnimation;
 class ConstantBufferObject;
 struct VMDPose;
 struct PMDBoneData;
@@ -59,10 +59,10 @@ public:
 	void WriteBoneMatrix(std::shared_ptr<ConstantBufferObject>& matrixBuffer);
 
 	/**
-	*	@brief 計算するVMDMotionを設定する
-	*	@param[in]	vmd		計算するVMDMotion
+	*	@brief 計算するVMDAnimationを設定する
+	*	@param[in]	vmd		計算するVMDAnimation
 	*/
-	void SetVMD(std::shared_ptr<VMDMotion>& vmd);
+	void SetVMD(std::shared_ptr<VMDAnimation>& vmd);
 private:
 	/**
 	*	VMDPlayerを保持しているモデルのボーン回転情報

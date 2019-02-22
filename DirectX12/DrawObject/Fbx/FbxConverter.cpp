@@ -265,7 +265,7 @@ void FbxConverter::WriteSkeleton(std::ofstream & stream, const std::shared_ptr<F
 	}
 }
 
-void FbxConverter::WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData)
+void FbxConverter::WriteFADFile(const std::shared_ptr<FbxAnimationData>& animationData)
 {
 	auto path = CreateWriteFilePath(mFilePath);
 	auto dotPoint = path.rfind('.');
@@ -283,11 +283,11 @@ void FbxConverter::WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData
 
 	filestream.write(FAD_FILE_HEADER, 4);
 
-	filestream.write(reinterpret_cast<const char*>(&motionData->mMaxFrame), sizeof(motionData->mMaxFrame));
-	unsigned int dataNum = static_cast<unsigned int>(motionData->mAnimData.size());
+	filestream.write(reinterpret_cast<const char*>(&animationData->mMaxFrame), sizeof(animationData->mMaxFrame));
+	unsigned int dataNum = static_cast<unsigned int>(animationData->mAnimData.size());
 	filestream.write(reinterpret_cast<const char*>(&dataNum), sizeof(dataNum));
 
-	for (auto& data : motionData->mAnimData)
+	for (auto& data : animationData->mAnimData)
 	{
 		unsigned int boneNameLength =static_cast<unsigned int>(data.boneName.size());
 		filestream.write(reinterpret_cast<const char*>(&boneNameLength), sizeof(boneNameLength));

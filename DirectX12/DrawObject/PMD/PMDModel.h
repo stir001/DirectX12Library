@@ -3,7 +3,7 @@
 #include "PMDDataStructure.h"
 
 class ConstantBufferObject;
-class VMDMotion;
+class VMDAnimation;
 class VMDPlayer;
 struct ID3D12DescriptorHeap;
 

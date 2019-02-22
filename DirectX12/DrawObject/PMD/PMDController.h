@@ -12,7 +12,7 @@
 
 class PMDModel;
 class ConstantBufferObject;
-class VMDMotion;
+class VMDAnimation;
 class VMDPlayer;
 class DirectionalLight;
 class Dx12DescriptorHeapObject;
@@ -58,20 +58,20 @@ public:
 
 	/**
 	*	@brief	VMDモーションを設定する
-	*	@param[in]	motion	モデルに適応するモーション
+	*	@param[in]	animation	モデルに適応するモーション
 	*/
-	void SetMotion(std::shared_ptr<VMDMotion> motion);
+	void SetAnimation(std::shared_ptr<VMDAnimation> animation);
 
 	/**
 	*	@brief	設定したモーションを再生する
 	*	@param[in]	loopFlag	ループするかどうかの設定 true:ループする false:ループしない
 	*/
-	void PlayMotion(bool isLoop = false);
+	void PlayAnimation(bool isLoop = false);
 
 	/**
 	*	設定したモーションの再生を止める
 	*/
-	void StopMotion();
+	void StopAnimation();
 
 	/**
 	*	@brief	モデルに適応するライトを設定する

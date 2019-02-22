@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "FbxModelController.h"
 #include "FbxModel.h"
-#include "FbxMotionPlayer.h"
+#include "FbxAnimationPlayer.h"
 #include "Master/Dx12Ctrl.h"
 #include "Light/LightObject.h"
 #include "Buffer/ConstantBufferObject.h"
@@ -85,13 +85,13 @@ FbxModelController::FbxModelController(std::shared_ptr<FbxModel>& model,
 	}
 	//çúópÇÃèàóùèIóπ
 
-	mMotionPlayer = std::make_shared<FbxMotionPlayer>(mModel->mSkeleton, mModel->mVertexes,
+	mAnimationPlayer = std::make_shared<FbxAnimationPlayer>(mModel->mSkeleton, mModel->mVertexes,
 		mVertexElements, mModel->mSkeletonIndices, mSkeletonVertexBuffer);
 }
 
 FbxModelController::~FbxModelController()
 {
-	if (mMotionPlayer->GetID() != -1)
+	if (mAnimationPlayer->GetID() != -1)
 	{
 		AnimationPlayerManager::Instance().WaitAnimation();
 	}
@@ -135,24 +135,24 @@ void FbxModelController::SetPipelineState(std::shared_ptr<PipelineStateObject>& 
 	mBundleUpdate = &FbxModelController::UpdateBundle;
 }
 
-void FbxModelController::SetMotion(std::shared_ptr<FbxMotionData>& motion,bool isLoop)
+void FbxModelController::SetAnimation(std::shared_ptr<FbxAnimationData>& animation,bool isLoop)
 {
-	mMotionPlayer->SetMotion(motion, isLoop);
+	mAnimationPlayer->SetAnimation(animation, isLoop);
 }
 
-void FbxModelController::StopMotion() const
+void FbxModelController::StopAnimation() const
 {
-	mMotionPlayer->StopMotion();
+	mAnimationPlayer->StopAnimation();
 }
 
-void FbxModelController::RestartMotion() const
+void FbxModelController::RestartAnimation() const
 {
-	mMotionPlayer->ReStartMotion();
+	mAnimationPlayer->ReStartAnimation();
 }
 
-bool FbxModelController::IsMotionEnd() const
+bool FbxModelController::IsAnimationEnd() const
 {
-	return mMotionPlayer->IsEnd();
+	return mAnimationPlayer->IsEnd();
 }
 
 void  FbxModelController::AddConstantBuffer(std::shared_ptr<ConstantBufferObject>& buffer)

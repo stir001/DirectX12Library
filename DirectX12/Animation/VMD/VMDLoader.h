@@ -12,7 +12,7 @@
 #include <string>
 #include <memory>
 
-class VMDMotion;
+class VMDAnimation;
 class File;
 
 /**
@@ -30,7 +30,7 @@ public:
 	*	@param[in]	path	VMDファイルパス
 	*	@return				ロードしたVMDデータ
 	*/
-	std::shared_ptr<VMDMotion> LoadMotion(const std::string& path);
+	std::shared_ptr<VMDAnimation> LoadAnimation(const std::string& path);
 private:
 
 	/**
@@ -41,12 +41,12 @@ private:
 	/**
 	*	VMDデータを保持する
 	*/
-	std::map<std::string, std::shared_ptr<VMDMotion>> mMotions;
+	std::map<std::string, std::shared_ptr<VMDAnimation>> mAnimations;
 	
 	/**
 	*	ロードするVMDの一時保存用
 	*/
-	std::shared_ptr<VMDMotion> mLoadingMotion;
+	std::shared_ptr<VMDAnimation> mLoadingAnimation;
 
 	/**
 	*	@biref	VMDのヘッダ部分をロードする
@@ -56,7 +56,7 @@ private:
 	/**
 	*	@brief	VMDのモーションデータ部分をロードする
 	*/
-	void LoadMotionDatas();
+	void LoadAnimationDatas();
 
 	/**
 	*	@brief	VMDのモーションデータ部からポーズを計算し

@@ -135,9 +135,6 @@
     <ClInclude Include="targetver.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\Animation\Motion.h">
-      <Filter>DirectX12\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Animation\Animation.h">
       <Filter>DirectX12\Animation</Filter>
     </ClInclude>
@@ -146,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h">
       <Filter>DirectX12\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\Animation\VMD\VMDMotion.h">
-      <Filter>DirectX12\Animation\VMD</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\Animation\VMD\VMDPlayer.h">
       <Filter>DirectX12\Animation\VMD</Filter>
@@ -214,15 +208,6 @@
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.h">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.h">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionData.h">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxStructure.h">
@@ -570,11 +555,20 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FADLoader.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationConverter.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationData.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Fbx\FbxAnimationPlayer.h">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Animation\VMD\VMDAnimation.h">
+      <Filter>DirectX12\Animation\VMD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX12\Animation\Motion.cpp">
-      <Filter>DirectX12\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
       <Filter>DirectX12\Animation</Filter>
     </ClCompile>
@@ -583,9 +577,6 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp">
       <Filter>DirectX12\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\Animation\VMD\VMDMotion.cpp">
-      <Filter>DirectX12\Animation\VMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\VMD\VMDPlayer.cpp">
       <Filter>DirectX12\Animation\VMD</Filter>
@@ -651,15 +642,6 @@
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxModelDataCoverter.cpp">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionConverter.cpp">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionData.cpp">
-      <Filter>DirectX12\DrawObject\Fbx</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxMotionPlayer.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxStructure.cpp">
@@ -991,6 +973,18 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Fbx\FADLoader.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationConverter.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationData.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Fbx\FbxAnimationPlayer.cpp">
+      <Filter>DirectX12\DrawObject\Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Animation\VMD\VMDAnimation.cpp">
+      <Filter>DirectX12\Animation\VMD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

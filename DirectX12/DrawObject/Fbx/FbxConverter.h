@@ -8,7 +8,7 @@ class FbxModelDataConverter;
 class LightObject;
 class PipelineStateObject;
 class RootSignatureObject;
-class FbxMotionData;
+class FbxAnimationData;
 
 namespace Fmd {
 	class FMDLoader;
@@ -66,7 +66,7 @@ private:
 	void WriteIndices(std::ofstream& stream, const std::shared_ptr<Fbx::FbxModelData>& modelData);
 	void WriteMaterials(std::ofstream& stream, const std::shared_ptr<Fbx::FbxModelData>& modelData);
 	void WriteSkeleton(std::ofstream& stream, const std::shared_ptr<Fbx::FbxModelData>& modelData);
-	void WriteFADFile(const std::shared_ptr<FbxMotionData>& motionData);
+	void WriteFADFile(const std::shared_ptr<FbxAnimationData>& animationData);
 
 	static FbxConverter* mInstance;
 

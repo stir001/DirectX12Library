@@ -78,17 +78,17 @@ void PMDController::DrawShadow()
 	mCmdList->SetDrawController(shared_from_this());
 }
 
-void PMDController::SetMotion(std::shared_ptr<VMDMotion> motion)
+void PMDController::SetAnimation(std::shared_ptr<VMDAnimation> animation)
 {
-	mVmdPlayer->SetVMD(motion);
+	mVmdPlayer->SetVMD(animation);
 }
 
-void PMDController::PlayMotion(bool loopFlag)
+void PMDController::PlayAnimation(bool loopFlag)
 {
 	mVmdPlayer->Play(loopFlag);
 }
 
-void PMDController::StopMotion()
+void PMDController::StopAnimation()
 {
 	mVmdPlayer->Stop();
 }
