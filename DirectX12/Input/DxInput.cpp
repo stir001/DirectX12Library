@@ -2,16 +2,12 @@
 #include "DxInput.h"
 #include "Master/Dx12Ctrl.h"
 
-//#include <Xinput.h>
-#include <Windows.h>
-
-#pragma comment(lib,"xinput.lib")
-
 DxInput::DxInput()
 {
 	GetKeyboardState(mKeyState);
 	GetCursorPos(&mMousePos.pos);
 	mHWND = Dx12Ctrl::Instance().GetWndHandle();
+	mXInputState.resize(PAD_NUM);
 }
 
 DxInput::~DxInput()
@@ -21,6 +17,10 @@ DxInput::~DxInput()
 bool DxInput::UpdateKeyState()
 {
 	memcpy(mPreKeyState, mKeyState, sizeof(mKeyState));
+	for (unsigned int i = 0; i < PAD_NUM; ++i)
+	{
+		XInputGetState(i, &mXInputState[i]);
+	}
 	return GetKeyboardState(mKeyState) != 0;
 }
 
@@ -36,17 +36,17 @@ const MousePos DxInput::GetMousePos()
 	return mMousePos;
 }
 
-bool DxInput::IsKeyDown(eVIRTUAL_KEY_INDEX index)const
+bool DxInput::IsKeyDown(VIRTUAL_KEY_INDEX index)const
 {
-	return (mKeyState[index] & eKEY_STATE_CHECK_DOWN) != 0;
+	return (mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_DOWN) != 0;
 }
 
-bool DxInput::IsKeyTrigger(eVIRTUAL_KEY_INDEX index)const
+bool DxInput::IsKeyTrigger(VIRTUAL_KEY_INDEX index)const
 {
-	return ((mKeyState[index] & eKEY_STATE_CHECK_TOGGLE) ^ (mPreKeyState[index] & eKEY_STATE_CHECK_TOGGLE)) != 0;
+	return ((mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE) ^ (mPreKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE)) != 0;
 }
 
-bool DxInput::IsKeyToggle(eVIRTUAL_KEY_INDEX index) const
+bool DxInput::IsKeyToggle(VIRTUAL_KEY_INDEX index) const
 {
-	return (mKeyState[index] & eKEY_STATE_CHECK_TOGGLE) != 0;
+	return (mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE) != 0;
 }

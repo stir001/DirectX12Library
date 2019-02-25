@@ -283,49 +283,49 @@ D3D12_RECT Dx12Camera::GetScissorRect() const
 void Dx12Camera::DefaultMove(const DxInput& input)
 {
 	float vel = 1.0f;
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_W))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_W))
 	{
 		MoveFront(vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_A))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_A))
 	{
 		MoveSide(vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_D))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_D))
 	{
 		MoveSide(-vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_S))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_S))
 	{
 		MoveFront(-vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_SPACE))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_SPACE))
 	{
 		MoveUp(vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_LSHIFT))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_LSHIFT))
 	{
 		MoveUp(-vel);
 	}
 
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_UP))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_UP))
 	{
 		TurnUpDown(vel);
 	}
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_DOWN))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_DOWN))
 	{
 		TurnUpDown(-vel);
 	}
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_RIGHT))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_RIGHT))
 	{
 		TurnRightLeft(vel);
 	}
-	if (input.IsKeyDown(eVIRTUAL_KEY_INDEX_LEFT))
+	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_LEFT))
 	{
 		TurnRightLeft(-vel);
 	}

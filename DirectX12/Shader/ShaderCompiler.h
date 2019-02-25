@@ -57,7 +57,7 @@ public:
 
 	void SetShaderModel(const std::string& shaderModel);
 
-	void SetShaderDirPath(std::string shaderDirPath);
+	void SetShaderDirPath(const std::string& shaderDirPath);
 
 	const std::string& GetShaderDirPath() const;
 

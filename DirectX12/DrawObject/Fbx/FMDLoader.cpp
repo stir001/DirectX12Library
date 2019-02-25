@@ -134,7 +134,6 @@ void FMDLoader::LoadSkeletons(std::ifstream& stream, FMDFileData& modelData)
 	modelData.skeletons.resize(modelData.skeletonNum);
 	int dataSize = 0;
 	{
-		FMDSkeleton skl;
 		dataSize = SKELETON_CONSTANT_DATA_SIZE;
 	}
 	for (auto& s : modelData.skeletons)

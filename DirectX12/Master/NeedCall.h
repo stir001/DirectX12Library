@@ -8,3 +8,7 @@ bool ProcessMessage();
 void Dx12CtrlInit(HINSTANCE hInst,
 	std::string wndName = "DirectX12",
 	unsigned int wndWidth = 1280, unsigned int wndHeight = 720);
+
+void Dx12CtrlEnd();
+
+void SetShaderDir(const std::string& dirPath);

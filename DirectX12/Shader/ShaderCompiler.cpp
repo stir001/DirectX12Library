@@ -168,7 +168,7 @@ void ShaderCompiler::SetShaderModel(const std::string& shaderModel)
 	mShaderModel = shaderModel;
 }
 
-void ShaderCompiler::SetShaderDirPath(std::string shaderDirPath)
+void ShaderCompiler::SetShaderDirPath(const std::string& shaderDirPath)
 {
 	mShaderDirPath = shaderDirPath;
 }

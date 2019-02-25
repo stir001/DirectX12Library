@@ -2,6 +2,7 @@
 #include "Dx12Ctrl.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "Animation/AnimationPlayerManager.h"
+#include "Shader/ShaderCompiler.h"
 
 unsigned int Roundup2Multiplier(unsigned int size)
 {
@@ -48,4 +49,15 @@ void Dx12CtrlInit(HINSTANCE hInst,
 	Dx12Ctrl::Instance().SetWindowSize(wndWidth, wndHeight);
 	Dx12Ctrl::Instance().SetWindowName(wndName);
 	Dx12Ctrl::Instance().Dx12Init(hInst);
+}
+
+void Dx12CtrlEnd()
+{
+	Dx12Ctrl::Instance().Release();
+	Dx12Ctrl::Destroy();
+}
+
+void SetShaderDir(const std::string& dirPath)
+{
+	ShaderCompiler::Instance().SetShaderDirPath(dirPath);
 }
