@@ -1,5 +1,8 @@
 #pragma once
 #include<Windows.h>
+#include<memory>
+
+class Dx12Camera;
 
 unsigned int Roundup2Multiplier(unsigned int size);
 
@@ -12,3 +15,5 @@ void Dx12CtrlInit(HINSTANCE hInst,
 void Dx12CtrlEnd();
 
 void SetShaderDir(const std::string& dirPath);
+
+std::shared_ptr<Dx12Camera> GetCamera(unsigned int cameraIndex);

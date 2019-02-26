@@ -3,6 +3,7 @@
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "Animation/AnimationPlayerManager.h"
 #include "Shader/ShaderCompiler.h"
+#include "Camera/CameraHolder.h"
 
 unsigned int Roundup2Multiplier(unsigned int size)
 {
@@ -60,4 +61,9 @@ void Dx12CtrlEnd()
 void SetShaderDir(const std::string& dirPath)
 {
 	ShaderCompiler::Instance().SetShaderDirPath(dirPath);
+}
+
+std::shared_ptr<Dx12Camera> GetCamera(unsigned int cameraIndex)
+{
+	return Dx12Ctrl::Instance().GetCameraHolder()->GetCamera(cameraIndex);
 }
