@@ -197,7 +197,7 @@
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
-    <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h" />
+    <ClInclude Include="DirectX12\Animation\AnimationPlayerUpdater.h" />
     <ClInclude Include="DirectX12\Animation\VMD\VMDLoader.h" />
     <ClInclude Include="DirectX12\Animation\VMD\VMDAnimation.h" />
     <ClInclude Include="DirectX12\Animation\VMD\VMDPlayer.h" />
@@ -344,7 +344,7 @@
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
-    <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp" />
+    <ClCompile Include="DirectX12\Animation\AnimationPlayerUpdater.cpp" />
     <ClCompile Include="DirectX12\Animation\VMD\VMDLoader.cpp" />
     <ClCompile Include="DirectX12\Animation\VMD\VMDAnimation.cpp" />
     <ClCompile Include="DirectX12\Animation\VMD\VMDPlayer.cpp" />

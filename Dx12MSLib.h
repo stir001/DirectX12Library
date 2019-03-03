@@ -5,7 +5,7 @@
 */
 #include "DirectX12/Animation/Animation.h"
 #include "DirectX12/Animation/AnimationPlayer.h"
-#include "DirectX12/Animation/AnimationPlayerManager.h"
+#include "DirectX12/Animation/AnimationPlayerUpdater.h"
 #include "DirectX12/Animation/VMD/VMDLoader.h"
 #include "DirectX12/Animation/VMD/VMDAnimation.h"
 #include "DirectX12/Animation/VMD/VMDPlayer.h"

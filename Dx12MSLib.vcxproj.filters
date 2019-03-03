@@ -141,9 +141,6 @@
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h">
       <Filter>DirectX12\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\Animation\AnimationPlayerManager.h">
-      <Filter>DirectX12\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Animation\VMD\VMDPlayer.h">
       <Filter>DirectX12\Animation\VMD</Filter>
     </ClInclude>
@@ -567,15 +564,15 @@
     <ClInclude Include="DirectX12\Animation\VMD\VMDAnimation.h">
       <Filter>DirectX12\Animation\VMD</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Animation\AnimationPlayerUpdater.h">
+      <Filter>DirectX12\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
       <Filter>DirectX12\Animation</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp">
-      <Filter>DirectX12\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\Animation\AnimationPlayerManager.cpp">
       <Filter>DirectX12\Animation</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\VMD\VMDPlayer.cpp">
@@ -985,6 +982,9 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\VMD\VMDAnimation.cpp">
       <Filter>DirectX12\Animation\VMD</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Animation\AnimationPlayerUpdater.cpp">
+      <Filter>DirectX12\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

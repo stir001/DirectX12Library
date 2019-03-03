@@ -9,7 +9,7 @@
 *	@par 最終更新日	更新日
 */
 
-class AnimationPlayerManager;
+class AnimationPlayerUpdater;
 
 /**
 *	@ingroup AnimationPlayer
@@ -18,7 +18,7 @@ class AnimationPlayerManager;
 */
 class AnimationPlayer
 {
-	friend AnimationPlayerManager;
+	friend AnimationPlayerUpdater;
 public:
 	AnimationPlayer();
 	virtual ~AnimationPlayer();

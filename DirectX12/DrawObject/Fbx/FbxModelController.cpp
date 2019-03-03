@@ -17,7 +17,7 @@
 #include "Buffer/ShaderResourceObject.h"
 #include "CommandList/Dx12CommandList.h"
 #include "ViewDesc/Dx12BufferViewDesc.h"
-#include "Animation/AnimationPlayerManager.h"
+#include "Animation/AnimationPlayerUpdater.h"
 
 using namespace Fbx;
 using namespace DirectX;
@@ -93,7 +93,7 @@ FbxModelController::~FbxModelController()
 {
 	if (mAnimationPlayer->GetID() != -1)
 	{
-		AnimationPlayerManager::Instance().WaitAnimation();
+		AnimationPlayerUpdater::Instance().WaitAnimation();
 	}
 }
 

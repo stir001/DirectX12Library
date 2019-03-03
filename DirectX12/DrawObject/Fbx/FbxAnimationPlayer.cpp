@@ -2,7 +2,7 @@
 #include "FbxAnimationPlayer.h"
 #include "FbxAnimationData.h"
 #include "Util/XMFloatOperators.h"
-#include "Animation/AnimationPlayerManager.h"
+#include "Animation/AnimationPlayerUpdater.h"
 #include "Util/XMFloatOperators.h"
 #include "Buffer/VertexBufferObject.h"
 
@@ -33,7 +33,7 @@ FbxAnimationPlayer::~FbxAnimationPlayer()
 {
 	if (mAnimationId != -1)
 	{
-		mAnimationId = AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);
+		mAnimationId = AnimationPlayerUpdater::Instance().RemoveAnimation(mAnimationId);
 	}
 }
 
@@ -43,11 +43,11 @@ void FbxAnimationPlayer::SetAnimation(std::shared_ptr<FbxAnimationData>& data, b
 	{
 		return;
 	}
-	AnimationPlayerManager::Instance().WaitAnimation();
+	AnimationPlayerUpdater::Instance().WaitAnimation();
 	mNextData = data;
 	mIsLoop = isLoop;
-	mAnimationId = AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);
-	mAnimationId = AnimationPlayerManager::Instance().SetAnimation(this);
+	mAnimationId = AnimationPlayerUpdater::Instance().RemoveAnimation(mAnimationId);
+	mAnimationId = AnimationPlayerUpdater::Instance().SetAnimation(this);
 }
 
 void FbxAnimationPlayer::Update()
@@ -236,10 +236,10 @@ void FbxAnimationPlayer::ChangeNextAnimationData()
 
 void FbxAnimationPlayer::StopAnimation() const
 {
-	AnimationPlayerManager::Instance().StopAnimation(mAnimationId);
+	AnimationPlayerUpdater::Instance().StopAnimation(mAnimationId);
 }
 
 void FbxAnimationPlayer::ReStartAnimation() const
 {
-	AnimationPlayerManager::Instance().ReStartAnimation(mAnimationId);
+	AnimationPlayerUpdater::Instance().ReStartAnimation(mAnimationId);
 }

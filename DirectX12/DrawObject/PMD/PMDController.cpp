@@ -16,7 +16,7 @@
 #include "Camera/Dx12Camera.h"
 #include "CommandList/Dx12CommandList.h"
 #include "Util/XMFloatOperators.h"
-#include "Animation/AnimationPlayerManager.h"
+#include "Animation/AnimationPlayerUpdater.h"
 
 PMDController::PMDController(std::shared_ptr<PMDModel>& model, std::shared_ptr<DirectionalLight>& dlight, const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<Dx12CommandList>& cmdList)
@@ -37,7 +37,7 @@ PMDController::~PMDController()
 {
 	if (mVmdPlayer->GetID() != -1)
 	{
-		AnimationPlayerManager::Instance().WaitAnimation();
+		AnimationPlayerUpdater::Instance().WaitAnimation();
 	}
 }
 

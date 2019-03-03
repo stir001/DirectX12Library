@@ -31,12 +31,12 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 	:DrawObjectController(img->GetTextureName() + "Bundle", dev, uicmdList)
 	, mBackCmdList(backcmdList)
 	, mImgObj(img)
-	, mVertex{ { { 0.f, img->GetImageSize().y, 0.f },{ 0.f, 0.f }, img->GetGamma()}/* v1 */
-			,{ { img->GetImageSize().x,img->GetImageSize().y, 0.f },{ 1.f, 0.f }, img->GetGamma() }/* v2 */
-			,{ { 0.0f,0.0f , 0.0f },{ 0.f, 1.f }, img->GetGamma() }/* v3 */
-			,{ { img->GetImageSize().x, 0.0f, 0.f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
-	, mScaleX(1.0f), mScaleY(1.0f), mRota(0.0f), mPivot{ 0.f,0.f,0.f }, mCenterOffset(0,0,0)
-	, mRect(std::make_shared<Rect>(DirectX::XMFLOAT3(img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0), img->GetImageSize().x, img->GetImageSize().y))
+	, mVertex{ { { 0.0f, img->GetImageSize().y, 0.0f },{ 0.0f, 0.0f }, img->GetGamma()}/* v1 */
+			,{ { img->GetImageSize().x,img->GetImageSize().y, 0.0f },{ 1.f, 0.0f }, img->GetGamma() }/* v2 */
+			,{ { 0.0f,0.0f , 0.0f },{ 0.0f, 1.f }, img->GetGamma() }/* v3 */
+			,{ { img->GetImageSize().x, 0.0f, 0.0f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
+	, mScaleX(1.0f), mScaleY(1.0f), mRota(0.0f), mPivot{ 0.0f,0.0f,0.0f }, mCenterOffset(0.0f, 0.0f, 0.0f)
+	, mRect(std::make_shared<Rect>(DirectX::XMFLOAT3(img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0.0f), img->GetImageSize().x, img->GetImageSize().y))
 	, mTurnSign(1,1), mBundleUpdate(&ImageController::UpdateBundle)
 {
 	mPipelinestate = pipelinestate;

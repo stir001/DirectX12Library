@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "AnimationPlayerManager.h"
+#include "AnimationPlayerUpdater.h"
 #include "AnimationPlayer.h"
 
 #include <Windows.h>
 #include <list>
 
-AnimationPlayerManager::AnimationPlayerManager() :mAnimations(), mIsThreadRun(true), mUpdate(&AnimationPlayerManager::CommonUpdate)
+AnimationPlayerUpdater::AnimationPlayerUpdater() :mAnimations(), mIsThreadRun(true), mUpdate(&AnimationPlayerUpdater::CommonUpdate)
 {
 	mThreadObject = ((std::thread([](std::map<int,AnimatiomInfo>& animInfo) {
 		for (auto& anim : animInfo)
@@ -18,7 +18,7 @@ AnimationPlayerManager::AnimationPlayerManager() :mAnimations(), mIsThreadRun(tr
 	}, mAnimations)));
 }
 
-AnimationPlayerManager::~AnimationPlayerManager()
+AnimationPlayerUpdater::~AnimationPlayerUpdater()
 {
 	if (mThreadObject.joinable())
 	{
@@ -26,17 +26,17 @@ AnimationPlayerManager::~AnimationPlayerManager()
 	}
 }
 
-AnimationPlayerManager& AnimationPlayerManager::Instance()
+AnimationPlayerUpdater& AnimationPlayerUpdater::Instance()
 {
-	static AnimationPlayerManager* animplayer = nullptr;
+	static AnimationPlayerUpdater* animplayer = nullptr;
 	if (animplayer == nullptr)
 	{
-		animplayer = new AnimationPlayerManager();
+		animplayer = new AnimationPlayerUpdater();
 	}
 	return *animplayer;
 }
 
-int AnimationPlayerManager::SetAnimation(AnimationPlayer* anim)
+int AnimationPlayerUpdater::SetAnimation(AnimationPlayer* anim)
 {
 	AnimatiomInfo animInfo;
 	animInfo.id = FindMostSmallId();
@@ -46,7 +46,7 @@ int AnimationPlayerManager::SetAnimation(AnimationPlayer* anim)
 	return animInfo.id;
 }
 
-void AnimationPlayerManager::StopAnimation(int id)
+void AnimationPlayerUpdater::StopAnimation(int id)
 {
 	if (id == -1)
 	{
@@ -56,7 +56,7 @@ void AnimationPlayerManager::StopAnimation(int id)
 	itr->second.isPaly = false;
 }
 
-void AnimationPlayerManager::ReStartAnimation(int id)
+void AnimationPlayerUpdater::ReStartAnimation(int id)
 {
 	if (id == -1)
 	{
@@ -66,7 +66,7 @@ void AnimationPlayerManager::ReStartAnimation(int id)
 	itr->second.isPaly = true;
 }
 
-void AnimationPlayerManager::UpdateAnimations()
+void AnimationPlayerUpdater::UpdateAnimations()
 {
 	if (mIsThreadRun)
 	{
@@ -76,7 +76,7 @@ void AnimationPlayerManager::UpdateAnimations()
 	(this->*mUpdate)();
 }
 
-int AnimationPlayerManager::RemoveAnimation(int id)
+int AnimationPlayerUpdater::RemoveAnimation(int id)
 {
 	if (id == -1 || mAnimations.size() == 0)
 	{
@@ -95,7 +95,7 @@ int AnimationPlayerManager::RemoveAnimation(int id)
 	return -1;
 }
 
-std::map<int,AnimationPlayerManager::AnimatiomInfo>::iterator AnimationPlayerManager::FindAnimItr(int id)
+std::map<int,AnimationPlayerUpdater::AnimatiomInfo>::iterator AnimationPlayerUpdater::FindAnimItr(int id)
 {
 	if (id != -1)
 	{
@@ -104,7 +104,7 @@ std::map<int,AnimationPlayerManager::AnimatiomInfo>::iterator AnimationPlayerMan
 	return mAnimations.end();
 }
 
-int AnimationPlayerManager::FindMostSmallId()
+int AnimationPlayerUpdater::FindMostSmallId()
 {
 	int id = 0;
 	bool isFind = false;
@@ -131,11 +131,11 @@ int AnimationPlayerManager::FindMostSmallId()
 	return id;
 }
 
-void AnimationPlayerManager::NonUpdate()
+void AnimationPlayerUpdater::NonUpdate()
 {
 }
 
-void AnimationPlayerManager::CommonUpdate()
+void AnimationPlayerUpdater::CommonUpdate()
 {
 	if (mAnimations.size() <= 0)
 	{
@@ -161,7 +161,7 @@ void AnimationPlayerManager::CommonUpdate()
 	mIsThreadRun = true;
 }
 
-void AnimationPlayerManager::WaitAnimation()
+void AnimationPlayerUpdater::WaitAnimation()
 {
 	if (mIsThreadRun)
 	{
@@ -174,13 +174,13 @@ void AnimationPlayerManager::WaitAnimation()
 	}
 }
 
-void AnimationPlayerManager::StopAllAnimation()
+void AnimationPlayerUpdater::StopAllAnimation()
 {
-	mUpdate = &AnimationPlayerManager::NonUpdate;
+	mUpdate = &AnimationPlayerUpdater::NonUpdate;
 }
 
-void AnimationPlayerManager::ReStartAllAnimation()
+void AnimationPlayerUpdater::ReStartAllAnimation()
 {
-	mUpdate = &AnimationPlayerManager::CommonUpdate;
+	mUpdate = &AnimationPlayerUpdater::CommonUpdate;
 }
 

@@ -3,7 +3,7 @@
 #include "VMDAnimation.h"
 #include "DrawObject/PMD/PMDModel.h"
 #include "Buffer/ConstantBufferObject.h"
-#include "Animation/AnimationPlayerManager.h"
+#include "Animation/AnimationPlayerUpdater.h"
 #include "Util//XMFloatOperators.h"
 
 #include <algorithm>
@@ -21,7 +21,7 @@ VMDPlayer::~VMDPlayer()
 {
 	if (mAnimationId != -1)
 	{
-		AnimationPlayerManager::Instance().WaitAnimation();
+		AnimationPlayerUpdater::Instance().WaitAnimation();
 	}
 }
 
@@ -157,7 +157,7 @@ void VMDPlayer::Play(bool flag)
 {
 	mIsLoop = flag;
 	mUpdate = &VMDPlayer::PlayingUpdate;
-	mAnimationId = AnimationPlayerManager::Instance().SetAnimation(this);
+	mAnimationId = AnimationPlayerUpdater::Instance().SetAnimation(this);
 	if (mIsLoop)
 	{
 		mEndCheck = &VMDPlayer::NonCheck;
@@ -180,7 +180,7 @@ void VMDPlayer::NonCheck()
 void VMDPlayer::Stop()
 {
 	mUpdate = &VMDPlayer::StopUpdate;
-	AnimationPlayerManager::Instance().RemoveAnimation(mAnimationId);
+	AnimationPlayerUpdater::Instance().RemoveAnimation(mAnimationId);
 	mAnimationId = -1;
 }
 

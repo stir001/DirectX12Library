@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Dx12Ctrl.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
-#include "Animation/AnimationPlayerManager.h"
+#include "Animation/AnimationPlayerUpdater.h"
 #include "Shader/ShaderCompiler.h"
 #include "Camera/CameraHolder.h"
 
@@ -19,9 +19,9 @@ unsigned int Roundup2Multiplier(unsigned int size)
 
 void CallEveryFrame()
 {
-	AnimationPlayerManager::Instance().WaitAnimation();
+	AnimationPlayerUpdater::Instance().WaitAnimation();
 	RenderingPassManager::Instance().Render();
-	AnimationPlayerManager::Instance().UpdateAnimations();
+	AnimationPlayerUpdater::Instance().UpdateAnimations();
 }
 
 bool ProcessMessage()
