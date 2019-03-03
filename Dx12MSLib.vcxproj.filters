@@ -567,6 +567,9 @@
     <ClInclude Include="DirectX12\Animation\AnimationPlayerUpdater.h">
       <Filter>DirectX12\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Dx12MSLibCommon.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
