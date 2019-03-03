@@ -51,6 +51,14 @@ public:
 		const std::string& dsName,
 		bool existRootSignature);
 
+	ShaderDatas CompileShaderFromResource(int reosurceID,
+		const std::string& vsName,
+		const std::string& psName,
+		const std::string& gsName,
+		const std::string& hsName,
+		const std::string& dsName,
+		bool existRootSignature);
+
 	void ReleaseShader(std::string shaderpath);
 
 	void AddDefineMacro(const std::string& name, const std::string& def);

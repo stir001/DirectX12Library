@@ -146,6 +146,11 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	return data;
 }
 
+ShaderDatas ShaderCompiler::CompileShaderFromResource(int reosurceID, const std::string & vsName, const std::string & psName, const std::string & gsName, const std::string & hsName, const std::string & dsName, bool existRootSignature)
+{
+	return ShaderDatas();
+}
+
 void ShaderCompiler::ReleaseShader(std::string shaderpath)
 {
 	mDatas.erase(shaderpath);
