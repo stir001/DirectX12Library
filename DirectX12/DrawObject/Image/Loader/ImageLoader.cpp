@@ -37,7 +37,7 @@ ImageLoader::~ImageLoader()
 	mImages.clear();
 }
 
-std::shared_ptr<ImageController> ImageLoader::LoadImageData(const std::string& path)
+std::shared_ptr<ImageController> ImageLoader::LoadImage2D(const std::string& path)
 {
 	std::shared_ptr<ImageController> imgCtrl;
 	auto itr = mImages.find(path);

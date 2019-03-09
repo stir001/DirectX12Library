@@ -56,22 +56,33 @@ void DrawController3D::SetScale(float scaleX, float scaleY, float scaleZ)
 	UpdateMatrix();
 }
 
-void  DrawController3D::AddRotaX(float deg)
+void  DrawController3D::AddRotaX(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotationMatrix, XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotationMatrix, DirectX::XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationX(rad));
 	UpdateMatrix();
 }
 
-void  DrawController3D::AddRotaY(float deg)
+void  DrawController3D::AddRotaY(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotationMatrix, XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotationMatrix, DirectX::XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationY(rad));
 	UpdateMatrix();
 }
 
-void  DrawController3D::AddRotaZ(float deg)
+void  DrawController3D::AddRotaZ(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotationMatrix, XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotationMatrix, DirectX::XMLoadFloat4x4(&mRotationMatrix) * DirectX::XMMatrixRotationZ(rad));
 	UpdateMatrix();
+}
+
+void DrawController3D::SetRota(float x, float y, float z)
+{
+	DirectX::XMStoreFloat4x4(&mRotationMatrix, DirectX::XMMatrixRotationRollPitchYaw(x, y, z));
+	UpdateMatrix();
+}
+
+void DrawController3D::SetRota(const DirectX::XMFLOAT3 & rota)
+{
+	SetRota(rota.x, rota.y, rota.z);
 }
 
 void DrawController3D::SetRotaQuaternion(const DirectX::XMFLOAT4& quaternion)

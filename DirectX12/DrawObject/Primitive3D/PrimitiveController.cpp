@@ -122,23 +122,23 @@ void PrimitiveController::SetScale(float scaleX, float scaleY, float scaleZ)
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
-void PrimitiveController::AddRotaX(float deg)
+void PrimitiveController::AddRotaX(float rad)
 {
-	DrawController3D::AddRotaX(deg);
+	DrawController3D::AddRotaX(rad);
 	mInstanceDatas[0].aMatrix = mModelMatrix;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
-void PrimitiveController::AddRotaY(float deg)
+void PrimitiveController::AddRotaY(float rad)
 {
-	DrawController3D::AddRotaY(deg);
+	DrawController3D::AddRotaY(rad);
 	mInstanceDatas[0].aMatrix = mModelMatrix;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
 
-void PrimitiveController::AddRotaZ(float deg)
+void PrimitiveController::AddRotaZ(float rad)
 {
-	DrawController3D::AddRotaZ(deg);
+	DrawController3D::AddRotaZ(rad);
 	mInstanceDatas[0].aMatrix = mModelMatrix;
 	mInstanceUpdate = &PrimitiveController::UpdateInstanceVertexBuffer;
 }
@@ -229,6 +229,16 @@ void PrimitiveController::DrawShadow()
 void PrimitiveController::SetShadowmapCommandList(std::shared_ptr<Dx12CommandList>& cmdList)
 {
 	mShadowmapCmdList = cmdList;
+}
+
+void PrimitiveController::SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootSignature)
+{
+	mRootsignature = rootSignature;
+}
+
+void PrimitiveController::SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelineState)
+{
+	mPipelinestate = pipelineState;
 }
 
 void PrimitiveController::UpdateInstanceVertexBuffer()

@@ -22,13 +22,14 @@ class RootSignatureObject;
 class PipelineStateObject;
 class IndexBufferObject;
 class VertexBufferObject;
+class DrawCallIssuer;
 
 /**
 *	@ingroup Dx12CommandList
 *	@class Dx12CommandList
 *	@brief ID3D12GraphicsCommandListをラップしたクラス
 */
-class Dx12CommandList
+class Dx12CommandList : public std::enable_shared_from_this<Dx12CommandList>
 {
 public:
 	/**
@@ -235,6 +236,17 @@ public:
 	*	@param[in]	src	コピー元
 	*/
 	void CopyResource(std::shared_ptr<Dx12BufferObject> dst, std::shared_ptr<Dx12BufferObject> src);
+
+	/**
+	*	@brief	描画関係の命令発行クラスの登録
+	*	@param[in]	drawIssuer	描画命令発行クラス
+	*/
+	void SetDrawCallIssuer(const std::shared_ptr<DrawCallIssuer>& drawIssuer);
+
+	/**
+	*	描画命令をコマンドリストに積む
+	*/
+	void StackDrawCall();
 private:
 	/**
 	*	コマンドリストの名前
@@ -256,7 +268,15 @@ private:
 	*/
 	const D3D12_COMMAND_LIST_TYPE mType;
 
+	/**
+	*	描画命令を登録したコントローラー
+	*/
 	std::vector<std::shared_ptr<DrawObjectController>> mControllers;
+
+	/**
+	*	描画命令を発行するIssuer
+	*/
+	std::vector<std::shared_ptr<DrawCallIssuer>> mDrawIssuers;
 
 	/**
 	*	@brief	ID3D12DeviecがRemoveされたかどうかをチェックする

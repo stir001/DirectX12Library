@@ -27,9 +27,9 @@ float DotXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
 DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
-DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float deg);
+DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad);
 
-DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float deg);
+DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float rad);
 
 DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& val);
 
@@ -52,6 +52,8 @@ DirectX::XMFLOAT4X4 operator+=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT
 DirectX::XMFLOAT4X4 operator-(const DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval);
 
 DirectX::XMFLOAT4X4 operator-=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval);
+
+DirectX::XMFLOAT4X4 operator-(const DirectX::XMFLOAT4X4& val);
 
 DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4X4& rval);
 

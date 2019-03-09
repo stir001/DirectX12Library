@@ -20,19 +20,19 @@ void Transform3DCalculator::AddScale(const DirectX::XMFLOAT3& scale)
 	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixScaling(scale.x, scale.y, scale.z));
 }
 
-void Transform3DCalculator::AddRotaX(float deg)
+void Transform3DCalculator::AddRotaX(float rad)
 {
-	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(deg)));
+	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationX(rad));
 }
 
-void Transform3DCalculator::AddRotaY(float deg)
+void Transform3DCalculator::AddRotaY(float rad)
 {
-	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(deg)));
+	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationY(rad));
 }
 
-void Transform3DCalculator::AddRotaZ(float deg)
+void Transform3DCalculator::AddRotaZ(float rad)
 {
-	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(deg)));
+	mAMatrix = Multiplication(mAMatrix, DirectX::XMMatrixRotationY(rad));
 }
 
 void Transform3DCalculator::AddRotaQuaternion(const DirectX::XMFLOAT4& quaternion)

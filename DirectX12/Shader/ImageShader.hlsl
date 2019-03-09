@@ -14,17 +14,26 @@ struct ImageOutput
     float gamma : GAMMA;
 };
 
-[RootSignature(IMGRS)]
-ImageOutput ImageVS(float4 pos : POSITION, float2 uv : TEXCOORD, float gamma:GAMMA)
+struct VSInput
 {
-    ImageOutput o;
-	o.svpos = pos;
-	o.uv = uv;
-    o.gamma = gamma;
-	return o;
-}
+    float4 pos : POSITION;
+    float gamma : GAMMA;
+    uint vertexID : VERTEXID;
+    float2 uv[4] : TEXCOORD;
+	float4x4 mat : INSTANCEMAT;
+};
 
-float4 ImagePS(ImageOutput input) : SV_Target
-{
-    return pow(tex.Sample(smp, input.uv), input.gamma);
-}
+[RootSignature(IMGRS)]
+ImageOutput ImageVS(VSInput input)
+ {
+	ImageOutput o;
+	o.svpos = mul(input.mat, input.pos);
+    o.uv = input.uv[input.vertexID];
+    o.gamma = input.gamma;
+	return o;
+ }
+
+ float4 ImagePS(ImageOutput input) : SV_Target
+ {
+     return pow(tex.Sample(smp, input.uv), input.gamma);
+ }

@@ -136,23 +136,23 @@ void Dx12Camera::ParallelSetPos(const DirectX::XMFLOAT3 & pos)
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::AddXAxisRota(float deg)
+void Dx12Camera::AddXAxisRota(float rad)
 {
-	AddRotationAxis(XMMatrixRotationX(XMConvertToRadians(deg)));
+	AddRotationAxis(DirectX::XMMatrixRotationX(rad));
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::AddYAxisRota(float deg)
+void Dx12Camera::AddYAxisRota(float rad)
 {
-	AddRotationAxis(XMMatrixRotationY(XMConvertToRadians(deg)));
+	AddRotationAxis(DirectX::XMMatrixRotationY(rad));
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::AddZAxisRota(float deg)
+void Dx12Camera::AddZAxisRota(float rad)
 {
-	AddRotationAxis(XMMatrixRotationZ(XMConvertToRadians(deg)));
+	AddRotationAxis(DirectX::XMMatrixRotationZ(rad));
 	UpdateElement();
 	(this->*mHolderSetter)();
 }
@@ -169,7 +169,7 @@ void Dx12Camera::MoveFront(float vel)
 {
 	DirectX::XMFLOAT3 target = { mElement.target.x, mElement.target.y ,mElement.target.z };
 	DirectX::XMFLOAT3 eye = { mElement.eye.x, mElement.eye.y ,mElement.eye.z };
-	XMFLOAT3 eyeToTarget = target - eye;
+	DirectX::XMFLOAT3 eyeToTarget = target - eye;
 	eyeToTarget = NormalizeXMFloat3(eyeToTarget);
 
 	eyeToTarget *= vel;
@@ -191,13 +191,13 @@ void Dx12Camera::MoveSide(float vel)
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::TurnRightLeft(float deg)
+void Dx12Camera::TurnRightLeft(float rad)
 {
 	DirectX::XMVECTOR t = DirectX::XMLoadFloat4(&mElement.target);
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
-	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(GetLocalUpper(), deg));
+	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(GetLocalUpper(), rad));
 	trans *= DirectX::XMMatrixTranslationFromVector(e);
 	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
@@ -206,7 +206,7 @@ void Dx12Camera::TurnRightLeft(float deg)
 	(this->*mHolderSetter)();
 }
 
-void Dx12Camera::TurnUpDown(float deg)
+void Dx12Camera::TurnUpDown(float rad)
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMFLOAT4 target = mElement.target;
@@ -215,7 +215,7 @@ void Dx12Camera::TurnUpDown(float deg)
 	DirectX::XMVECTOR t = DirectX::XMLoadFloat4(&mElement.target);
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
-	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(cross, deg));
+	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(cross, rad));
 	trans *= DirectX::XMMatrixTranslationFromVector(e);
 	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);

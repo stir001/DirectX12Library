@@ -10,12 +10,12 @@
 */
 #include <memory>
 #include <wrl.h>
-#include <d3d12.h>
 #include <string>
 
 class RootSignatureObject;
 class PipelineStateObject;
 class Dx12CommandList;
+struct ID3D12Device;
 
 /**
 *	@ingroup DrawObjectController
@@ -34,17 +34,17 @@ public:
 		std::shared_ptr<Dx12CommandList>& cmdList);
 	virtual ~DrawObjectController();
 
-	/**
-	*	@brief	使用するrootsignatureを設定する
-	*	@param[in]	rootsignature	使用するrootsignature
-	*/
-	virtual void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature);
+	///**
+	//*	@brief	使用するrootsignatureを設定する
+	//*	@param[in]	rootsignature	使用するrootsignature
+	//*/
+	//virtual void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature);
 
-	/**
-	*	@brief	使用するpipelinestateを設定する
-	*	@param[in]	pipelinestate	使用するpipelinestate
-	*/
-	virtual void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate);
+	///**
+	//*	@brief	使用するpipelinestateを設定する
+	//*	@param[in]	pipelinestate	使用するpipelinestate
+	//*/
+	//virtual void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate);
 
 	/**
 	*	@brief	使用するコマンドリストを設定する

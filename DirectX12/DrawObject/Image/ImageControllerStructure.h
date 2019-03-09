@@ -5,7 +5,7 @@
 *
 *	@author 真鍋奨一郎
 *
-*	@par 最終更新日	2018/9/14
+*	@par 最終更新日	2019/3/07
 */
 #include <DirectXMath.h>
 
@@ -18,17 +18,25 @@ struct ImageVertex
 	/**
 	*	座標
 	*/
-	DirectX::XMFLOAT3 pos;
-
-	/**
-	*	uv座標
-	*/
-	DirectX::XMFLOAT2 uv;
+	DirectX::XMFLOAT4 pos;
 
 	/**
 	*	ガンマ値
 	*/
 	float gamma;
+
+	/**
+	*	頂点ID
+	*/
+	unsigned int vertexID;
+};
+
+struct ImageUVSet
+{
+	/**
+	*	uv座標
+	*/
+	DirectX::XMFLOAT2 uv[4];
 };
 
 /**

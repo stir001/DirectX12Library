@@ -73,21 +73,21 @@ public:
 
 	/**
 	*	@brief	画像をx軸中心で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaX(float deg);
+	void AddRotaX(float rad);
 
 	/**
 	*	@brief	画像をy軸中心で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaY(float deg);
+	void AddRotaY(float rad);
 
 	/**
 	*	@brief	画像をz軸中心で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaZ(float deg);
+	void AddRotaZ(float rad);
 
 	/**
 	*	@brief	画像の任意の矩形部分を表示するように設定する
@@ -169,12 +169,6 @@ public:
 	*	@param[in]	pipelinestate	使用するpipelinestate
 	*/
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
-
-	/**
-	*	@brief	使用するコマンドリストを設定する
-	*	@param[in]	cmdList		設定するコマンドリスト
-	*/
-	void SetCommandList(Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& cmdList);
 
 	/**
 	*	@brief	画像の名前を取得する
@@ -292,7 +286,7 @@ private:
 	/**
 	*	アフィン行列をバッファに書き込む
 	*/
-	void UpdateBuffer();
+	void UpdateInstanceMatrix();
 
 	/**
 	*	バンドルを更新する

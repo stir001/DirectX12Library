@@ -16,7 +16,6 @@
 class TextureObject;
 class ShaderResourceObject;
 
-struct ID3D12GraphicsCommandList;
 struct ImageVertex;
 
 /**

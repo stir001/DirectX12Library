@@ -106,7 +106,7 @@ void FbxModelController::Draw()
 	
 	for (auto& buffer : mAddConstantBuffers)
 	{
-		buffer->UpdateBuffer();
+		buffer->UpdateInstanceMatrix();
 	}
 	mCmdList->SetDrawController(shared_from_this());
 }

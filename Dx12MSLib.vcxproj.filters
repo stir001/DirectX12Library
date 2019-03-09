@@ -570,6 +570,12 @@
     <ClInclude Include="Dx12MSLibCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\DrawCallIssuer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\DrawObject\Image\ImageDrawIssuer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
@@ -988,6 +994,12 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Animation\AnimationPlayerUpdater.cpp">
       <Filter>DirectX12\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\DrawCallIssuer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

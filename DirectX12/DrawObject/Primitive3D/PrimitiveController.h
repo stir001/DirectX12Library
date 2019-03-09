@@ -106,21 +106,21 @@ public:
 
 	/**
 	*	@brief	x²’†S‚Å’Ç‰Á‚Å‰ñ“]‚³‚¹‚é
-	*	@param[in]	deg		‰ñ“]—Ê(degree,“x”–@)
+	*	@param[in]	rad		‰ñ“]—Ê(radian,ŒÊ“x–@)
 	*/
-	void AddRotaX(float deg);
+	void AddRotaX(float rad);
 
 	/**
 	*	@brief	y²’†S‚Å’Ç‰Á‚Å‰ñ“]‚³‚¹‚é
-	*	@param[in]	deg		‰ñ“]—Ê(degree,“x”–@)
+	*	@param[in]	rad		‰ñ“]—Ê(radian,ŒÊ“x–@)
 	*/
-	void AddRotaY(float deg);
+	void AddRotaY(float rad);
 
 	/**
 	*	@brief	z²’†S‚Å’Ç‰Á‚Å‰ñ“]‚³‚¹‚é
-	*	@param[in]	deg		‰ñ“]—Ê(degree,“x”–@)
+	*	@param[in]	rad		‰ñ“]—Ê(radian,ŒÊ“x–@)
 	*/
-	void AddRotaZ(float deg);
+	void AddRotaZ(float rad);
 
 	/**
 	*	@brief	”CˆÓ‚Ì²‚Å‰ñ“]‚·‚élŒ³”‚ğİ’è‚·‚é
@@ -157,6 +157,10 @@ public:
 	void DrawShadow();
 
 	void SetShadowmapCommandList(std::shared_ptr<Dx12CommandList>& cmdList);
+
+	void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootSignature);
+
+	void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelineState);
 
 protected:
 	void UpdateInstanceVertexBuffer();

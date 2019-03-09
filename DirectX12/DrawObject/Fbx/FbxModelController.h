@@ -39,7 +39,6 @@ public:
 	void Draw();
 	void DrawSkeleton();
 	void SetLight(std::shared_ptr<LightObject> dirlight);
-
 	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
 	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
 	void SetAnimation(std::shared_ptr<FbxAnimationData>& animation, bool isLoop = true);

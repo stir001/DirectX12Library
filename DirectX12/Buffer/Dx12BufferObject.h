@@ -112,6 +112,12 @@ public:
 	*/
 	const std::shared_ptr<Dx12BufferViewDesc>& GetViewDesc() const;
 
+	/**
+	*	@brief	バッファの名前を取得する
+	*	@return	バッファの名前
+	*/
+	std::string GetName() const;
+
 protected:
 	/**
 	*	保持しているID3D12Resource

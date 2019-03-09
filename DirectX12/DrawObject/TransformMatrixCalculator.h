@@ -35,21 +35,21 @@ public:
 
 	/**
 	*	@brief	x軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaX(float deg) = 0;
+	virtual void AddRotaX(float rad) = 0;
 
 	/**
 	*	@brief	y軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaY(float deg) = 0;
+	virtual void AddRotaY(float rad) = 0;
 
 	/**
 	*	@brief	z軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaZ(float deg) = 0;
+	virtual void AddRotaZ(float rad) = 0;
 
 	/**
 	*	@brief	四元数で指定された量追加で回転させる

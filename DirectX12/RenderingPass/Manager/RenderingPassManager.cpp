@@ -99,6 +99,7 @@ void RenderingPassManager::Render()
 		{
 			continue;
 		}
+		pathObj->GetCommandList()->StackDrawCall();
 		pathObj->PreExecuteUpdate();
 		pathObj->ExecutePath(mCmdQueue);
 
@@ -174,6 +175,11 @@ std::shared_ptr<Dx12CommandList> RenderingPassManager::GetRenderingPassCommandLi
 		return mRenderingPassObjects[pathIndex]->GetCommandList();
 	}
 	return nullptr;
+}
+
+std::shared_ptr<Dx12CommandList> RenderingPassManager::GetRenderingPassCommandList(DefaultPass passIndex) const
+{
+	return GetRenderingPassCommandList(static_cast<unsigned int>(passIndex));
 }
 
 std::shared_ptr<Dx12CommandList> RenderingPassManager::GetRenderingPassCommandList(const std::string& pathName) const

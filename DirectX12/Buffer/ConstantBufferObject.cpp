@@ -63,7 +63,7 @@ ConstantBufferObject::~ConstantBufferObject()
 {
 }
 
-void ConstantBufferObject::UpdateBuffer()
+void ConstantBufferObject::UpdateInstanceMatrix()
 {
 	mSetBufferUpdate();
 }

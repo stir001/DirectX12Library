@@ -8,6 +8,7 @@
 #include "RootSignature/RootSignatureObject.h"
 #include "Buffer/IndexBufferObject.h"
 #include "Buffer/VertexBufferObject.h"
+#include "DrawObject/DrawCallIssuer.h"
 
 
 Dx12CommandList::Dx12CommandList(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, D3D12_COMMAND_LIST_TYPE type)
@@ -172,6 +173,7 @@ void Dx12CommandList::SetDrawController(std::shared_ptr<DrawObjectController> co
 void Dx12CommandList::ClearControllers()
 {
 	mControllers.clear();
+	mDrawIssuers.clear();
 }
 
 void Dx12CommandList::ExecuteBundle(std::shared_ptr<Dx12CommandList>& bundle)
@@ -222,6 +224,19 @@ void Dx12CommandList::DrawInstanced(unsigned int vertexNum, unsigned int instanc
 void Dx12CommandList::CopyResource(std::shared_ptr<Dx12BufferObject> dst, std::shared_ptr<Dx12BufferObject> src)
 {
 	mCmdList->CopyResource(dst->GetBuffer().Get(), src->GetBuffer().Get());
+}
+
+void Dx12CommandList::SetDrawCallIssuer(const std::shared_ptr<DrawCallIssuer>& drawIssuer)
+{
+	mDrawIssuers.push_back(drawIssuer);
+}
+
+void Dx12CommandList::StackDrawCall()
+{
+	for (auto& issuer : mDrawIssuers)
+	{
+		issuer->IssueDrawCall(shared_from_this());
+	}
 }
 
 HRESULT Dx12CommandList::GetDeviceRemoveReason() const

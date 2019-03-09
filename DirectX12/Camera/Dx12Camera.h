@@ -93,21 +93,21 @@ public:
 
 	/**
 	*	@brief	ワールド基準でX軸回転する
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddXAxisRota(float deg);
+	void AddXAxisRota(float rad);
 
 	/**
 	*	@brief	ワールド基準でY軸回転する
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddYAxisRota(float deg);
+	void AddYAxisRota(float rad);
 
 	/**
 	*	@brief	ワールド基準でZ軸回転する
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddZAxisRota(float deg);
+	void AddZAxisRota(float rad);
 
 	/**
 	*	@brief	y方向へ移動する
@@ -129,15 +129,15 @@ public:
 
 	/**
 	*	@brief	Y軸中心で回転する
-	*	@param[in]	deg	回転成分の大きさ(degree,度数法)
+	*	@param[in]	rad	回転成分の大きさ(radian,弧度法)
 	*/
-	void TurnRightLeft(float deg);
+	void TurnRightLeft(float rad);
 
 	/**
 	*	@brief	カメラのローカル上方向へ回転する
-	*	@param[in]	deg	回転成分の大きさ(degree,度数法)
+	*	@param[in]	rad	回転成分の大きさ(radian,弧度法)
 	*/
-	void TurnUpDown(float deg);
+	void TurnUpDown(float rad);
 
 	/**
 	*	@brief ViewPortを設定する 描画する画面内の大きさ
@@ -238,7 +238,7 @@ public:
 
 	/**
 	*	@brief fovを設定する
-	*	@param[in]	rad		視野角(ラジアン)
+	*	@param[in]	rad		視野角(radian,弧度法)
 	*/
 	void SetFoV(float rad);
 

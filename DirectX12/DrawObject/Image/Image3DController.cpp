@@ -50,7 +50,7 @@ Image3DController::Image3DController(std::shared_ptr<ImageObject> img,
 	DirectX::XMStoreFloat4x4(&mImageMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMMatrixIdentity());
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 Image3DController::~Image3DController()
@@ -63,7 +63,7 @@ void Image3DController::AddCenterPos(const float x, const float y, const float z
 	mCenter.y += y;
 	mCenter.z += z;
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::AddPosition(const DirectX::XMFLOAT3& offset)
@@ -71,25 +71,25 @@ void Image3DController::AddPosition(const DirectX::XMFLOAT3& offset)
 	AddCenterPos(offset.x, offset.y, offset.z);
 }
 
-void Image3DController::AddRotaX(float deg)
+void Image3DController::AddRotaX(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationX(rad));
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
-void Image3DController::AddRotaY(float deg)
+void Image3DController::AddRotaY(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationY(rad));
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
-void Image3DController::AddRotaZ(float deg)
+void Image3DController::AddRotaZ(float rad)
 {
-	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(deg)));
+	DirectX::XMStoreFloat4x4(&mRotaMatrix, DirectX::XMLoadFloat4x4(&mRotaMatrix) * DirectX::XMMatrixRotationZ(rad));
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::AddScale(const float scale)
@@ -103,7 +103,7 @@ void Image3DController::AddScale(const float scaleX, const float scaleY, const f
 	mScaleY += scaleY;
 	mScaleZ += scaleZ;
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::SetRect(const DirectX::XMFLOAT3& inc, const float inw, const float inh)
@@ -113,7 +113,7 @@ void Image3DController::SetRect(const DirectX::XMFLOAT3& inc, const float inw, c
 	mRect->SetWidth(inw);
 
 	UpdateUV();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::SetRect(const Rect& rc)
@@ -128,7 +128,7 @@ void Image3DController::SetPosition(const float x, const float y, const float z)
 	mCenter.z = z;
 
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::SetPosition(const DirectX::XMFLOAT3& setPos)
@@ -147,7 +147,7 @@ void Image3DController::SetScale(const float sx, const float sy, const float sz)
 	mScaleY = sy;
 	mScaleZ = sz;
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::TurnU()
@@ -164,7 +164,7 @@ void Image3DController::TurnU()
 	mTurnSign.x *= -1;
 
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::TurnV()
@@ -181,7 +181,7 @@ void Image3DController::TurnV()
 	mTurnSign.y *= -1;
 
 	UpdateMatrix();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void Image3DController::Draw()
@@ -286,7 +286,7 @@ void Image3DController::UpdateMatrix()
 	DirectX::XMStoreFloat4x4(&mImageMatrix, imageMatrix);
 }
 
-void Image3DController::UpdateBuffer()
+void Image3DController::UpdateInstanceMatrix()
 {
 	mVertexBuffer->WriteBuffer(mVertex, sizeof(Image3DVertex) * 4);
 	mImageMatrixBuffer->WriteBuffer256Alignment(&mImageMatrix, sizeof(DirectX::XMFLOAT4X4), 1);

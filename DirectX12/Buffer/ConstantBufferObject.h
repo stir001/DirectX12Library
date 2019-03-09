@@ -43,7 +43,7 @@ public:
 	/**
 	*	コンスタントバッファを更新する
 	*/
-	void UpdateBuffer();
+	void UpdateInstanceMatrix();
 	
 protected:
 	/**

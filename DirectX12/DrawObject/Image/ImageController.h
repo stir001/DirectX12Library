@@ -18,6 +18,7 @@ class Rect;
 class VertexBufferObject;
 class Dx12DescriptorHeapObject;
 class Dx12CommandList;
+class ImageDrawIssuer;
 
 /**
 *	@ingroup DrawObjectController
@@ -65,9 +66,9 @@ public:
 
 	/**
 	*	@brief	画像を回転させる 正の値で反時計回り
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRota(const float deg);
+	void AddRota(const float rad);
 
 	/**
 	*	@brief	画像の基準点を平行移動させる
@@ -117,9 +118,9 @@ public:
 
 	/**
 	*	@brief	画像の回転を設定する  正の値で反時計回り
-	*	@param[in]	deg		設定したい回転角度(degree,度数法)
+	*	@param[in]	rad		設定したい回転角度(radian,弧度法)
 	*/
-	void SetRota(const float deg);
+	void SetRota(const float rad);
 
 	/**
 	*	@brief	画像の中心点の基準点からのオフセットを設定する
@@ -206,24 +207,14 @@ public:
 	std::string GetFilePath() const;
 private:
 	/**
-	*	横幅の拡大率
+	*	拡大率
 	*/
-	float mScaleX;
-
-	/**
-	*	縦幅の拡大率
-	*/
-	float mScaleY;
+	DirectX::XMFLOAT2 mScale;
 
 	/**
 	*	現在の回転角度
 	*/
 	float mRota;
-
-	/**
-	*	画像の中心からの各頂点へのベクトルの長さ
-	*/
-	float mLength[4];
 
 	/**
 	*	反転しているかどうかの値
@@ -236,14 +227,24 @@ private:
 	DirectX::XMFLOAT3 mCenterOffset;
 
 	/**
-	*	画像の中心からの各頂点への単位ベクトル
-	*/
-	DirectX::XMFLOAT3 mNormvec[4];
-
-	/**
 	*	描画の際の基準点(画面座標)回転や反転の中心
 	*/
 	DirectX::XMFLOAT3 mPivot;
+
+	/**
+	*	変換行列
+	*/
+	std::vector<DirectX::XMFLOAT4X4> mInstanceMat;
+
+	/**
+	*	変換行列計算用行列
+	*/
+	DirectX::XMFLOAT4X4 mCalMatrix;
+
+	/**
+	*	UV計算用
+	*/
+	ImageUVSet mCalUV;
 
 	/**
 	*	頂点情報
@@ -251,22 +252,29 @@ private:
 	ImageVertex mVertex[4];
 
 	/**
+	*	UV情報
+	*/
+	std::vector<ImageUVSet> mUVs;
+
+	/**
 	*	頂点情報を書き込むバッファ
 	*/
 	std::shared_ptr<VertexBufferObject> mVertexBuffer;
 
 	/**
+	*	UV情報を書き込むバッファ
+	*/
+	std::shared_ptr<VertexBufferObject> mUVBuffer;
+
+	/**
+	*	変換行列情報を書き込むバッファ
+	*/
+	std::shared_ptr<VertexBufferObject> mMatrixBuffer;
+
+	/**
 	*	画像内の切り抜きローカル座標矩形
 	*/
 	std::shared_ptr<Rect> mRect;
-
-	/**
-	*	このrootsigantureで使うルートパラメーター
-	*/
-	enum eROOT_PARAMATER_INDEX
-	{
-		eROOT_PARAMATER_INDEX_TEXTURE,
-	};
 
 	/**
 	*	2D画像の情報
@@ -289,19 +297,19 @@ private:
 	void (ImageController::*mBundleUpdate)();
 
 	/**
+	*	描画命令発行用クラス
+	*/
+	std::shared_ptr<ImageDrawIssuer> mDrawIssuer;
+
+	/**
 	*	UV情報を更新する
 	*/
 	void UpdateUV();
 
 	/**
-	*	画像の中心から各頂点への単位ベクトルを更新する
-	*/
-	void UpdateNormvec();
-
-	/**
 	*	頂点バッファを更新する
 	*/
-	void UpdateBuffer();
+	void UpdateInstanceMatrix();
 
 	/**
 	*	バンドルを更新する
@@ -312,5 +320,35 @@ private:
 	*	バンドルを更新しない
 	*/
 	void NonUpdateBundle();
+
+	/**
+	*	描画命令発行クラスを生成する
+	*/
+	void CreateDrawIssuer();
+
+	/**
+	*	変換行列の更新
+	*/
+	void WriteMatrixBuffer();
+
+	/**
+	*	UVバッファを更新
+	*/
+	void WriteUVBuffer();
+
+	/**
+	*	インスタンシング用のデータを作成する
+	*/
+	void CreateInstanceData();
+
+	/**
+	*	現在計算しているインスタンスのIDを取得する
+	*/
+	unsigned int GetCurrentInstanceID() const;
+
+	/**
+	*	同じ名前でVertexBufferを再生成する
+	*/
+	void RemakeVertexBuffer(std::shared_ptr<VertexBufferObject>& buffer, unsigned int elementSize, unsigned int elementNum);
 };
 

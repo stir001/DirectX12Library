@@ -17,7 +17,7 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 	const float unitYDiv = DirectX::XM_PI / div;
 	const float unitUDiv = 1.0f / div;
 	const float unitVDiv = 1.0f / div;
-	const float unitRadios = DirectX::XM_PI * 2.0f / div;
+	const float unitRadian = DirectX::XM_PI * 2.0f / div;
 
 	const unsigned int circleVertNum = div + 2;
 
@@ -29,8 +29,8 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 		//‰~‚Ì•ªŠ„
 		for (unsigned int circleDiv = 0; circleDiv < circleVertNum; ++circleDiv)
 		{
-			float rRatio = sin(unitRadios * yDiv * 0.5f);
-			float pi = unitRadios * circleDiv;
+			float rRatio = sin(unitRadian * yDiv * 0.5f);
+			float pi = unitRadian * circleDiv;
 			vertPos = { radius * sin(pi) * rRatio,
 				radius * cos(unitYDiv * yDiv),
 				radius * cos(pi) * rRatio };
@@ -51,8 +51,8 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 		//‰~‚Ì•ªŠ„
 		for (unsigned int circleDiv = 0; circleDiv < circleVertNum; ++circleDiv)
 		{
-			float rRatio = sin(unitRadios * yDiv * 0.5f);
-			float pi = unitRadios * circleDiv;
+			float rRatio = sin(unitRadian * yDiv * 0.5f);
+			float pi = unitRadian * circleDiv;
 			vertPos = { radius * sin(pi) * rRatio,
 				radius * cos(unitYDiv * yDiv),
 				radius * cos(pi) * rRatio };

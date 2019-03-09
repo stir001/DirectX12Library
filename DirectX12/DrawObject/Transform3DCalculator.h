@@ -34,21 +34,21 @@ public:
 
 	/**
 	*	@brief	x軸中心の回転行列を計算し現在の行列にかける
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaX(float deg);
+	void AddRotaX(float rad);
 
 	/**
 	*	@brief	y軸中心の回転行列を計算し現在の行列にかける
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaY(float deg);
+	void AddRotaY(float rad);
 
 	/**
 	*	@brief	z軸中心の回転行列を計算し現在の行列にかける
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	void AddRotaZ(float deg);
+	void AddRotaZ(float rad);
 
 	/**
 	*	@brief	現在の行列に回転を表す四元数から作られる行列を計算し現在の行列にかける

@@ -298,6 +298,7 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12RenderTargetViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.h" />
+    <ClInclude Include="DirectX12\DrawObject\DrawCallIssuer.h" />
     <ClInclude Include="Dx12MSLib.h" />
     <ClInclude Include="Bullet\Action\IActionDefiner.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h" />
@@ -325,6 +326,7 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FADLoader.h" />
     <ClInclude Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.h" />
     <ClInclude Include="Dx12MSLibCommon.h" />
+    <ClInclude Include="DirectX12\DrawObject\Image\ImageDrawIssuer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -467,6 +469,8 @@
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveCone.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Fbx\FADLoader.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\DrawCallIssuer.cpp" />
+    <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -101,13 +101,13 @@ void PMDController::SetLight(std::shared_ptr<DirectionalLight> dlight)
 void PMDController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState)
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
-	DrawObjectController::SetPipelineState(pipelineState);
+	mPipelinestate = (pipelineState);
 }
 
 void PMDController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsiganture)
 {
 	mBundleUpdate = &PMDController::UpdateBundle;
-	DrawObjectController::SetGraphicsRootSignature(rootsiganture);
+	mRootsignature = (rootsiganture);
 }
 
 void PMDController::SetToonPipelineState(std::shared_ptr<PipelineStateObject>& pipelineState)

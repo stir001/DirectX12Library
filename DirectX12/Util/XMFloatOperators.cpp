@@ -66,19 +66,19 @@ DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XM
 	return  NormalizeXMFloat3(DirectX::XMFLOAT3(lval.y * rval.z - lval.z * rval.y, lval.z * rval.x - lval.x * rval.z, lval.x * rval.y - lval.y * rval.x));
 }
 
-DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float deg)
+DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad)
 {
-	return DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,deg));
+	return DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,rad));
 }
 
-DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float deg)
+DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float rad)
 {
 	DirectX::XMFLOAT3 normAxis = NormalizeXMFloat3(axis);
 	return DirectX::XMFLOAT4(
-		normAxis.x * sinf(DirectX::XMConvertToRadians(deg / 2.0f)),
-		normAxis.y * sinf(DirectX::XMConvertToRadians(deg / 2.0f)),
-		normAxis.z * sinf(DirectX::XMConvertToRadians(deg / 2.0f)),
-		cosf(DirectX::XMConvertToRadians(deg / 2.0f)));
+		normAxis.x * sinf(rad / 2.0f),
+		normAxis.y * sinf(rad / 2.0f),
+		normAxis.z * sinf(rad / 2.0f),
+		cosf(rad / 2.0f));
 }
 
 DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& val)
@@ -153,6 +153,16 @@ DirectX::XMFLOAT4X4 operator-=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT
 {
 	lval = lval - rval;
 	return lval;
+}
+
+DirectX::XMFLOAT4X4 operator-(const DirectX::XMFLOAT4X4 & val)
+{
+	return DirectX::XMFLOAT4X4(
+		val._11 * -1, val._12 * -1, val._13 * -1, val._14 * -1,
+		val._21 * -1, val._22 * -1, val._23 * -1, val._24 * -1,
+		val._31 * -1, val._32 * -1, val._33 * -1, val._34 * -1,
+		val._41 * -1, val._42 * -1, val._43 * -1, val._44
+	);
 }
 
 DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4X4& rval)

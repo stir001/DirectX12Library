@@ -64,6 +64,13 @@ public:
 	std::shared_ptr<Dx12CommandList> GetRenderingPassCommandList(unsigned int passIndex) const;
 
 	/**
+	*	DefaultPassで指定
+	*	パスのインデックスからそのパスのコマンドを積むべきコマンドリストを取得する
+	*	一度でもRenderinsPassを編集すると有効なものが返ってくる保証はなくなる
+	*/
+	std::shared_ptr<Dx12CommandList> GetRenderingPassCommandList(DefaultPass passIndex) const;
+
+	/**
 	*	パスの名前からそのパスのコマンドを積むべきコマンドリストを取得する
 	*	DeleteRenderingpassメソッドを呼んだ後だとインデックスが崩れるがコマンドリスト自体は変化しない
 	*/

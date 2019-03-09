@@ -11,6 +11,7 @@
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "CommandList/Dx12CommandList.h"
+#include "ImageDrawIssuer.h"
 
 DirectX::XMFLOAT3 RotationXY(DirectX::XMFLOAT3& pos, float rad)
 {
@@ -31,12 +32,12 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 	:DrawObjectController(img->GetTextureName() + "Bundle", dev, uicmdList)
 	, mBackCmdList(backcmdList)
 	, mImgObj(img)
-	, mVertex{ { { 0.0f, img->GetImageSize().y, 0.0f },{ 0.0f, 0.0f }, img->GetGamma()}/* v1 */
-			,{ { img->GetImageSize().x,img->GetImageSize().y, 0.0f },{ 1.f, 0.0f }, img->GetGamma() }/* v2 */
-			,{ { 0.0f,0.0f , 0.0f },{ 0.0f, 1.f }, img->GetGamma() }/* v3 */
-			,{ { img->GetImageSize().x, 0.0f, 0.0f },{ 1.f, 1.f }, img->GetGamma() }/* v4 */ }
-	, mScaleX(1.0f), mScaleY(1.0f), mRota(0.0f), mPivot{ 0.0f,0.0f,0.0f }, mCenterOffset(0.0f, 0.0f, 0.0f)
-	, mRect(std::make_shared<Rect>(DirectX::XMFLOAT3(img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0.0f), img->GetImageSize().x, img->GetImageSize().y))
+	, mVertex{ { { -img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0.0f, 1.0f }, img->GetGamma(), 0U}/* v1 */
+			,{ { img->GetImageSize().x / 2.0f, img->GetImageSize().y / 2.0f, 0.0f, 1.0f }, img->GetGamma(), 1U}/* v2 */
+			,{ { -img->GetImageSize().x / 2.0f, -img->GetImageSize().y / 2.0f, 0.0f, 1.0f }, img->GetGamma(), 2U }/* v3 */
+			,{ { img->GetImageSize().x / 2.0f, -img->GetImageSize().y / 2.0f, 0.0f, 1.0f }, img->GetGamma(), 3U }/* v4 */ }
+	, mScale(1.0f, 1.0f), mRota(0.0f), mPivot{ 0.0f,0.0f,0.0f }, mCenterOffset(0.0f, 0.0f, 0.0f)
+	, mRect(std::make_shared<Rect>(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), img->GetImageSize().x, img->GetImageSize().y))
 	, mTurnSign(1,1), mBundleUpdate(&ImageController::UpdateBundle)
 {
 	mPipelinestate = pipelinestate;
@@ -44,7 +45,14 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 
 	std::string name = mImgObj->GetTextureName();
 	name += "2DImageVertexBuffer";
-	mVertexBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(ImageVertex)), 4U);
+	mVertexBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(mVertex[0])), 4U);
+	mVertexBuffer->WriteBuffer(mVertex, sizeof(mVertex[0]) * 4U);
+	name = mImgObj->GetTextureName();
+	name += "2DImageUVBuffer";
+	mUVBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(mUVs[0])), 1U);
+	name = mImgObj->GetTextureName();
+	name += "2DImageMatrixBuffer";
+	mMatrixBuffer = std::make_shared<VertexBufferObject>(name, mDevice, static_cast<unsigned int>(sizeof(mInstanceMat)), 1U);
 
 	std::vector<std::shared_ptr<Dx12BufferObject>> resource;
 	resource.reserve(DEFAULT_RESOURCE_NUM);
@@ -54,15 +62,12 @@ ImageController::ImageController(std::shared_ptr<ImageObject> img,
 	name += "ImageDescriptorHeap";
 	mDescHeap = std::make_shared<Dx12DescriptorHeapObject>(name, mDevice, resource, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	DirectX::XMFLOAT2 size = mImgObj->GetImageSize();
-	DirectX::XMFLOAT3 offset = { size.x / 2.0f,size.y / 2.0f, 0.0f };
-	for (int i = 0; i < 4; ++i)
-	{
-		DirectX::XMFLOAT3 vec = mVertex[i].pos - offset;
-		mNormvec[i] = NormalizeXMFloat3(vec);
-		mLength[i] = sqrt(DotXMFloat3(vec, vec));
-	}
+	CreateDrawIssuer();
+	CreateInstanceData();
+
 	SetPos(mPivot);
+	UpdateInstanceMatrix();
+	UpdateUV();
 }
 
 ImageController::~ImageController()
@@ -74,7 +79,7 @@ void ImageController::AddPos(const float x, const float y, const float z)
 	mPivot.x += x;
 	mPivot.y += y;
 	mPivot.z += z;
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void ImageController::AddPos(const DirectX::XMFLOAT3& offset)
@@ -82,23 +87,23 @@ void ImageController::AddPos(const DirectX::XMFLOAT3& offset)
 	AddPos(offset.x, offset.y, offset.z);
 }
 
-void ImageController::AddRota(const float deg)
+void ImageController::AddRota(const float rad)
 {
-	mRota += DirectX::XMConvertToRadians(deg);
-	UpdateBuffer();
+	mRota += rad;
+	UpdateInstanceMatrix();
 }
 
 void ImageController::AddScale(const float scale)
 {
-	mScaleX += scale;
-	mScaleY += scale;
-	UpdateBuffer();
+	mScale.x += scale;
+	mScale.y += scale;
+	UpdateInstanceMatrix();
 }
 
 void ImageController::AddPivot(const DirectX::XMFLOAT3& offset)
 {
 	mPivot += offset;
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void ImageController::SetRect(const DirectX::XMFLOAT3& inc, const float inw, const float inh)
@@ -106,9 +111,7 @@ void ImageController::SetRect(const DirectX::XMFLOAT3& inc, const float inw, con
 	mRect->SetCenter(inc);
 	mRect->SetHeight(inh);
 	mRect->SetWidth(inw);
-	UpdateNormvec();
 	UpdateUV();
-	UpdateBuffer();
 }
 
 void ImageController::SetRect(const Rect& rc)
@@ -122,7 +125,7 @@ void ImageController::SetPos(const float x, const float y, const float z)
 	mPivot.y = y;
 	mPivot.z = z;
 
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void ImageController::SetPos(const DirectX::XMFLOAT3& setPos)
@@ -132,22 +135,22 @@ void ImageController::SetPos(const DirectX::XMFLOAT3& setPos)
 
 void ImageController::SetScale(const float s)
 {
-	mScaleX = s;
-	mScaleY = s;
-	UpdateBuffer();
+	mScale.x = s;
+	mScale.y = s;
+	UpdateInstanceMatrix();
 }
 
 void ImageController::SetScale(const DirectX::XMFLOAT2 & scale)
 {
-	mScaleX = scale.x;
-	mScaleY = scale.y;
-	UpdateBuffer();
+	mScale.x = scale.x;
+	mScale.y = scale.y;
+	UpdateInstanceMatrix();
 }
 
-void ImageController::SetRota(const float deg)
+void ImageController::SetRota(const float rad)
 {
-	mRota = DirectX::XMConvertToRadians(deg);
-	UpdateBuffer();
+	mRota = rad;
+	UpdateInstanceMatrix();
 }
 
 void ImageController::SetCenterOffset(const float x, const float y, const float z)
@@ -155,8 +158,7 @@ void ImageController::SetCenterOffset(const float x, const float y, const float 
 	mCenterOffset.x = x;
 	mCenterOffset.y = y;
 	mCenterOffset.z = z;
-	UpdateNormvec();
-	UpdateBuffer();
+	UpdateInstanceMatrix();
 }
 
 void ImageController::SetCenterOffset(const DirectX::XMFLOAT3& offset)
@@ -166,42 +168,33 @@ void ImageController::SetCenterOffset(const DirectX::XMFLOAT3& offset)
 
 void ImageController::TurnU()
 {
-	DirectX::XMFLOAT2 uv;
-	uv = mVertex[0].uv;
-	mVertex[0].uv = mVertex[1].uv;
-	mVertex[1].uv = uv;
-
-	uv = mVertex[2].uv;
-	mVertex[2].uv = mVertex[3].uv;
-	mVertex[3].uv = uv;
+	unsigned int instanceID = GetCurrentInstanceID();
+	std::swap(mUVs[instanceID].uv[0], mUVs[instanceID].uv[1]);
+	std::swap(mUVs[instanceID].uv[2], mUVs[instanceID].uv[3]);
 
 	mTurnSign.x *= -1;
-	UpdateNormvec();
-	UpdateBuffer();
+	WriteUVBuffer();
 }
 
 void ImageController::TurnV()
 {
-	DirectX::XMFLOAT2 uv;
-	uv = mVertex[0].uv;
-	mVertex[0].uv = mVertex[2].uv;
-	mVertex[2].uv = uv;
-
-	uv = mVertex[1].uv;
-	mVertex[1].uv = mVertex[3].uv;
-	mVertex[3].uv = uv;
+	unsigned int instanceID = GetCurrentInstanceID();
+	std::swap(mUVs[instanceID].uv[0], mUVs[instanceID].uv[2]);
+	std::swap(mUVs[instanceID].uv[1], mUVs[instanceID].uv[3]);
 
 	mTurnSign.y *= -1;
-	UpdateNormvec();
-	UpdateBuffer();
+	WriteUVBuffer();
 }
 
 void ImageController::Draw()
 {
 	(this->*mBundleUpdate)();
-	mDescHeap->SetDescriptorHeap(mCmdList);
-	mCmdList->ExecuteBundle(mBundleCmdList);
-	mCmdList->SetDrawController(shared_from_this());
+	CreateInstanceData();
+	if (mDrawIssuer->CountUpInstanceNum() == 1)
+	{
+		mCmdList->SetDrawCallIssuer(mDrawIssuer);
+		mCmdList->SetDrawController(shared_from_this());
+	}
 }
 
 void ImageController::BackDraw()
@@ -209,7 +202,7 @@ void ImageController::BackDraw()
 	(this->*mBundleUpdate)();
 	mDescHeap->SetDescriptorHeap(mBackCmdList);
 	mBackCmdList->ExecuteBundle(mBundleCmdList);
-	mCmdList->SetDrawController(shared_from_this());
+	mBackCmdList->SetDrawController(shared_from_this());
 }
 
 bool ImageController::IsTurnU() const
@@ -233,20 +226,20 @@ std::shared_ptr<ImageController> ImageController::Duplicate()
 	rtn->SetRect(mRect->GetCenter(), mRect->GetWidth(), mRect->GetHeight());
 	rtn->SetCenterOffset(mCenterOffset);
 	rtn->SetPos(mPivot);
-	rtn->SetRota(DirectX::XMConvertToDegrees(mRota));
-	rtn->SetScale(DirectX::XMFLOAT2(mScaleX, mScaleY));
+	rtn->SetRota(mRota);
+	rtn->SetScale(mScale);
 	return rtn;
 }
 
 void ImageController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
 {
-	mRootsignature = rootsignature;
+	mDrawIssuer->SetRootSignature(rootsignature);
 	mBundleUpdate = &ImageController::UpdateBundle;
 }
 
 void ImageController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
 {
-	mPipelinestate = pipelinestate;
+	mDrawIssuer->SetPipelineState(pipelinestate);
 	mBundleUpdate = &ImageController::UpdateBundle;
 }
 
@@ -262,99 +255,126 @@ std::string ImageController::GetFilePath() const
 
 void ImageController::UpdateUV()
 {
+	CreateInstanceData();
+
 	DirectX::XMFLOAT2 size = mImgObj->GetImageSize();
-	DirectX::XMFLOAT2 leftupUV = { mRect->GetLeft() / size.x,mRect->GetDown() / size.y };
-	DirectX::XMFLOAT2 rightdownUV = { mRect->GetRight() /size.x, mRect->GetUp() / size.y };
-	mVertex[0].uv = leftupUV;
+	DirectX::XMFLOAT2 leftupUV = { (size.x / 2.0f + mRect->GetLeft()) / size.x, 1.0f - (size.y / 2.0f + mRect->GetUp()) / size.y };
+	DirectX::XMFLOAT2 rightdownUV = { (size.x / 2.0f + mRect->GetRight()) /size.x, 1.0f - (size.y / 2.0f + mRect->GetDown()) / size.y };
+	mCalUV.uv[0] = leftupUV;
 
-	mVertex[1].uv.x = rightdownUV.x;
-	mVertex[1].uv.y = leftupUV.y;
+	mCalUV.uv[1].x = rightdownUV.x;
+	mCalUV.uv[1].y = leftupUV.y;
 
-	mVertex[2].uv.x = leftupUV.x;
-	mVertex[2].uv.y = rightdownUV.y;
+	mCalUV.uv[2].x = leftupUV.x;
+	mCalUV.uv[2].y = rightdownUV.y;
 
-	mVertex[3].uv = rightdownUV;
+	mCalUV.uv[3] = rightdownUV;
 
 	if (mTurnSign.x == -1)
 	{
-		DirectX::XMFLOAT2 uv;
-		uv = mVertex[0].uv;
-		mVertex[0].uv = mVertex[1].uv;
-		mVertex[1].uv = uv;
-
-		uv = mVertex[2].uv;
-		mVertex[2].uv = mVertex[3].uv;
-		mVertex[3].uv = uv;
+		std::swap(mCalUV.uv[0], mCalUV.uv[1]);
+		std::swap(mCalUV.uv[2], mCalUV.uv[3]);
 	}
 	if (mTurnSign.y == -1)
 	{
-		DirectX::XMFLOAT2 uv;
-		uv = mVertex[0].uv;
-		mVertex[0].uv = mVertex[2].uv;
-		mVertex[2].uv = uv;
-
-		uv = mVertex[1].uv;
-		mVertex[1].uv = mVertex[3].uv;
-		mVertex[3].uv = uv;
+		std::swap(mCalUV.uv[0], mCalUV.uv[2]);
+		std::swap(mCalUV.uv[1], mCalUV.uv[3]);
 	}
+
+	mUVs[GetCurrentInstanceID()] = mCalUV;
+
+	WriteUVBuffer();
 }
 
-void ImageController::UpdateNormvec()
+void ImageController::UpdateInstanceMatrix()
 {
-	mVertex[0].pos.x = mRect->GetLeft() + mCenterOffset.x * mTurnSign.x;
-	mVertex[0].pos.y = mRect->GetUp()	+ mCenterOffset.y * mTurnSign.y;
+	CreateInstanceData();
 
-	mVertex[1].pos.x = mRect->GetRight() + mCenterOffset.x * mTurnSign.x;
-	mVertex[1].pos.y = mRect->GetUp() + mCenterOffset.y * mTurnSign.y;
-
-	mVertex[2].pos.x = mRect->GetLeft() + mCenterOffset.x * mTurnSign.x;
-	mVertex[2].pos.y = mRect->GetDown() + mCenterOffset.y * mTurnSign.y;
-
-	mVertex[3].pos.x = mRect->GetRight() + mCenterOffset.x * mTurnSign.x;
-	mVertex[3].pos.y = mRect->GetDown() + mCenterOffset.y * mTurnSign.y;
-
-	const DirectX::XMFLOAT3 offset = mRect->GetCenter();
-	for (int i = 0; i < 4; ++i)
-	{
-		DirectX::XMFLOAT3 vec = mVertex[i].pos - offset;
-		mNormvec[i] = NormalizeXMFloat3(vec);
-		mLength[i] = sqrt(DotXMFloat3(vec, vec));
-	}
-}
-
-
-void ImageController::UpdateBuffer()
-{
 	DX12CTRL_INSTANCE
 	DirectX::XMFLOAT2 size = d12.GetWindowSize();
-	for (int i = 0; i < 4; ++i)
-	{
-		mVertex[i].pos.x = RotationXY(mNormvec[i], mRota).x * mLength[i] * mScaleX + mPivot.x;
-		mVertex[i].pos.y = RotationXY(mNormvec[i], mRota).y * mLength[i] * mScaleY + mPivot.y;
-		mVertex[i].pos.x *= 2.0f / size.x;
-		mVertex[i].pos.y *= 2.0f / size.y;
-	}
-	mVertexBuffer->WriteBuffer(mVertex, sizeof(ImageVertex) * 4);
+	auto mat = IdentityXMFloat4x4();
+	mCalMatrix = mat;
+	mat._11 = 2.0f / size.x;
+	mat._22 = 2.0f / size.y;
+	
+	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixScaling(mScale.x, mScale.y, 1.0f));
+	auto offsetMat = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(mCenterOffset.x, mCenterOffset.y, mCenterOffset.z));
+	mCalMatrix *= offsetMat;
+	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixRotationZ(mRota));
+	mCalMatrix *= -offsetMat;
+	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(mPivot.x ,mPivot.y, mPivot.z));
+	mCalMatrix *= mat;
+
+	mInstanceMat[GetCurrentInstanceID()] = mCalMatrix;
+
+	WriteMatrixBuffer();
 }
 
 void ImageController::UpdateBundle()
 {
-	mBundleCmdList->Reset();
-	auto bundle = mBundleCmdList;
-	mDescHeap->SetDescriptorHeap(bundle);
-	bundle->SetPipelineState(mPipelinestate);
-	bundle->SetGraphicsRootSignature(mRootsignature);
-	bundle->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	bundle->IASetVertexBuffers({ &mVertexBuffer }, 1);
-
-	mDescHeap->SetGraphicsDescriptorTable(bundle, 0, eROOT_PARAMATER_INDEX_TEXTURE);
-
-	bundle->DrawInstanced(4, 1, 0, 0);
-	bundle->Close();
+	mDrawIssuer->UpdateBundle();
 
 	mBundleUpdate = &ImageController::NonUpdateBundle;
 }
 
 void ImageController::NonUpdateBundle()
 {
+}
+
+void ImageController::CreateDrawIssuer()
+{
+	ImageDrawIssuer::ConstructorArg arg = {};
+	arg.descHeap = mDescHeap;
+	arg.uvBuffer = mUVBuffer;
+	arg.vertexBuffer = mVertexBuffer;
+	arg.matrixBuffer = mMatrixBuffer;
+	arg.name = mImgObj->GetTextureName();
+	arg.pipelineState = mPipelinestate;
+	arg.rootSignature = mRootsignature;
+	arg.texViewIndex = 0;
+	arg.dev = mDevice;
+	
+	mDrawIssuer = std::make_shared<ImageDrawIssuer>(arg);
+}
+
+void ImageController::WriteMatrixBuffer()
+{
+	mMatrixBuffer->WriteBuffer(mInstanceMat.data(), static_cast<unsigned int>(sizeof(mInstanceMat[0]) * mInstanceMat.size()));
+}
+
+void ImageController::WriteUVBuffer()
+{
+	mUVBuffer->WriteBuffer(mUVs.data(), static_cast<unsigned int>(sizeof(mUVs[0]) * mUVs.size()));
+}
+
+void ImageController::CreateInstanceData()
+{
+	unsigned int instanceNum = GetCurrentInstanceID() + 1;
+	if (instanceNum > mUVs.size())
+	{
+		mUVs.resize(instanceNum);
+		mUVs[GetCurrentInstanceID()] = mCalUV;
+		RemakeVertexBuffer(mUVBuffer, static_cast<unsigned int>(sizeof(mUVs[0])), instanceNum);
+		mDrawIssuer->SetUVBuffer(mUVBuffer);
+		WriteUVBuffer();
+	}
+	if (instanceNum > mInstanceMat.size())
+	{
+		mInstanceMat.resize(instanceNum);
+		mInstanceMat[GetCurrentInstanceID()] = mCalMatrix;
+		RemakeVertexBuffer(mMatrixBuffer, static_cast<unsigned int>(sizeof(mInstanceMat[0])), instanceNum);
+		mDrawIssuer->SetMatrixBuffer(mMatrixBuffer);
+		WriteMatrixBuffer();
+	}
+}
+
+unsigned int ImageController::GetCurrentInstanceID() const
+{
+	return mDrawIssuer->GetInstanceNum();
+}
+
+void ImageController::RemakeVertexBuffer(std::shared_ptr<VertexBufferObject>& buffer, unsigned int elementSize, unsigned int elementNum)
+{
+	auto name = buffer->GetName();
+	buffer = std::make_shared<VertexBufferObject>(name, mDevice, elementSize, elementNum);
 }

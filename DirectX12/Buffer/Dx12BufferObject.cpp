@@ -9,7 +9,6 @@
 #include "Master/Dx12Ctrl.h"
 #include "Util//Dx12Getter.h"
 
-
 Dx12BufferObject::Dx12BufferObject(const std::string& name) : mBuffer(nullptr),mElementBuffer(nullptr)
 {
 	std::wstring buf;
@@ -131,5 +130,12 @@ void Dx12BufferObject::CreateDepthStecilViewDesc()
 const std::shared_ptr<Dx12BufferViewDesc>& Dx12BufferObject::GetViewDesc() const
 {
 	return mViewDescs;
+}
+
+std::string Dx12BufferObject::GetName() const
+{
+	std::string rtn;
+	ToChar(rtn, mName);
+	return rtn;
 }
 

@@ -66,21 +66,35 @@ public:
 
 	/**
 	*	@brief	x軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaX(float deg);
+	virtual void AddRotaX(float rad);
 
 	/**
 	*	@brief	y軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaY(float deg);
+	virtual void AddRotaY(float rad);
 
 	/**
 	*	@brief	z軸中心で追加で回転させる
-	*	@param[in]	deg		回転量(degree,度数法)
+	*	@param[in]	rad		回転量(radian,弧度法)
 	*/
-	virtual void AddRotaZ(float deg);
+	virtual void AddRotaZ(float rad);
+
+	/**
+	*	@broef	回転を設定する(ラジアン単位)
+	*	@param[in]	x	x軸の回転量
+	*	@param[in]	y	y軸の回転量
+	*	@param[in]	z	z軸の回転量
+	*/
+	virtual void SetRota(float x, float y, float z);
+
+	/**
+	*	@broef	回転を設定する(ラジアン単位)
+	*	@param[in]	rota	各軸の回転量
+	*/
+	virtual void SetRota(const DirectX::XMFLOAT3& rota);
 
 	/**
 	*	@brief	任意の軸で回転する四元数を設定する
