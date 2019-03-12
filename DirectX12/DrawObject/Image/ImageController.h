@@ -41,9 +41,7 @@ public:
 		std::shared_ptr<Dx12CommandList> backcmdList,
 		std::shared_ptr<PipelineStateObject>& pipelinestate,
 		std::shared_ptr<RootSignatureObject>& rootsignature);
-
 	~ImageController();
-
 	/**
 	*	@brief	‰æ‘œ‚ğ•½sˆÚ“®‚³‚¹‚é ‰æ–Ê’†‰›Œ´“_ +x‰E +yã
 	*	@param[in]	x	x‚Ì•½sˆÚ“®¬•ª
@@ -158,7 +156,7 @@ public:
 
 	/**
 	*	U•ûŒü‚É”½“]‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ“¾‚é
-	*		ture : ”½“]‚µ‚Ä‚¢‚é 
+	*		ture : ”½“]‚µ‚Ä‚¢‚é
 	*		false : ”½“]‚µ‚Ä‚¢‚È‚¢
 	*/
 	bool IsTurnU() const;
