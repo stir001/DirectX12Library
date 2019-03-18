@@ -4,6 +4,8 @@
 #include "Animation/AnimationPlayerUpdater.h"
 #include "Shader/ShaderCompiler.h"
 #include "Camera/CameraHolder.h"
+#include "Camera/Dx12Camera.h"
+#include "NeedCall.h"
 
 unsigned int Roundup2Multiplier(unsigned int size)
 {
@@ -66,4 +68,31 @@ void SetShaderDir(const std::string& dirPath)
 std::shared_ptr<Dx12Camera> GetCamera(unsigned int cameraIndex)
 {
 	return Dx12Ctrl::Instance().GetCameraHolder()->GetCamera(cameraIndex);
+}
+
+std::shared_ptr<Dx12Camera> AddCamera(const Dx12Camera::Property& prop, const DirectX::XMFLOAT3& eye,
+	const DirectX::XMFLOAT3& target)
+{
+	D3D12_VIEWPORT port = {
+		prop.viewTopLeftX,
+		prop.viewTopLeftY,
+		prop.viewWidth,
+		prop.viewHeight,
+		prop.viewMinDepth,
+		prop.viewMaxDepth,
+	};
+
+	D3D12_RECT rect
+	{
+		prop.rectLeft,
+		prop.rectTop,
+		prop.rectRight,
+		prop.rectBottom
+	};
+	return Dx12Ctrl::Instance().GetCameraHolder()->AddCamera(eye, target, port, rect);
+}
+
+bool DeleteCamera(unsigned int cameraIndex)
+{
+	return Dx12Ctrl::Instance().GetCameraHolder()->DeleteCamera(cameraIndex);
 }

@@ -28,6 +28,20 @@ struct ID3D12GraphicsCommandList;
 class Dx12Camera : public std::enable_shared_from_this<Dx12Camera>
 {
 public:
+	struct Property
+	{
+		float viewTopLeftX;
+		float viewTopLeftY;
+		float viewWidth;
+		float viewHeight;
+		float viewMinDepth;
+		float viewMaxDepth;
+		long rectLeft;
+		long rectTop;
+		long rectRight;
+		long rectBottom;
+	};
+
 	/**
 	*	@param[in]	width	カメラの映すピクセル単位の横幅
 	*	@param[in]	height	カメラの映すピクセル単位の縦幅
@@ -51,7 +65,7 @@ public:
 	*	@param[in]	target	カメラの注視点
 	*	@param[in]	upper	カメラの上ベクトル(world座標基準)
 	*/
-	Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3& eye,
+	Dx12Camera(const D3D12_VIEWPORT& viewport, const D3D12_RECT& scissorRect, const DirectX::XMFLOAT3& eye,
 		const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper,
 		std::shared_ptr<CameraHolder> holder, unsigned int holdIndex);
 	~Dx12Camera();

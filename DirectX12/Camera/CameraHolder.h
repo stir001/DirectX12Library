@@ -17,7 +17,7 @@ public:
 	CameraHolder(int wndWidth, int wndHeight, Microsoft::WRL::ComPtr<ID3D12Device> dev);
 	~CameraHolder();
 
-	std::shared_ptr<Dx12Camera> CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
+	std::shared_ptr<Dx12Camera> AddCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
 		D3D12_VIEWPORT viewport, D3D12_RECT scissorRect);
 	std::shared_ptr<Dx12Camera> GetCamera(unsigned int index) const;
 	int GetCameraNum() const;

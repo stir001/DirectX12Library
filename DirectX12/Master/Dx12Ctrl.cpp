@@ -205,7 +205,7 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 	mCameraHolder = std::make_shared<CameraHolder>(mWndWidth, mWndHeight, mDev);
 	D3D12_VIEWPORT viewport = {0, 0, static_cast<float>(mWndWidth), static_cast<float>(mWndHeight), 0.0f, 1.0f};
 	D3D12_RECT sissorRect = { 0, 0, mWndWidth, mWndHeight };
-	mCameraHolder->CreateCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), viewport, sissorRect);
+	mCameraHolder->AddCamera(DirectX::XMFLOAT3(0, 20, -30), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), viewport, sissorRect);
 
 	//RendringManagerƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—
 	InitRenderPath();

@@ -3,6 +3,7 @@
 #include<memory>
 
 class Dx12Camera;
+struct Dx12Camera::Property;
 
 unsigned int Roundup2Multiplier(unsigned int size);
 
@@ -17,3 +18,8 @@ void Dx12CtrlEnd();
 void SetShaderDir(const std::string& dirPath);
 
 std::shared_ptr<Dx12Camera> GetCamera(unsigned int cameraIndex);
+
+std::shared_ptr<Dx12Camera> AddCamera(const Dx12Camera::Property& prop, const DirectX::XMFLOAT3& eye,
+	const DirectX::XMFLOAT3& target);
+
+bool DeleteCamera(unsigned int cameraIndex);

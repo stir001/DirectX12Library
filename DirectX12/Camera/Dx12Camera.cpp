@@ -39,8 +39,8 @@ Dx12Camera::Dx12Camera(int wWidth, int wHeight,const DirectX::XMFLOAT3& eye,
 	UpdateElement();
 }
 
-Dx12Camera::Dx12Camera(D3D12_VIEWPORT viewport, D3D12_RECT scissorRect, const DirectX::XMFLOAT3 & eye,
-	const DirectX::XMFLOAT3 & target, const DirectX::XMFLOAT3 & upper,
+Dx12Camera::Dx12Camera(const D3D12_VIEWPORT& viewport, const D3D12_RECT& scissorRect, const DirectX::XMFLOAT3& eye,
+	const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& upper,
 	std::shared_ptr<CameraHolder> holder, unsigned int holdIndex)
 	: mWidth(static_cast<int>(viewport.Width)), mHeight(static_cast<int>(viewport.Height))
 	, mFov(DirectX::XM_PIDIV4), mNear(1.0f), mFar(500.f)
@@ -283,6 +283,7 @@ D3D12_RECT Dx12Camera::GetScissorRect() const
 void Dx12Camera::DefaultMove(const DxInput& input)
 {
 	float vel = 1.0f;
+	float rota = 3.141592f / 180.0f;
 	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_W))
 	{
 		MoveFront(vel);
@@ -315,19 +316,19 @@ void Dx12Camera::DefaultMove(const DxInput& input)
 
 	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_UP))
 	{
-		TurnUpDown(vel);
+		TurnUpDown(rota);
 	}
 	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_DOWN))
 	{
-		TurnUpDown(-vel);
+		TurnUpDown(-rota);
 	}
 	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_RIGHT))
 	{
-		TurnRightLeft(vel);
+		TurnRightLeft(rota);
 	}
 	if (input.IsKeyDown(VIRTUAL_KEY_INDEX::KEY_LEFT))
 	{
-		TurnRightLeft(-vel);
+		TurnRightLeft(-rota);
 	}
 }
 

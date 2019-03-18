@@ -16,7 +16,7 @@ CameraHolder::~CameraHolder()
 {
 }
 
-std::shared_ptr<Dx12Camera> CameraHolder::CreateCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
+std::shared_ptr<Dx12Camera> CameraHolder::AddCamera(const DirectX::XMFLOAT3& eye, const DirectX::XMFLOAT3& target, 
 	D3D12_VIEWPORT viewport, D3D12_RECT scissorRect)
 {
 	std::shared_ptr<Dx12Camera> rtn = nullptr;
