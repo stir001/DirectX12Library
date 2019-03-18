@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Dx12Ctrl.h"
-#include "d3dx12.h"
 #include "Texture/TextureLoader.h"
 #include "Buffer/DepthBufferObject.h"
 #include "Buffer/RendertargetObject.h"
@@ -358,7 +357,7 @@ void Dx12Ctrl::SetWindowName(std::string& inWindowName)
 	mWindowName = inWindowName;
 }
 
-const HWND& Dx12Ctrl::GetWndHandle() const
+const HWND& Dx12Ctrl::GetWindowHandle() const
 {
 	return mhWnd;
 }

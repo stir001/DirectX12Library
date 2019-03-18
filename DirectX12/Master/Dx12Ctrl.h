@@ -77,7 +77,7 @@ public:
 	void SetWindowSize(int inw, int inh);
 	void SetWindowName(std::string& inWindowName);
 
-	const HWND& GetWndHandle() const;
+	const HWND& GetWindowHandle() const;
 
 	HRESULT GetDeviceRemoveReason();
 	HRESULT CheckResult();

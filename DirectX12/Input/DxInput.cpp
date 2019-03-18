@@ -6,7 +6,7 @@ DxInput::DxInput()
 {
 	GetKeyboardState(mKeyState);
 	GetCursorPos(&mMousePos.pos);
-	mHWND = Dx12Ctrl::Instance().GetWndHandle();
+	mHWND = Dx12Ctrl::Instance().GetWindowHandle();
 	mXInputState.resize(PAD_NUM);
 }
 
