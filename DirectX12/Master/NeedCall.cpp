@@ -6,6 +6,8 @@
 #include "Camera/CameraHolder.h"
 #include "Camera/Dx12Camera.h"
 #include "NeedCall.h"
+#include "DrawObject/Image/Loader/ImageLoader.h"
+#include "DrawObject/Fbx/FbxLoader.h"
 
 unsigned int Roundup2Multiplier(unsigned int size)
 {
@@ -95,4 +97,24 @@ std::shared_ptr<Dx12Camera> AddCamera(const Dx12Camera::Property& prop, const Di
 bool DeleteCamera(unsigned int cameraIndex)
 {
 	return Dx12Ctrl::Instance().GetCameraHolder()->DeleteCamera(cameraIndex);
+}
+
+std::shared_ptr<FbxModelController> LoadFbxMesh(const std::string & fbxPath)
+{
+	return FbxLoader::Instance().LoadMesh(fbxPath);
+}
+
+std::shared_ptr<FbxModelController> LoadFMD(const std::string & fmdPath)
+{
+	return FbxLoader::Instance().LoadFMD(fmdPath);
+}
+
+std::shared_ptr<ImageController> LoadImage2D(const std::string & imagePath)
+{
+	return ImageLoader::Instance().LoadImage2D(imagePath);
+}
+
+std::shared_ptr<Image3DController> LoadImage3D(const std::string & imagePath)
+{
+	return ImageLoader::Instance().LoadImage3D(imagePath);
 }

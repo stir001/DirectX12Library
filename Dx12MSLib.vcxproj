@@ -195,6 +195,7 @@
     <ClInclude Include="bullet\System\PhysicsSystem.h" />
     <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h" />
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h" />
+    <ClInclude Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayerUpdater.h" />
@@ -345,6 +346,7 @@
     <ClCompile Include="bullet\System\PhysicsSystem.cpp" />
     <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp" />
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp" />
+    <ClCompile Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayerUpdater.cpp" />

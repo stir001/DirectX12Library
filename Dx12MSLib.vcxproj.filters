@@ -570,11 +570,14 @@
     <ClInclude Include="Dx12MSLibCommon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.h">
+      <Filter>DirectX12\DescriptorHeap</Filter>
+    </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\DrawCallIssuer.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12\DrawObject</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Image\ImageDrawIssuer.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12\DrawObject\Image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -995,11 +998,14 @@
     <ClCompile Include="DirectX12\Animation\AnimationPlayerUpdater.cpp">
       <Filter>DirectX12\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.cpp">
+      <Filter>DirectX12\DescriptorHeap</Filter>
+    </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\DrawCallIssuer.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>DirectX12\DrawObject</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>DirectX12\DrawObject\Image</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
