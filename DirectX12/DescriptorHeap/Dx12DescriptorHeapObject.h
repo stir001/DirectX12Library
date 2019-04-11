@@ -28,6 +28,18 @@ class Dx12DescriptorHeapObject : public std::enable_shared_from_this<Dx12Descrip
 {
 public:
 	/**
+	*	@enum	HeapType
+	*	@brief	Heapの種類
+	*/
+	enum HeapType
+	{
+		CBV_ARV_UAV,
+		SRV,
+		SMP,
+		DSV,
+	};
+
+	/**
 	*	@param[in]	name		DescriptorHeapの名前
 	*	@param[in]	dev			ID3D12Deviceの参照
 	*	@param[in]	buffers		DescriptorHeapにセットするBufferのvector
@@ -35,6 +47,14 @@ public:
 	*/
 	Dx12DescriptorHeapObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 		std::vector<std::shared_ptr<Dx12BufferObject>>& buffers, D3D12_DESCRIPTOR_HEAP_TYPE heapType);
+
+	/**
+	*	@param[in]	name		DescriptorHeapの名前
+	*	@param[in]	dev			ID3D12Deviceの参照
+	*	@param[in]	heapType	DescriptorHeapのタイプ
+	*/
+	Dx12DescriptorHeapObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
+		HeapType heapType, unsigned int heapNum = 100);
 	virtual ~Dx12DescriptorHeapObject();
 
 	/**

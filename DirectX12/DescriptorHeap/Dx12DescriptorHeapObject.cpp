@@ -67,6 +67,11 @@ Dx12DescriptorHeapObject::Dx12DescriptorHeapObject(const std::string& name, cons
 	}
 }
 
+Dx12DescriptorHeapObject::Dx12DescriptorHeapObject(const std::string & name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, HeapType heapType, unsigned int heapNum)
+{
+
+}
+
 Dx12DescriptorHeapObject::~Dx12DescriptorHeapObject()
 {
 	mDescHeap.Reset();
