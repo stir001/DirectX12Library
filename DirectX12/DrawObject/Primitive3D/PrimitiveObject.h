@@ -23,7 +23,7 @@ struct PrimitiveVertex
 		uv = { 0, 0 };
 	}
 
-	PrimitiveVertex(DirectX::XMFLOAT3& inpos, DirectX::XMFLOAT3& innorm, DirectX::XMFLOAT2& inuv)
+	PrimitiveVertex(const DirectX::XMFLOAT3& inpos, const DirectX::XMFLOAT3& innorm, const DirectX::XMFLOAT2& inuv)
 	{
 		pos = { inpos.x, inpos.y, inpos.z, 1.0f };
 		normal = { innorm.x, innorm.y, innorm.z, 1.0f };
