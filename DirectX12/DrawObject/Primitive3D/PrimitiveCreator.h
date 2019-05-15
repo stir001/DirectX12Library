@@ -37,11 +37,16 @@ public:
 
 	void SetLightObject(std::shared_ptr<LightObject> inlight);
 	std::shared_ptr<PrimitiveController> CreatePlane(const DirectX::XMFLOAT3& pos, float length, float height, const DirectX::XMFLOAT3& normal);
+	std::shared_ptr<PrimitiveObject> GetPlane(float length, float height, const DirectX::XMFLOAT3& normal);
 	std::shared_ptr<PrimitiveController> CreateCube(float length, const std::string& texPath = "");
+	std::shared_ptr<PrimitiveObject> GetCube(float length);
 	std::shared_ptr<PrimitiveController> CreateCubeNormalMap(float length, const std::string& texPath);
 	std::shared_ptr<PrimitiveController> CreateSphere(float radius, unsigned int div, const std::string& texPath = "");
+	std::shared_ptr<PrimitiveObject> GetSphere(float radius, unsigned int div);
 	std::shared_ptr<PrimitiveController> CreateCapsule(float radius, float length, unsigned int div, const std::string& texPath = "");
-	std::shared_ptr<PrimitiveController> CreateCone(float radius, float height, unsigned int dev);
+	std::shared_ptr<PrimitiveObject> GetCapsule(float radius, float length, unsigned int div);
+	std::shared_ptr<PrimitiveController> CreateCone(float radius, float height, unsigned int div);
+	std::shared_ptr<PrimitiveObject> GetCone(float radius, float height, unsigned int div);
 	std::shared_ptr<PrimitiveController> CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive, const std::string& texPath = "");
 	void SetParamaters(std::shared_ptr<PrimitiveController>& ctrl);
 	void SetRenderingCommandList(std::shared_ptr<Dx12CommandList>& cmdList);

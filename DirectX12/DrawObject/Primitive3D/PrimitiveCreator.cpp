@@ -39,7 +39,12 @@ PrimitiveCreator::~PrimitiveCreator()
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreatePlane(const DirectX::XMFLOAT3& pos, float length, float height, const DirectX::XMFLOAT3& normal)
 {
-	return CreateController(std::shared_ptr<PrimitivePlane>(std::make_shared<PrimitivePlane>(pos, length, height, normal)));
+	return CreateController(std::make_shared<PrimitivePlane>(pos, length, height, normal));
+}
+
+std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetPlane(float length, float height, const DirectX::XMFLOAT3 & normal)
+{
+	return std::make_shared<PrimitivePlane>(DirectX::XMFLOAT3(0.0f,0.0f,0.0f), length, height, normal);
 }
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCube(float length, const std::string& texPath)
@@ -47,6 +52,11 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCube(float length, 
 	std::shared_ptr<PrimitiveController> rtn = CreateController(std::make_shared<PrimitiveCube>(length));
 	SetTexture(rtn, texPath);
 	return rtn;
+}
+
+std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetCube(float length)
+{
+	return std::make_shared<PrimitiveCube>(length);
 }
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCubeNormalMap(float length, const std::string & texPath)
@@ -65,6 +75,11 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateSphere(float radius
 	return rtn;
 }
 
+std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetSphere(float radius, unsigned int div)
+{
+	return std::make_shared<PrimitiveSphere>(radius, div);
+}
+
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radius, float length, unsigned int div, const std::string & texPath)
 {
 	auto cap = std::make_shared<PrimitiveCapsule>(radius, length, div);
@@ -72,11 +87,21 @@ std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCapsule(float radiu
 	return rtn;
 }
 
-std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone(float radius, float height, unsigned int dev)
+std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetCapsule(float radius, float length, unsigned int div)
 {
-	auto cone = std::make_shared<PrimitiveCone>(radius, height, dev);
+	return std::make_shared<PrimitiveCapsule>(radius, length, div);
+}
+
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCone(float radius, float height, unsigned int div)
+{
+	auto cone = std::make_shared<PrimitiveCone>(radius, height, div);
 	auto rtn = CreateController(cone);
 	return rtn;
+}
+
+std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetCone(float radius, float height, unsigned int div)
+{
+	return std::make_shared<PrimitiveCone>(radius, height, div);
 }
 
 std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive, const std::string& texPath)

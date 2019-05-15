@@ -112,4 +112,13 @@ DirectX::XMFLOAT2 NormalizeXMFloat2(const DirectX::XMFLOAT2& val);
 float GetLengthXMFloat2(const DirectX::XMFLOAT2& val);
 
 float DotXMFloat2(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2 rval);
+
+DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);
+DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);
+DirectX::XMFLOAT2 operator-=(DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);
+DirectX::XMFLOAT2 operator+=(DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);
+DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2& xmf2, const float val);
+DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2& xmf2, const float val);
+DirectX::XMFLOAT2 operator*=(DirectX::XMFLOAT2& xmf2, const float val);
+DirectX::XMFLOAT2 operator/=(DirectX::XMFLOAT2& xmf2, const float val);
 #endif

@@ -353,3 +353,47 @@ float DotXMFloat2(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 rval)
 	return lval.x * rval.x + lval.y * rval.y;
 }
 
+DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 & rval)
+{
+	return DirectX::XMFLOAT2(lval.x - rval.x, lval.y - rval.y);
+}
+
+DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 & rval)
+{
+	return DirectX::XMFLOAT2(lval.x + rval.x, lval.y+ rval.y);
+}
+
+DirectX::XMFLOAT2 operator-=(DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 & rval)
+{
+	lval = lval - rval;
+	return lval;
+}
+
+DirectX::XMFLOAT2 operator+=(DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 & rval)
+{
+	lval = lval + rval;
+	return lval;
+}
+
+DirectX::XMFLOAT2 operator*(const DirectX::XMFLOAT2 & xmf2, const float val)
+{
+	return DirectX::XMFLOAT2(xmf2.x * val, xmf2.y * val);
+}
+
+DirectX::XMFLOAT2 operator/(const DirectX::XMFLOAT2 & xmf2, const float val)
+{
+	return DirectX::XMFLOAT2(xmf2.x / val , xmf2.y / val);
+}
+
+DirectX::XMFLOAT2 operator*=(DirectX::XMFLOAT2 & xmf2, const float val)
+{
+	xmf2 = xmf2 * val;
+	return xmf2;
+}
+
+DirectX::XMFLOAT2 operator/=(DirectX::XMFLOAT2 & xmf2, const float val)
+{
+	xmf2 = xmf2 / val;
+	return xmf2;
+}
+
