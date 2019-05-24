@@ -51,7 +51,6 @@ IndexBufferObject::IndexBufferObject(const std::string& name, const Microsoft::W
 	mIndexBufferView.BufferLocation = mBuffer->GetGPUVirtualAddress();
 	mIndexBufferView.Format = format;
 	mIndexBufferView.SizeInBytes = (elementsize * elementcount);
-
 }
 
 IndexBufferObject::IndexBufferObject(const std::string& name, Microsoft::WRL::ComPtr<ID3D12Resource>& rsc)

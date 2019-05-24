@@ -60,10 +60,7 @@
 #include "DirectX12/DrawObject/Primitive2D/Primitive2DManager.h"
 #include "DirectX12/DrawObject/Primitive3D/PrimitiveController.h"
 #include "DirectX12/DrawObject/Primitive3D/PrimitiveCreator.h"
-#include "DirectX12/DrawObject/Primitive3D/PrimitiveCube.h"
 #include "DirectX12/DrawObject/Primitive3D/PrimitiveObject.h"
-#include "DirectX12/DrawObject/Primitive3D/PrimitivePlane.h"
-#include "DirectX12/DrawObject/Primitive3D/PrimitiveSphere.h"
 
 #include "DirectX12/Input/DxInput.h"
 

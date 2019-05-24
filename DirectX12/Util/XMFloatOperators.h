@@ -41,6 +41,8 @@ DirectX::XMFLOAT4 operator+=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT3& r
 
 DirectX::XMFLOAT4 operator+=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
 
+DirectX::XMFLOAT4 operator-=(DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
+
 DirectX::XMFLOAT4X4 operator*(const DirectX::XMFLOAT4X4& lval, const float rval);
 
 DirectX::XMFLOAT4X4 operator*( const float lval, const DirectX::XMFLOAT4X4& rval);

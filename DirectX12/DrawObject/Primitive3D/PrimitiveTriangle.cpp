@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "PrimitiveTriangle.h"
-#include <Dx12MSLib.h>
-
+#include "Util/XMFloatOperators.h"
 
 PrimitiveTriangle::PrimitiveTriangle(const DirectX::XMFLOAT3& pos1, const DirectX::XMFLOAT3& pos2, const DirectX::XMFLOAT3& pos3)
 	: PrimitiveObject("PrimitiveTriangle")

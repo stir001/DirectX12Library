@@ -1,10 +1,16 @@
 #include "stdafx.h"
 #include "FbxConverter.h"
-#include "Dx12MSLib.h"
 #include "DirectX12/PipelineState/FbxPipelineState.h"
 #include "DirectX12/Rootsignature/FbxRootSignature.h"
 #include "FMDdata.h"
 #include "FMDLoader.h"
+#include "Master/Dx12Ctrl.h"
+#include "Light/DirectionalLight.h"
+#include "FbxLoader.h"
+#include "FbxModelController.h"
+#include "RenderingPass/Manager/RenderingPassManager.h"
+#include "FbxModelDataCoverter.h"
+#include "FbxAnimationData.h"
 
 FbxConverter* FbxConverter::mInstance = nullptr;
 

@@ -65,7 +65,7 @@ void PrimitiveSphere::CreateIndices(unsigned int div)
 	//ˆê”Ôã‚Æˆê”Ô‰ºˆÈŠO
 	for (unsigned int yDiv = 1; yDiv < div - 1; ++yDiv)
 	{
-		for (unsigned int circleDiv = 0; circleDiv < circleVertNum; ++circleDiv)
+		for (unsigned int circleDiv = 0; circleDiv < circleVertNum - 1; ++circleDiv)
 		{
 			mIndices.push_back(circleDiv + yDiv * circleVertNum);
 			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum);
