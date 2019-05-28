@@ -6,12 +6,12 @@
 PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 	: PrimitiveObject("PrimitiveCone")
 {
-
 	PrimitiveVertex vert;
 
 	float unitHeight = height / static_cast<float>(div);
 	float unitCircleDiv = 3.14159265f * 2.0f / static_cast<float>(div);
 	float unitRadius = radius / static_cast<float>(div);
+	const float yOffset = -height / 2.0f;
 
 	//ñ@ê¸çÏê¨
 	std::vector<DirectX::XMFLOAT4> normals(div + 1);
@@ -44,7 +44,7 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 			float currentRadius = unitRadius * yDiv;
 			vert.pos.x = sinf(unitCircleDiv * circleDiv) * currentRadius;
 			vert.pos.z = cosf(unitCircleDiv * circleDiv) * currentRadius;
-			vert.pos.y = unitHeight * yDiv;
+			vert.pos.y = unitHeight * yDiv + yOffset;
 
 			vert.normal = normals[circleDiv];
 
@@ -58,7 +58,7 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 		float currentRadius = radius;
 		vert.pos.x = sinf(unitCircleDiv * circleDiv) * currentRadius;
 		vert.pos.z = cosf(unitCircleDiv * circleDiv) * currentRadius;
-		vert.pos.y = height;
+		vert.pos.y = height + yOffset;
 
 		vert.normal = { 0.0f, 1.0f, 0.0f, 1.0f };
 

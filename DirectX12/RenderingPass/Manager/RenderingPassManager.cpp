@@ -49,7 +49,7 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	mDevice->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&mCmdQueue));
 	mCmdQueue->SetName(L"RenderingCommandQueue");
 
-	mSwapChain.reset(new SwapChainObject(hwnd, mDevice, factory, mCmdQueue));
+	mSwapChain = std::make_shared<SwapChainObject>(hwnd, mDevice, factory, mCmdQueue);
 
 	DXGI_SWAP_CHAIN_DESC desc;
 	mSwapChain->GetSwapChain()->GetDesc(&desc);

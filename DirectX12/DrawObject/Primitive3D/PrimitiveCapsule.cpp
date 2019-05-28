@@ -21,7 +21,7 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 
 	const unsigned int circleVertNum = div + 2;
 
-	DirectX::XMFLOAT3 offset = { 0.0f, length * 0.5f + radius, 0.0f};
+	DirectX::XMFLOAT3 offset = { 0.0f, length * 0.5f - radius, 0.0f};
 
 	//y•ûŒü•ªŠ„
 	for (unsigned int yDiv = 0; yDiv < circleVertNum / 2; ++yDiv)
@@ -79,7 +79,7 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 	//ˆê”Ôã‚Æˆê”Ô‰ºˆÈŠO
 	for (unsigned int yDiv = 1; yDiv < div - 1; ++yDiv)
 	{
-		for (unsigned int circleDiv = 0; circleDiv < circleVertNum; ++circleDiv)
+		for (unsigned int circleDiv = 0; circleDiv < circleVertNum - 1; ++circleDiv)
 		{
 			mIndices.push_back(circleDiv + yDiv * circleVertNum);
 			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum);
