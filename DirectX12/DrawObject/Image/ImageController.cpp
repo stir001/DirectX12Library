@@ -200,9 +200,12 @@ void ImageController::Draw()
 void ImageController::BackDraw()
 {
 	(this->*mBundleUpdate)();
-	mDescHeap->SetDescriptorHeap(mBackCmdList);
-	mBackCmdList->ExecuteBundle(mBundleCmdList);
-	mBackCmdList->SetDrawController(shared_from_this());
+	CreateInstanceData();
+	if (mDrawIssuer->CountUpInstanceNum() == 1)
+	{
+		mBackCmdList->SetDrawCallIssuer(mDrawIssuer);
+		mBackCmdList->SetDrawController(shared_from_this());
+	}
 }
 
 bool ImageController::IsTurnU() const
