@@ -71,6 +71,11 @@ void Dx12Ctrl::UpdateWindowSize()
 	mWndHeight = rect.bottom;
 }
 
+void Dx12Ctrl::SetIcon(const std::string & iconName)
+{
+	mIconName = iconName;
+}
+
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}
 ,mCmdAllocator(nullptr),mCmdList(nullptr),mCmdQueue(nullptr),mFactory(nullptr)
 ,mDev(nullptr), mCameraHolder(nullptr)
@@ -222,18 +227,22 @@ void Dx12Ctrl::InitWindowCreate()
 	RECT wrc = { 0,0,mWndWidth,mWndHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
-	const char* name = mWindowName.data();
 	std::string strName = mWindowName;
 	strName.push_back('\0');
 	size_t size = strName.size();
 	std::wstring buff;
 	ToWChar(buff,strName);
+	std::wstring icon;
+	strName = mIconName;
+	strName.push_back('\0');
+	ToWChar(icon, strName);
 
 	WNDCLASSEX w = {};
 	w.lpfnWndProc = (WNDPROC)winProc;
-	w.lpszClassName = buff.data();
+	w.lpszClassName = icon.data();
 	w.hInstance = mWinHInstance;
-	w.hIcon = LoadIcon(w.hInstance, buff.data());
+	w.hIcon = LoadIcon(w.hInstance, icon.data());
+	w.hIconSm = w.hIcon;
 	w.cbSize = sizeof(WNDCLASSEX);
 	w.hCursor = LoadCursor(NULL, IDC_ARROW);
 	RegisterClassEx(&w);

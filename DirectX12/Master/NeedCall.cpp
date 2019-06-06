@@ -118,3 +118,8 @@ std::shared_ptr<Image3DController> LoadImage3D(const std::string & imagePath)
 {
 	return ImageLoader::Instance().LoadImage3D(imagePath);
 }
+
+void SetIcon(const std::string & iconName)
+{
+	Dx12Ctrl::Instance().SetIcon(iconName);
+}

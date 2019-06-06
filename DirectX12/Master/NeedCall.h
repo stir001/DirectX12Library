@@ -35,3 +35,5 @@ std::shared_ptr<FbxModelController> LoadFMD(const std::string& fmdPath);
 std::shared_ptr<ImageController> LoadImage2D(const std::string& imagePath);
 
 std::shared_ptr<Image3DController> LoadImage3D(const std::string& imagePath);
+
+void SetIcon(const std::string& iconName);

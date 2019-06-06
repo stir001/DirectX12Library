@@ -195,6 +195,7 @@
     <ClInclude Include="bullet\System\PhysicsSystem.h" />
     <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h" />
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h" />
+    <ClInclude Include="DirectX12\PipelineState\DefaultPipelineState.h" />
     <ClInclude Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
     <ClInclude Include="DirectX12\Animation\AnimationPlayer.h" />
@@ -328,6 +329,7 @@
     <ClInclude Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.h" />
     <ClInclude Include="Dx12MSLibCommon.h" />
     <ClInclude Include="DirectX12\DrawObject\Image\ImageDrawIssuer.h" />
+    <ClInclude Include="DirectX12\PipelineState\NotCullPipelineState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -346,6 +348,7 @@
     <ClCompile Include="bullet\System\PhysicsSystem.cpp" />
     <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp" />
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\DefaultPipelineState.cpp" />
     <ClCompile Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
     <ClCompile Include="DirectX12\Animation\AnimationPlayer.cpp" />
@@ -473,6 +476,7 @@
     <ClCompile Include="DirectX12\Rootsignature\FbxNonShadeRootSignature.cpp" />
     <ClCompile Include="DirectX12\DrawObject\DrawCallIssuer.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp" />
+    <ClCompile Include="DirectX12\PipelineState\NotCullPipelineState.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

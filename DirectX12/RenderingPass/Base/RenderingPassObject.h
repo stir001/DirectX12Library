@@ -4,8 +4,6 @@
 #include <string>
 
 struct ID3D12CommandQueue;
-struct ID3D12GraphicsCommandList;
-struct ID3D12Resource;
 
 class Dx12CommandList;
 class Dx12BufferObject;
@@ -44,6 +42,7 @@ public:
 
 	/**
 	*	最終レンダリング結果を返す関数　一番最後のパスのみ必須それ以外は実装しなくてもいい
+	*		デフォルトでは空のshared_ptrを返す
 	*/
 	virtual std::shared_ptr<Dx12BufferObject> GetRenderTarget();
 

@@ -32,6 +32,11 @@ const Microsoft::WRL::ComPtr<ID3D12RootSignature>& RootSignatureObject::GetRootS
 	return mRootSignature;
 }
 
+const std::vector<D3D12_INPUT_ELEMENT_DESC>& RootSignatureObject::GetInputElementDesc() const
+{
+	return mInputElements;
+}
+
 void RootSignatureObject::CreateRootSignature(const std::string& name, ID3D10Blob * signatureBlob, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	dev->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&mRootSignature));

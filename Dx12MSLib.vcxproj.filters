@@ -579,6 +579,12 @@
     <ClInclude Include="DirectX12\DrawObject\Image\ImageDrawIssuer.h">
       <Filter>DirectX12\DrawObject\Image</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\DefaultPipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\NotCullPipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
@@ -1006,6 +1012,12 @@
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp">
       <Filter>DirectX12\DrawObject\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\DefaultPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\NotCullPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

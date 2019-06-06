@@ -4,7 +4,6 @@
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Buffer/Dx12BufferObject.h"
 #include "Buffer/RendertargetObject.h"
-#include "d3dx12.h"
 
 #include <d3d12.h>
 #include <dxgi1_4.h>

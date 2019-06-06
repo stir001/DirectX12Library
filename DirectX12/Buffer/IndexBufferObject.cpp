@@ -3,8 +3,6 @@
 #include "Util/Dx12Getter.h"
 #include "CommandList/Dx12CommandList.h"
 
-#include "d3dx12.h"
-
 IndexBufferObject::IndexBufferObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, unsigned int elementsize, unsigned int elementcount, DXGI_FORMAT format)
 	:Dx12BufferObject(name)
 {

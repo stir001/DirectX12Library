@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Dx12Getter.h"
 
-#include "d3dx12.h"
-
 namespace dx12_getter
 {
 	D3D12_RESOURCE_DESC GetResourceDesc(unsigned int width, unsigned int height, DXGI_FORMAT format)

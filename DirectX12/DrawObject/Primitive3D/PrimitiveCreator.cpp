@@ -7,7 +7,6 @@
 #include "PrimitiveCapsule.h"
 #include "PrimitiveCone.h"
 #include "Master/Dx12Ctrl.h"
-#include "d3dx12.h"
 #include "Camera/Dx12Camera.h"
 #include "Light/LightObject.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"

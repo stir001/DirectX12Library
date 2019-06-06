@@ -17,6 +17,7 @@
 
 struct ID3D12RootSignature;
 struct ID3D10Blob;
+struct D3D12_INPUT_ELEMENT_DESC;
 
 /**
 *	@ingroup Dx12RootSignature
@@ -50,6 +51,12 @@ public:
 	*	@return	作成したrootsignature
 	*/
 	const Microsoft::WRL::ComPtr<ID3D12RootSignature>& GetRootSignature() const;
+
+	/**
+	*	@brief	InputElementを取得する
+	*	@return	InputElement
+	*/
+	const std::vector<D3D12_INPUT_ELEMENT_DESC>& GetInputElementDesc() const;
 protected:
 	RootSignatureObject();
 
@@ -69,6 +76,11 @@ protected:
 	*	使用するシェーダー
 	*/
 	ShaderDatas mShader;
+
+	/**
+	*	インプットエレメント
+	*/
+	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputElements;
 private:
 };
 

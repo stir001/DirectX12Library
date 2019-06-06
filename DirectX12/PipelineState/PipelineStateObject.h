@@ -13,6 +13,10 @@
 #include <string>
 #include <d3d12.h>
 #include <wrl.h>
+#include <memory>
+
+struct D3D12_SHADER_BYTECODE;
+class RootSignatureObject;
 
 /**
 *	@ingroup Dx12PipelineState
@@ -69,6 +73,13 @@ protected:
 	void CreatePipelineState(const std::string& name, D3D12_COMPUTE_PIPELINE_STATE_DESC& cpsDesc, const Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 
 	/**
+	*	@brief	InputElementを設定する
+	*	@param[in,out]	gpsDesc	設定先のGraphicsPipelineState
+	*	@param[in]		rootSignature	InputElementを持っているRootSignature
+	*/
+	void SetInputElement(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const std::shared_ptr<RootSignatureObject>& rootSignature);
+
+	/**
 	*	@brief	GraphicsPipelineのDescにシェーダーをセットする
 	*	@param[in,out]	gpsDesc		シェーダーを登録したいGraphicsPipelineのDesc
 	*	@param[in]	shaders		登録したいシェーダー
@@ -76,10 +87,22 @@ protected:
 	void SetShaders(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const ShaderDatas& shaders);
 
 	/**
+	*	@brief	RootSignature周りに任せている設定をgpsに適応する
+	*	@param[in,out]	gpsDesc	設定を適応する先のgpsDesc
+	*	@param[in]		rootsignature	設定を保持しているRootSignature;
+	*/
+	void SetRootSignatureConfigure(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const std::shared_ptr<RootSignatureObject>& rootSignature);
+
+	/**
 	*	@brief	PipelineStateに名前をセットする
 	*	@param[in]	name	PipelineStateの名前
 	*/
 	void SetName(const std::string& name);
+
+	/**
+	*	@brief	デフォルト設定のGraphicsPipelineStateを取得する
+	*/
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC GetDefalutPipelineStateDesc() const;
 
 	/**
 	*	作成したPipelineState
@@ -90,5 +113,13 @@ protected:
 	*	PipelineStateの名前
 	*/
 	std::string mName;
+private:
+
+	/**
+	*	@brief	シェーダーを設定する
+	*	@param[in,out]	byteCode	設定する先
+	*	@param[in]		blob		設定するシェーダー
+	*/
+	void SetShader(D3D12_SHADER_BYTECODE& byteCode, ID3DBlob* blob);
 };
 

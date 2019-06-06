@@ -13,7 +13,6 @@
 #include "Master/Dx12Ctrl.h"
 #include "Buffer/RendertargetObject.h"
 
-#include "d3dx12.h"
 #include <algorithm>
 #include <assert.h>
 

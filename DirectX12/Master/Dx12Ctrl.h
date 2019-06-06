@@ -104,6 +104,7 @@ public:
 
 	void SetWinProc(LRESULT(*proc)(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam));
 	void UpdateWindowSize();
+	void SetIcon(const std::string& iconName);
 private:
 	Dx12Ctrl();
 	Dx12Ctrl(const Dx12Ctrl&);
@@ -126,6 +127,7 @@ private:
 	std::shared_ptr<DepthBufferObject> mDepthBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDepthDescHeap;
 	std::shared_ptr<CameraHolder> mCameraHolder;
+	std::string mIconName;
 	UINT64 mFenceValue;
 	HWND mhWnd;
 	float mClrcolor[4];

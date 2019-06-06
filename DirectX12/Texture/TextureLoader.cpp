@@ -2,7 +2,6 @@
 #include "TextureLoader.h"
 #include "DirectXTex.h"
 #include "Master/Dx12Ctrl.h"
-#include "d3dx12.h"
 #include "Texture/TextureObject.h"
 #include "Buffer/ShaderResourceObject.h"
 #include "Util/CharToWChar.h"
