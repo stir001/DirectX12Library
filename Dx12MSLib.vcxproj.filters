@@ -279,9 +279,6 @@
     <ClInclude Include="DirectX12\PipelineState\PipelineStateObject.h">
       <Filter>DirectX12\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\Image2DPipelineState.h">
-      <Filter>DirectX12\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\RootSignatureObject.h">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
@@ -348,9 +345,6 @@
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxsdkHaveStruct.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\FbxPipelineState.h">
-      <Filter>DirectX12\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\FbxRootSignature.h">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClInclude>
@@ -365,9 +359,6 @@
     </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\Image3DRootSignature.h">
       <Filter>DirectX12\Rootsignature</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\Image3DPipelineState.h">
-      <Filter>DirectX12\PipelineState</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.h">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
@@ -459,26 +450,11 @@
     <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDBasicPipelineState.h">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDShadowPipelineState.h">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.h">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDToonShadowPipelineState.h">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.h">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.h">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\RenderingPass\ShadowmapPass.h">
       <Filter>DirectX12\RenderingPass</Filter>
@@ -492,20 +468,8 @@
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.h">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PrimitivePipelineState.h">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.h">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\BillboardPipelineState.h">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClInclude>
     <ClInclude Include="DirectX12\Rootsignature\BillboardRootSignature.h">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.h">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\DrawObject\Fbx\FbxConverter.h">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
@@ -583,6 +547,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="DirectX12\PipelineState\NotCullPipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\TransParentPipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -725,9 +692,6 @@
     <ClCompile Include="DirectX12\PipelineState\PipelineStateObject.cpp">
       <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\Image2DPipelineState.cpp">
-      <Filter>DirectX12\PipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\RootSignatureObject.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
@@ -791,9 +755,6 @@
     <ClCompile Include="DirectX12\DrawObject\Image\Loader\ImageLoader.cpp">
       <Filter>DirectX12\DrawObject\Image</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\FbxPipelineState.cpp">
-      <Filter>DirectX12\PipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\FbxRootSignature.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
     </ClCompile>
@@ -808,9 +769,6 @@
     </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\Image3DRootSignature.cpp">
       <Filter>DirectX12\Rootsignature</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\Image3DPipelineState.cpp">
-      <Filter>DirectX12\PipelineState</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Primitive3D\PrimitiveSphere.cpp">
       <Filter>DirectX12\DrawObject\Primitive3D</Filter>
@@ -893,29 +851,14 @@
     <ClCompile Include="DirectX12\Rootsignature\PMDToonRootsignature.cpp">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDBasicPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDShadowPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDToonShadowPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\PMD</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\PMD</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\RenderingPass\ShadowmapPass.cpp">
       <Filter>DirectX12\RenderingPass</Filter>
@@ -929,20 +872,8 @@
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PrimitivePipelineState.cpp">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\BillboardPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
-    </ClCompile>
     <ClCompile Include="DirectX12\Rootsignature\BillboardRootSignature.cpp">
       <Filter>DirectX12\Rootsignature\Primitive</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.cpp">
-      <Filter>DirectX12\PipelineState\Primitive</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\DrawObject\Fbx\FbxConverter.cpp">
       <Filter>DirectX12\DrawObject\Fbx</Filter>
@@ -1017,6 +948,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DirectX12\PipelineState\NotCullPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\TransParentPipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

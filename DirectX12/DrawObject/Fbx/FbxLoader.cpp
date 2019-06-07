@@ -11,7 +11,7 @@
 #include "Light/DirectionalLight.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "FbxsdkHaveStruct.h"
-#include "PipelineState/FbxPipelineState.h"
+#include "PipelineState/DefaultPipelineState.h"
 #include "Rootsignature/FbxRootSignature.h"
 #include "FMDLoader.h"
 #include "FMDdata.h"
@@ -43,7 +43,7 @@ FbxLoader::FbxLoader()
 
 void FbxLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	mPipelinestate = std::make_shared<FbxPipelineState>(mRootsignature, dev);
+	mPipelinestate = std::make_shared<DefaultPipelineState>("Fbx",mRootsignature, dev);
 }
 
 void FbxLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)

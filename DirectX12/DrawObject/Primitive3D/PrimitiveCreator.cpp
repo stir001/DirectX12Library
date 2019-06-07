@@ -12,7 +12,7 @@
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "Rootsignature/PrimitiveRootSignature.h"
 #include "Rootsignature/PrimitiveNormalMapRootSignature.h"
-#include "PipelineState/PrimitivePipelineState.h"
+#include "PipelineState/DefaultPipelineState.h"
 #include "Light/DirectionalLight.h"
 #include "Texture/TextureLoader.h"
 
@@ -23,11 +23,11 @@
 PrimitiveCreator* PrimitiveCreator::mInstance = nullptr;
 
 PrimitiveCreator::PrimitiveCreator():mRootsiganture(std::make_shared<PrimitiveRootSignature>(Dx12Ctrl::Instance().GetDev()))
-	, mPipelineState(std::make_shared<PrimitivePipelineState>(mRootsiganture, Dx12Ctrl::Instance().GetDev()))
+	, mPipelineState(std::make_shared<DefaultPipelineState>("Primitive",mRootsiganture, Dx12Ctrl::Instance().GetDev()))
 	, mLight(std::make_shared<DirectionalLight>(1.0f,-1.0f,1.0f))
 	, mCommnadList(RenderingPassManager::Instance().GetRenderingPassCommandList(static_cast<unsigned int>(DefaultPass::Model)))
 	, mNormalMapRootsignature(std::make_shared<PrimitiveNormalMapRootSignature>(Dx12Ctrl::Instance().GetDev()))
-	, mNormalMapPipelineState(std::make_shared<PrimitivePipelineState>(mNormalMapRootsignature, Dx12Ctrl::Instance().GetDev()))
+	, mNormalMapPipelineState(std::make_shared<DefaultPipelineState>("PrimitiveNormalmap",mNormalMapRootsignature, Dx12Ctrl::Instance().GetDev()))
 {
 }
 

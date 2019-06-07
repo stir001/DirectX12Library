@@ -6,6 +6,7 @@ SkeletonPipelineState::SkeletonPipelineState(std::shared_ptr<RootSignatureObject
 {
 	auto gps = GetDefalutPipelineStateDesc();
 	gps.RasterizerState.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_NONE;
+	gps.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
 	SetRootSignatureConfigure(gps, rootsignature);
 

@@ -259,12 +259,7 @@
     <ClInclude Include="DirectX12\Master\Dx12Ctrl.h" />
     <ClInclude Include="DirectX12\Master\Dx12ResultCheckDefine.h" />
     <ClInclude Include="DirectX12\Master\NeedCall.h" />
-    <ClInclude Include="DirectX12\PipelineState\BillboardPipelineState.h" />
-    <ClInclude Include="DirectX12\PipelineState\FbxPipelineState.h" />
-    <ClInclude Include="DirectX12\PipelineState\Image2DPipelineState.h" />
-    <ClInclude Include="DirectX12\PipelineState\Image3DPipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\PipelineStateObject.h" />
-    <ClInclude Include="DirectX12\PipelineState\PrimitivePipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\SkeletonPipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\WireFramePipelineState.h" />
     <ClInclude Include="DirectX12\RenderingPass\BackGroundPass.h" />
@@ -304,20 +299,13 @@
     <ClInclude Include="Dx12MSLib.h" />
     <ClInclude Include="Bullet\Action\IActionDefiner.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PMDToonPipelineState.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDShadowRootSignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PMDShadowPipelineState.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDBasicRootSignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PMDBasicPipelineState.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PMDToonShadowPipelineState.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.h" />
     <ClInclude Include="DirectX12\RenderingPass\ShadowmapPass.h" />
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveShadowRootSignature.h" />
     <ClInclude Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.h" />
-    <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.h" />
-    <ClInclude Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.h" />
     <ClInclude Include="DirectX12\PipelineState\SkyBoxPipelineState.h" />
     <ClInclude Include="DirectX12\RenderingPass\SkyBoxPass.h" />
     <ClInclude Include="DirectX12\Rootsignature\SkyBoxRootSignature.h" />
@@ -332,6 +320,7 @@
     <ClInclude Include="DirectX12\PipelineState\NotCullPipelineState.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="DirectX12\PipelineState\TransParentPipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bullet\Action\CollisionDetector.cpp" />
@@ -408,12 +397,7 @@
     <ClCompile Include="DirectX12\Light\LightObject.cpp" />
     <ClCompile Include="DirectX12\Master\Dx12Ctrl.cpp" />
     <ClCompile Include="DirectX12\Master\NeedCall.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\BillboardPipelineState.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\FbxPipelineState.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\Image2DPipelineState.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\Image3DPipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\PipelineStateObject.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PrimitivePipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\SkeletonPipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\WireFramePipelineState.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\BackGroundPass.cpp" />
@@ -451,20 +435,13 @@
     <ClCompile Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.cpp" />
     <ClCompile Include="Bullet\Action\IActionDefiner.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDToonRootsignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PMDToonPipelineState.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDShadowRootSignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PMDShadowPipelineState.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDBasicRootSignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PMDBasicPipelineState.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDToonShadowRootSignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PMDToonShadowPipelineState.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PMDBasicShadowRootSignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PMDBasicShadowPipelineState.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\ShadowmapPass.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveShadowRootSignature.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\PrimitiveShadowRenderRootSignature.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowPipelineState.cpp" />
-    <ClCompile Include="DirectX12\PipelineState\PrimitiveShadowRenderPipelineState.cpp" />
     <ClCompile Include="DirectX12\PipelineState\SkyBoxPipelineState.cpp" />
     <ClCompile Include="DirectX12\RenderingPass\SkyBoxPass.cpp" />
     <ClCompile Include="DirectX12\Rootsignature\SkyBoxRootSignature.cpp" />
@@ -483,6 +460,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\TransParentPipelineState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\Billboard.hlsl">

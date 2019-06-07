@@ -11,12 +11,12 @@
 #include "Rootsignature/BillboardRootSignature.h"
 #include "PipelineState/PipelineStateObject.h"
 #include "PipelineState/NotCullPipelineState.h"
-#include "PipelineState//Image3DPipelineState.h"
 #include "PipelineState/DefaultPipelineState.h"
 #include "Shader/ShaderCompiler.h"
 #include "Texture/TextureLoader.h"
 #include "RenderingPass/Manager/RenderingPassManager.h"
 #include "DrawObject/Image/Image3DController.h"
+#include "PipelineState/TransParentPipelineState.h"
 
 ImageLoader* ImageLoader::mInstance = nullptr;
 
@@ -107,9 +107,9 @@ void ImageLoader::Release(const std::string& releaseImagePath)
 
 void ImageLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	mPipelinestate = std::make_shared <NotCullPipelineState>("Image2D", mRootsignature, dev);
+	mPipelinestate = std::make_shared <TransParentPipelineState>("Image2D", mRootsignature, dev);
 
-	m3DPipelinestate = std::make_shared<NotCullPipelineState>("Image3D", m3DRootsignature, dev);
+	m3DPipelinestate = std::make_shared<TransParentPipelineState>("Image3D", m3DRootsignature, dev);
 
 	mBillboardPipelineState = std::make_shared<NotCullPipelineState>("Billboard",mBillboardRootsignature, dev);
 }

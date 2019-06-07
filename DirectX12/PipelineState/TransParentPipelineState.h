@@ -1,15 +1,13 @@
 #pragma once
 #include "PipelineStateObject.h"
 
-class RootSignatureObject;
-
-class DefaultPipelineState :
+class TransParentPipelineState :
 	public PipelineStateObject
 {
 public:
-	DefaultPipelineState(const std::string& name,
+	TransParentPipelineState(const std::string& name,
 		const std::shared_ptr<RootSignatureObject>& rootsignature,
 		const Microsoft::WRL::ComPtr<ID3D12Device>& dev);
-	~DefaultPipelineState();
+	~TransParentPipelineState();
 };
 

@@ -4,7 +4,7 @@
 
 using namespace DirectX;
 
-const unsigned int PLANE_INDICES[] = { 0, 1, 2, 1, 3, 2};
+const unsigned int PLANE_INDICES[] = { 0, 2, 1, 1, 2, 3};
 
 PrimitivePlane::PrimitivePlane(DirectX::XMFLOAT3 p, float len, float hei, DirectX::XMFLOAT3 norm) 
 	: PrimitiveObject("PrimitivePlane"), mLength(len), mHeight(hei), mPos(p)

@@ -73,8 +73,8 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 	for (unsigned int i = 0; i < roopCount - 1; ++i)
 	{
 		mIndices[idx++] = i;
-		mIndices[idx++] = i + 1 + roopCount;
 		mIndices[idx++] = i + roopCount;
+		mIndices[idx++] = i + 1 + roopCount;
 	}
 
 	//ˆê”ÔãˆÈŠO
@@ -84,12 +84,12 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 		{
 			int offset = i * roopCount;
 			mIndices[idx++] = j + offset;
-			mIndices[idx++] = j + 1 + roopCount + offset;
 			mIndices[idx++] = j + roopCount + offset;
+			mIndices[idx++] = j + 1 + roopCount + offset;
 
 			mIndices[idx++] = j + offset;
-			mIndices[idx++] = j + 1 + offset;
 			mIndices[idx++] = j + 1 + roopCount + offset;
+			mIndices[idx++] = j + 1 + offset;
 		}
 	}
 

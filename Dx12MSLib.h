@@ -73,9 +73,9 @@
 /**
 *	Pipelinestateフォルダインクルード
 */
+#include "DirectX12/PipelineState/DefaultPipelineState.h"
+#include "DirectX12/PipelineState/NotCullPipelineState.h"
 #include "DirectX12/PipelineState/PipelineStateObject.h"
-#include "DirectX12/PipelineState/Image2DPipelineState.h"
-#include "DirectX12/PipelineState/PrimitivePipelineState.h"
 #include "DirectX12/PipelineState/FbxPipelineState.h"
 
 /**

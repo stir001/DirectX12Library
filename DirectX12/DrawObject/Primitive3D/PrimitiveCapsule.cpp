@@ -72,8 +72,8 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 	for (unsigned int circleDiv = 0; circleDiv < div; ++circleDiv)
 	{
 		mIndices.push_back(circleDiv + 0);
-		mIndices.push_back(circleDiv + (0 + 1) * circleVertNum);
 		mIndices.push_back(circleDiv + (0 + 1) * circleVertNum + 1);
+		mIndices.push_back(circleDiv + (0 + 1) * circleVertNum);
 	}
 
 	//ˆê”Ôã‚Æˆê”Ô‰ºˆÈŠO
@@ -82,12 +82,12 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 		for (unsigned int circleDiv = 0; circleDiv < circleVertNum - 1; ++circleDiv)
 		{
 			mIndices.push_back(circleDiv + yDiv * circleVertNum);
-			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum);
 			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum + 1);
+			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum);
 
 			mIndices.push_back(circleDiv + yDiv * circleVertNum);
-			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum + 1);
 			mIndices.push_back(circleDiv + yDiv * circleVertNum + 1);
+			mIndices.push_back(circleDiv + (yDiv + 1) * circleVertNum + 1);
 		}
 	}
 
@@ -95,8 +95,8 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 	for (unsigned int circleDiv = 0; circleDiv < div; ++circleDiv)
 	{
 		mIndices.push_back(circleDiv + (div - 1) * circleVertNum);
-		mIndices.push_back(circleDiv + (div + 0) * circleVertNum + 1);
 		mIndices.push_back(circleDiv + (div - 1) * circleVertNum + 1);
+		mIndices.push_back(circleDiv + (div + 0) * circleVertNum + 1);
 	}
 }
 

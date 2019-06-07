@@ -7,6 +7,7 @@
 #include "Util/CharToWChar.h"
 #include "Util/Util.h"
 
+#include <d3dx12.h>
 #include <tchar.h>
 #include <algorithm>
 

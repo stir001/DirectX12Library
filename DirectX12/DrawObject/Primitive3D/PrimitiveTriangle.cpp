@@ -22,7 +22,7 @@ PrimitiveTriangle::PrimitiveTriangle(const DirectX::XMFLOAT3& pos1, const Direct
 	vert.pos = ConvertXMFloat3ToXMFloat4(pos3);
 	mVertices[2] = vert;
 
-	mIndices = { 0,1,2 };
+	mIndices = { 0,2,1 };
 }
 
 

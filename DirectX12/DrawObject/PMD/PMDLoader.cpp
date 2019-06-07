@@ -13,8 +13,7 @@
 #include "Animation/VMD/VMDPlayer.h"
 #include "Texture/TextureLoader.h"
 #include "PipelineState/PipelineStateObject.h"
-#include "PipelineState/PMDToonPipelineState.h"
-#include "PipelineState/PMDBasicPipelineState.h"
+#include "PipelineState/DefaultPipelineState.h"
 #include "Light/DirectionalLight.h"
 #include "Shader/ShaderCompiler.h"
 #include "Util/File.h"
@@ -358,9 +357,9 @@ void PMDLoader::CreateMaterialBuffer()
 void PMDLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 
-	mPipelinestate = std::make_shared<PMDBasicPipelineState>(mRootsignature, dev);
+	mPipelinestate = std::make_shared<DefaultPipelineState>("PMDBasic", mRootsignature, dev);
 
-	mToonPipelineState = std::make_shared<PMDToonPipelineState>(mToonRootsiganture, dev);
+	mToonPipelineState = std::make_shared<DefaultPipelineState>("PMDToon", mToonRootsiganture, dev);
 }
 
 void PMDLoader::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device>& dev)

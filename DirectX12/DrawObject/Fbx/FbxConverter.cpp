@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "FbxConverter.h"
-#include "DirectX12/PipelineState/FbxPipelineState.h"
+#include "DirectX12/PipelineState/DefaultPipelineState.h"
 #include "DirectX12/Rootsignature/FbxRootSignature.h"
 #include "FMDdata.h"
 #include "FMDLoader.h"
@@ -32,7 +32,7 @@ void FbxConverter::Initialize()
 	auto device = Dx12Ctrl::Instance().GetDev();
 
 	mRootsignature = std::make_shared<FbxRootSignature>(device);
-	mPipelineState = std::make_shared<FbxPipelineState>(mRootsignature, device);
+	mPipelineState = std::make_shared<DefaultPipelineState>("Fbx",mRootsignature, device);
 	mWorldLight = std::make_shared<DirectionalLight>(0.5f, -1.0f, 1.0f);
 }
 

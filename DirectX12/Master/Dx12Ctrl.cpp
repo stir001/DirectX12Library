@@ -239,7 +239,7 @@ void Dx12Ctrl::InitWindowCreate()
 
 	WNDCLASSEX w = {};
 	w.lpfnWndProc = (WNDPROC)winProc;
-	w.lpszClassName = icon.data();
+	w.lpszClassName = buff.data();
 	w.hInstance = mWinHInstance;
 	w.hIcon = LoadIcon(w.hInstance, icon.data());
 	w.hIconSm = w.hIcon;

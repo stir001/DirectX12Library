@@ -107,7 +107,7 @@ void PipelineStateObject::SetName(const std::string & name)
 D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateObject::GetDefalutPipelineStateDesc() const
 {
 	//GraphicsPSO
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc;
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
 	
 	//ブレンドの設定
 	D3D12_BLEND_DESC blendDesc;
@@ -118,8 +118,8 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateObject::GetDefalutPipelineStateD
 	D3D12_RENDER_TARGET_BLEND_DESC rtBlendDesc;
 	rtBlendDesc.BlendEnable = true;
 	rtBlendDesc.LogicOpEnable = false;
-	rtBlendDesc.SrcBlend = D3D12_BLEND::D3D12_BLEND_SRC_ALPHA;
-	rtBlendDesc.DestBlend = D3D12_BLEND::D3D12_BLEND_INV_SRC_ALPHA;
+	rtBlendDesc.SrcBlend = D3D12_BLEND::D3D12_BLEND_ONE;	//今から書き込むもの
+	rtBlendDesc.DestBlend = D3D12_BLEND::D3D12_BLEND_ZERO;	//書き込み先にすでにあるもの
 	rtBlendDesc.BlendOp = D3D12_BLEND_OP::D3D12_BLEND_OP_ADD;
 	rtBlendDesc.SrcBlendAlpha = D3D12_BLEND::D3D12_BLEND_ONE;
 	rtBlendDesc.DestBlendAlpha = D3D12_BLEND::D3D12_BLEND_ONE;
@@ -138,6 +138,7 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateObject::GetDefalutPipelineStateD
 	D3D12_STREAM_OUTPUT_DESC streamOutputDesc;
 	streamOutputDesc.pSODeclaration = nullptr;
 	streamOutputDesc.NumEntries = 0;
+	streamOutputDesc.NumStrides = 0;
 	streamOutputDesc.pBufferStrides = 0;
 	streamOutputDesc.RasterizedStream = 0;
 
@@ -183,15 +184,16 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateObject::GetDefalutPipelineStateD
 	desc.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;		//トライアングルストリップ時の不連続性を表す特別なインデックス値の設定
 	desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	desc.NumRenderTargets = 1;
-	desc.RTVFormats[0] = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
+	desc.RTVFormats[0] = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.DSVFormat = DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
 	
 	DXGI_SAMPLE_DESC sampleDesc;
 	sampleDesc.Count = 1;
 	sampleDesc.Quality = 0;
 
+	desc.SampleDesc = sampleDesc;
 	//参照できるデバイスのマスク
-	desc.NodeMask = UINT_MAX;
+	desc.NodeMask = 0;
 	
 	D3D12_CACHED_PIPELINE_STATE cachedPSO;
 	cachedPSO.CachedBlobSizeInBytes = 0;
