@@ -51,6 +51,9 @@ public:
 		const std::string& dsName,
 		bool existRootSignature);
 
+	/** TODO:リソース化したシェーダーから読み込む
+	*	@brief	未実装
+	*/
 	ShaderDatas CompileShaderFromResource(int reosurceID,
 		const std::string& vsName,
 		const std::string& psName,
@@ -82,7 +85,15 @@ private:
 		std::string def;
 	};
 
-	std::map<std::string, ShaderDatas> mDatas;
+	struct ShaderNames {
+		std::string vs;
+		std::string ps;
+		std::string gs;
+		std::string hs;
+		std::string ds;
+	};
+
+	std::map<std::string, std::list<std::pair<ShaderNames,ShaderDatas>>> mDatas;
 	std::vector<D3D_SHADER_MACRO> mMacros;
 	std::list<MacroData> mStrData;
 	std::string mShaderModel;

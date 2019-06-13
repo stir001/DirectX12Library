@@ -30,10 +30,10 @@ RendertargetObject::RendertargetObject(const std::string& name,const Microsoft::
 
 	mClearValue;
 	mClearValue.Format = format;
-	mClearValue.Color[0] = 0.5f;
-	mClearValue.Color[1] = 0.5f;
-	mClearValue.Color[2] = 0.5f;
-	mClearValue.Color[3] = 1.0f;
+	mClearValue.Color[0] = 0.0f;
+	mClearValue.Color[1] = 0.0f;
+	mClearValue.Color[2] = 0.0f;
+	mClearValue.Color[3] = 0.0f;
 
 	mDeafultState = mCurrentState = D3D12_RESOURCE_STATE_RENDER_TARGET;
 

@@ -76,7 +76,7 @@
 #include "DirectX12/PipelineState/DefaultPipelineState.h"
 #include "DirectX12/PipelineState/NotCullPipelineState.h"
 #include "DirectX12/PipelineState/PipelineStateObject.h"
-#include "DirectX12/PipelineState/FbxPipelineState.h"
+#include "DirectX12/PipelineState/TransparentAfterPipelineState.h"
 
 /**
 *	RenderringPassフォルダインクルード
@@ -91,6 +91,7 @@
 #include "DirectX12/Rootsignature/PrimitiveRootSignature.h"
 #include "DirectX12/Rootsignature/RootSignatureObject.h"
 #include "DirectX12/Rootsignature/FbxNonShadeRootSignature.h"
+#include "DirectX12/Rootsignature/Image3DRootSignature.h"
 
 #include "DirectX12/Shader/HlslInclude.h"
 #include "DirectX12/Shader/ShaderCompiler.h"

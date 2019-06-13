@@ -162,13 +162,13 @@ public:
 	*	@brief	使用するrootsignatureを設定する
 	*	@param[in]	rootsignature	使用するrootsiganture
 	*/
-	void SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature);
+	void SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature);
 
 	/**
 	*	@brief	使用するpipelinestateを設定する
 	*	@param[in]	pipelinestate	使用するpipelinestate
 	*/
-	void SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate);
+	void SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate);
 
 	/**
 	*	@brief	画像の名前を取得する

@@ -67,8 +67,8 @@ PriVSOutput PrimitiveVS(PriVSInput vsInput)
 
 float4 PrimitivePS(PriGSOut data) : SV_Target
 {
-    float4 color = (tex.Sample(smp, data.uv)) * 0.5f + data.color * 0.5f;
-    return saturate(float4(color * dot(data.normal, float4(-tailPos.xyz, 1)) + color * 0.2f + data.color * 0.2f));
+    float4 color = float4((tex.Sample(smp, data.uv)).rgb * 0.5f + data.color.rgb * 0.5f, data.color.a);
+    return saturate(float4(color.xyz * dot(data.normal, float4(-tailPos.xyz, 1)) + color.rgb * 0.2f + data.color.rgb * 0.2f, color.a));
 }
 
 #define VERTEX_NUM (3U)

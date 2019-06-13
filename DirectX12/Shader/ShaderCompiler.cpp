@@ -23,12 +23,15 @@ ShaderCompiler::~ShaderCompiler()
 {
 	for (auto& data : mDatas)
 	{
-		data.second.vertexShader.Reset();
-		data.second.pixelShader.Reset();
-		data.second.geometryShader.Reset();
-		data.second.domainShader.Reset();
-		data.second.hullShader.Reset();
-		data.second.rootSignature.Reset();
+		for (auto& shader : data.second)
+		{
+			shader.second.vertexShader.Reset();
+			shader.second.pixelShader.Reset();
+			shader.second.geometryShader.Reset();
+			shader.second.domainShader.Reset();
+			shader.second.hullShader.Reset();
+			shader.second.rootSignature.Reset();
+		}
 	}
 }
 
@@ -73,7 +76,6 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	D3D_SHADER_MACRO macro = { nullptr, nullptr };
 	mMacros.push_back(macro);
 
-	ID3D12ShaderReflection* id3d12ref = nullptr;
 	ShaderDatas data;
 
 	if (vsName.size() > 0)

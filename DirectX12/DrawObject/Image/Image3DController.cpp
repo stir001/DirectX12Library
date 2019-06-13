@@ -203,13 +203,13 @@ std::shared_ptr<Image3DController> Image3DController::GetNewCopy()
 	return rtn;
 }
 
-void Image3DController::SetGraphicsRootSignature(std::shared_ptr<RootSignatureObject>& rootsignature)
+void Image3DController::SetGraphicsRootSignature(const std::shared_ptr<RootSignatureObject>& rootsignature)
 {
 	mRootsignature = rootsignature;
 	mBundleUpdate = &Image3DController::UpdateBundle;
 }
 
-void Image3DController::SetPipelineState(std::shared_ptr<PipelineStateObject>& pipelinestate)
+void Image3DController::SetPipelineState(const std::shared_ptr<PipelineStateObject>& pipelinestate)
 {
 	mPipelinestate = pipelinestate;
 	mBundleUpdate = &Image3DController::UpdateBundle;

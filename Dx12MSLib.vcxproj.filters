@@ -552,6 +552,9 @@
     <ClInclude Include="DirectX12\PipelineState\TransParentPipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\PipelineState\TransparentAfterPipelineState.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
@@ -953,6 +956,9 @@
     <ClCompile Include="DirectX12\PipelineState\TransParentPipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX12\PipelineState\TransparentAfterPipelineState.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -1000,11 +1006,11 @@
     <FxCompile Include="DirectX12\Shader\SkyBoxShader.hlsl">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="DirectX12\Shader\FbxRootsiganatureDefine.hlsli">
+      <Filter>DirectX12\Shader\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DirectX12\Shader\FbxRootsiganatureDefine.hlsli">
-      <Filter>DirectX12\Shader\hlsl</Filter>
-    </None>
     <None Include="DirectX12\Shader\MatrixOperation.hlsli">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </None>
