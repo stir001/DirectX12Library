@@ -35,7 +35,6 @@ struct VSInput
     float4 pos : POSITION;
     float4 normal : NORMAL;
     float2 uv : TEXCOORD;
-    //float4x4 vmatrix : VERTEXMATRIX;
 };
 
 struct VSOutput

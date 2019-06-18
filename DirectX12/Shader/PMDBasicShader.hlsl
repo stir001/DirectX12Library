@@ -78,7 +78,7 @@ struct GSOutput
 [RootSignature(PMDRS SMP)]
 VSOutput BasicVS(VSInput vInput)
 {
-    float wgt1 = (float) vInput.weight / 100.0;
+    float wgt1 = (float) vInput.weight / 100.0f;
     float wgt2 = 1.0 - wgt1;
     VSOutput o;
     matrix m = mul(modelMatrix, bones[vInput.boneno[0]] * wgt1 + bones[vInput.boneno[1]] * wgt2);

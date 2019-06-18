@@ -1,0 +1,28 @@
+//{{NO_DEPENDENCIES}}
+// Microsoft Visual C++ で生成されたインクルード ファイル。
+// Dx12MSLib.rc で使用
+//
+#define SHADERID_BILLBOARD		101
+#define SHADERID_FBXNORMALMAP	102
+#define SHADERID_FBX			103
+#define SHADERID_IMAGE3D		104
+#define SHADERID_IMAGE			105
+#define SHADERID_NORMALMAP		106
+#define SHADERID_PMDBASIC		107
+#define SHADERID_PMDTOON		108
+#define SHADERID_PRIMITIVE2D	109
+#define SHADERID_PRIMITIVE3D	110
+#define SHADERID_SKELETON		111
+#define SHADERID_SKYBOX			112
+#define SHADERID_WIREFRAME		113
+
+// Next default values for new objects
+// 
+#ifdef APSTUDIO_INVOKED
+#ifndef APSTUDIO_READONLY_SYMBOLS
+#define _APS_NEXT_RESOURCE_VALUE        102
+#define _APS_NEXT_COMMAND_VALUE         40001
+#define _APS_NEXT_CONTROL_VALUE         1001
+#define _APS_NEXT_SYMED_VALUE           101
+#endif
+#endif

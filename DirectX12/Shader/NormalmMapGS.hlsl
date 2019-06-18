@@ -1,30 +1,6 @@
-#define PRM3DRS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)" \
-    ", DescriptorTable(SRV(t0), visibility = SHADER_VISIBILITY_PIXEL)" \
-	", DescriptorTable(CBV(b0), visibility = SHADER_VISIBILITY_ALL)" \
-	", DescriptorTable(CBV(b1), visibility = SHADER_VISIBILITY_ALL)" \
-	", StaticSampler(s0, filter = FILTER_MIN_MAG_LINEAR_MIP_POINT"   \
-        ", addressU = TEXTURE_ADDRESS_WRAP, addressV = TEXTURE_ADDRESS_WRAP, addressW = TEXTURE_ADDRESS_WRAP)"
-
-#include "MatrixOperation.hlsli"
-
-Texture2D<float4> normalmap : register(t0);
-SamplerState smp : register(s0);
-
-#include "CameraLightcBuffer.hlsl"
-
-CAMERA_CBUFFER(b0);
-
-LIGHT_CBUFFER(b1)
-
-struct NormalMapVSInput
+struct GSOutput
 {
-    float4 pos : POSITION;
-    float4 normal : NORMAL;
-    float2 uv : TEXCOORD;
-    matrix aMat : INSTANCEMAT;
-    float4 instanceOffset : INSTANCEPOS;
-    float4 color : INSTANCECOLOR;
-    uint instanceID : SV_InstanceID;
+	float4 pos : SV_POSITION;
 };
 
 struct NormalMapData
@@ -45,29 +21,22 @@ struct PrimitiveVertexData
     float2 uv : TEXCOORD;
     float4 tangentLight : LIGHT;
     float4 eyeDir : EYEDIR;
-	matrix uvzMatrix : UVZMAT;
-	matrix localMat : INSTANCEMAT;
+    matrix uvzMatrix : UVZMAT;
+    matrix localMat : INSTANCEMAT;
 };
 
-[RootSignature(PRM3DRS)]
-NormalMapData NormalMapVS(NormalMapVSInput vsIn)
-{
-    NormalMapData data;
-    data.pos = mul(vsIn.aMat, vsIn.pos) + float4((vsIn.instanceOffset).xyz, 0.0f);
-    data.color = vsIn.color;
-    data.uv = vsIn.uv;
-    matrix rotaMat = vsIn.aMat;
-    rotaMat._14_24_34 = 0;
-    rotaMat._41_42_43 = 0;
-    data.normal = vsIn.normal;
-    data.aMatrix = rotaMat;
-    return data;
-}
+#include "MatrixOperation.hlsli"
+
+#include "CameraLightcBuffer.hlsl"
+
+CAMERA_CBUFFER(b0);
+
+LIGHT_CBUFFER(b1)
 
 #define VERTEX_COUNT 3U
 
 [maxvertexcount(VERTEX_COUNT)]void NormalMapGS(in triangle NormalMapData vertices[VERTEX_COUNT], inout TriangleStream<PrimitiveVertexData> gsOut)
-{	
+{
     matrix tangentSpace;
     tangentSpace._14_24_34 = 0.0f;
     tangentSpace._31_32_33 = vertices[0].normal.xyz;
@@ -120,18 +89,4 @@ NormalMapData NormalMapVS(NormalMapVSInput vsIn)
         gsOut.Append(ret);
     }
     gsOut.RestartStrip();
-}
-
-float4 NormalMapPS(PrimitiveVertexData psIn) : SV_target
-{
-    float4 normal = float4(normalize(((normalmap.Sample(smp, psIn.uv)) * 2.0f - 1.0f).xyz), 1);
-
-    float brightness = (dot(-psIn.tangentLight.xyz, normalize(normal.xyz)) + 1.0f) * 0.5f;
-
-    float3 refLight = normalize(reflect(normalize(psIn.tangentLight.xyz), normalize(normal.xyz)));
-    float spec = pow(saturate(dot(normalize(refLight), -psIn.eyeDir.xyz)), 5);
-    //return float4(spec, spec, spec, 1.0f);
-
-    float4 color = saturate(float4((psIn.color * brightness + saturate(float4(1, 1, 1, 0) * spec)).xyz, 1.0f));
-    return color;
 }

@@ -148,8 +148,13 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	return data;
 }
 
-ShaderDatas ShaderCompiler::CompileShaderFromResource(int reosurceID, const std::string & vsName, const std::string & psName, const std::string & gsName, const std::string & hsName, const std::string & dsName, bool existRootSignature)
+ShaderDatas ShaderCompiler::CompileShaderFromResource(int resourceID, const std::string & vsName, const std::string & psName, const std::string & gsName, const std::string & hsName, const std::string & dsName, bool existRootSignature)
 {
+	auto resource = FindResource(nullptr, RT_RCDATA, MAKEINTRESOURCE(resourceID));
+	auto data = LoadResource(nullptr, resource);
+	auto shaderData = reinterpret_cast<ID3DBlob*>(data);
+	auto dataSize = SizeofResource(nullptr, resource);
+	
 	return ShaderDatas();
 }
 

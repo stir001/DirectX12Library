@@ -555,6 +555,9 @@
     <ClInclude Include="DirectX12\PipelineState\TransparentAfterPipelineState.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
@@ -1009,10 +1012,41 @@
     <FxCompile Include="DirectX12\Shader\FbxRootsiganatureDefine.hlsli">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </FxCompile>
+    <FxCompile Include="DirectX12\Shader\BillboardVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\BillboardPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\BillboardGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxNormalmapVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxNormalmapPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxNormalmapGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\FbxGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Image3DVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Image3DPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Image3DGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\ImageVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\ImagePS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\NormalMapVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\NormalMapPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\NormalmMapGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDBasicVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDBasicPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDBasicShadowVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDBasicShadowPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PMDShadowVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Primitive3DVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Primitive3DPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Primitive3DGS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX12\Shader\MatrixOperation.hlsli">
       <Filter>DirectX12\Shader\hlsl</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Dx12MSLib.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
