@@ -19,23 +19,52 @@ ShaderCompiler::ShaderCompiler() : mShaderModel("5_0"), mShaderDirPath("../Direc
 {
 }
 
+Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiler::GetCompiledShader(const std::wstring& filePath, ID3DInclude& includer, const std::string & name, const std::string & model, unsigned int compileFlag)
+{
+	ID3DBlob* shader = nullptr;
+	ID3DBlob* err = nullptr;
+	auto result = D3DCompileFromFile(filePath.data(), mMacros.data(), &includer,
+		name.data(), model.data(), compileFlag, 0, &shader, &err);
+	if (err != nullptr)
+	{
+		OutputDebugStringA((char*)err->GetBufferPointer());
+	}
+
+	assert(SUCCEEDED(result));
+
+	return Microsoft::WRL::ComPtr<ID3DBlob>(shader);
+}
+
+ShaderResource ShaderCompiler::GetShaderResource(int id)
+{
+	ShaderResource shader;
+	auto resource = FindResource(nullptr, RT_RCDATA, MAKEINTRESOURCE(id));
+	shader.hGlobal = LoadResource(nullptr, resource);
+	shader.ptr = LockResource(shader.hGlobal);
+	shader.size = SizeofResource(nullptr, resource);
+	return ShaderResource();
+}
+
+Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiler::GetRootSignature(const void* ptr, size_t size)
+{
+	ID3DBlob* root = nullptr;
+	auto result = D3DGetBlobPart(ptr, size, D3D_BLOB_ROOT_SIGNATURE, 0, &root);
+	assert(SUCCEEDED(result));
+	return Microsoft::WRL::ComPtr<ID3DBlob>(root);
+}
+
 ShaderCompiler::~ShaderCompiler()
 {
 	for (auto& data : mDatas)
 	{
 		for (auto& shader : data.second)
 		{
-			shader.second.vertexShader.Reset();
-			shader.second.pixelShader.Reset();
-			shader.second.geometryShader.Reset();
-			shader.second.domainShader.Reset();
-			shader.second.hullShader.Reset();
 			shader.second.rootSignature.Reset();
 		}
 	}
 }
 
-ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
+std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShader(const std::string& shaderPath,
 	const std::string& vsName,
 	const std::string& psName,
 	const std::string& gsName,
@@ -63,7 +92,7 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 #endif
 
 	HlslInclude hlslinculde;
-	ID3D10Blob* err = nullptr;
+	ID3DBlob* err = nullptr;
 
 	std::string rpath = GetRelativePath(shaderPath);
 	hlslinculde.SetRelativePath(rpath);
@@ -76,70 +105,36 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	D3D_SHADER_MACRO macro = { nullptr, nullptr };
 	mMacros.push_back(macro);
 
-	ShaderDatas data;
+	auto data = std::make_shared<ComPtrShader>();
 
 	if (vsName.size() > 0)
 	{
-		ID3DBlob* vertex = nullptr;
-		std::string vsModel = "vs_" + mShaderModel;
-		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
-			vsName.data(), vsModel.data(), compileflag, 0, &vertex, &err);
-		outErr(err);
-		data.vertexShader.Swap(vertex);
-
-		assert(SUCCEEDED(result));
+		data->vertex = GetCompiledShader(path, hlslinculde, vsName, "vs_" + mShaderModel, compileflag);
 
 		if (existRootSignature)
 		{
-			ID3DBlob* root = nullptr;
-			result = D3DGetBlobPart(vertex->GetBufferPointer() , vertex->GetBufferSize(), D3D_BLOB_ROOT_SIGNATURE, 0, &root);
-			data.rootSignature.Swap(root);
-			assert(SUCCEEDED(result));
+			data->rootSignature = GetRootSignature(data->vertex->GetBufferPointer(), data->vertex->GetBufferSize());
 		}
 	}
 
 	if (psName.size() > 0)
 	{
-		ID3DBlob* pixcel = nullptr;
-		std::string psModel = "ps_" + mShaderModel;
-		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
-			psName.data(), psModel.data(), compileflag, 0, &pixcel, &err);
-		outErr(err);
-		data.pixelShader.Swap(pixcel);
-		assert(SUCCEEDED(result));
+		data->pixel = GetCompiledShader(path, hlslinculde, psName, "ps_" + mShaderModel, compileflag);
 	}
 
 	if (gsName.size() > 0)
 	{
-		ID3DBlob* geometry = nullptr;
-		std::string gsModel = "gs_" + mShaderModel;
-		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
-			gsName.data(), gsModel.data(), compileflag, 0, &geometry, &err);
-		outErr(err);
-		data.geometryShader.Swap(geometry);
-		assert(SUCCEEDED(result));
+		data->geometry = GetCompiledShader(path, hlslinculde, gsName, "gs_" + mShaderModel, compileflag);
 	}
 
 	if (hsName.size() > 0)
 	{
-		ID3DBlob* hull = nullptr;
-		std::string hsModel = "hs_" + mShaderModel;
-		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
-			hsName.data(), hsModel.data(), compileflag, 0, &hull, &err);
-		outErr(err);
-		data.hullShader.Swap(hull);
-		assert(SUCCEEDED(result));
+		data->geometry = GetCompiledShader(path, hlslinculde, hsName, "hs_" + mShaderModel, compileflag);
 	}
 
 	if (dsName.size() > 0)
 	{
-		ID3DBlob* domain = nullptr;
-		std::string dsModel = "ds_" + mShaderModel;
-		result = D3DCompileFromFile(path.data(), mMacros.data(), &hlslinculde,
-			dsName.data(), dsModel.data(), compileflag, 0, &domain, &err);
-		outErr(err);
-		data.domainShader.Swap(domain);
-		assert(SUCCEEDED(result));
+		data->geometry = GetCompiledShader(path, hlslinculde, dsName, "ds_" + mShaderModel, compileflag);
 	}
 
 	mMacros.clear();
@@ -148,14 +143,45 @@ ShaderDatas ShaderCompiler::CompileShader(const std::string& shaderPath,
 	return data;
 }
 
-ShaderDatas ShaderCompiler::CompileShaderFromResource(int resourceID, const std::string & vsName, const std::string & psName, const std::string & gsName, const std::string & hsName, const std::string & dsName, bool existRootSignature)
+std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShaderFromResource(
+	const int vsID,
+	const int psID,
+	const int gsID,
+	const int hsID,
+	const int dsID,
+	bool existRootSignature)
 {
-	auto resource = FindResource(nullptr, RT_RCDATA, MAKEINTRESOURCE(resourceID));
-	auto data = LoadResource(nullptr, resource);
-	auto shaderData = reinterpret_cast<ID3DBlob*>(data);
-	auto dataSize = SizeofResource(nullptr, resource);
-	
-	return ShaderDatas();
+	auto data = std::make_shared<ResourceShader>();
+	if (vsID != 0)
+	{
+		data->vertex = GetShaderResource(vsID);
+		if (existRootSignature)
+		{
+			data->rootSignature = GetRootSignature(data->vertex.ptr, data->vertex.size);
+		}
+	}
+
+	if (psID != 0)
+	{
+		data->pixel = GetShaderResource(psID);
+	}
+
+	if (gsID != 0)
+	{
+		data->geometry = GetShaderResource(gsID);
+	}
+
+	if (hsID != 0)
+	{
+		data->hull = GetShaderResource(hsID);
+	}
+
+	if (dsID != 0)
+	{
+		data->domain = GetShaderResource(dsID);
+	}
+
+	return data;
 }
 
 void ShaderCompiler::ReleaseShader(std::string shaderpath)

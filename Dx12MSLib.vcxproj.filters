@@ -1038,6 +1038,8 @@
     <FxCompile Include="DirectX12\Shader\Primitive3DVS.hlsl" />
     <FxCompile Include="DirectX12\Shader\Primitive3DPS.hlsl" />
     <FxCompile Include="DirectX12\Shader\Primitive3DGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\SkeletonVS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\SkeletonPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX12\Shader\MatrixOperation.hlsli">

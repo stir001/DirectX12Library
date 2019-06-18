@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <memory>
 
 class ShaderCompiler
 {
@@ -43,7 +44,7 @@ public:
 	*@param (dsname) ドメインシェーダー名
 	*@param (existRootSignature) ルートシグネチャを定義しているかどうか
 	*/
-	ShaderDatas CompileShader(const std::string& shaderPath,
+	std::shared_ptr<ShaderDatas> CompileShader(const std::string& shaderPath,
 		const std::string& vsName,
 		const std::string& psName,
 		const std::string& gsName,
@@ -54,12 +55,12 @@ public:
 	/** TODO:リソース化したシェーダーから読み込む
 	*	@brief	未実装
 	*/
-	ShaderDatas CompileShaderFromResource(int reosurceID,
-		const std::string& vsName,
-		const std::string& psName,
-		const std::string& gsName,
-		const std::string& hsName,
-		const std::string& dsName,
+	std::shared_ptr<ShaderDatas> CompileShaderFromResource(
+		const int vsID,
+		const int psID,
+		const int gsID,
+		const int hsID,
+		const int dsID,
 		bool existRootSignature);
 
 	void ReleaseShader(std::string shaderpath);
@@ -92,6 +93,13 @@ private:
 		std::string hs;
 		std::string ds;
 	};
+
+	Microsoft::WRL::ComPtr<ID3DBlob> GetCompiledShader(const std::wstring& filePath,
+		ID3DInclude& includer, const std::string& name, const std::string& model, unsigned int compileFlag);
+
+	ShaderResource GetShaderResource(int id);
+
+	Microsoft::WRL::ComPtr<ID3DBlob> GetRootSignature(const void* ptr, size_t size);
 
 	std::map<std::string, std::list<std::pair<ShaderNames,ShaderDatas>>> mDatas;
 	std::vector<D3D_SHADER_MACRO> mMacros;
