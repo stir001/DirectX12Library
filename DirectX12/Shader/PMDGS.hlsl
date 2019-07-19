@@ -18,7 +18,7 @@ struct GSOutput
 
 #include "MatrixOperation.hlsli"
 
-MULTI_CAMERA(CAMERA_REGISTER)
+MULTI_CAMERA(b0)
 
 #define VERTEX_NUM (3U)
 

@@ -153,12 +153,12 @@ private:
 	/**
 	*	2D画像描画用のシェーダー情報
 	*/
-	ShaderDatas mShader;
+	std::shared_ptr<ShaderDatas> mShader;
 
 	/**
 	*	2D画像を3Dとして描画するときのシェーダ情報
 	*/
-	ShaderDatas m3DShader;
+	std::shared_ptr<ShaderDatas> m3DShader;
 
 	/**
 	*	@brief	pipelinestateを作成する

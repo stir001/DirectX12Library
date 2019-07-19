@@ -66,9 +66,14 @@ DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XM
 	return  NormalizeXMFloat3(DirectX::XMFLOAT3(lval.y * rval.z - lval.z * rval.y, lval.z * rval.x - lval.x * rval.z, lval.x * rval.y - lval.y * rval.x));
 }
 
-DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad)
+DirectX::XMFLOAT4X4 CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad)
 {
-	return DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,rad));
+	return ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,rad))));
+}
+
+DirectX::XMVECTOR CreateQuoternionXMVEC(const DirectX::XMFLOAT3 & axis, float rad)
+{
+	return DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis, rad));
 }
 
 DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float rad)

@@ -92,6 +92,7 @@ private:
 		std::string gs;
 		std::string hs;
 		std::string ds;
+		bool operator==(const ShaderNames& val) const;
 	};
 
 	Microsoft::WRL::ComPtr<ID3DBlob> GetCompiledShader(const std::wstring& filePath,
@@ -101,7 +102,9 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3DBlob> GetRootSignature(const void* ptr, size_t size);
 
-	std::map<std::string, std::list<std::pair<ShaderNames,ShaderDatas>>> mDatas;
+	//bool 
+
+	std::map<std::string, std::list<std::pair<ShaderNames,std::shared_ptr<ShaderDatas>>>> mDatas;
 	std::vector<D3D_SHADER_MACRO> mMacros;
 	std::list<MacroData> mStrData;
 	std::string mShaderModel;

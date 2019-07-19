@@ -26,6 +26,8 @@ struct VSOutput
     float gamma : GAMMA;
 };
 
+#define VERTEX_COUNT 3
+
 [maxvertexcount(VERTEX_COUNT)]
 void BillboardGS(in triangle VSOutput vertices[3], inout TriangleStream<GSOutput> gsOut)
 {

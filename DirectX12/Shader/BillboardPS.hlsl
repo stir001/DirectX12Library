@@ -13,5 +13,5 @@ struct GSOutput
 
 float4 BillboardPS(GSOutput gsout) : SV_Target
 {
-    return pow(colortex.Sample(texsampler, gsout.uv), gsout.gamma);
+    return pow(abs(colortex.Sample(texsampler, gsout.uv)), gsout.gamma);
 }

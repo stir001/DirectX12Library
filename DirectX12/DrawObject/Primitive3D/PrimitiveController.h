@@ -45,7 +45,7 @@ public:
 		, Microsoft::WRL::ComPtr<ID3D12Device>& dev
 		, std::shared_ptr<Dx12CommandList>& cmdList);
 
-	~PrimitiveController();
+	virtual ~PrimitiveController();
 
 	/**
 	*	@brief	テクスチャを設定する

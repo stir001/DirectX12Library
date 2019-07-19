@@ -77,6 +77,7 @@
 #include "DirectX12/PipelineState/NotCullPipelineState.h"
 #include "DirectX12/PipelineState/PipelineStateObject.h"
 #include "DirectX12/PipelineState/TransparentAfterPipelineState.h"
+#include "DirectX12/PipelineState/WireFramePipelineState.h"
 
 /**
 *	RenderringPassフォルダインクルード

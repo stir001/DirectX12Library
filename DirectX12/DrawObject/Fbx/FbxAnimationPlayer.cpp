@@ -198,9 +198,8 @@ void FbxAnimationPlayer::UpdateQuoternionMatrix()
 		else
 		{
 			DirectX::XMFLOAT3 axis = NormalizeXMFloat3(CrossXMFloat3(iPos, cPos));
-			auto quot = CreateQuoternion(axis, acos(cos));
-			auto transform = DirectX::XMMatrixRotationQuaternion(quot);
-			mQuoternionMatrix[i] = mInverseMatrix[i] * ConvertXMMATRIXToXMFloat4x4(transform) * tranlateMat;
+			auto transform = CreateQuoternion(axis, acos(cos));
+			mQuoternionMatrix[i] = mInverseMatrix[i] * transform * tranlateMat;
 		}
 	}
 }

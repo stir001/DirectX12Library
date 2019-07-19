@@ -17,12 +17,12 @@ RootSignatureObject::~RootSignatureObject()
 	mRootSignature.Reset();
 }
 
-void RootSignatureObject::SetShaderData(const ShaderDatas& shader)
+void RootSignatureObject::SetShaderData(const std::shared_ptr<ShaderDatas>& shader)
 {
 	mShader = shader;
 }
 
-const ShaderDatas& RootSignatureObject::GetShaderDatas() const
+const std::shared_ptr<ShaderDatas>& RootSignatureObject::GetShaderDatas() const
 {
 	return mShader;
 }
@@ -37,7 +37,7 @@ const std::vector<D3D12_INPUT_ELEMENT_DESC>& RootSignatureObject::GetInputElemen
 	return mInputElements;
 }
 
-void RootSignatureObject::CreateRootSignature(const std::string& name, ID3D10Blob * signatureBlob, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+void RootSignatureObject::CreateRootSignature(const std::string& name, ID3DBlob * signatureBlob, const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
 	dev->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&mRootSignature));
 	std::wstring str;

@@ -50,8 +50,11 @@ void Primitive2DManager::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device
 	gpsDesc.SampleMask = 0xffffff;
 	gpsDesc.NodeMask = 0;
 
-	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(mShader.vertexShader.Get());
-	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(mShader.pixelShader.Get());
+
+	gpsDesc.VS.pShaderBytecode = mShader->GetVS().ptr;
+	gpsDesc.VS.BytecodeLength = mShader->GetVS().size;
+	gpsDesc.PS.pShaderBytecode = mShader->GetPS().ptr;
+	gpsDesc.PS.BytecodeLength = mShader->GetPS().size;
 
 	mPipelinestate = std::make_shared<PipelineStateObject>("Primitive2D", gpsDesc, dev);
 }
@@ -68,5 +71,5 @@ void Primitive2DManager::CreateRootsignature(Microsoft::WRL::ComPtr<ID3D12Device
 		true
 	);
 
-	mRootsignature = (std::make_shared<RootSignatureObject>("Primitive2DRootSignature",mShader.rootSignature.Get(), dev));
+	mRootsignature = (std::make_shared<RootSignatureObject>("Primitive2DRootSignature",mShader->rootSignature.Get(), dev));
 }

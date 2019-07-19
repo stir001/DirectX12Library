@@ -5,7 +5,6 @@
 DxInput::DxInput()
 {
 	GetKeyboardState(mKeyState);
-	GetCursorPos(&mMousePos.pos);
 	mHWND = Dx12Ctrl::Instance().GetWindowHandle();
 	mXInputState.resize(PAD_NUM);
 }
@@ -21,6 +20,7 @@ bool DxInput::UpdateKeyState()
 	{
 		XInputGetState(i, &mXInputState[i]);
 	}
+
 	return GetKeyboardState(mKeyState) != 0;
 }
 
@@ -29,19 +29,20 @@ const unsigned char* DxInput::GetKeyState()
 	return mKeyState;
 }
 
-const MousePos DxInput::GetMousePos()
+const DirectX::XMFLOAT2 DxInput::GetMousePos() const
 {
-	GetCursorPos(&mMousePos.pos);
-	ScreenToClient(mHWND, &mMousePos.pos);
-	return mMousePos;
+	POINT mouse;
+	GetCursorPos(&mouse);
+	ScreenToClient(mHWND, &mouse);
+	return { static_cast<float>(mouse.x), static_cast<float>(mouse.y) };
 }
 
-bool DxInput::IsKeyDown(VIRTUAL_KEY_INDEX index)const
+bool DxInput::IsKeyDown(VIRTUAL_KEY_INDEX index) const
 {
 	return (mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_DOWN) != 0;
 }
 
-bool DxInput::IsKeyTrigger(VIRTUAL_KEY_INDEX index)const
+bool DxInput::IsKeyTrigger(VIRTUAL_KEY_INDEX index) const
 {
 	return ((mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE) ^ (mPreKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE)) != 0;
 }
@@ -49,4 +50,9 @@ bool DxInput::IsKeyTrigger(VIRTUAL_KEY_INDEX index)const
 bool DxInput::IsKeyToggle(VIRTUAL_KEY_INDEX index) const
 {
 	return (mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_TOGGLE) != 0;
+}
+
+bool DxInput::IsKeyUp(VIRTUAL_KEY_INDEX index) const
+{
+	return (!(mKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_DOWN)) && (mPreKeyState[static_cast<int>(index)] & eKEY_STATE_CHECK_DOWN);
 }

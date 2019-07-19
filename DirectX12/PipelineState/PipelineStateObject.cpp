@@ -62,31 +62,31 @@ void PipelineStateObject::SetInputElement(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gp
 	gpsDesc.InputLayout.NumElements = static_cast<unsigned int>(rootSignature->GetInputElementDesc().size());
 }
 
-void PipelineStateObject::SetShaders(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const ShaderDatas& shaders)
+void PipelineStateObject::SetShaders(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const std::shared_ptr<ShaderDatas>& shaders)
 {
-	if (shaders.vertexShader != nullptr)
+	if (shaders->GetVS().ptr != nullptr)
 	{
-		SetShader(gpsDesc.VS, shaders.vertexShader.Get());
+		SetShader(gpsDesc.VS, shaders->GetVS());
 	}
 
-	if (shaders.pixelShader != nullptr)
+	if (shaders->GetPS().ptr != nullptr)
 	{
-		SetShader(gpsDesc.PS , shaders.pixelShader.Get());
+		SetShader(gpsDesc.PS , shaders->GetPS());
 	}
 
-	if (shaders.geometryShader != nullptr)
+	if (shaders->GetGS().ptr != nullptr)
 	{
-		SetShader(gpsDesc.GS, shaders.geometryShader.Get());
+		SetShader(gpsDesc.GS, shaders->GetGS());
 	}
 
-	if (shaders.domainShader != nullptr)
+	if (shaders->GetDS().ptr != nullptr)
 	{
-		SetShader(gpsDesc.DS, shaders.domainShader.Get());
+		SetShader(gpsDesc.DS, shaders->GetDS());
 	}
 
-	if (shaders.hullShader != nullptr)
+	if (shaders->GetHS().ptr != nullptr)
 	{
-		SetShader(gpsDesc.HS, shaders.hullShader.Get());
+		SetShader(gpsDesc.HS, shaders->GetHS());
 	}
 }
 
@@ -207,9 +207,9 @@ D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateObject::GetDefalutPipelineStateD
 	return desc;
 }
 
-void PipelineStateObject::SetShader(D3D12_SHADER_BYTECODE & byteCode, ID3DBlob * blob)
+void PipelineStateObject::SetShader(D3D12_SHADER_BYTECODE & byteCode, ShaderResource& rsc)
 {
-	byteCode.pShaderBytecode = blob->GetBufferPointer();
-	byteCode.BytecodeLength = blob->GetBufferSize();
+	byteCode.pShaderBytecode = rsc.ptr;
+	byteCode.BytecodeLength = rsc.size;
 }
 

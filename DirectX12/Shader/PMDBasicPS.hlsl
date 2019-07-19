@@ -12,9 +12,9 @@ struct GSOutput
 
 #include "CameraLightcBuffer.hlsl"
 
-MULTI_CAMERA(CAMERA_REGISTER)
+MULTI_CAMERA(b0)
 
-LIGHT_CBUFFER(LIGHT_REGISTER)
+LIGHT_CBUFFER(b1)
 
 cbuffer mat : register(b4)
 {

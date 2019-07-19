@@ -100,8 +100,8 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 	for (unsigned int i = 0; i < div - 1; ++i)
 	{
 		mIndices[idx++] = pivotVertxNum;
-		mIndices[idx++] = secondVertexNum;
 		mIndices[idx++] = thirdVertexNum;
+		mIndices[idx++] = secondVertexNum;
 		
 		secondVertexNum = thirdVertexNum;
 		++thirdVertexNum;

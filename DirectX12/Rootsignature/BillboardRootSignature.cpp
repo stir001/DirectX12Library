@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BillboardRootSignature.h"
 #include "Shader/ShaderCompiler.h"
+#include "resource.h"
 
 BillboardRootSignature::BillboardRootSignature(const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
@@ -13,7 +14,16 @@ BillboardRootSignature::BillboardRootSignature(const Microsoft::WRL::ComPtr<ID3D
 		"",
 		true);
 
-	CreateRootSignature("BillboardRootSignature", mShader.rootSignature.Get(), dev);
+	//mShader = ShaderCompiler::Instance().CompileShaderFromResource(
+	//	SHADERID_BILLBOARD_VS,
+	//	SHADERID_BILLBOARD_PS,
+	//	SHADERID_BILLBOARD_GS,
+	//	0,
+	//	0,
+	//	true
+	//);
+
+	CreateRootSignature("BillboardRootSignature", mShader->rootSignature.Get(), dev);
 
 	mInputElements.resize(4);
 	mInputElements[0] = { "POSITION",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };

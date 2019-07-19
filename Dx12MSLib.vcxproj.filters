@@ -558,6 +558,12 @@
     <ClInclude Include="resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX12\Shader\RootsignatureInclude.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\CommandQueue\CommandQueue.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12\Animation\Animation.cpp">
@@ -962,6 +968,12 @@
     <ClCompile Include="DirectX12\PipelineState\TransparentAfterPipelineState.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\CommandQueue\CommandQueue.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX12\Shader\CameraLightcBuffer.hlsl">
@@ -1028,7 +1040,6 @@
     <FxCompile Include="DirectX12\Shader\ImagePS.hlsl" />
     <FxCompile Include="DirectX12\Shader\NormalMapVS.hlsl" />
     <FxCompile Include="DirectX12\Shader\NormalMapPS.hlsl" />
-    <FxCompile Include="DirectX12\Shader\NormalmMapGS.hlsl" />
     <FxCompile Include="DirectX12\Shader\PMDBasicVS.hlsl" />
     <FxCompile Include="DirectX12\Shader\PMDBasicPS.hlsl" />
     <FxCompile Include="DirectX12\Shader\PMDGS.hlsl" />
@@ -1040,6 +1051,8 @@
     <FxCompile Include="DirectX12\Shader\Primitive3DGS.hlsl" />
     <FxCompile Include="DirectX12\Shader\SkeletonVS.hlsl" />
     <FxCompile Include="DirectX12\Shader\SkeletonPS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\NormalMapGS.hlsl" />
+    <FxCompile Include="DirectX12\Shader\Primitive3DLine.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX12\Shader\MatrixOperation.hlsli">

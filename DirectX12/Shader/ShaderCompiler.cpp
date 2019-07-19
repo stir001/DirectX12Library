@@ -39,6 +39,7 @@ ShaderResource ShaderCompiler::GetShaderResource(int id)
 {
 	ShaderResource shader;
 	auto resource = FindResource(nullptr, RT_RCDATA, MAKEINTRESOURCE(id));
+	assert(resource);
 	shader.hGlobal = LoadResource(nullptr, resource);
 	shader.ptr = LockResource(shader.hGlobal);
 	shader.size = SizeofResource(nullptr, resource);
@@ -55,13 +56,7 @@ Microsoft::WRL::ComPtr<ID3DBlob> ShaderCompiler::GetRootSignature(const void* pt
 
 ShaderCompiler::~ShaderCompiler()
 {
-	for (auto& data : mDatas)
-	{
-		for (auto& shader : data.second)
-		{
-			shader.second.rootSignature.Reset();
-		}
-	}
+
 }
 
 std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShader(const std::string& shaderPath,
@@ -71,12 +66,21 @@ std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShader(const std::string& sh
 	const std::string& hsName,
 	const std::string& dsName, bool existRootSignature)
 {
+	struct ShaderNames names = {
+		vsName,psName,gsName,hsName,dsName
+	};
 
-	//auto itr = mDatas.find(shaderPath);
-	//if (itr != mDatas.end())
-	//{
-	//	return itr->second;
-	//}
+	auto itr = mDatas.find(shaderPath);
+	if (itr != mDatas.end())
+	{
+		for (auto& list : itr->second)
+		{
+			if (list.first == names)
+			{
+				return list.second;
+			}
+		}
+	}
 #ifdef _DEBUG
 	UINT compileflag = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 	std::function<void(ID3D10Blob*)> outErr = [](ID3D10Blob* err) {
@@ -99,8 +103,6 @@ std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShader(const std::string& sh
 
 	std::wstring path;
 	ToWChar(path, shaderPath);
-
-	HRESULT result;
 
 	D3D_SHADER_MACRO macro = { nullptr, nullptr };
 	mMacros.push_back(macro);
@@ -140,6 +142,8 @@ std::shared_ptr<ShaderDatas> ShaderCompiler::CompileShader(const std::string& sh
 	mMacros.clear();
 	mMacros.shrink_to_fit();
 	mStrData.clear();
+	std::pair<ShaderNames, std::shared_ptr<ShaderDatas>> pairData = { names, data };
+	mDatas[shaderPath].push_back(pairData);
 	return data;
 }
 
@@ -214,4 +218,9 @@ void ShaderCompiler::SetShaderDirPath(const std::string& shaderDirPath)
 const std::string & ShaderCompiler::GetShaderDirPath() const
 {
 	return mShaderDirPath;
+}
+
+bool ShaderCompiler::ShaderNames::operator==(const ShaderNames & val) const
+{
+	return vs == val.vs && ps == val.ps && gs == val.gs && hs == val.hs & ds == val.ds;
 }

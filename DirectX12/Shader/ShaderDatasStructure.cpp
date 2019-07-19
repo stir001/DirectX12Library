@@ -38,7 +38,14 @@ ShaderResource ComPtrShader::GetDS() const
 
 ShaderResource ComPtrShader::GetResource(const Microsoft::WRL::ComPtr<ID3DBlob>& shader) const
 {
-	return { shader->GetBufferPointer(), shader->GetBufferSize()};
+	ShaderResource rtn;
+	if (shader)
+	{
+		rtn.ptr = shader->GetBufferPointer();
+		rtn.hGlobal = nullptr;
+		rtn.size = shader->GetBufferSize();
+	}
+	return rtn;
 }
 
 ShaderResource ResourceShader::GetVS() const

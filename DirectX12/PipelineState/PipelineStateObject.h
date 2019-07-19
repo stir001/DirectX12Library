@@ -84,7 +84,7 @@ protected:
 	*	@param[in,out]	gpsDesc		シェーダーを登録したいGraphicsPipelineのDesc
 	*	@param[in]	shaders		登録したいシェーダー
 	*/
-	void SetShaders(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const ShaderDatas& shaders);
+	void SetShaders(D3D12_GRAPHICS_PIPELINE_STATE_DESC& gpsDesc, const std::shared_ptr<ShaderDatas>& shaders);
 
 	/**
 	*	@brief	RootSignature周りに任せている設定をgpsに適応する
@@ -120,6 +120,6 @@ private:
 	*	@param[in,out]	byteCode	設定する先
 	*	@param[in]		blob		設定するシェーダー
 	*/
-	void SetShader(D3D12_SHADER_BYTECODE& byteCode, ID3DBlob* blob);
+	void SetShader(D3D12_SHADER_BYTECODE& byteCode, ShaderResource& rsc);
 };
 

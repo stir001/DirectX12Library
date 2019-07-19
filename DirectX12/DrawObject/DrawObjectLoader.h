@@ -53,7 +53,7 @@ protected:
 	/**
 	*	使用するシェーダー情報保存用
 	*/
-	ShaderDatas mShader;
+	std::shared_ptr<ShaderDatas> mShader;
 
 	/**
 	*	ロードしたオブジェクトに渡すpipelinestate

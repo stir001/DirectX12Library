@@ -38,13 +38,13 @@ public:
 	*	@brief	使用するシェーダーを設定する
 	*	@param[in]	shader	設定するシェーダー
 	*/
-	void SetShaderData(const ShaderDatas& shader);
+	void SetShaderData(const std::shared_ptr<ShaderDatas>& shader);
 
 	/**
 	*	@brief	使用しているシェーダーを取得する
 	*	@return	使用しているシェーダー
 	*/
-	const ShaderDatas& GetShaderDatas() const;
+	const std::shared_ptr<ShaderDatas>& GetShaderDatas() const;
 
 	/**
 	*	@brief	ID3D12RootSignatureを取得する
@@ -65,7 +65,7 @@ protected:
 	*	@param[in]	signatureBlob	rootsignatureの情報をもつblob
 	*	@param[in]	dev		ID3D12Deviceの参照
 	*/
-	void CreateRootSignature(const std::string& name, ID3D10Blob* signatureBlob, const Microsoft::WRL::ComPtr<ID3D12Device>& dev);
+	void CreateRootSignature(const std::string& name, ID3DBlob* signatureBlob, const Microsoft::WRL::ComPtr<ID3D12Device>& dev);
 
 	/**
 	*	作成したrootsigantrue
@@ -75,7 +75,7 @@ protected:
 	/**
 	*	使用するシェーダー
 	*/
-	ShaderDatas mShader;
+	std::shared_ptr<ShaderDatas> mShader;
 
 	/**
 	*	インプットエレメント

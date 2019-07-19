@@ -14,7 +14,6 @@
 #define DX12CTRL_INSTANCE Dx12Ctrl& d12 = Dx12Ctrl::Instance();
 
 class SwapChainObject;
-class DescriptorHeapManager;
 class RootSignatureObject;
 class TextureLoader;
 class PipelineStateObject;

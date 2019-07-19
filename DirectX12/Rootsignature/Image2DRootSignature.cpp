@@ -13,7 +13,7 @@ Image2DRootSignature::Image2DRootSignature(const Microsoft::WRL::ComPtr<ID3D12De
 		"",
 		true);
 
-	CreateRootSignature("Image2DRootSignature", mShader.rootSignature.Get(), dev);
+	CreateRootSignature("Image2DRootSignature", mShader->rootSignature.Get(), dev);
 
 	mInputElements.resize(11);
 	mInputElements[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };

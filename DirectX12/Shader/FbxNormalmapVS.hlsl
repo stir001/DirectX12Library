@@ -18,7 +18,7 @@ struct VSOutput
     float2 uv : TEXCOORD;
 };
 
-[RootSignature(FBXRSEX_DEFINE)]
+[RootSignature(FBXRS EX_DEFINE)]
 VSOutput FbxVS(VSInput input)
 {
     VSOutput o;

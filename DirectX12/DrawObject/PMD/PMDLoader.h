@@ -52,7 +52,7 @@ private:
 	/**
 	*	テクスチャを使って描画するときに使うシェーダー情報
 	*/
-	ShaderDatas mSubShader;
+	std::shared_ptr<ShaderDatas> mSubShader;
 
 	/**
 	*	Toonテクスチャを使って描画するときに使うrootsiganture

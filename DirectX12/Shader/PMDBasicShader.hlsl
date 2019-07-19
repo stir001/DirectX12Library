@@ -27,9 +27,9 @@ SamplerState smp : register(s0);
 
 #include "MatrixOperation.hlsli"
 
-MULTI_CAMERA(CAMERA_REGISTER)
+MULTI_CAMERA(b0)
 
-LIGHT_CBUFFER(LIGHT_REGISTER)
+LIGHT_CBUFFER(b1)
 
 cbuffer bone : register(b2)
 {

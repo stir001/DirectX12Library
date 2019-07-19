@@ -232,7 +232,7 @@ public:
 	*	@brief	カメラの座標を得る
 	*	@return	カメラの座標
 	*/
-	DirectX::XMFLOAT4 GetCameraPosition();
+	DirectX::XMFLOAT4 GetPos();
 
 	/**
 	*	@brief	カメラのワールド行列を得る
@@ -263,9 +263,19 @@ public:
 	void SetNear(float cameraNear);
 
 	/**
-	*	@brief	カメラの
+	*	@brief	カメラのNearクリッピングを取得
+	*/
+	float GetNear() const;
+
+	/**
+	*	@brief	カメラのFarクリッピングを設定
 	*/
 	void SetFar(float cameraFar);
+
+	/**
+	*	@brief	カメラのFarクリッピングを取得
+	*/
+	float GetFar() const;
 
 	/**
 	*	画面の大きさに合わせてviewportとscissorRectを更新する(画面比ベース)
@@ -281,6 +291,12 @@ public:
 	*	@return	現在のfov
 	*/
 	float GetFov() const;
+
+	/**
+	*	@brief	targetを取得する
+	*	@return target
+	*/
+	DirectX::XMFLOAT3 GetTaregt() const;
 private:
 	/**
 	*	@struct	ViewportやScissorRectの画面比保存用構造体

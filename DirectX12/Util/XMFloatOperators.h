@@ -27,7 +27,9 @@ float DotXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
 DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
-DirectX::XMVECTOR CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad);
+DirectX::XMFLOAT4X4 CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad);
+
+DirectX::XMVECTOR CreateQuoternionXMVEC(const DirectX::XMFLOAT3& axis, float rad);
 
 DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float rad);
 

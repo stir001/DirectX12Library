@@ -10,5 +10,5 @@ struct VSOutput
 
 float4 ImagePS(VSOutput input) : SV_Target
 {
-    return pow(tex.Sample(smp, input.uv), input.gamma);
+    return pow(abs(tex.Sample(smp, input.uv)), input.gamma);
 }

@@ -13,9 +13,18 @@ SamplerState smp : register(s0);
 
 #include "CameraLightcBuffer.hlsl"
 
-MULTI_CAMERA(CAMERA_REGISTER)
+MULTI_CAMERA(b0)
 
-LIGHT_CBUFFER(LIGHT_REGISTER)
+LIGHT_CBUFFER(b1)
+
+cbuffer mat : register(b4)
+{
+    float4 diffuse;
+    float4 specular;
+    float4 ambient;
+    float alpha;
+    float specularity;
+}
 
 float4 BasicShadowPS(GSOutput data) : SV_Target
 {

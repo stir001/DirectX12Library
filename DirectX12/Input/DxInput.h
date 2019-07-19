@@ -3,11 +3,7 @@
 #include <Windows.h>
 #include <memory>
 #include <Xinput.h>
-
-struct MousePos
-{
-	POINT pos;
-};
+#include <DirectXMath.h>
 
 //window側で定義されていない部分の
 //仮想キーコードの定義と
@@ -124,6 +120,21 @@ enum eKEY_STATE_CHECK
 
 class DxInput
 {
+public:
+	DxInput();
+	~DxInput();
+	//毎フレーム呼ぶ
+	bool UpdateKeyState();
+	const DirectX::XMFLOAT2 GetMousePos() const;
+
+	//@return 256の要素をもつ配列を返す
+	const unsigned char* GetKeyState();
+
+	bool IsKeyDown(VIRTUAL_KEY_INDEX index) const;
+	bool IsKeyTrigger(VIRTUAL_KEY_INDEX index) const;
+	bool IsKeyToggle(VIRTUAL_KEY_INDEX index) const;
+
+	bool IsKeyUp(VIRTUAL_KEY_INDEX index) const;
 private:
 	const static int KEY_COUNT = 256;
 	const static int PAD_NUM = 4;
@@ -136,20 +147,7 @@ private:
 	//ttp://www016.upp.so-net.ne.jp/garger-studio/gameprog/vb0142.html
 	unsigned char mKeyState[KEY_COUNT];
 	unsigned char mPreKeyState[KEY_COUNT];
-	MousePos mMousePos;
+
 	std::vector<XINPUT_STATE> mXInputState;
-public:
-	//毎フレーム呼ぶ
-	bool UpdateKeyState();
-	const MousePos GetMousePos();
-
-	//@return 256の要素をもつ配列を返す
-	const unsigned char* GetKeyState();
-
-	bool IsKeyDown(VIRTUAL_KEY_INDEX index) const;
-	bool IsKeyTrigger(VIRTUAL_KEY_INDEX index) const;
-	bool IsKeyToggle(VIRTUAL_KEY_INDEX index) const;
-	DxInput();
-	~DxInput();
 };
 

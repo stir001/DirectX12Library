@@ -49,7 +49,7 @@ float4 FbxPS(GSOutput output) : SV_Target
 				)
 		* specularFactorMap.Sample(smp, output.uv);
     color += saturate(specular).rgb;
-    color += diffuse * emissiveMap.Sample(smp, output.uv) * emissiveFactorMap.Sample(smp, output.uv);
+    color += diffuse.rgb * emissiveMap.Sample(smp, output.uv).rgb * emissiveFactorMap.Sample(smp, output.uv);
     float alpha = diffuse.a * transparencyFactorMap.Sample(smp, output.uv);
     return float4(saturate(color), alpha);
 }

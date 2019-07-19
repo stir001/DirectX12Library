@@ -197,7 +197,7 @@ void Dx12Camera::TurnRightLeft(float rad)
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
-	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(GetLocalUpper(), rad));
+	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternionXMVEC(GetLocalUpper(), rad));
 	trans *= DirectX::XMMatrixTranslationFromVector(e);
 	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
@@ -215,7 +215,7 @@ void Dx12Camera::TurnUpDown(float rad)
 	DirectX::XMVECTOR t = DirectX::XMLoadFloat4(&mElement.target);
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
-	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternion(cross, rad));
+	trans *= DirectX::XMMatrixRotationQuaternion(CreateQuoternionXMVEC(cross, rad));
 	trans *= DirectX::XMMatrixTranslationFromVector(e);
 	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
@@ -342,7 +342,7 @@ DirectX::XMFLOAT4X4 Dx12Camera::GetProjection()
 	return mProjection;
 }
 
-DirectX::XMFLOAT4 Dx12Camera::GetCameraPosition()
+DirectX::XMFLOAT4 Dx12Camera::GetPos()
 {
 	return mElement.eye;
 }
@@ -378,12 +378,21 @@ void Dx12Camera::SetNear(float cameraNear)
 	(this->*mHolderSetter)();
 }
 
+float Dx12Camera::GetNear() const
+{
+	return mNear;
+}
+
 void Dx12Camera::SetFar(float cameraFar)
 {
 	mFar = cameraFar;
 	UpdateProjection();
 	UpdateElement();
 	(this->*mHolderSetter)();
+}
+float Dx12Camera::GetFar() const
+{
+	return mFar;
 }
 
 void Dx12Camera::UpdateViewportScisoorRect()
@@ -398,6 +407,11 @@ DirectX::XMINT2 Dx12Camera::GetViewPortSize() const
 float Dx12Camera::GetFov() const
 {
 	return mFov;
+}
+
+DirectX::XMFLOAT3 Dx12Camera::GetTaregt() const
+{
+	return ConvertXMFloat4ToXMFloat3(mElement.target);
 }
 
 void Dx12Camera::AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix)

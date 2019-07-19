@@ -4,6 +4,7 @@
 
 struct ShaderResource
 {
+	ShaderResource() : ptr(nullptr), hGlobal(nullptr), size(0) {};
 	void* ptr;
 	void* hGlobal;
 	size_t size;
@@ -58,6 +59,5 @@ struct ResourceShader : public ShaderDatas
 	ShaderResource domain;
 	ShaderResource compute;
 
-	ResourceShader();
 	~ResourceShader();
 };
