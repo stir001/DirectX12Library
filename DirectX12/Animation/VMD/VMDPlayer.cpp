@@ -113,8 +113,8 @@ void VMDPlayer::ApplyRootLocation()
 	auto rootItr = (*mCurrentPoses.begin());
 	DirectX::XMMATRIX mats = DirectX::XMMatrixTranslation(rootItr->location.x, rootItr->location.y, rootItr->location.z);
 	DirectX::XMMATRIX matg = DirectX::XMMatrixTranslation((rootItr + 1)->location.x, (rootItr + 1)->location.y, (rootItr + 1)->location.z);
-	DirectX::XMFLOAT4X4 f44s = ConvertXMMATRIXToXMFloat4x4(mats);
-	DirectX::XMFLOAT4X4 f44g = ConvertXMMATRIXToXMFloat4x4(matg);
+	DirectX::XMFLOAT4X4 f44s = ConvertToXMFloat4x4(mats);
+	DirectX::XMFLOAT4X4 f44g = ConvertToXMFloat4x4(matg);
 	float t = static_cast<float>(mFrame * 0.5f - rootItr->frameNo) / static_cast<float>((rootItr + 1)->frameNo - rootItr->frameNo);
 	DirectX::XMFLOAT4X4 mat = f44g * t + f44s * (1.0f - t);
 	for (auto& currentMat : mCurrentBoneMatrix)

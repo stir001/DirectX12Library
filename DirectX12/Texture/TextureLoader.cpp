@@ -6,6 +6,9 @@
 #include "Buffer/ShaderResourceObject.h"
 #include "Util/CharToWChar.h"
 #include "Util/Util.h"
+#include "Util/Dx12Getter.h"
+#include "CommandList/Dx12CommandList.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 #include <d3dx12.h>
 #include <tchar.h>
@@ -34,7 +37,6 @@ std::shared_ptr<TextureObject> TextureLoader::LoadTexture(const std::string& fil
 {
 	std::wstring wstrPath;
 	ToWChar(wstrPath, filepath);
-
 
 	auto tex = mTextures.find(filepath);
 	if (tex != mTextures.end())
@@ -181,54 +183,55 @@ std::shared_ptr<TextureObject> TextureLoader::CreateSingleColorTexture(const flo
 	return rtn;
 }
 
-void TextureLoader::CreateTexWriteToSubRrsource(std::shared_ptr<TextureObject>& inTex)
-{
-	Microsoft::WRL::ComPtr<ID3D12Resource>& dstResource = inTex->mShaderResource->GetBuffer();
-	DX12CTRL_INSTANCE
-	D3D12_RESOURCE_DESC desc = dstResource->GetDesc();
-
-	//https://msdn.microsoft.com/ja-jp/library/windows/desktop/dn986725(v=vs.85).aspx
-	D3D12_HEAP_PROPERTIES heapProp = {};
-	heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
-	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	heapProp.CreationNodeMask = 1;
-	heapProp.VisibleNodeMask = 1;
-
-	int count = dstResource.Reset();
-	dstResource = nullptr;
-
-	d12.result = d12.GetDev()->CreateCommittedResource(&heapProp
-		, D3D12_HEAP_FLAG_NONE
-		, &desc
-		, D3D12_RESOURCE_STATE_GENERIC_READ
-		, nullptr
-		, IID_PPV_ARGS(&dstResource));
-
-
-	D3D12_BOX box = {};
-	box.left = 0;
-	box.right = static_cast<UINT>(desc.Width);
-	box.top = 0;
-	box.bottom = desc.Height;
-	box.front = 0;
-	box.back = 1;
-
-	d12.result = dstResource->WriteToSubresource(0, &box, inTex->mSubresource.pData, box.right * 4, box.bottom * 4);
-
-	d12.GetCmdList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(dstResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-
-	{
-		//改善対象
-		//cmdList変数の寿命管理のためブロックを作っている
-		ID3D12GraphicsCommandList* cmdList = d12.GetCmdList().Get();
-		cmdList->Close();
-		d12.GetCmdQueue()->ExecuteCommandLists(1, (ID3D12CommandList* const*)(&cmdList));
-	}
-
-	d12.CmdQueueSignal();
-	d12.GetCmdList()->Reset(d12.GetCmdAllocator().Get(), nullptr);
-}
+//void TextureLoader::CreateTexWriteToSubRrsource(std::shared_ptr<TextureObject>& inTex)
+//{
+//	Microsoft::WRL::ComPtr<ID3D12Resource>& dstResource = inTex->mShaderResource->GetBuffer();
+//	DX12CTRL_INSTANCE
+//	D3D12_RESOURCE_DESC desc = dstResource->GetDesc();
+//
+//	//https://msdn.microsoft.com/ja-jp/library/windows/desktop/dn986725(v=vs.85).aspx
+//	D3D12_HEAP_PROPERTIES heapProp = {};
+//	heapProp.Type = D3D12_HEAP_TYPE_CUSTOM;
+//	heapProp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+//	heapProp.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+//	heapProp.CreationNodeMask = 1;
+//	heapProp.VisibleNodeMask = 1;
+//
+//	int count = dstResource.Reset();
+//	dstResource = nullptr;
+//
+//	d12.result = d12.GetDev()->CreateCommittedResource(&heapProp
+//		, D3D12_HEAP_FLAG_NONE
+//		, &desc
+//		, D3D12_RESOURCE_STATE_GENERIC_READ
+//		, nullptr
+//		, IID_PPV_ARGS(&dstResource));
+//
+//	std::shared_ptr<Dx12BufferObject> dst = std::make_shared<Dx12BufferObject>(dstResource, "DstResource", dx12_getter::GetDxgiFormatByteSize(desc.Format), desc.Width * desc.Height);
+//
+//	D3D12_BOX box = {};
+//	box.left = 0;
+//	box.right = static_cast<UINT>(desc.Width);
+//	box.top = 0;
+//	box.bottom = desc.Height;
+//	box.front = 0;
+//	box.back = 1;
+//
+//	d12.result = dstResource->WriteToSubresource(0, &box, inTex->mSubresource.pData, box.right * 4, box.bottom * 4);
+//
+//	//d12.GetCmdList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(dstResource.Get(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+//	d12.GetCmdList()->TransitionBarrier(dst, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+//	{
+//		//改善対象
+//		//cmdList変数の寿命管理のためブロックを作っている
+//		ID3D12GraphicsCommandList* cmdList = d12.GetCmdList()->GetCommandList().Get();
+//		cmdList->Close();
+//		d12.GetCmdQueue()->ExecuteCommandLists(1, (ID3D12CommandList* const*)(&cmdList));
+//	}
+//
+//	d12.CmdQueueSignal();
+//	d12.GetCmdList()->Reset();
+//}
 
 void TextureLoader::CreateTexUpdateSubResources(std::shared_ptr<TextureObject>& inTex)
 {
@@ -265,7 +268,7 @@ void TextureLoader::CreateTexUpdateSubResources(std::shared_ptr<TextureObject>& 
 		nullptr,
 		IID_PPV_ARGS(&updateBuffer));
 
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList = d12.GetCmdList();
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> cmdList = d12.GetCmdList()->GetCommandList();
 
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn986740(v=vs.85).aspx
 	D3D12_RESOURCE_BARRIER barrier;
@@ -292,15 +295,12 @@ void TextureLoader::CreateTexUpdateSubResources(std::shared_ptr<TextureObject>& 
 
 	cmdList->Close();
 
-	{
-		ID3D12GraphicsCommandList* t_cmdList = cmdList.Get();
-		d12.GetCmdQueue()->ExecuteCommandLists(1, (ID3D12CommandList* const*)(&t_cmdList));
-	}
+	d12.GetCmdQueue()->ExecuteCommandList(d12.GetCmdList());
 
-	d12.CmdQueueSignal();
-
-	d12.GetCmdAllocator()->Reset();
-	cmdList->Reset(d12.GetCmdAllocator().Get(),nullptr);
+	d12.GetCmdQueue()->Signal();
+	d12.GetCmdQueue()->Wait();
+	
+	d12.GetCmdList()->Reset();
 }
 
 void TextureLoader::CreateNullTexture(std::shared_ptr<TextureObject>& inTex)

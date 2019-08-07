@@ -561,7 +561,10 @@
     <ClInclude Include="DirectX12\Shader\RootsignatureInclude.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX12\CommandQueue\CommandQueue.h">
+    <ClInclude Include="DirectX12\CommandQueue\Dx12CommandQueue.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX12\Fence\Dx12Fence.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -971,7 +974,10 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12\CommandQueue\CommandQueue.cpp">
+    <ClCompile Include="DirectX12\CommandQueue\Dx12CommandQueue.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectX12\Fence\Dx12Fence.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1053,6 +1059,7 @@
     <FxCompile Include="DirectX12\Shader\SkeletonPS.hlsl" />
     <FxCompile Include="DirectX12\Shader\NormalMapGS.hlsl" />
     <FxCompile Include="DirectX12\Shader\Primitive3DLine.hlsl" />
+    <FxCompile Include="DirectX12\Shader\PositionRender.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectX12\Shader\MatrixOperation.hlsli">

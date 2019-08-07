@@ -7,6 +7,7 @@ struct ID3D12CommandQueue;
 
 class Dx12CommandList;
 class Dx12BufferObject;
+class Dx12CommandQueue;
 
 class RenderingPassObject
 {
@@ -28,7 +29,7 @@ public:
 	/**
 	*	コマンドリストの実行をする。GPU待ちの責任は負わない
 	*/
-	virtual void ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue) = 0;
+	virtual void ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue) = 0;
 
 	/**
 	*	ExecutePathの実行後に実行される。CommnadListのリセットをする

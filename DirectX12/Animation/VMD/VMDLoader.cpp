@@ -28,7 +28,7 @@ std::shared_ptr<VMDAnimation> VMDLoader::LoadAnimation(const std::string& path)
 	}
 	else
 	{
-		mFp->SetFile(path);
+		mFp->SetLoadFile(path);
 	}
 	mLoadingAnimation = std::make_shared<VMDAnimation>();
 

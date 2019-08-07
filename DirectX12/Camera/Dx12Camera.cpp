@@ -170,7 +170,7 @@ void Dx12Camera::MoveFront(float vel)
 	DirectX::XMFLOAT3 target = { mElement.target.x, mElement.target.y ,mElement.target.z };
 	DirectX::XMFLOAT3 eye = { mElement.eye.x, mElement.eye.y ,mElement.eye.z };
 	DirectX::XMFLOAT3 eyeToTarget = target - eye;
-	eyeToTarget = NormalizeXMFloat3(eyeToTarget);
+	eyeToTarget = Normalize(eyeToTarget);
 
 	eyeToTarget *= vel;
 	mElement.eye = mElement.eye + eyeToTarget;
@@ -182,9 +182,9 @@ void Dx12Camera::MoveFront(float vel)
 void Dx12Camera::MoveSide(float vel)
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
-	DirectX::XMFLOAT3 cross = CrossXMFloat3(eyeToTarget, GetLocalUpper());
-	auto testdotvalue = DotXMFloat3(eyeToTarget, GetLocalUpper());
-	cross = NormalizeXMFloat3(cross) * vel;
+	DirectX::XMFLOAT3 cross = Cross(eyeToTarget, GetLocalUpper());
+	auto testdotvalue = Dot(eyeToTarget, GetLocalUpper());
+	cross = Normalize(cross) * vel;
 	mElement.eye += cross;
 	mElement.target += cross;
 	UpdateElement();
@@ -210,8 +210,8 @@ void Dx12Camera::TurnUpDown(float rad)
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
 	DirectX::XMFLOAT4 target = mElement.target;
-	DirectX::XMFLOAT3 cross = CrossXMFloat3(eyeToTarget, GetLocalUpper());
-	cross = NormalizeXMFloat3(cross);
+	DirectX::XMFLOAT3 cross = Cross(eyeToTarget, GetLocalUpper());
+	cross = Normalize(cross);
 	DirectX::XMVECTOR t = DirectX::XMLoadFloat4(&mElement.target);
 	DirectX::XMVECTOR e = DirectX::XMLoadFloat4(&mElement.eye);
 	DirectX::XMMATRIX trans = DirectX::XMMatrixTranslationFromVector(-e);
@@ -220,7 +220,7 @@ void Dx12Camera::TurnUpDown(float rad)
 	t = DirectX::XMVector4Transform(t - e, trans);
 	DirectX::XMStoreFloat4(&mElement.target, e + t);
 
-	float dotvalue = abs(DotXMFloat3(NormalizeXMFloat3(GetEyeToTargetVec()), mUpper));
+	float dotvalue = abs(Dot(Normalize(GetEyeToTargetVec()), mUpper));
 	if (dotvalue >= 0.95f)
 	{
 		mElement.target = target;
@@ -411,7 +411,7 @@ float Dx12Camera::GetFov() const
 
 DirectX::XMFLOAT3 Dx12Camera::GetTaregt() const
 {
-	return ConvertXMFloat4ToXMFloat3(mElement.target);
+	return ConvertToXMFloat3(mElement.target);
 }
 
 void Dx12Camera::AddRotationAxis(const DirectX::XMMATRIX& rotaMatrix)
@@ -435,8 +435,8 @@ DirectX::XMFLOAT3 Dx12Camera::GetEyeToTargetVec()
 DirectX::XMFLOAT3 Dx12Camera::GetLocalUpper()
 {
 	DirectX::XMFLOAT3 eyeToTarget = GetEyeToTargetVec();
-	DirectX::XMFLOAT3 crossVec = CrossXMFloat3(eyeToTarget, mUpper);
-	crossVec = NormalizeXMFloat3(crossVec);
-	mLocalUpper = NormalizeXMFloat3(CrossXMFloat3(crossVec, eyeToTarget));
+	DirectX::XMFLOAT3 crossVec = Cross(eyeToTarget, mUpper);
+	crossVec = Normalize(crossVec);
+	mLocalUpper = Normalize(Cross(crossVec, eyeToTarget));
 	return  mLocalUpper;
 }

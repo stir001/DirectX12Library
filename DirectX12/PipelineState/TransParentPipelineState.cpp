@@ -3,7 +3,7 @@
 
 TransParentPipelineState::TransParentPipelineState(const std::string& name,
 	const std::shared_ptr<RootSignatureObject>& rootsignature,
-	const Microsoft::WRL::ComPtr<ID3D12Device>& dev)
+	const Microsoft::WRL::ComPtr<ID3D12Device>& dev, bool isUseDepth)
 {
 	auto gps = GetDefalutPipelineStateDesc();
 	gps.RasterizerState.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_NONE;
@@ -19,6 +19,11 @@ TransParentPipelineState::TransParentPipelineState(const std::string& name,
 	rtDesc.LogicOpEnable = false;
 	rtDesc.LogicOp = D3D12_LOGIC_OP::D3D12_LOGIC_OP_NOOP;
 	rtDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE::D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	if (!isUseDepth)
+	{
+		gps.DepthStencilState.DepthEnable = false;
+	}
 
 	gps.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK::D3D12_DEPTH_WRITE_MASK_ALL;
 	

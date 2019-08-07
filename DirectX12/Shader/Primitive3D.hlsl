@@ -52,6 +52,16 @@ struct PriGSOut
 };
 
 
+struct MulPsOut
+{
+    float4 front : SV_Target0;
+    float4 back : SV_Target1;
+    float4 left : SV_Target2;
+    float4 right : SV_Target3;
+    float4 up : SV_Target4;
+    float4 buttom : SV_Target5;
+};
+
 [RootSignature(PRM3DRS SMP)]
 PriVSOutput PrimitiveVS(PriVSInput vsInput)
 {

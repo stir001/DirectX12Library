@@ -12,6 +12,7 @@ class Dx12DescriptorHeapObject;
 class RenderingPassObject;
 class Dx12CommandList;
 class Dx12BufferObject;
+class Dx12CommandQueue;
 
 enum class DefaultPass
 {
@@ -164,12 +165,10 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mRenderCmdAllocator;
 	std::shared_ptr<Dx12CommandList> mRenderCmdList;
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCmdQueue;
+	std::shared_ptr<Dx12CommandQueue> mCmdQueue;
 	Microsoft::WRL::ComPtr<ID3D12Device> mDevice;
 
 	std::shared_ptr<SwapChainObject> mSwapChain;
-	Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
-	UINT64 mFenceValue;
 
 	unsigned int mWidth;
 	unsigned int mHeight;

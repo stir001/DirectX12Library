@@ -103,7 +103,7 @@ std::shared_ptr<PrimitiveObject> PrimitiveCreator::GetCone(float radius, float h
 	return std::make_shared<PrimitiveCone>(radius, height, div);
 }
 
-std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCustumPrimitve(std::shared_ptr<PrimitiveObject> primitive, const std::string& texPath)
+std::shared_ptr<PrimitiveController> PrimitiveCreator::CreateCustumPrimitve(const std::shared_ptr<PrimitiveObject>& primitive, const std::string& texPath)
 {
 	auto rtn = CreateController(primitive);
 	SetTexture(rtn, texPath);
@@ -136,7 +136,7 @@ void PrimitiveCreator::SetTexture(std::shared_ptr<PrimitiveController>& ctrl, co
 	}
 }
 
-void PrimitiveCreator::SetLightObject(std::shared_ptr<LightObject> inlight)
+void PrimitiveCreator::SetLightObject(const std::shared_ptr<LightObject>& inlight)
 {
 	mLight = inlight;
 }

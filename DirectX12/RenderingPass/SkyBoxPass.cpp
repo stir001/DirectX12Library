@@ -7,6 +7,7 @@
 #include "Buffer/RendertargetObject.h"
 #include "Camera/CameraHolder.h"
 #include "Master/Dx12Ctrl.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 #include <d3d12.h>
 
@@ -59,9 +60,9 @@ void SkyBoxPass::PreExecuteUpdate()
 	mCmdList->Close();
 }
 
-void SkyBoxPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void SkyBoxPass::ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 {
-	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)(mCmdList->GetCommandList().GetAddressOf()));
+	cmdQueue->ExecuteCommandList(mCmdList);
 }
 
 void SkyBoxPass::ResetCommandList()

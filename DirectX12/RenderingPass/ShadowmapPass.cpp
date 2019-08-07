@@ -5,6 +5,7 @@
 #include "Light/DirectionalLight.h"
 #include "Master/Dx12Ctrl.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 #include <d3d12.h>
 
 ShadowmapPass::ShadowmapPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev) : RenderingPassObject("ShadowmapPass")
@@ -41,10 +42,9 @@ void ShadowmapPass::PreExecuteUpdate()
 	mCmdList->Close();
 }
 
-void ShadowmapPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void ShadowmapPass::ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 {
-	ID3D12CommandList* cmdList = mCmdList->GetCommandList().Get();
-	cmdQueue->ExecuteCommandLists(1, &cmdList);
+	cmdQueue->ExecuteCommandList(mCmdList);
 }
 
 void ShadowmapPass::ResetCommandList()

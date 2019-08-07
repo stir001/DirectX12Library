@@ -21,7 +21,10 @@ class TextureObject;
 class DepthBufferObject;
 class Dx12Camera;
 class Dx12DescriptorHeapObject;
+class Dx12CommandList;
 class CameraHolder;
+class Dx12Fence;
+class Dx12CommandQueue;
 
 namespace DirectX
 {
@@ -61,13 +64,13 @@ public:
 
 
 	Microsoft::WRL::ComPtr<ID3D12Device>& GetDev();
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator>& GetCmdAllocator();
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue>& GetCmdQueue();
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& GetCmdList();
+	std::shared_ptr<Dx12CommandQueue>& GetCmdQueue();
+	std::shared_ptr<Dx12CommandList>& GetCmdList();
 	Microsoft::WRL::ComPtr<IDXGIFactory4> GetFactory();
 	std::shared_ptr<DepthBufferObject> GetDepthBuffer() const;
 	std::shared_ptr<Dx12DescriptorHeapObject> GetDepthDescHeap() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthCpuHandle() const;
+	std::shared_ptr<Dx12Fence> GetFence() const;
 
 	void CmdQueueSignal();
 	UINT64 GetFenceValue() const;
@@ -118,10 +121,9 @@ private:
 	int mWndWidth;
 	std::string mWindowName;
 	Microsoft::WRL::ComPtr<ID3D12Device> mDev;
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> mCmdAllocator;
-	Microsoft::WRL::ComPtr<ID3D12CommandQueue> mCmdQueue;
-	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> mCmdList;
-	Microsoft::WRL::ComPtr<ID3D12Fence> mFence;
+	std::shared_ptr<Dx12CommandQueue> mCmdQueue;
+	std::shared_ptr<Dx12CommandList> mCmdList;
+	std::shared_ptr<Dx12Fence> mFence;
 	Microsoft::WRL::ComPtr<IDXGIFactory4> mFactory;
 	std::shared_ptr<DepthBufferObject> mDepthBuffer;
 	std::shared_ptr<Dx12DescriptorHeapObject> mDepthDescHeap;

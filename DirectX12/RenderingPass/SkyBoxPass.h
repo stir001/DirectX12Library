@@ -36,7 +36,7 @@ public:
 	/**
 	*	コマンドリストの実行をする。GPU待ちの責任は負わない
 	*/
-	 void ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue);
+	 void ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue);
 
 	/**
 	*	ExecutePathの実行後に実行される。CommnadListのリセットをする

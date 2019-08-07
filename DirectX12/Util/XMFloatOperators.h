@@ -21,11 +21,11 @@ DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& lval, float rato);
 
 DirectX::XMFLOAT3 operator/=(DirectX::XMFLOAT3& lval, float rato);
 
-DirectX::XMFLOAT3 NormalizeXMFloat3(const DirectX::XMFLOAT3& val);
+DirectX::XMFLOAT3 Normalize(const DirectX::XMFLOAT3& val);
 
-float DotXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
+float Dot(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
-DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
+DirectX::XMFLOAT3 Cross(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval);
 
 DirectX::XMFLOAT4X4 CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad);
 
@@ -67,15 +67,15 @@ DirectX::XMFLOAT4X4 operator*(const DirectX::XMFLOAT4X4& lval, const DirectX::XM
 
 DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT4X4& rval);
 
-float GetLengthXMFloat3(const DirectX::XMFLOAT3& val);
+float GetLength(const DirectX::XMFLOAT3& val);
 
-DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3& val);
+DirectX::XMFLOAT4 ConvertToXMFloat4(const DirectX::XMFLOAT3& val);
 
-DirectX::XMFLOAT3 ConvertXMFloat4ToXMFloat3(const DirectX::XMFLOAT4& val);
+DirectX::XMFLOAT3 ConvertToXMFloat3(const DirectX::XMFLOAT4& val);
 
-DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val);
+DirectX::XMFLOAT4X4 ConvertToXMFloat4x4(const DirectX::XMMATRIX& val);
 
-DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4& val);
+DirectX::XMMATRIX ConvertToXMMatrix(const DirectX::XMFLOAT4X4& val);
 
 DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4& xmf4);
 
@@ -105,17 +105,17 @@ bool operator==(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
 
 DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lval, const DirectX::XMFLOAT4& rval);
 
-DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4& matrix);
+DirectX::XMFLOAT4X4 Inverse(const DirectX::XMFLOAT4X4& matrix);
 
 DirectX::XMFLOAT4X4 IdentityXMFloat4x4();
 
 DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 mat);
 
-DirectX::XMFLOAT2 NormalizeXMFloat2(const DirectX::XMFLOAT2& val);
+DirectX::XMFLOAT2 Normalize(const DirectX::XMFLOAT2& val);
 
-float GetLengthXMFloat2(const DirectX::XMFLOAT2& val);
+float GetLength(const DirectX::XMFLOAT2& val);
 
-float DotXMFloat2(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2 rval);
+float Dot(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2 rval);
 
 DirectX::XMFLOAT2 operator-(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);
 DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& lval, const DirectX::XMFLOAT2& rval);

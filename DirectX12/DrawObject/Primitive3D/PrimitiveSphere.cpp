@@ -41,7 +41,7 @@ void PrimitiveSphere::CreateVertices(float radius, unsigned int div)
 						radius * cos(unitYDiv * yDiv),
 						radius * cos(pi) * rRatio };
 			vert.pos = { vertPos.x, vertPos.y, vertPos.z, 1.0f };
-			DirectX::XMFLOAT3 v = NormalizeXMFloat3(vertPos - center);
+			DirectX::XMFLOAT3 v = Normalize(vertPos - center);
 			vert.normal = { v.x, v.y, v.z, 1.0f };
 			vert.uv = { unitUDiv * circleDiv, unitVDiv * yDiv };
 			mVertices.push_back(vert);

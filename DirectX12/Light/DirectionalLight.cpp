@@ -11,13 +11,13 @@ DirectionalLight::DirectionalLight(DirectX::XMFLOAT3 & pos, DirectX::XMFLOAT3 & 
 {
 	mPos = pos;
 	mLength = length;
-	mElement.tailPos = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(tailPos));
+	mElement.tailPos = ConvertToXMFloat4(Normalize(tailPos));
 
 	XMVECTOR upper = { 0,1,0 };
 	XMVECTOR target = { mElement.tailPos.x * length, mElement.tailPos.y * length, mElement.tailPos.z * length };
 
 	DirectX::XMFLOAT3 t_dir = { mElement.tailPos.x, mElement.tailPos.y, mElement.tailPos.z };
-	mElement.tailPos = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(t_dir));
+	mElement.tailPos = ConvertToXMFloat4(Normalize(t_dir));
 	DirectX::XMVECTOR lightpos = XMLoadFloat3(&pos);
 	DirectX::XMMATRIX lightview = DirectX::XMMatrixLookAtLH(lightpos, target, upper);
 	DirectX::XMMATRIX lightprojection = DirectX::XMMatrixOrthographicLH(70, 70, 1.0f, length);//lightprojectionçsóÒ
@@ -32,14 +32,14 @@ DirectionalLight::DirectionalLight(float dirX, float dirY, float dirZ, float len
 	mPos = {0, 0, 0};
 	mLength = length;
 	DirectX::XMFLOAT3 tdir = { dirX, dirY, dirZ };
-	mElement.tailPos = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(tdir));
+	mElement.tailPos = ConvertToXMFloat4(Normalize(tdir));
 	mPos = { -mElement.tailPos.x * length * 0.5f,- mElement.tailPos.y * length * 0.5f, -mElement.tailPos.z * length * 0.5f};
 
 	XMVECTOR upper = { 0,1,0 };
 	XMVECTOR target = {0, 0,0 };
 
 	DirectX::XMFLOAT3 t_dir = { mElement.tailPos.x, mElement.tailPos.y, mElement.tailPos.z };
-	mElement.tailPos = ConvertXMFloat3ToXMFloat4(NormalizeXMFloat3(t_dir));
+	mElement.tailPos = ConvertToXMFloat4(Normalize(t_dir));
 	DirectX::XMVECTOR lightpos = XMLoadFloat3(&mPos);
 	DirectX::XMMATRIX lightview = DirectX::XMMatrixLookAtLH(lightpos, target, upper);
 	DirectX::XMMATRIX lightprojection = DirectX::XMMatrixOrthographicLH(100, 100, 1.0f, length);//lightprojectionçsóÒ

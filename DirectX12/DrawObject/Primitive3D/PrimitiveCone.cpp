@@ -23,16 +23,16 @@ PrimitiveCone::PrimitiveCone(float radius, float height, unsigned int div)
 		pos.z = cosf(unitCircleDiv * i) * currentRadius;
 		pos.y = height;
 
-		auto unitPosVec = NormalizeXMFloat3({ pos.x, pos.y, pos.z });
+		auto unitPosVec = Normalize({ pos.x, pos.y, pos.z });
 
 		DirectX::XMFLOAT3 upVec = { 0.0f, 1.0f, 0.0f };
 
-		auto projRatio = DotXMFloat3(unitPosVec, upVec);
+		auto projRatio = Dot(unitPosVec, upVec);
 
 		auto projVec = unitPosVec * projRatio;
 
-		auto normalVec = NormalizeXMFloat3(projVec - upVec);
-		normals[i] = ConvertXMFloat3ToXMFloat4(normalVec);
+		auto normalVec = Normalize(projVec - upVec);
+		normals[i] = ConvertToXMFloat4(normalVec);
 	}
 
 	//ÉRÅ[Éìè„ïîçÏê¨

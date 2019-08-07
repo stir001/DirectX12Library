@@ -3,6 +3,7 @@
 #include "Buffer/RendertargetObject.h"
 #include "CommandList/Dx12CommandList.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 BackGroundPass::BackGroundPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
@@ -34,9 +35,9 @@ void BackGroundPass::PreExecuteUpdate()
 	mCmdList->Close();
 }
 
-void BackGroundPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void BackGroundPass::ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 {
-	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mCmdList->GetCommandList().GetAddressOf());
+	cmdQueue->ExecuteCommandList(mCmdList);
 }
 
 void BackGroundPass::ResetCommandList()

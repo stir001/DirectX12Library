@@ -36,7 +36,7 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 				radius * cos(pi) * rRatio };
 			vertPos += offset;
 			vert.pos = { vertPos.x, vertPos.y, vertPos.z, 1.0f };
-			DirectX::XMFLOAT3 v = NormalizeXMFloat3(vertPos - center);
+			DirectX::XMFLOAT3 v = Normalize(vertPos - center);
 			vert.normal = { v.x, v.y, v.z, 1.0f };
 			vert.uv = { unitUDiv * circleDiv, unitVDiv * yDiv };
 			mVertices.push_back(vert);
@@ -58,7 +58,7 @@ PrimitiveCapsule::PrimitiveCapsule(float radius, float length, unsigned int div)
 				radius * cos(pi) * rRatio };
 			vertPos += offset;
 			vert.pos = { vertPos.x, vertPos.y, vertPos.z, 1.0f };
-			DirectX::XMFLOAT3 v = NormalizeXMFloat3(vertPos - center);
+			DirectX::XMFLOAT3 v = Normalize(vertPos - center);
 			vert.normal = { v.x, v.y, v.z, 1.0f };
 			vert.uv = { unitUDiv * circleDiv, unitVDiv * yDiv };
 			mVertices.push_back(vert);

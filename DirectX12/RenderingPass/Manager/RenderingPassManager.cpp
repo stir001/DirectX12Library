@@ -12,6 +12,8 @@
 #include "CommandList/Dx12CommandList.h"
 #include "Master/Dx12Ctrl.h"
 #include "Buffer/RendertargetObject.h"
+#include "CommandQueue/Dx12CommandQueue.h"
+#include "Fence/Dx12Fence.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -26,7 +28,6 @@ RenderingPassManager::~RenderingPassManager()
 {
 	mRenderingPassObjects.clear();
 	mSwapChain.reset();
-	mFence.Reset();
 }
 
 void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, HWND hwnd)
@@ -34,19 +35,12 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	auto& d12 = Dx12Ctrl::Instance();
 
 	mRenderingPassObjects.clear();
-	mCmdQueue.Reset();
 
 	mDevice = dev;
-	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = {};
-	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	cmdQueueDesc.NodeMask = 0;
-	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
 	mRenderCmdList = std::make_shared<Dx12CommandList>("RenderingCommandList", dev);
 
-	mDevice->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&mCmdQueue));
-	mCmdQueue->SetName(L"RenderingCommandQueue");
+	mCmdQueue = std::make_shared<Dx12CommandQueue>("Rendering", dev, D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 	mSwapChain = std::make_shared<SwapChainObject>(hwnd, mDevice, factory, mCmdQueue);
 
@@ -54,9 +48,6 @@ void RenderingPassManager::Init(Microsoft::WRL::ComPtr<ID3D12Device>& dev, Micro
 	mSwapChain->GetSwapChain()->GetDesc(&desc);
 	mWidth = desc.BufferDesc.Width;
 	mHeight = desc.BufferDesc.Height;
-
-	mDevice->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
-	mFence->SetName(L"RenderingManagerFence");
 
 	auto device = d12.GetDev();
 	auto wndSize = d12.GetWindowSize();
@@ -154,7 +145,7 @@ void RenderingPassManager::CopyLastPassRenderTarget()
 
 	mRenderCmdList->Close();
 
-	mCmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mRenderCmdList->GetCommandList().GetAddressOf());
+	mCmdQueue->ExecuteCommandList(mRenderCmdList);
 
 	WaitCmdQueue();
 
@@ -281,18 +272,20 @@ D3D12_CPU_DESCRIPTOR_HANDLE RenderingPassManager::GetCurrentRTVHeapHandle() cons
 
 void RenderingPassManager::WaitCmdQueue()
 {
-	mCmdQueue->Signal(mFence.Get(), ++mFenceValue);
-	UINT64 value = mFence->GetCompletedValue();
-	UINT64 u64max = UINT64_MAX;
-	while (value != mFenceValue)
-	{
-		value = mFence->GetCompletedValue();
-		if (value == UINT64_MAX)
-		{
-			HRESULT result = mDevice->GetDeviceRemovedReason();
-			assert(!FAILED(result));
-		}
-	}
+	mCmdQueue->Signal();
+	mCmdQueue->Wait();
+	//mCmdQueue->Signal(mFence.Get(), ++mFenceValue);
+	//UINT64 value = mFence->GetCompletedValue();
+	//UINT64 u64max = UINT64_MAX;
+	//while (value != mFenceValue)
+	//{
+	//	value = mFence->GetCompletedValue();
+	//	if (value == UINT64_MAX)
+	//	{
+	//		HRESULT result = mDevice->GetDeviceRemovedReason();
+	//		assert(!FAILED(result));
+	//	}
+	//}
 }
 
 std::shared_ptr<Dx12DescriptorHeapObject> RenderingPassManager::GetCurrentRTVDescHeap() const

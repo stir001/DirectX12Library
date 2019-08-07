@@ -50,25 +50,25 @@ DirectX::XMFLOAT3 operator/=(DirectX::XMFLOAT3& lval, float rato)
 	return lval;
 }
 
-DirectX::XMFLOAT3 NormalizeXMFloat3(const DirectX::XMFLOAT3& val)
+DirectX::XMFLOAT3 Normalize(const DirectX::XMFLOAT3& val)
 {
 	float len = sqrtf(val.x * val.x + val.y * val.y + val.z * val.z);
 	return DirectX::XMFLOAT3(val.x / len, val.y / len, val.z / len);
 }
 
-float DotXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
+float Dot(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
 {
 	return lval.x * rval.x + lval.y * rval.y + lval.z * rval.z;
 }
 
-DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
+DirectX::XMFLOAT3 Cross(const DirectX::XMFLOAT3& lval, const DirectX::XMFLOAT3& rval)
 {
-	return  NormalizeXMFloat3(DirectX::XMFLOAT3(lval.y * rval.z - lval.z * rval.y, lval.z * rval.x - lval.x * rval.z, lval.x * rval.y - lval.y * rval.x));
+	return  Normalize(DirectX::XMFLOAT3(lval.y * rval.z - lval.z * rval.y, lval.z * rval.x - lval.x * rval.z, lval.x * rval.y - lval.y * rval.x));
 }
 
 DirectX::XMFLOAT4X4 CreateQuoternion(const DirectX::XMFLOAT3& axis, float rad)
 {
-	return ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,rad))));
+	return ConvertToXMFloat4x4(DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&CreateQuoternionXMFloat4(axis,rad))));
 }
 
 DirectX::XMVECTOR CreateQuoternionXMVEC(const DirectX::XMFLOAT3 & axis, float rad)
@@ -78,7 +78,7 @@ DirectX::XMVECTOR CreateQuoternionXMVEC(const DirectX::XMFLOAT3 & axis, float ra
 
 DirectX::XMFLOAT4 CreateQuoternionXMFloat4(const DirectX::XMFLOAT3& axis, float rad)
 {
-	DirectX::XMFLOAT3 normAxis = NormalizeXMFloat3(axis);
+	DirectX::XMFLOAT3 normAxis = Normalize(axis);
 	return DirectX::XMFLOAT4(
 		normAxis.x * sinf(rad / 2.0f),
 		normAxis.y * sinf(rad / 2.0f),
@@ -221,22 +221,22 @@ DirectX::XMFLOAT4X4 operator*=(DirectX::XMFLOAT4X4& lval, const DirectX::XMFLOAT
 	return lval;
 }
 
-float GetLengthXMFloat3(const DirectX::XMFLOAT3& val)
+float GetLength(const DirectX::XMFLOAT3& val)
 {
-	return sqrtf(DotXMFloat3(val, val));
+	return sqrtf(Dot(val, val));
 }
 
-DirectX::XMFLOAT4 ConvertXMFloat3ToXMFloat4(const DirectX::XMFLOAT3& val)
+DirectX::XMFLOAT4 ConvertToXMFloat4(const DirectX::XMFLOAT3& val)
 {
 	return DirectX::XMFLOAT4(val.x, val.y, val.z, 1);
 }
 
-DirectX::XMFLOAT3 ConvertXMFloat4ToXMFloat3(const DirectX::XMFLOAT4 & val)
+DirectX::XMFLOAT3 ConvertToXMFloat3(const DirectX::XMFLOAT4 & val)
 {
 	return DirectX::XMFLOAT3(val.x, val.y, val.z);
 }
 
-DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val)
+DirectX::XMFLOAT4X4 ConvertToXMFloat4x4(const DirectX::XMMATRIX& val)
 {
 	DirectX::XMFLOAT4X4 rtn;
 	rtn._11 = val.r[0].m128_f32[0]; rtn._12 = val.r[0].m128_f32[1]; rtn._13 = val.r[0].m128_f32[2]; rtn._14 = val.r[0].m128_f32[3];
@@ -246,7 +246,7 @@ DirectX::XMFLOAT4X4 ConvertXMMATRIXToXMFloat4x4(const DirectX::XMMATRIX& val)
 	return rtn;
 }
 
-DirectX::XMMATRIX ConvertXMFloat4x4ToXMMatrix(const DirectX::XMFLOAT4X4& val)
+DirectX::XMMATRIX ConvertToXMMatrix(const DirectX::XMFLOAT4X4& val)
 {
 	DirectX::XMMATRIX rtn;
 	rtn.r[0].m128_f32[0] = val._11; rtn.r[0].m128_f32[1] = val._12; rtn.r[0].m128_f32[2] = val._13; rtn.r[0].m128_f32[3] = val._14;
@@ -326,9 +326,9 @@ DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 & lval, const DirectX::XMFLO
 	return DirectX::XMFLOAT4(lval.x + rval.x, lval.y + rval.y, lval.z + rval.z , 1.0f);
 }
 
-DirectX::XMFLOAT4X4 InverseXMFloat4x4(const DirectX::XMFLOAT4X4 & matrix)
+DirectX::XMFLOAT4X4 Inverse(const DirectX::XMFLOAT4X4 & matrix)
 {
-	return ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixInverse(nullptr, ConvertXMFloat4x4ToXMMatrix(matrix)));
+	return ConvertToXMFloat4x4(DirectX::XMMatrixInverse(nullptr, ConvertToXMMatrix(matrix)));
 }
 
 DirectX::XMFLOAT4X4 IdentityXMFloat4x4()
@@ -347,18 +347,18 @@ DirectX::XMFLOAT3 operator*=(DirectX::XMFLOAT3& xmf3, const DirectX::XMFLOAT4X4 
 	return xmf3;
 }
 
-DirectX::XMFLOAT2 NormalizeXMFloat2(const DirectX::XMFLOAT2 & val)
+DirectX::XMFLOAT2 Normalize(const DirectX::XMFLOAT2 & val)
 {
-	float length = GetLengthXMFloat2(val);
+	float length = GetLength(val);
 	return DirectX::XMFLOAT2(val.x / length, val.y /length);
 }
 
-float GetLengthXMFloat2(const DirectX::XMFLOAT2 & val)
+float GetLength(const DirectX::XMFLOAT2 & val)
 {
 	return sqrt(val.x * val.x + val.y * val.y);
 }
 
-float DotXMFloat2(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 rval)
+float Dot(const DirectX::XMFLOAT2 & lval, const DirectX::XMFLOAT2 rval)
 {
 	return lval.x * rval.x + lval.y * rval.y;
 }

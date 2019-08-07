@@ -24,7 +24,7 @@ FbxAnimationPlayer::FbxAnimationPlayer(std::vector<Fbx::FbxSkeleton>& bones, con
 	mSkeletonHeadPos.resize(boneNum);
 	for (unsigned int i = 0; i < boneNum; ++i)
 	{
-		mInverseMatrix[i] = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(-mModelBones[i].pos.x, -mModelBones[i].pos.y, -mModelBones[i].pos.z));
+		mInverseMatrix[i] = ConvertToXMFloat4x4(DirectX::XMMatrixTranslation(-mModelBones[i].pos.x, -mModelBones[i].pos.y, -mModelBones[i].pos.z));
 	}
 	CreateSkeletonTree(skeletonIndices);
 }
@@ -184,20 +184,20 @@ void FbxAnimationPlayer::UpdateQuoternionMatrix()
 	for (int i = 0; i < mModelBones.size(); ++i)
 	{
 		initPos[i] = mModelBones[i].tailPos - mModelBones[i].pos;
-		DirectX::XMFLOAT3 iPos = NormalizeXMFloat3({ initPos[i].x, initPos[i].y, initPos[i].z });
+		DirectX::XMFLOAT3 iPos = Normalize({ initPos[i].x, initPos[i].y, initPos[i].z });
 		calPos[i] = mSkeletonTailPos[i] - mSkeletonHeadPos[i];
-		DirectX::XMFLOAT3 cPos = NormalizeXMFloat3({ calPos[i].x, calPos[i].y, calPos[i].z });
+		DirectX::XMFLOAT3 cPos = Normalize({ calPos[i].x, calPos[i].y, calPos[i].z });
 
-		auto tranlateMat = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(mSkeletonHeadPos[i].x, mSkeletonHeadPos[i].y, mSkeletonHeadPos[i].z));
+		auto tranlateMat = ConvertToXMFloat4x4(DirectX::XMMatrixTranslation(mSkeletonHeadPos[i].x, mSkeletonHeadPos[i].y, mSkeletonHeadPos[i].z));
 
-		float cos = DotXMFloat3(iPos, cPos);
+		float cos = Dot(iPos, cPos);
 		if (1.0f - abs(cos) <= 0.0001f)
 		{
 			mQuoternionMatrix[i] = mInverseMatrix[i] * IdentityXMFloat4x4() * tranlateMat;
 		}
 		else
 		{
-			DirectX::XMFLOAT3 axis = NormalizeXMFloat3(CrossXMFloat3(iPos, cPos));
+			DirectX::XMFLOAT3 axis = Normalize(Cross(iPos, cPos));
 			auto transform = CreateQuoternion(axis, acos(cos));
 			mQuoternionMatrix[i] = mInverseMatrix[i] * transform * tranlateMat;
 		}

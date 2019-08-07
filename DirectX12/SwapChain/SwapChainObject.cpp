@@ -4,13 +4,14 @@
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Buffer/Dx12BufferObject.h"
 #include "Buffer/RendertargetObject.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 #include <d3d12.h>
 #include <dxgi1_4.h>
 
 const unsigned int SWAPCHAINBUFFERCOUNT = 2;
 
-SwapChainObject::SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device>& device, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+SwapChainObject::SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device>& device, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 	:mSwapchain(nullptr), mRtvDescriptorHeap(nullptr)
 {
 	DX12CTRL_INSTANCE;
@@ -28,7 +29,7 @@ SwapChainObject::SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device
 	swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;//DXGI_SWAP_CHAIN_FLAG_NONPREROTATED;
 
-	factory->CreateSwapChainForHwnd(cmdQueue.Get(), hwnd, &(swapChainDesc), nullptr, nullptr, (IDXGISwapChain1**)(mSwapchain.GetAddressOf()));
+	factory->CreateSwapChainForHwnd(cmdQueue->Get().Get(), hwnd, &(swapChainDesc), nullptr, nullptr, (IDXGISwapChain1**)(mSwapchain.GetAddressOf()));
 	DXGI_SWAP_CHAIN_DESC swdesc = {};
 	mSwapchain->GetDesc(&swdesc);
 

@@ -4,6 +4,7 @@
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Buffer/RendertargetObject.h"
 #include "Camera/CameraHolder.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 #include <d3d12.h>
 
 ModelPass::ModelPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
@@ -34,9 +35,9 @@ void ModelPass::PreExecuteUpdate()
 	mCmdList->Close();
 }
 
-void ModelPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void ModelPass::ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 {
-	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)(mCmdList->GetCommandList().GetAddressOf()));
+	cmdQueue->ExecuteCommandList(mCmdList);
 }
 
 void ModelPass::ResetCommandList()

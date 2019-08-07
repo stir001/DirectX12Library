@@ -4,6 +4,7 @@
 #include "Master/Dx12Ctrl.h"
 #include "Master/Dx12ResultCheckDefine.h"
 #include "ViewDesc/Dx12ShaderResourceViewDesc.h"
+#include "CommandList/Dx12CommandList.h"
 #include <cassert>
 
 DepthBufferObject::DepthBufferObject(const std::string& name, const Microsoft::WRL::ComPtr<ID3D12Device>& dev, 
@@ -81,7 +82,7 @@ DepthBufferObject::~DepthBufferObject()
 		barrier.Transition.StateAfter = mCurrentState;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 		barrier.Transition.Subresource = 0;
-		Dx12Ctrl::Instance().GetCmdList()->ResourceBarrier(1, &barrier);
+		Dx12Ctrl::Instance().GetCmdList()->GetCommandList()->ResourceBarrier(1, &barrier);
 	}
 }
 

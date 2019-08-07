@@ -2,7 +2,7 @@
 #include "Transform3DCalculator.h"
 #include "Util/XMFloatOperators.h"
 
-Transform3DCalculator::Transform3DCalculator(): mAMatrix(ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity()))
+Transform3DCalculator::Transform3DCalculator(): mAMatrix(ConvertToXMFloat4x4(DirectX::XMMatrixIdentity()))
 {
 }
 
@@ -48,13 +48,13 @@ DirectX::XMFLOAT4X4 Transform3DCalculator::GetAMatrix()
 
 void Transform3DCalculator::Init()
 {
-	mAMatrix = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity());
+	mAMatrix = ConvertToXMFloat4x4(DirectX::XMMatrixIdentity());
 }
 
 DirectX::XMFLOAT4X4 Transform3DCalculator::Multiplication(DirectX::XMFLOAT4X4& matF44,const DirectX::XMMATRIX& matXM)
 {
 	DirectX::XMMATRIX mat = DirectX::XMLoadFloat4x4(&matF44);
 	mat *= matXM;
-	return ConvertXMMATRIXToXMFloat4x4(mat);
+	return ConvertToXMFloat4x4(mat);
 }
 

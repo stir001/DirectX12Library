@@ -7,11 +7,14 @@
 
 class Dx12DescriptorHeapObject;
 class Dx12BufferObject;
+class Dx12CommandQueue;
 
 class SwapChainObject
 {
 public:
-	SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device>& device, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory, Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue);
+	SwapChainObject(HWND& hwnd, Microsoft::WRL::ComPtr<ID3D12Device>& device
+		, Microsoft::WRL::ComPtr<IDXGIFactory4>& factory
+		, std::shared_ptr<Dx12CommandQueue>& cmdQueue);
 	~SwapChainObject();
 	Microsoft::WRL::ComPtr<IDXGISwapChain3> GetSwapChain() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRTVHeap() const;

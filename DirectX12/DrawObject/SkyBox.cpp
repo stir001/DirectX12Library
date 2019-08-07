@@ -135,7 +135,7 @@ DirectX::XMFLOAT4X4 SkyBox::GetSkyBoxProjection(std::shared_ptr<Dx12Camera> came
 	float fov = camera->GetFov();
 	auto size = camera->GetViewPortSize();
 	auto projection = DirectX::XMMatrixPerspectiveFovLH(fov, static_cast<float>(size.x) / static_cast<float>(size.y), mSkyBoxRange * 0.6f * 0.5f, mSkyBoxRange * 1.8f * 0.5f);
-	DirectX::XMFLOAT4X4 rtn = ConvertXMMATRIXToXMFloat4x4(projection);
+	DirectX::XMFLOAT4X4 rtn = ConvertToXMFloat4x4(projection);
 	return rtn;
 }
 

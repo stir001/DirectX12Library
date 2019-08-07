@@ -59,7 +59,7 @@ void PrimitiveController::Instancing(std::vector<DirectX::XMFLOAT3>& instancePos
 	for (unsigned int i = 0; i < static_cast<unsigned int>(instancePositions.size()); ++i)
 	{
 		mInstanceDatas[i].aMatrix = mat;
-		mInstanceDatas[i].offset = ConvertXMFloat3ToXMFloat4(instancePositions[i]);
+		mInstanceDatas[i].offset = ConvertToXMFloat4(instancePositions[i]);
 	}
 
 	mInstanceVertexBuffer = std::make_shared<VertexBufferObject>(mPrimitive->GetName() + "InstanceVertexBuffer", mDevice, static_cast<unsigned int>(sizeof(mInstanceDatas[0])), static_cast<unsigned int>(mInstanceDatas.size()));

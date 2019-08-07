@@ -202,7 +202,7 @@
     <ClInclude Include="bullet\System\PhysicsSystem.h" />
     <ClInclude Include="Bullet\CollisionObject\Base\ICollisionObject.h" />
     <ClInclude Include="Bullet\Action\CollisionActionCaller.h" />
-    <ClInclude Include="DirectX12\CommandQueue\CommandQueue.h" />
+    <ClInclude Include="DirectX12\CommandQueue\Dx12CommandQueue.h" />
     <ClInclude Include="DirectX12\PipelineState\DefaultPipelineState.h" />
     <ClInclude Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.h" />
     <ClInclude Include="DirectX12\Animation\Animation.h" />
@@ -305,6 +305,7 @@
     <ClInclude Include="DirectX12\ViewDesc\Dx12ShaderResourceViewDesc.h" />
     <ClInclude Include="DirectX12\ViewDesc\Dx12UnorderedAccessViewDesc.h" />
     <ClInclude Include="DirectX12\DrawObject\DrawCallIssuer.h" />
+    <ClInclude Include="DirectX12\Fence\Dx12Fence.h" />
     <ClInclude Include="Dx12MSLib.h" />
     <ClInclude Include="Bullet\Action\IActionDefiner.h" />
     <ClInclude Include="DirectX12\Rootsignature\PMDToonRootsignature.h" />
@@ -348,7 +349,7 @@
     <ClCompile Include="bullet\System\PhysicsSystem.cpp" />
     <ClCompile Include="Bullet\CollisionObject\Base\ICollisionObject.cpp" />
     <ClCompile Include="Bullet\Action\CollisionActionCaller.cpp" />
-    <ClCompile Include="DirectX12\CommandQueue\CommandQueue.cpp" />
+    <ClCompile Include="DirectX12\CommandQueue\Dx12CommandQueue.cpp" />
     <ClCompile Include="DirectX12\PipelineState\DefaultPipelineState.cpp" />
     <ClCompile Include="DirectX12\DescriptorHeap\DescriptorHeapHolder.cpp" />
     <ClCompile Include="DirectX12\Animation\Animation.cpp" />
@@ -466,6 +467,7 @@
     <ClCompile Include="DirectX12\DrawObject\DrawCallIssuer.cpp" />
     <ClCompile Include="DirectX12\DrawObject\Image\ImageDrawIssuer.cpp" />
     <ClCompile Include="DirectX12\PipelineState\NotCullPipelineState.cpp" />
+    <ClCompile Include="DirectX12\Fence\Dx12Fence.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -848,6 +850,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ShadowVS</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DirectX12\Shader\PositionRender.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="DirectX12\Shader\Primitive2D.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>

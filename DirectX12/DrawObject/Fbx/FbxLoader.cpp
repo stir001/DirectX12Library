@@ -559,12 +559,12 @@ void FbxLoader::LoadVertexUV(fbxsdk::FbxMesh* mesh)
 
 void StoreSkeleton(Fbx::FbxSkeleton& skl, const NodeTree& tree) {
 	skl.name = tree.nodeName;
-	skl.pos = ConvertXMFloat3ToXMFloat4(tree.translation);
-	skl.rotation = ConvertXMFloat3ToXMFloat4(tree.rotation);
-	skl.scale = ConvertXMFloat3ToXMFloat4(tree.scale);
+	skl.pos = ConvertToXMFloat4(tree.translation);
+	skl.rotation = ConvertToXMFloat4(tree.rotation);
+	skl.scale = ConvertToXMFloat4(tree.scale);
 	skl.globalMatrix = tree.globalPosition;
 	skl.localMatrix = tree.offsetMatrix;
-	skl.tailPos = ConvertXMFloat3ToXMFloat4(tree.tailPos);
+	skl.tailPos = ConvertToXMFloat4(tree.tailPos);
 	
 };
 
@@ -1115,7 +1115,7 @@ void FbxLoader::ClearTmpInfo()
 	mSkeletonMatrix.clear();
 	mSkeletonMatrix.shrink_to_fit();
 	DirectX::XMFLOAT4X4 identity;
-	identity = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixIdentity());
+	identity = ConvertToXMFloat4x4(DirectX::XMMatrixIdentity());
 	mNodeTree.globalPosition = identity;
 	mNodeTree.nodeName.clear();
 	mNodeTree.nodeName.shrink_to_fit();
@@ -1146,7 +1146,7 @@ void FbxLoader::LoadAnimationMain(fbxsdk::FbxScene* scene, unsigned int meshId)
 		{
 			DirectX::XMMATRIX t_mat;
 			StoreFbxMatrixToXMMatrix(skeletonNode[i]->EvaluateLocalTransform(times[j]), t_mat);
-			mSkeletonMatrix[i].animMatrix[j].matrix = ConvertXMMATRIXToXMFloat4x4(t_mat);
+			mSkeletonMatrix[i].animMatrix[j].matrix = ConvertToXMFloat4x4(t_mat);
 			mSkeletonMatrix[i].animMatrix[j].frame = static_cast<int>(times[j].Get() / oneFrameValue);
 		}
 	}
@@ -1315,7 +1315,7 @@ std::shared_ptr<Fbx::FbxModelData> FbxLoader::GetMeshData(const std::string & mo
 		float scale = 1.0f;
 		xmMat = DirectX::XMMatrixTranslation(static_cast<float>(translate[3][0]), static_cast<float>(translate[3][1]), static_cast<float>(translate[3][2]));
 		//StoreFbxMatrixToXMMatrix(translate, xmMat);
-		mGeometryOffset = ConvertXMMATRIXToXMFloat4x4(xmMat);
+		mGeometryOffset = ConvertToXMFloat4x4(xmMat);
 		//auto mat = DirectX::XMMatrixTranslation(10, 20, -30);
 		models[i] = MainLoad(mMeshDatas[i], modelPath);
 		models[i]->modelPath = modelPath;

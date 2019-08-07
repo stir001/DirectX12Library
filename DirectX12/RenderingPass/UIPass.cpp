@@ -3,6 +3,7 @@
 #include "CommandList/Dx12CommandList.h"
 #include "DescriptorHeap/Dx12DescriptorHeapObject.h"
 #include "Buffer/RendertargetObject.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 UIPass::UIPass(const Microsoft::WRL::ComPtr<ID3D12Device>& dev,
 	std::shared_ptr<Dx12DescriptorHeapObject> rtvHeap,
@@ -31,9 +32,9 @@ void UIPass::PreExecuteUpdate()
 	mCmdList->Close();
 }
 
-void UIPass::ExecutePath(Microsoft::WRL::ComPtr<ID3D12CommandQueue>& cmdQueue)
+void UIPass::ExecutePath(std::shared_ptr<Dx12CommandQueue>& cmdQueue)
 {
-	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)mCmdList->GetCommandList().GetAddressOf());
+	cmdQueue->ExecuteCommandList(mCmdList);
 }
 
 void UIPass::ResetCommandList()

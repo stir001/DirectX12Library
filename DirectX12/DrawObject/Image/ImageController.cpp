@@ -261,8 +261,8 @@ void ImageController::UpdateUV()
 	CreateInstanceData();
 
 	DirectX::XMFLOAT2 size = mImgObj->GetImageSize();
-	DirectX::XMFLOAT2 leftupUV = { (size.x / 2.0f + mRect->GetLeft()) / size.x, 1.0f - (size.y / 2.0f + mRect->GetUp()) / size.y };
-	DirectX::XMFLOAT2 rightdownUV = { (size.x / 2.0f + mRect->GetRight()) /size.x, 1.0f - (size.y / 2.0f + mRect->GetDown()) / size.y };
+	DirectX::XMFLOAT2 leftupUV = { (size.x / 2.0f + mRect->GetRight()) / size.x, 1.0f - (size.y / 2.0f + mRect->GetDown()) / size.y };
+	DirectX::XMFLOAT2 rightdownUV = { (size.x / 2.0f + mRect->GetLeft()) / size.x, 1.0f - (size.y / 2.0f + mRect->GetUp()) / size.y };
 	mCalUV.uv[0] = leftupUV;
 
 	mCalUV.uv[1].x = rightdownUV.x;
@@ -300,12 +300,12 @@ void ImageController::UpdateInstanceMatrix()
 	mat._11 = 2.0f / size.x;
 	mat._22 = 2.0f / size.y;
 	
-	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixScaling(mScale.x, mScale.y, 1.0f));
-	auto offsetMat = ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(mCenterOffset.x, mCenterOffset.y, mCenterOffset.z));
+	mCalMatrix *= ConvertToXMFloat4x4(DirectX::XMMatrixScaling(mScale.x, mScale.y, 1.0f));
+	auto offsetMat = ConvertToXMFloat4x4(DirectX::XMMatrixTranslation(mCenterOffset.x, mCenterOffset.y, mCenterOffset.z));
 	mCalMatrix *= offsetMat;
-	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixRotationZ(mRota));
+	mCalMatrix *= ConvertToXMFloat4x4(DirectX::XMMatrixRotationZ(mRota));
 	mCalMatrix *= -offsetMat;
-	mCalMatrix *= ConvertXMMATRIXToXMFloat4x4(DirectX::XMMatrixTranslation(mPivot.x ,mPivot.y, mPivot.z));
+	mCalMatrix *= ConvertToXMFloat4x4(DirectX::XMMatrixTranslation(mPivot.x ,mPivot.y, mPivot.z));
 	mCalMatrix *= mat;
 
 	mInstanceMat[GetCurrentInstanceID()] = mCalMatrix;

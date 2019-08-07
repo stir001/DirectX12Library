@@ -10,7 +10,7 @@ PrimitivePlane::PrimitivePlane(DirectX::XMFLOAT3 p, float len, float hei, Direct
 	: PrimitiveObject("PrimitivePlane"), mLength(len), mHeight(hei), mPos(p)
 {
 
-	mNormal = NormalizeXMFloat3(norm);
+	mNormal = Normalize(norm);
 
 	DirectX::XMVECTOR leftUp = { -mLength / 2.0f, 0, mHeight / 2.0f };
 	DirectX::XMVECTOR rightUp = { mLength / 2.0f, 0, mHeight / 2.0f };
@@ -23,8 +23,8 @@ PrimitivePlane::PrimitivePlane(DirectX::XMFLOAT3 p, float len, float hei, Direct
 
 	DirectX::XMFLOAT3 inNorm = { mNormal.x, mNormal.y, mNormal.z };
 
-	float cos = DotXMFloat3(defNorm, inNorm);
-	float rad = acosf(DotXMFloat3(defNorm, inNorm));
+	float cos = Dot(defNorm, inNorm);
+	float rad = acosf(Dot(defNorm, inNorm));
 
 	DirectX::XMMATRIX m = XMMatrixIdentity();
 
@@ -32,7 +32,7 @@ PrimitivePlane::PrimitivePlane(DirectX::XMFLOAT3 p, float len, float hei, Direct
 	{
 		defNorm = { 0, 0, 1 };
 
-		DirectX::XMFLOAT3 cross = CrossXMFloat3(defNorm, inNorm);
+		DirectX::XMFLOAT3 cross = Cross(defNorm, inNorm);
 
 		DirectX::XMVECTOR q = CreateQuoternionXMVEC(cross, rad);
 
@@ -40,7 +40,7 @@ PrimitivePlane::PrimitivePlane(DirectX::XMFLOAT3 p, float len, float hei, Direct
 	}
 	else if (defNorm != inNorm)
 	{
-		DirectX::XMFLOAT3 cross = CrossXMFloat3(defNorm, inNorm);
+		DirectX::XMFLOAT3 cross = Cross(defNorm, inNorm);
 
 		DirectX::XMVECTOR q = CreateQuoternionXMVEC(cross, rad);
 

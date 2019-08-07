@@ -15,6 +15,8 @@
 #include "DrawObject/Fbx/FbxLoader.h"
 #include "DrawObject/Primitive3D/PrimitiveCreator.h"
 #include "Bullet/System/PhysicsSystem.h"
+#include "Fence/Dx12Fence.h"
+#include "CommandQueue/Dx12CommandQueue.h"
 
 
 #include <d3d12.h>
@@ -77,7 +79,7 @@ void Dx12Ctrl::SetIcon(const std::string & iconName)
 }
 
 Dx12Ctrl::Dx12Ctrl() :mWndHeight(720), mWndWidth(1280),mClrcolor{0.5f,0.5f,0.5f,1.0f}
-,mCmdAllocator(nullptr),mCmdList(nullptr),mCmdQueue(nullptr),mFactory(nullptr)
+,mCmdList(nullptr),mCmdQueue(nullptr),mFactory(nullptr)
 ,mDev(nullptr), mCameraHolder(nullptr)
 ,result(S_OK),mFenceValue(0), mWndProc(WindowProcedure)
 ,mWindowName("DirectX12")
@@ -190,21 +192,11 @@ bool Dx12Ctrl::Dx12Init( HINSTANCE winHInstance)
 	mDepthDescHeap = std::make_shared<Dx12DescriptorHeapObject>("DepthDescriptorHeap",mDev, t_buffer, D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	t_buffer.clear();
 
-	result = mDev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mCmdAllocator));
-	mCmdAllocator->SetName(L"MasterCommandAllocator");
+	mCmdList = std::make_shared<Dx12CommandList>("Master", mDev);
 
-	result = mDev->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mCmdAllocator.Get(), nullptr, IID_PPV_ARGS(&mCmdList));
-	mCmdList->SetName(L"MasterCommandList");
-
-	D3D12_COMMAND_QUEUE_DESC cmdQueueDesc = {};
-	cmdQueueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	cmdQueueDesc.NodeMask = 0;
-	cmdQueueDesc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
-	cmdQueueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-	result = mDev->CreateCommandQueue(&cmdQueueDesc, IID_PPV_ARGS(&mCmdQueue));
+	mCmdQueue = std::make_shared<Dx12CommandQueue>("Master",mDev, D3D12_COMMAND_LIST_TYPE_DIRECT);
 	
-	result = mDev->CreateFence(mFenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence));
+	mFence = std::make_shared<Dx12Fence>(mDev);
 
 	mCameraHolder = std::make_shared<CameraHolder>(mWndWidth, mWndHeight, mDev);
 	D3D12_VIEWPORT viewport = {0, 0, static_cast<float>(mWndWidth), static_cast<float>(mWndHeight), 0.0f, 1.0f};
@@ -264,17 +256,12 @@ void Dx12Ctrl::InitWindowCreate()
 	ShowWindow(hwnd, SW_SHOW);
 }
 
-Microsoft::WRL::ComPtr<ID3D12CommandAllocator>& Dx12Ctrl::GetCmdAllocator()
-{
-	return mCmdAllocator;
-}
-
-Microsoft::WRL::ComPtr<ID3D12CommandQueue>& Dx12Ctrl::GetCmdQueue()
+std::shared_ptr<Dx12CommandQueue>& Dx12Ctrl::GetCmdQueue()
 {
 	return mCmdQueue;
 }
 
-Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& Dx12Ctrl::GetCmdList()
+std::shared_ptr<Dx12CommandList>& Dx12Ctrl::GetCmdList()
 {
 	return mCmdList;
 }
@@ -291,17 +278,19 @@ UINT64 Dx12Ctrl::GetFenceValue() const
 
 void Dx12Ctrl::CmdQueueSignal()
 {
-	mCmdQueue->Signal(mFence.Get(), ++mFenceValue);
-	UINT64 value = mFence->GetCompletedValue();
-	UINT64 u64max = UINT64_MAX;
-	while (value != mFenceValue)
-	{
-		value = mFence->GetCompletedValue();
-		if (value == UINT64_MAX)
-		{
-			GetDeviceRemoveReason();
-		}
-	}
+	mCmdQueue->Signal();
+	mCmdQueue->Wait();
+	//UINT64 value = mFence->GetCompletedValue();
+	//UINT64 u64max = UINT64_MAX;
+	//while (value != mFenceValue)
+	//{
+	//	mCmdQueue->Wait(mFence.Get(), mFenceValue);
+	//	value = mFence->GetCompletedValue();
+	//	if (value == UINT64_MAX)
+	//	{
+	//		GetDeviceRemoveReason();
+	//	}
+	//}
 }
 
 HRESULT Dx12Ctrl::GetDeviceRemoveReason()
@@ -344,11 +333,8 @@ void Dx12Ctrl::Release()
 	mCameraHolder.reset();
 	Primitive2DManager::Destory();
 	mDepthBuffer.reset();
-	mCmdAllocator.Reset();
-	mCmdList.Reset();
-	mCmdQueue.Reset();
+	mCmdList->Reset();
 	mFactory.Reset();
-	mFence.Reset();
 	PrimitiveCreator::Destroy();
 	PhysicsSystem::Destory();
 
@@ -384,6 +370,11 @@ std::shared_ptr<Dx12DescriptorHeapObject> Dx12Ctrl::GetDepthDescHeap() const
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Ctrl::GetDepthCpuHandle() const
 {
 	return mDepthDescHeap->GetCPUHeapHandleStart();
+}
+
+std::shared_ptr<Dx12Fence> Dx12Ctrl::GetFence() const
+{
+	return mFence;
 }
 
 std::shared_ptr<Dx12Camera> Dx12Ctrl::GetCamera(unsigned int index) const

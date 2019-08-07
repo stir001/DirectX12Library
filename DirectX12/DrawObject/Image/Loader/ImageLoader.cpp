@@ -107,7 +107,7 @@ void ImageLoader::Release(const std::string& releaseImagePath)
 
 void ImageLoader::CreatePipelineState(Microsoft::WRL::ComPtr<ID3D12Device>& dev)
 {
-	mPipelinestate = std::make_shared <TransParentPipelineState>("Image2D", mRootsignature, dev);
+	mPipelinestate = std::make_shared <TransParentPipelineState>("Image2D", mRootsignature, dev, false);
 
 	m3DPipelinestate = std::make_shared<TransParentPipelineState>("Image3D", m3DRootsignature, dev);
 
